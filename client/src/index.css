@@ -1,0 +1,85 @@
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0px;
+  box-sizing: border-box;
+  padding: 0px;
+}
+
+:root {
+  --blue100: #e5ecf8;
+  --blue500: #2f5fac;
+}
+
+.H1 {
+  font-family: "Inter", sans-serif;
+  font-size: 66px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 125%; /* 82.5px */
+  letter-spacing: -1.32px;
+}
+
+.H2 {
+  font-family: "Inter", sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 125%; /* 45px */
+  letter-spacing: -0.72px;
+}
+.H3 {
+  font-family: "Inter", sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 125%; /* 30px */
+  letter-spacing: -0.48px;
+}
+
+.Body1 {
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 30px */
+}
+
+.Body2 {
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+}
+.Body3 {
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 21px */
+}
+.Body4 {
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 18px */
+}
+
+.Shadow1 {
+  /* border-radius: 8px;
+  background: var(--utility-white, #fff); */
+  /* shadow1 */
+  box-shadow: 4px 4px 24px 0px rgba(0, 0, 0, 0.08);
+}
+
+.Shadow2 {
+  /* border-radius: 8px;
+  background: var(--utility-white, #fff); */
+
+  /* shadow2 */
+  box-shadow: 2px 2px 12px 0px rgba(64, 50, 133, 0.12);
+}
