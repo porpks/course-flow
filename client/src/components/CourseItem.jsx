@@ -2,6 +2,14 @@ import React from "react";
 import "./courseItem.css";
 
 function CourseItem(props) {
+  const {
+    coverimg,
+    coursetype,
+    coursename,
+    coursedetail,
+    coursesummary,
+    totallearningtime,
+  } = props;
   return (
     <div className="Shadow1 w-[357px] bg-[--white]  ">
       <div className="topCard flex justify-center items-center ">
