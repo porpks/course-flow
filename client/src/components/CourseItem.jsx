@@ -1,15 +1,23 @@
 import React from "react";
 
 function CourseItem(props) {
+  const {
+    coverimg,
+    coursetype,
+    coursename,
+    coursedetail,
+    coursesummary,
+    totallearningtime,
+  } = props;
   return (
     <div className="card--contrainer">
-      <img src="" alt="" />
-      <p>{props.coursetype}</p>
-      <h2>{props.coursename}</h2>
-      <p>{props.coursedetail}</p>
+      <img src={coverimg} alt={coursename} />
+      <p>{coursetype}</p>
+      <h2>{coursename}</h2>
+      <p>{coursedetail}</p>
       <div className="footer--cord">
-        <p>{props.coursesummary}</p>
-        <p>{props.totallearningtime}</p>
+        <p>{coursesummary}</p>
+        <p>{totallearningtime}</p>
       </div>
     </div>
   );
