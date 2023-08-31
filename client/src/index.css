@@ -10,7 +10,30 @@
 
 :root {
   --blue100: #e5ecf8;
+  --blue200: #c6d6ef;
+  --blue300: #8dade0;
+  --blue400: #8dade0;
   --blue500: #2f5fac;
+  --blue600: #234781;
+  --blue700: #183056;
+  --blue800: #0c182b;
+  --blue900: #020d1e;
+  --gray100: #f6f7fc;
+  --gray200: #f1f2f6;
+  --gray300: #e4e6ed;
+  --gray400: #d6d9e4;
+  --gray500: #c8ccdb;
+  --gray600: #9aa1b9;
+  --gray700: #646d89;
+  --gray800: #424c6b;
+  --gray900: #2a2e3f;
+  --orange100: #fbaa1c;
+  --orange500: #f47e20;
+  --black: #000000;
+  --white: #ffffff;
+  --green: #2fac8e;
+  --linear1: linear-gradient(114deg, #95beff 0%, #0040e5 100%);
+  --linear2: linear-gradient(207deg, #5697ff 0%, #2558dd 100%);
 }
 
 .H1 {
