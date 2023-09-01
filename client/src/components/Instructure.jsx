@@ -10,7 +10,8 @@ function Instructure() {
   const navigate = useNavigate();
   return (
     <>
-      <div className='h-[700px]  bg-[--blue100] relative '>
+    <div className="flex flex-col items-center justify-center">
+      <div className='h-[700px] w-[100vw] bg-[--blue100] relative '>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           width='1032'
@@ -635,12 +636,12 @@ function Instructure() {
           </button>
         </div>
       </div>
-      <div className='h-[1111px] relative flex justify-center items-center'>
+      <div className='h-[1111px] w-[80vw] relative flex justify-center items-center'>
         <svg
           width='1233'
           height='1111'
           viewBox='0 0 1233 1111'
-          className='absolute left-[140px] '
+          className='absolute '
           fill='none'
           xmlns='http://www.w3.org/2000/svg'>
           <circle
@@ -808,7 +809,7 @@ function Instructure() {
           </div>
         </div>
       </div>
-      <div className='h-[823px] relative flex justify-center items-center'>
+      <div className='h-[823px] w-[80vw] relative flex justify-center items-center'>
         <svg
           width='51'
           height='51'
@@ -849,7 +850,7 @@ function Instructure() {
           </div>
         </div>
       </div>
-      <div className='h-[742px] relative '>
+      <div className='h-[742px] w-[100vw] relative '>
         <svg
           width='1356'
           height='630'
@@ -1061,6 +1062,7 @@ function Instructure() {
           </div>
         </div>
       </div>
+    </div>
     </>
   );
 }

@@ -7,18 +7,18 @@ function SubFooter() {
 
   return (
     <>
-      <body className="flex flex-row justify-center" style={footerStyle}>
-        <footer className="h-[90vh] w-[80vw] flex flex-row justify-between">
+      <body className="flex flex-row justify-center h-[500px]" style={footerStyle}>
+        <footer className=" w-[80vw] flex flex-row justify-between">
           <div className="w-[40vw] flex flex-col justify-evenly items-start ">
             <h1 className="H2 text-white w-[70%]">
               Interested in Becoming a Software Developer?
             </h1>
-            <button className="text-[16px] font-[700] justify-center px-[32px] py-[18px]  text-[--orange500] rounded-[12px] border-[--orange500]">
+            <button className="Secondary">
               Check Out Our Course
             </button>
           </div>
-          <div className="w-[40vw]">
-            <SubFooterIMG />
+          <div className="w-[40vw] self-end">
+            <SubFooterIMG height="448.594" width="592" />
           </div>
         </footer>
       </body>
