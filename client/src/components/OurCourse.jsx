@@ -1,5 +1,6 @@
 import Navbar from "./Navbar.jsx";
 import CourseItem from "./CourseItem";
+import "./ourCourse.css";
 
 let courseData = [
   {
@@ -83,24 +84,54 @@ let courseData = [
     coursesummary: "6 Lesson",
     totallearningtime: "6 Hours",
   },
+  {
+    course_id: 10,
+    coursetype: "Course",
+    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
+    coursename: "Software Developer",
+    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
+    coursesummary: "6 Lesson",
+    totallearningtime: "6 Hours",
+  },
+  {
+    course_id: 11,
+    coursetype: "Course",
+    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
+    coursename: "Software Developer",
+    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
+    coursesummary: "6 Lesson",
+    totallearningtime: "6 Hours",
+  },
+  {
+    course_id: 12,
+    coursetype: "Course",
+    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
+    coursename: "Software Developer",
+    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
+    coursesummary: "6 Lesson",
+    totallearningtime: "6 Hours",
+  },
 ];
 function OurCourse() {
   return (
-    <div>
+    <div className="grid">
       <div className="topSection">
-        <h1>Our Courses</h1>
-        <input
-          className="search--ourCourse"
-          type="search"
-          placeholder="search..."
-          //   value=""
-          // onChange={}
-        />
+        <h2 className="H2">Our Courses</h2>
+        <div className="input-container">
+          <img src="../../public/search.svg" alt="searchIcon" />
+          <input
+            type="search"
+            placeholder="Search..."
+            //   value=""
+            // onChange={}
+          />
+        </div>
       </div>
-      <div className="card--container">
+      <div className="card-container">
         {courseData.map((item) => (
           <CourseItem
             key={item.course_id}
+            count={item.course_id}
             coursetype={item.coursetype}
             coverimg={item.coverimg}
             coursename={item.coursename}

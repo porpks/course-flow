@@ -1,4 +1,5 @@
 import React from "react";
+import "./courseItem.css";
 
 function CourseItem(props) {
   const {
@@ -8,16 +9,22 @@ function CourseItem(props) {
     coursedetail,
     coursesummary,
     totallearningtime,
+    count,
   } = props;
   return (
     <div className="card--contrainer">
-      <img src={coverimg} alt={coursename} />
-      <p>{coursetype}</p>
-      <h2>{coursename}</h2>
-      <p>{coursedetail}</p>
-      <div className="footer--cord">
-        <p>{coursesummary}</p>
-        <p>{totallearningtime}</p>
+      <div className="w">
+        <p></p>
+        <img src={coverimg} alt={coursename} />
+      </div>
+      <div>
+        <p>{coursetype}</p>
+        <h2>{count}__{coursename}</h2>
+        <p>{coursedetail}</p>
+        <div className="footer--cord">
+          <p>{coursesummary}</p>
+          <p>{totallearningtime}</p>
+        </div>
       </div>
     </div>
   );
