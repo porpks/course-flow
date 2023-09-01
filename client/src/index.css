@@ -107,3 +107,7 @@
   /* shadow2 */
   box-shadow: 2px 2px 12px 0px rgba(64, 50, 133, 0.12);
 }
+
+test {
+  linear-gradient: 271deg, #5697ff 7.78%, #2558dd 73.86%;
+}
