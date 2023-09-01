@@ -1,10 +1,10 @@
 import "./App.css";
 import "./index.css";
-import HomePage from './pages/HomePage.jsx'
-import OurCoursePage from './pages/OurCoursePage.jsx'
-import RegisterPage from './pages/RegisterPage.jsx'
-import LoginPage from './pages/LoginPage.jsx'
-import Profile from './pages/Profile.jsx'
+import HomePage from "./pages/HomePage.jsx";
+import OurCoursePage from "./pages/OurCoursePage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import Profile from "./pages/Profile.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 

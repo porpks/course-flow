@@ -3,6 +3,13 @@ import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
+import { menuItems } from "../assets/NavbarDropdown.js";
+import { Icon } from "@mui/material";
+import PeopleIcon from "../assets/PeopleIcon.jsx";
+import BookIcon from "../assets/BookIcon.jsx";
+import CopyIcon from "../assets/CopyIcon.jsx";
+import StarIcon from "../assets/StarIcon.jsx";
+import LogoutIcon from "../assets/LogoutIcon.jsx";
 
 function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useAuth(); // Set initial state to false
@@ -52,9 +59,18 @@ function Navbar() {
         <Avatar alt={profileImg} src={profileImg} />
         <img src={profileImg} alt="profileImg" />
         <p>{profileName}</p>
-        <div className="h-0 w-0 border-x-8 border-x-transparent border-b-[25px] border-b-blue-600"></div>
+        {/* <div className="h-0 w-0 border-x-8 border-x-transparent border-b-[25px] border-b-blue-600"></div>
         <DropdownArrow />
-        <ion-icon name="caret-down-outline"></ion-icon>
+        <ion-icon name="caret-down-outline"></ion-icon> */}
+      </div>
+    );
+  };
+
+  const DropdownItem = (props) => {
+    return (
+      <div className="dropdownItem">
+        <img src={props.icon} />
+        <a>{props.text}</a>
       </div>
     );
   };
@@ -72,7 +88,34 @@ function Navbar() {
               Our Course
             </a>
             {isLoggedIn ? (
-              <AfterLogin profileImg="url" profileName="TESTS" />
+              <div className="flex flex-row ">
+                <AfterLogin profileImg="url" profileName="TESTS" />
+                <ul
+                  className="Body3 text-[--gray700] flex flex-col items-start p-[14px]"
+                  style={{ fontWeight: "500" }}
+                >
+                  <div className="flex flex-row space-x-3 justify-start items-center">
+                    <PeopleIcon width="16px" height="16px" stroke="#8DADE0" />
+                    <DropdownItem text="Profile" />
+                  </div>
+                  <div className="flex flex-row space-x-3">
+                    <BookIcon width="16px" height="16px" stroke="#8DADE0" />
+                    <DropdownItem text="My Course" />
+                  </div>
+                  <div className="flex flex-row space-x-3">
+                    <CopyIcon width="16px" height="16px" stroke="#8DADE0" />
+                    <DropdownItem text="My Homework" />
+                  </div>
+                  <div className="flex flex-row space-x-3">
+                    <StarIcon width="16px" height="16px" stroke="#8DADE0" />
+                    <DropdownItem text="MyDesire Courses" />
+                  </div>
+                  <div className="flex flex-row space-x-3">
+                    <LogoutIcon width="16px" height="16px" stroke="#8DADE0" />
+                    <DropdownItem text="Log out" />
+                  </div>
+                </ul>
+              </div>
             ) : (
               <LoginButton onClick={handleLogin} buttonText="Log in" />
             )}
