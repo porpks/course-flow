@@ -107,3 +107,17 @@
   /* shadow2 */
   box-shadow: 2px 2px 12px 0px rgba(64, 50, 133, 0.12);
 }
+@keyframes dissolve {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Apply the animation to the element when the transition class is added */
+.transition {
+  animation-name: dissolve;
+  animation-duration: 300ms;
+}
