@@ -627,8 +627,7 @@ function Instructure() {
             that caters to all your educational needs!{" "}
           </p>
           <button
-            className='w-[193px] Shadow1 bg-[--blue500]  rounded-[12px] flex h-[60px] py-[18px] px-[32px] justify-center 
-          items-center text-[white] font-bold text-[16px] transition mt-[36px]'
+            className='w-[193px] transition mt-[36px] Primary'
             onClick={() => {
               navigate("/ourcourse");
             }}>
@@ -945,7 +944,7 @@ function Instructure() {
                   />
                   <div className='flex flex-col gap-[24px] bg-[--blue100] w-[578.784px] h-[309.485px] absolute right-0 z-[-1] pt-[66.792px] pr-[25.358px] pb-[68.693px] pl-[72.283px] justify-end items-start'>
                     <div className='H3 text-[--Primary]'>Saiful Islam</div>
-                    <div className='Body2 text-[--gray700] w-[481.142]'>
+                    <div className='Body2 text-[--gray700] w-[481.142px]'>
                       Start with something simple and small, then expand over
                       time. If people call it a ‘toy’ you’re definitely onto
                       something. If you’re waiting for encouragement from
@@ -997,7 +996,7 @@ function Instructure() {
                   />
                   <div className='flex flex-col gap-[24px] bg-[--blue100] w-[578.784px] h-[309.485px] absolute right-0 z-[-1] pt-[66.792px] pr-[25.358px] pb-[68.693px] pl-[72.283px] justify-end items-start'>
                     <div className='H3 text-[--Primary]'>Saiful Islam</div>
-                    <div className='Body2 text-[--gray700] w-[481.142]'>
+                    <div className='Body2 text-[--gray700] w-[481.142px]'>
                       Start with something simple and small, then expand over
                       time. If people call it a ‘toy’ you’re definitely onto
                       something. If you’re waiting for encouragement from
@@ -1048,7 +1047,7 @@ function Instructure() {
                   />
                   <div className='flex flex-col gap-[24px] bg-[--blue100] w-[578.784px] h-[309.485px] absolute right-0 z-[-1] pt-[66.792px] pr-[25.358px] pb-[68.693px] pl-[72.283px] justify-end items-start'>
                     <div className='H3 text-[--Primary]'>Saiful Islam</div>
-                    <div className='Body2 text-[--gray700] w-[481.142]'>
+                    <div className='Body2 text-[--gray700] w-[481.142px]'>
                       Start with something simple and small, then expand over
                       time. If people call it a ‘toy’ you’re definitely onto
                       something. If you’re waiting for encouragement from
