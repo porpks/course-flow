@@ -1,21 +1,47 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext.jsx'
 
 function Login() {
     const navigate = useNavigate()
+    const { loginData,
+        setLoginData,
+        isLogin,
+        setIsLogin,
+    } = useAuth()
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        console.log(email);
+        console.log(password);
+        setLoginData({
+            email,
+            password,
+        })
+        setEmail("")
+        setPassword("")
+        console.log(loginData);
+    }
+
+    console.log(loginData);
     return (
+
         <div className="flex justify-center min-h-[100vh] relative overflow-hidden">
             <div className="w-[450px] mt-[100px] bg-white overflow-visible">
                 <h1 className="H2 text-[#22269E]">
                     Welcome back!
                 </h1>
 
-                <form className="flex flex-col">
+                <form className="flex flex-col" onSubmit={(e) => handleSubmit(e)}>
                     <label htmlFor="email" className="Body2 mt-10">
                         Email
                     </label>
                     <input
                         type="email"
                         id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         className="Body2 mt-1 p-3 rounded-lg border-solid border-[--gray500] focus:border-[--orange500] focus:outline-none"
                         placeholder="Enter Email"
                     />
@@ -25,6 +51,8 @@ function Login() {
                     <input
                         type="password"
                         id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         className="Body2 mt-1 p-3 rounded-lg border-solid border-[--gray500] focus:border-[--orange500] focus:outline-none"
                         placeholder="Enter Password"
                     />
