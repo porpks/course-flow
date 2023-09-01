@@ -1,9 +1,13 @@
+/* eslint-disable react/no-unknown-property */
+import ProtectIcon from "../assets/ProtectIcon.jsx";
+import HeartIcon from "../assets/HeartIcon.jsx";
 import { useNavigate } from "react-router-dom";
+// import Frame427320903 from "../assets/image/Frame427320903.png";
 function Instructure() {
   const navigate = useNavigate();
   return (
     <>
-      <div className='h-[700px]  bg-[--blue100] relative'>
+      <div className='h-[700px]  bg-[--blue100] relative '>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           width='1032'
@@ -629,6 +633,221 @@ function Instructure() {
           </button>
         </div>
       </div>
+      <div className='h-[1111px] relative flex justify-center items-center'>
+        <svg
+          width='1233'
+          height='1111'
+          viewBox='0 0 1233 1111'
+          className='absolute left-[140px] '
+          fill='none'
+          xmlns='http://www.w3.org/2000/svg'>
+          <circle
+            cx='44.7032'
+            cy='13.7032'
+            r='36.5'
+            transform='rotate(-75 44.7032 13.7032)'
+            fill='url(#paint0_linear_15_1851)'
+          />
+          <circle cx='384' cy='110' r='16' fill='#E5ECF8' />
+          <circle cx='1135.5' cy='1106.5' r='42.5' fill='#C6DCFF' />
+          <path
+            d='M1223.84 399L1218.84 417.68'
+            stroke='#9B2FAC'
+            strokeWidth='3'
+            strokeLinecap='round'
+          />
+          <path
+            d='M1212 405.837L1230.68 410.843'
+            stroke='#9B2FAC'
+            strokeWidth='3'
+            strokeLinecap='round'
+          />
+          <defs>
+            <linearGradient
+              id='paint0_linear_15_1851'
+              x1='9.726'
+              y1='23.6459'
+              x2='77.4257'
+              y2='47.6752'
+              gradientUnits='userSpaceOnUse'>
+              <stop stopColor='#95BEFF' />
+              <stop offset='1' stopColor='#0040E6' />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div className='inline-flex flex-col gap-[120px]'>
+          <div className='flex flex-start gap-[119px]'>
+            <img src='../public/image/Frame427320903(1).png' alt='' />
+            <div className='flex flex-col gap-[40px]'>
+              <h1 className='H2 self-stretch'>
+                Learning experience has been <br />
+                enhanced with new technologies{" "}
+              </h1>
+              <div className='flex flex-col gap-[24px] w-[547px]'>
+                <div className='flex gap-[24px]'>
+                  <ProtectIcon />
+                  <div className='flex flex-col gap-[10px] flex-1 '>
+                    <h1 className='H3 self-stretch'>Secure & Easy</h1>
+                    <p className='text-[--gray700] Body2'>
+                      Duis aute irure dolor in reprehenderit in voluptate velit
+                      es se cillum dolore eu fugiat nulla pariatur. Excepteur
+                      sint.
+                    </p>
+                  </div>
+                </div>
+                <div className='flex gap-[24px]'>
+                  <HeartIcon />
+                  <div className='flex flex-col gap-[10px] flex-1 '>
+                    {" "}
+                    <h1 className='H3'>Support All Student</h1>
+                    <p className='text-[--gray700] Body2'>
+                      Duis aute irure dolor in reprehenderit in voluptate velit
+                      es se cillum dolore eu fugiat nulla pariatur. Excepteur
+                      sint.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className='flex flex-start gap-[119px]'>
+            <div className='flex flex-col gap-[40px]'>
+              <h1 className='H2 self-stretch'>
+                Interaction between the tutor <br />
+                and the learners{" "}
+              </h1>
+              <div className='flex  gap-[24px]'>
+                <svg
+                  width='36'
+                  height='36'
+                  viewBox='0 0 36 36'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'>
+                  <path
+                    d='M23.9209 16.955C25.2971 16.75 26.3567 15.4985 26.3597 13.9823C26.3597 12.4881 25.3327 11.2492 23.986 11.0148'
+                    stroke='#5483D0'
+                    stroke-width='1.5'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  />
+                  <path
+                    d='M25.7363 20.4642C27.0692 20.6756 27.9995 21.1705 27.9995 22.1908C27.9995 22.8929 27.5615 23.3491 26.8531 23.6358'
+                    stroke='#5483D0'
+                    stroke-width='1.5'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  />
+                  <path
+                    fill-rule='evenodd'
+                    clip-rule='evenodd'
+                    d='M18 20.8969C14.8292 20.8969 12.1211 21.4064 12.1211 23.4416C12.1211 25.4758 14.8124 26 18 26C21.1707 26 23.8778 25.4957 23.8778 23.4594C23.8778 21.4232 21.1875 20.8969 18 20.8969Z'
+                    stroke='#5483D0'
+                    stroke-width='1.5'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  />
+                  <path
+                    fill-rule='evenodd'
+                    clip-rule='evenodd'
+                    d='M18.0001 17.9922C20.0807 17.9922 21.7677 16.204 21.7677 13.9961C21.7677 11.7893 20.0807 10 18.0001 10C15.9195 10 14.2324 11.7893 14.2324 13.9961C14.2246 16.1956 15.8987 17.9849 17.9725 17.9922H18.0001Z'
+                    stroke='#5483D0'
+                    stroke-width='1.5'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  />
+                  <path
+                    d='M12.0794 16.955C10.7022 16.75 9.64358 15.4985 9.64062 13.9823C9.64062 12.4881 10.6676 11.2492 12.0143 11.0148'
+                    stroke='#5483D0'
+                    stroke-width='1.5'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  />
+                  <path
+                    d='M10.2632 20.4642C8.93032 20.6756 8 21.1705 8 22.1908C8 22.8929 8.43803 23.3491 9.14637 23.6358'
+                    stroke='#5483D0'
+                    stroke-width='1.5'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  />
+                  <rect
+                    x='0.5'
+                    y='0.5'
+                    width='35'
+                    height='35'
+                    rx='17.5'
+                    stroke='#5483D0'
+                    stroke-dasharray='2 2'
+                  />
+                </svg>
+                <div className='flex flex-col gap-[10px]'>
+                  <h1 className='H3 self-stretch'>Purely Collaborative</h1>
+                  <p className='text-[--gray700] Body2 w-[487px]'>
+                    Duis aute irure dolor in reprehenderit in voluptate velit es
+                    se cillum dolore eu fugiat nulla pariatur. Excepteur sint.
+                  </p>
+                </div>
+              </div>
+              <div className='flex  gap-[24px]'>
+                <HeartIcon />
+                <div className='flex flex-col gap-[10px]'>
+                  <h1 className='H3 self-stretch'>Support All Student</h1>
+                  <p className='text-[--gray700] Body2 w-[487px]'>
+                    Duis aute irure dolor in reprehenderit in voluptate velit es
+                    se cillum dolore eu fugiat nulla pariatur. Excepteur sint.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <img
+              src='../public/image/Frame427320903.jpg'
+              alt='other photo'
+              className='w-[454px] h-[330px]'
+            />
+          </div>
+        </div>
+      </div>
+      <div className='h-[823px] relative flex justify-center items-center'>
+        <svg
+          width='51'
+          height='51'
+          viewBox='0 0 51 51'
+          fill='none'
+          className='absolute left-[70px] bottom-[76.22px]'
+          xmlns='http://www.w3.org/2000/svg'>
+          <path
+            d='M11.3581 19.9099L37.1499 15.9774L27.6597 40.28L11.3581 19.9099Z'
+            stroke='#FBAA1C'
+            stroke-width='3'
+          />
+        </svg>
+        <div className='flex flex-col gap-[60px]'>
+          <h1 className='H2 text-center'>Our Professional Intructor</h1>
+          <div className='flex gap-[24px]'>
+            <div className='flex flex-col gap-[24px]'>
+              <img src='../../public/image/Frame 427320910.png' alt='' />
+              <div className='text-center'>
+                <h1 className='H3'>Jane Cooper</h1>
+                <p className='body2 text-[--blue400]'>UX/UI Designer</p>
+              </div>
+            </div>
+            <div className='flex flex-col gap-[24px]'>
+              <img src='../../public/image/Frame 427320911.png' alt='' />
+              <div className='text-center'>
+                <h1 className='H3'>Esther Howard</h1>
+                <p className='body2 text-[--blue400]'>Program Manager</p>
+              </div>
+            </div>
+            <div className='flex flex-col gap-[24px]'>
+              <img src='../../public/image/Frame 427320912.png' alt='' />
+              <div className='text-center'>
+                <h1 className='H3'>Brooklyn Simmons</h1>
+                <p className='body2 text-[--blue400]'>Software Engineer</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div></div>
     </>
   );
 }
