@@ -9,6 +9,7 @@ function CourseItem(props) {
     coursedetail,
     coursesummary,
     totallearningtime,
+    count,
   } = props;
   return (
     <div className="Shadow1 w-[357px] bg-[--white]  ">
