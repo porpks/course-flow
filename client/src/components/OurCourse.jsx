@@ -111,6 +111,7 @@ let courseData = [
     coursesummary: "6 Lesson",
     totallearningtime: "6 Hours",
   },
+
 ];
 function OurCourse() {
   return (

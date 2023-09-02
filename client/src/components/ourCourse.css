@@ -4,6 +4,8 @@
   background-repeat: no-repeat;
   background-position: start;
   position: relative;
+  /* border: 1px solid #000; */
+  padding-bottom: 200px;
 }
 
 .topSection {
@@ -46,6 +48,7 @@
   row-gap: 60px;
   column-gap: 24px;
   padding: 0px 161px 0 160px;
+  /* border: 1px solid #000; */
 }
 
 .content-Section {
