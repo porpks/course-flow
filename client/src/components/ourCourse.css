@@ -33,7 +33,7 @@
 
 .card-container {
   /* width: 1440px; */
-  background: #c4c4c4;
+  /* background: #c4c4c4; */
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   row-gap: 60px;
