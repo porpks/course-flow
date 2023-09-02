@@ -114,7 +114,7 @@ let courseData = [
 ];
 function OurCourse() {
   return (
-    <div className="grid">
+    <div className="canvas-ourCourse">
       <div className="topSection">
         <h2 className="H2">Our Courses</h2>
         <div className="input-container">
@@ -127,19 +127,21 @@ function OurCourse() {
           />
         </div>
       </div>
-      <div className="card-container">
-        {courseData.map((item) => (
-          <CourseItem
-            key={item.course_id}
-            count={item.course_id}
-            coursetype={item.coursetype}
-            coverimg={item.coverimg}
-            coursename={item.coursename}
-            coursedetail={item.coursedetail}
-            coursesummary={item.coursesummary}
-            totallearningtime={item.totallearningtime}
-          />
-        ))}
+      <div className="content-Section">
+        <div className="card-container">
+          {courseData.map((item) => (
+            <CourseItem
+              key={item.course_id}
+              count={item.course_id}
+              coursetype={item.coursetype}
+              coverimg={item.coverimg}
+              coursename={item.coursename}
+              coursedetail={item.coursedetail}
+              coursesummary={item.coursesummary}
+              totallearningtime={item.totallearningtime}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

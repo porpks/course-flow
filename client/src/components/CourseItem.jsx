@@ -3,15 +3,14 @@ import "./courseItem.css";
 
 function CourseItem(props) {
   return (
-    <div className="Shadow1 w-[357px]  ">
+    <div className="Shadow1 w-[357px] bg-[--white]  ">
       <div className="topCard flex justify-center items-center ">
         <img className="" src={props.coverimg} alt={props.coursename} />
       </div>
       <div className="bodyCard ">
         <div className="border border-sky-500">
           <p className="Body3 text-[--orange500]">{props.coursetype}</p>
-          <h2 className="H3 text-[#000] py-[8px]">{props.coursename}
-          </h2>
+          <h2 className="H3 text-[#000] py-[8px]">{props.coursename}</h2>
           <p className="Body2 text-[--gray700]">{props.coursedetail}</p>
         </div>
       </div>

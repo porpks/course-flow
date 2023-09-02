@@ -14,7 +14,7 @@
 
 .footer-Line {
   width: auto;
-  height: 3px;
+  height: 2px;
   background: var(--gray600);
   opacity: 0.1;
 }

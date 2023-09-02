@@ -1,3 +1,11 @@
+.canvas-ourCourse {
+  background-image: url("../../public/bg-headerOurCorse.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: start;
+  position: relative;
+}
+
 .topSection {
   display: flex;
   flex-direction: column;
@@ -24,20 +32,23 @@
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
+  width: 100%;
   line-height: 150%; /* 24px */
   border: none;
 }
 .input-container > input:focus {
-   outline: none;
-  }
+  outline: none;
+}
 
 .card-container {
-  /* width: 1440px; */
-  /* background: #c4c4c4; */
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   row-gap: 60px;
   column-gap: 24px;
-  justify-items: center;
-  align-items: center;
+  padding: 0px 161px 0 160px;
+}
+
+.content-Section {
+  display: flex;
+  justify-content: center;
 }
