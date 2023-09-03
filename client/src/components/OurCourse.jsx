@@ -1,4 +1,4 @@
-import Navbar from "./Navbar.jsx";
+
 import CourseItem from "./CourseItem";
 import "./ourCourse.css";
 
