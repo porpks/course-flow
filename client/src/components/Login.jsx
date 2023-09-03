@@ -6,22 +6,25 @@ function Login() {
     const navigate = useNavigate()
     const { loginData,
         setLoginData,
-        isLogin,
-        setIsLogin,
     } = useAuth()
+
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
     const handleSubmit = (event) => {
         event.preventDefault()
-        console.log(email);
-        console.log(password);
-        setLoginData({
-            email,
-            password,
-        })
-        setEmail("")
-        setPassword("")
-        console.log(loginData);
+        if (!email || !password) {
+            console.log("nodata");
+        } else {
+            setLoginData({
+                email,
+                password,
+            })
+            setEmail("")
+            setPassword("")
+            alert("I'm in")
+        }
+
     }
 
     console.log(loginData);
@@ -56,7 +59,7 @@ function Login() {
                         className="Body2 mt-1 p-3 rounded-lg border-solid border-[--gray500] focus:border-[--orange500] focus:outline-none"
                         placeholder="Enter Password"
                     />
-                    <button type="submit" className="Body1 text-white bg-[--blue500] mt-10 p-4 rounded-2xl border-none">
+                    <button type="submit" className="Body1 text-white bg-[--blue500] mt-10 p-4 rounded-2xl border-none cursor-pointer hover:bg-[--blue400] active:bg-[--blue700]">
                         Login
                     </button>
                 </form>

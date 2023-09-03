@@ -6,10 +6,9 @@ function Register() {
     const navigate = useNavigate()
     const { registerData,
         setRegisterData,
-        isRegister,
-        setIsRegister,
     } = useAuth()
 
+    console.log(registerData);
     return (
         <div className="flex justify-center min-h-[960px] relative overflow-hidden">
             <div className="w-[450px] mt-[100px] bg-white overflow-visible">
@@ -54,11 +53,23 @@ function Register() {
                         return errors;
                     }}
                     onSubmit={(values, actions) => {
-                        console.log(values)
-                        alert(JSON.stringify(values, null, 2));
+                        console.log("submit")
+                        // alert(JSON.stringify(values, null, 2));
+
+                        setRegisterData(values)
+                        actions.resetForm()
+                        actions.setFieldValue("name", "")
+                        actions.setFieldValue("dateOfBirth", "")
+                        actions.setFieldValue("eduBg", "")
+                        actions.setFieldValue("email", "")
+                        actions.setFieldValue("password", "")
+
+                        alert("register successfully")
+
                         actions.setSubmitting(true);
                         const timeOut = setTimeout(() => {
                             actions.setSubmitting(false);
+
                             clearTimeout(timeOut);
                         }, 400);
 
@@ -131,7 +142,7 @@ function Register() {
                             </div>
 
                             <button type="submit" disabled={isSubmitting}
-                                className="Body1 text-white bg-[--blue500] w-full mt-10 p-4 rounded-2xl border-none disabled:bg-[--gray500]">
+                                className="Body1 text-white bg-[--blue500] w-full mt-10 p-4 rounded-2xl border-none cursor-pointer disabled:bg-[--gray500] hover:bg-[--blue400] active:bg-[--blue700]">
                                 {isSubmitting ? "Registering..." : "Register"}
                             </button>
                         </Form>
