@@ -1,7 +1,77 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import calendarIcon from "../../public/image/calendarIcon.svg";
 
 function UpdateProfile() {
-  const [focused, setFocused] = useState(false);
+  const [name, setName] = useState(null);
+  const [dateOfBirth, setDateOfBirth] = useState(null);
+  const [edu, setEdu] = useState(null);
+  const [email, setEmail] = useState(null);
+
+  const today = dayjs();
+  const navigate = useNavigate();
+  const data = { name, dateOfBirth, edu, email };
+
+  const submitHandle = async (e) => {
+    e.preventDefault();
+
+    // ฟังชั่นในการ valid ข้อมูลใน form
+    // ใช้ Regular Expression ในการ validate ข้อมูล
+
+    function isValidName(inputName) {
+      return inputName !== null && /^[a-zA-Z-' ]+$/.test(inputName);
+    }
+
+    function isValidDateOfBirth(dateOfBirth) {
+      if (!dateOfBirth) {
+        return false;
+      }
+      const currentDate = new Date();
+      const selectedDate = new Date(dateOfBirth);
+      return selectedDate <= currentDate;
+    }
+
+    function isValidEdu(inputEdu) {
+      return inputEdu !== null;
+    }
+
+    function isValidEmail(inputEmail) {
+      return (
+        inputEmail !== null && /^[a-zA-Z0-9._-]+@[^.]+\.(com)$/.test(inputEmail)
+        // ปล.ยังไม่ได้เขียน logic ส่วนที่ห้ามซ้ำ
+      );
+    }
+
+    if (!isValidName(name)) {
+      alert(
+        "name : ต้องเป็นตัวอักษรภาษาอังกฤษพิมพ์เล็กหรือพิมพ์ใหญ่เท่านั้น และสามารถมีแค่เครื่องหมาย “ ' “ หรือ “ - “ ( ไม่สามารถใช้อักขระพิเศษอื่นๆหรือตัวเลขได้ )"
+      );
+      return;
+    }
+
+    if (!isValidDateOfBirth(dateOfBirth)) {
+      alert("date of birth : ไม่สามารถเลือกวันที่ก่อนวันปัจจุบันได้");
+      return;
+    }
+
+    if (!isValidEdu(edu)) {
+      alert("educational background : จำเป็นต้องกรอกข้อมูล (Not null)");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      alert("e-mail : เป็นรูปแบบ email มี @ และ .com และต้องไม่ซ้ำกัน");
+      return;
+    }
+
+    // เว้นว่างไว้สำหรับ editProfile Logic send data as a body
+    navigate("/");
+  };
 
   return (
     <div className="relative flex flex-col items-center w-[1440px] h-[995px]">
@@ -60,7 +130,7 @@ function UpdateProfile() {
             src="../public/image/user_profile.png"
             className="relative w-[358px] h-[358px] object-cover	rounded-2xl	"
           />
-          <button className="flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none">
+          <button className="flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="22"
@@ -77,50 +147,76 @@ function UpdateProfile() {
             </svg>
           </button>
         </div>
-        <div className="w-[453px] Body2">
-          <div>Name</div>
-          <input
-            type="text"
-            className="p-[12px] w-[100%] h-[48px] rounded-lg border-gray-400 border-[1px] border-solid bg-utility-white mb-[40px]"
-            placeholder="Enter Name and Lastname"
-          />
 
-          <div>Date of Birth</div>
-          <div className="relative w-[100%] h-[48px] mb-[40px]">
+        <form className="product-form" onSubmit={submitHandle}>
+          <div className="w-[453px] Body2">
+            <div>Name</div>
             <input
-              type={focused ? "date" : "text"}
-              className="p-[12px] w-[100%] h-[48px] rounded-lg border-gray-400 border-[1px] border-solid "
-              placeholder="DD/MM/YYYY"
-              onFocus={() => setFocused(true)}
-              onBlur={() => setFocused(false)}
-              style={{
-                backgroundImage:
-                  'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%239AA1B9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6.75 3V5.25M17.25 3V5.25M3 18.75V7.5C3 6.90326 3.23705 6.33097 3.65901 5.90901C4.08097 5.48705 4.65326 5.25 5.25 5.25H18.75C19.3467 5.25 19.919 5.48705 20.341 5.90901C20.7629 6.33097 21 6.90326 21 7.5V18.75M3 18.75C3 19.3467 3.23705 19.919 3.65901 20.341C4.08097 20.7629 4.65326 21 5.25 21H18.75C19.3467 21 19.919 20.7629 20.341 20.341C20.7629 19.919 21 19.3467 21 18.75M3 18.75V11.25C3 10.6533 3.23705 10.081 3.65901 9.65901C4.08097 9.23705 4.65326 9 5.25 9H18.75C19.3467 9 19.919 9.23705 20.341 9.65901C20.7629 10.081 21 10.6533 21 11.25V18.75M12 12.75H12.008V12.758H12V12.75ZM12 15H12.008V15.008H12V15ZM12 17.25H12.008V17.258H12V17.25ZM9.75 15H9.758V15.008H9.75V15ZM9.75 17.25H9.758V17.258H9.75V17.25ZM7.5 15H7.508V15.008H7.5V15ZM7.5 17.25H7.508V17.258H7.5V17.25ZM14.25 12.75H14.258V12.758H14.25V12.75ZM14.25 15H14.258V15.008H14.25V15ZM14.25 17.25H14.258V17.258H14.25V17.25ZM16.5 12.75H16.508V12.758H16.5V12.75ZM16.5 15H16.508V15.008H16.5V15Z"/></svg>\')',
-                backgroundSize: "24 ",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "right center",
-              }}
+              type="text"
+              className="p-[12px] w-[100%] h-[48px] rounded-lg border-gray-400 border-[1px] border-solid mb-[40px] focus:outline-none focus:border-orange-500 focus:border-[1px]"
+              placeholder="Enter Name and Lastname"
+              onChange={(e) => setName(e.target.value)}
             />
+
+            <div>Date of Birth</div>
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                slotProps={{ popper: { placement: "bottom-end" } }}
+                sx={{
+                  width: 453,
+                  marginBottom: 5,
+                  "& .MuiInputBase-root": {
+                    height: 48,
+                    borderRadius: "0.5rem",
+                    border: "1px solid #CBD5E0",
+                  },
+                  "&.MuiInputBase-root:focus": {
+                    border: "1px solid #F47E20",
+                  },
+                }}
+                components={{
+                  OpenPickerIcon: () => (
+                    <img
+                      src={calendarIcon}
+                      alt="Calendar Icon"
+                      className="w-[24px] h-[24px] mx-[4px]"
+                    />
+                  ),
+                }}
+                format="DD-MM-YYYY"
+                maxDate={today}
+                // showDaysOutsideCurrentMonth
+                onChange={(newValue) => {
+                  const timestamp = new Date(newValue);
+                  setDateOfBirth(timestamp);
+                }}
+              />
+            </LocalizationProvider>
+
+            <div>Educational Background</div>
+            <input
+              type="text"
+              className="p-[12px] w-[100%] h-[48px] rounded-lg border-gray-400 border-[1px] border-solid mb-[40px] focus:outline-none focus:border-orange-500 focus:border-[1px]"
+              placeholder="Enter Educational Background"
+              onChange={(e) => setEdu(e.target.value)}
+            />
+
+            <div>Email</div>
+            <input
+              type="email"
+              className="p-[12px] w-[100%] h-[48px] rounded-lg border-gray-400 border-[1px] border-solid mb-[37px]  focus:outline-none focus:border-orange-500 focus:border-[1px]"
+              placeholder="Enter Email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <button
+              className="Primary w-[100%] border-none cursor-pointer"
+              type="submit">
+              Update Profile
+            </button>
           </div>
-
-          <div>Educational Background</div>
-          <input
-            type="text"
-            className="p-[12px] w-[100%] h-[48px] rounded-lg border-gray-400 border-[1px] border-solid mb-[40px]"
-            placeholder="Enter Educational Background"
-          />
-
-          <div>Email</div>
-          <input
-            type="text"
-            className="p-[12px] w-[100%] h-[48px] rounded-lg border-gray-400 border-[1px] border-solid mb-[37px]"
-            placeholder="Enter Email"
-          />
-
-          <button className="Primary w-[100%] border-none">
-            Update Profile
-          </button>
-        </div>
+        </form>
       </div>
     </div>
   );

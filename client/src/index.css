@@ -188,9 +188,3 @@
   background: #fff;
   color: var(--gray-500, #c8ccdb);
 }
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-  /* opacity: 0; */
-  width: 24px;
-  height: 24px;
-}
