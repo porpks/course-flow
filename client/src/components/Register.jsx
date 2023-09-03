@@ -79,7 +79,7 @@ function Register() {
                         touched,
                         handleSubmit,
                         isSubmitting,
-                        isValid }) => (
+                    }) => (
                         <Form onSubmit={handleSubmit}>
                             <div className='relative mt-10'>
                                 <label htmlFor="name" className="Body2">
