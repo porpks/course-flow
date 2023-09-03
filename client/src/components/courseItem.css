@@ -1,7 +1,17 @@
+.Shadow1:hover {
+  scale: 1.0125;
+  box-shadow: 2px 2px 12px 0px rgba(64, 50, 133, 0.12);
+}
 .footerCard {
   display: flex;
   flex-direction: column;
   /* border: 1px solid #000; */
+}
+.topCard img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
 }
 
 .lesson-count-container,
