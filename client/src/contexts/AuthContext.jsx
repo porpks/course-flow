@@ -8,7 +8,7 @@ function AuthProvider(props) {
   const [registerData, setRegisterData] = useState({});
   const [loginData, setLoginData] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(true); // Set initial state to false
-
+  const [userID, setUserID] = useState(null);
   return (
     <AuthContext.Provider
       value={{
@@ -20,8 +20,9 @@ function AuthProvider(props) {
         setRegisterData,
         loginData,
         setLoginData,
-      }}
-    >
+        userID,
+        setUserID,
+      }}>
       {props.children}
     </AuthContext.Provider>
   );
