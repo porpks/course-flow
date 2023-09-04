@@ -224,4 +224,4 @@ function Register() {
         </div >
     )
 }
-export default Register
+export default Register;
