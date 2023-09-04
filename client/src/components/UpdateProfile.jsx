@@ -25,7 +25,7 @@ function UpdateProfile() {
     if (!values.name) {
       errors.name = "Required!";
     } else if (!/^[A-Z' -]+$/i.test(values.name)) {
-      errors.name = `Name must be included (A-Z) , (a-z) and (' , -)`;
+      errors.name = `Name must be included (A-Z) , (a-z) and (' , -)z`;
     }
 
     if (!values.dateOfBirth) {
