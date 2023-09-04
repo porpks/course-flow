@@ -15,6 +15,7 @@ import CopyIcon from "../assets/CopyIcon.jsx";
 import StarIcon from "../assets/StarIcon.jsx";
 import LogoutIcon from "../assets/LogoutIcon.jsx";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios'
 
 function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useAuth(); // Set initial state to false
@@ -24,8 +25,9 @@ function Navbar() {
   //   setIsLoggedIn(true); // Simulate a login action
   // };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsLoggedIn(false);
+    const result = await axios.get('http://localhost:4000/auth/logout')
   };
 
   const LoginButton = ({ buttonText }) => {

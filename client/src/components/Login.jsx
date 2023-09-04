@@ -1,13 +1,32 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext.jsx";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext.jsx'
+import axios from 'axios'
 
 function Login() {
   const navigate = useNavigate();
   const { loginData, setLoginData } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        if (!email || !password) {
+            console.log("nodata");
+        } else {
+            setLoginData({
+                email,
+                password,
+            })
+            setEmail("")
+            setPassword("")
+            try {
+                const result = await axios.post('http://localhost:4000/auth/login', loginData)
+            } catch (error) {
+                alert(error)
+            }
+        }
 
   const handleSubmit = (event) => {
     event.preventDefault();
