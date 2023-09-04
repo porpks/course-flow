@@ -7,7 +7,7 @@ function Profile() {
     <>
       <Navbar />
       <UpdateProfile />
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 }
