@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TextField from "@mui/material/TextField";
+import { useFormik } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -9,70 +8,69 @@ import calendarIcon from "../../public/image/calendarIcon.svg";
 import Navbar from "./Navbar.jsx";
 
 function UpdateProfile() {
-  const [name, setName] = useState(null);
-  const [dateOfBirth, setDateOfBirth] = useState(null);
-  const [edu, setEdu] = useState(null);
-  const [email, setEmail] = useState(null);
+  const initialValues = {
+    name: "",
+    dateOfBirth: null,
+    edu: "",
+    email: "",
+  };
 
-  const today = dayjs();
-  const navigate = useNavigate();
-  const data = { name, dateOfBirth, edu, email };
-
-  const submitHandle = async (e) => {
-    e.preventDefault();
-
-    // ฟังชั่นในการ valid ข้อมูลใน form
-    // ใช้ Regular Expression ในการ validate ข้อมูล
-
-    function isValidName(inputName) {
-      return inputName !== null && /^[a-zA-Z-' ]+$/.test(inputName);
-    }
-
-    function isValidDateOfBirth(dateOfBirth) {
-      if (!dateOfBirth) {
-        return false;
-      }
-      const currentDate = new Date();
-      const selectedDate = new Date(dateOfBirth);
-      return selectedDate <= currentDate;
-    }
-
-    function isValidEdu(inputEdu) {
-      return inputEdu !== null;
-    }
-
-    function isValidEmail(inputEmail) {
-      return (
-        inputEmail !== null && /^[a-zA-Z0-9._-]+@[^.]+\.(com)$/.test(inputEmail)
-        // ปล.ยังไม่ได้เขียน logic ส่วนที่ห้ามซ้ำ
-      );
-    }
-
-    if (!isValidName(name)) {
-      alert(
-        "name : ต้องเป็นตัวอักษรภาษาอังกฤษพิมพ์เล็กหรือพิมพ์ใหญ่เท่านั้น และสามารถมีแค่เครื่องหมาย “ ' “ หรือ “ - “ ( ไม่สามารถใช้อักขระพิเศษอื่นๆหรือตัวเลขได้ )"
-      );
-      return;
-    }
-
-    if (!isValidDateOfBirth(dateOfBirth)) {
-      alert("date of birth : ไม่สามารถเลือกวันที่ก่อนวันปัจจุบันได้");
-      return;
-    }
-
-    if (!isValidEdu(edu)) {
-      alert("educational background : จำเป็นต้องกรอกข้อมูล (Not null)");
-      return;
-    }
-
-    if (!isValidEmail(email)) {
-      alert("e-mail : เป็นรูปแบบ email มี @ และ .com และต้องไม่ซ้ำกันนะ");
-      return;
-    }
-
-    // เว้นว่างไว้สำหรับ editProfile Logic send data as a body
+  const onSubmit = (values) => {
+    console.log("Form data", values);
     navigate("/");
   };
+
+  const validate = (values) => {
+    let errors = {};
+
+    if (!values.name) {
+      errors.name = "Required!";
+    } else if (!/^[A-Z' -]+$/i.test(values.name)) {
+      errors.name = `Name must be included (A-Z) , (a-z) and (' , -)`;
+    }
+
+    if (!values.dateOfBirth) {
+      errors.dateOfBirth = "Required!";
+    } else {
+      const currentDate = new Date();
+      const selectedDate = new Date(values.dateOfBirth);
+      if (selectedDate > currentDate) {
+        errors.dateOfBirth = "Date must be in the past";
+      }
+    }
+
+    if (!values.edu) {
+      errors.edu = "Required!";
+    }
+
+    if (!values.email) {
+      errors.email = "Required!";
+    } else if (!/^[a-zA-Z0-9._-]+@[^.]+\.(com)$/i.test(values.email)) {
+      errors.email = "Invalid email address!";
+    }
+
+    return errors;
+  };
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit,
+    validate,
+  });
+
+  const handleDatePickerChange = (newValue) => {
+    const timestamp = new Date(newValue);
+    formik.handleChange({
+      target: {
+        name: "dateOfBirth",
+        value: timestamp,
+        type: "date",
+      },
+    });
+  };
+
+  const navigate = useNavigate();
+  const today = dayjs();
 
   return (
     <body className="flex justify-center">
@@ -83,8 +81,7 @@ function UpdateProfile() {
             width="11"
             height="11"
             viewBox="0 0 11 11"
-            fill="none"
-          >
+            fill="none">
             <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" stroke-width="3" />
           </svg>
         </div>
@@ -95,8 +92,7 @@ function UpdateProfile() {
             width="27"
             height="27"
             viewBox="0 0 27 27"
-            fill="none"
-          >
+            fill="none">
             <circle cx="13.1741" cy="13.1741" r="13.1741" fill="#C6DCFF" />
           </svg>
         </div>
@@ -107,8 +103,7 @@ function UpdateProfile() {
             width="53"
             height="74"
             viewBox="0 0 53 74"
-            fill="none"
-          >
+            fill="none">
             <circle cx="37" cy="37" r="37" fill="#C6DCFF" />
           </svg>
         </div>
@@ -119,8 +114,7 @@ function UpdateProfile() {
             width="51"
             height="51"
             viewBox="0 0 51 51"
-            fill="none"
-          >
+            fill="none">
             <path
               d="M11.3581 19.9099L37.1499 15.9774L27.6597 40.28L11.3581 19.9099Z"
               stroke="#FBAA1C"
@@ -142,8 +136,7 @@ function UpdateProfile() {
                 width="22"
                 height="22"
                 viewBox="0 0 22 22"
-                fill="none"
-              >
+                fill="none">
                 <path
                   d="M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764"
                   stroke="white"
@@ -219,8 +212,7 @@ function UpdateProfile() {
 
               <button
                 className="Primary w-[100%] border-none cursor-pointer"
-                type="submit"
-              >
+                type="submit">
                 Update Profile
               </button>
             </div>
