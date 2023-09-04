@@ -147,7 +147,10 @@ function Navbar() {
 
   return (
     <>
-      <body className="flex flex-row justify-center Shadow2 h-[88px]">
+      <body
+        id="homepage"
+        className="flex flex-row justify-center Shadow2 h-[88px]"
+      >
         <nav className="flex flex-row justify-between items-center ju w-[80vw]">
           <a
             href=""
