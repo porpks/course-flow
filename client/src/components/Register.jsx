@@ -7,6 +7,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import calendarIcon from "../../public/image/calendarIcon.svg";
 import dayjs from "dayjs";
+import axios from 'axios'
 
 const today = dayjs();
 
@@ -16,7 +17,7 @@ function Register() {
         setRegisterData,
     } = useAuth()
     const [dateOfBirth, setDateOfBirth] = useState(null);
-    const handleRegister = (values) => {
+    const handleRegister = async (values) => {
         const formData = {
             name: values.name,
             dateOfBirth: dateOfBirth,
@@ -25,9 +26,13 @@ function Register() {
             password: values.password
         }
         setRegisterData(formData)
+        try {
+            await axios.post('http://localhost:4000/auth/register', registerData)
+            navigate('/login')
+        } catch (error) {
+            alert(error);
+        }
     }
-
-    console.log(registerData);
 
     return (
         <div className="flex justify-center min-h-[960px] relative overflow-hidden">
