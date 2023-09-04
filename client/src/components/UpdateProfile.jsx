@@ -121,34 +121,35 @@ function UpdateProfile() {
         </svg>
       </div>
 
-      <h2 className="H2 pt-[100px] pb-[72px]">Profile</h2>
-      <div className="flex justify-between w-[930px] h-[521px] bg-cover">
-        <div className="relative">
-          <img
-            src="../public/image/user_profile.png"
-            className="relative w-[358px] h-[358px] object-cover	rounded-2xl	"
-          />
-          <button className="flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              viewBox="0 0 22 22"
-              fill="none">
-              <path
-                d="M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
-        <form onSubmit={formik.handleSubmit}>
-          <div className="w-[453px] Body2">
-            <div>Name</div>
-            <div className="relative h-[100%]">
+        <h2 className="H2 pt-[100px] pb-[72px]">Profile</h2>
+        <div className="flex justify-between w-[930px] h-[521px] bg-cover">
+          <div className="relative">
+            <img
+              src="../public/image/user_profile.png"
+              className="relative w-[358px] h-[358px] object-cover	rounded-2xl	"
+            />
+            <button className="flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 22 22"
+                fill="none"
+              >
+                <path
+                  d="M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764"
+                  stroke="white"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <form className="product-form" onSubmit={submitHandle}>
+            <div className="w-[453px] Body2">
+              <div>Name</div>
               <input
                 type="text"
                 id="name"
