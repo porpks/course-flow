@@ -6,9 +6,11 @@
   margin: 0px;
   box-sizing: border-box;
   padding: 0px;
+  font-family: "Inter", sans-serif;
 }
 
 :root {
+  --Primary: #2f5fac;
   --blue100: #e5ecf8;
   --blue200: #c6d6ef;
   --blue300: #8dade0;
@@ -105,4 +107,84 @@
 
   /* shadow2 */
   box-shadow: 2px 2px 12px 0px rgba(64, 50, 133, 0.12);
+}
+
+@keyframes dissolve {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.transition {
+  animation-name: dissolve;
+  animation-duration: 300ms;
+}
+
+.Primary {
+  display: inline-flex;
+  padding: 18px 32px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  background: var(--blue-500, #2f5fac);
+  box-shadow: 4px 4px 24px 0px rgba(0, 0, 0, 0.08);
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
+  transition: background 0.3s ease-out;
+}
+
+.Primary:hover {
+  background: var(--blue-400, #5483d0);
+}
+
+.Primary:active {
+  background: var(--blue-700, #183056);
+  transition: background 0.3s ease-out;
+}
+
+.Primary:disabled {
+  background: var(--gray-400, #d6d9e4);
+}
+
+.Secondary {
+  display: inline-flex;
+  padding: 18px 32px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--orange-500, #f47e20);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 4px 4px 24px 0px rgba(0, 0, 0, 0.08);
+  color: var(--orange-500, #f47e20);
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
+  transition: background 0.3s ease-out;
+}
+
+.Secondary:hover {
+  color: var(--orange-100, #fbaa1c);
+  transition: color 0.3s ease-out;
+}
+
+.Secondary:active {
+  color: var(--orange-500, #f47e20);
+  transition: color 0.3s ease-out;
+}
+
+.Secondary:disabled {
+  border: 1px solid var(--gray-500, #c8ccdb);
+  background: #fff;
+  color: var(--gray-500, #c8ccdb);
 }
