@@ -7,7 +7,7 @@ function AuthProvider(props) {
   const [state, setState] = useState("eiei");
   const [registerData, setRegisterData] = useState({});
   const [loginData, setLoginData] = useState({});
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Set initial state to false
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Set initial state to false
 
   return (
     <AuthContext.Provider
