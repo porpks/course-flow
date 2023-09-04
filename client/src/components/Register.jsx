@@ -1,14 +1,39 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useAuth } from '../contexts/AuthContext.jsx'
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import calendarIcon from "../../public/image/calendarIcon.svg";
+import dayjs from "dayjs";
+import axios from 'axios'
+
+const today = dayjs();
 
 function Register() {
     const navigate = useNavigate()
     const { registerData,
         setRegisterData,
     } = useAuth()
+    const [dateOfBirth, setDateOfBirth] = useState(null);
+    const handleRegister = async (values) => {
+        const formData = {
+            name: values.name,
+            dateOfBirth: dateOfBirth,
+            educationBackground: values.eduBg,
+            email: values.email,
+            password: values.password
+        }
+        setRegisterData(formData)
+        try {
+            await axios.post('http://localhost:4000/auth/register', registerData)
+            navigate('/login')
+        } catch (error) {
+            alert(error);
+        }
+    }
 
-    console.log(registerData);
     return (
         <div className="flex justify-center min-h-[960px] relative overflow-hidden">
             <div className="w-[450px] mt-[100px] bg-white overflow-visible">
@@ -29,11 +54,11 @@ function Register() {
                             errors.name = `Name must be included (A-Z) , (a-z) and (' , -)`;
                         }
 
-                        else if (!values.dateOfBirth) {
-                            errors.dateOfBirth = 'Required!'
-                        } else if (new Date(values.dateOfBirth) > new Date().getTime()) {
-                            errors.dateOfBirth = `Date must  be in the past`;
-                        }
+                        // else if (!values.dateOfBirth) {
+                        //     errors.dateOfBirth = 'Required!'
+                        // } else if (new Date(values.dateOfBirth) > new Date().getTime()) {
+                        //     errors.dateOfBirth = `Date must  be in the past`;
+                        // }
 
                         else if (!values.eduBg) {
                             errors.eduBg = 'Required!'
@@ -53,18 +78,17 @@ function Register() {
                         return errors;
                     }}
                     onSubmit={(values, actions) => {
-                        console.log("submit")
                         // alert(JSON.stringify(values, null, 2));
 
-                        setRegisterData(values)
+                        handleRegister(values)
                         actions.resetForm()
                         actions.setFieldValue("name", "")
-                        actions.setFieldValue("dateOfBirth", "")
+                        setDateOfBirth(null)
                         actions.setFieldValue("eduBg", "")
                         actions.setFieldValue("email", "")
                         actions.setFieldValue("password", "")
 
-                        alert("register successfully")
+                        // alert("register successfully")
 
                         actions.setSubmitting(true);
                         const timeOut = setTimeout(() => {
@@ -97,12 +121,45 @@ function Register() {
                                 <label htmlFor="dateOfBirth" className="Body2">
                                     Date of Birth
                                 </label>
-                                <Field type="date" name="dateOfBirth" id="dateOfBirth"
-                                    placeholder="Enter Date of Birth"
-                                    className={`Body2 w-full mt-1 p-3 rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${errors.dateOfBirth && touched.dateOfBirth ? " border-[#9B2FAC]" : " border-[--gray500]"}`} />
-                                <ErrorMessage name="dateOfBirth" component="div"
+                                {/* <Field type="date" name="dateOfBirth" id="dateOfBirth"
+                                    className={`Body2 w-full mt-1 p-3 rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${errors.dateOfBirth && touched.dateOfBirth ? " border-[#9B2FAC]" : " border-[--gray500]"}`} /> */}
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        slotProps={{ popper: { placement: "bottom-end" } }}
+                                        sx={{
+                                            width: 450,
+                                            marginBottom: 0,
+                                            "& .MuiInputBase-root": {
+                                                height: 50,
+                                                borderRadius: "0.5rem",
+                                                border: "1px solid #CBD5E0",
+                                            },
+                                            "&.MuiInputBase-root:focus": {
+                                                border: "1px solid #F47E20",
+                                            },
+                                        }}
+                                        components={{
+                                            OpenPickerIcon: () => (
+                                                <img
+                                                    src={calendarIcon}
+                                                    alt="Calendar Icon"
+                                                    className="w-[24px] h-[24px] mx-[4px]"
+                                                />
+                                            ),
+                                        }}
+                                        format="DD-MM-YYYY"
+                                        maxDate={today}
+                                        value={dateOfBirth}
+                                        // showDaysOutsideCurrentMonth
+                                        onChange={(newValue) => {
+                                            const timestamp = new Date(newValue);
+                                            setDateOfBirth(timestamp);
+                                        }}
+                                    />
+                                </LocalizationProvider>
+                                {/* <ErrorMessage name="dateOfBirth" component="div"
                                     className='text-[#9B2FAC] absolute right-0 -bottom-6' />
-                                {errors.dateOfBirth && touched.dateOfBirth ? <img src='../../public/Exclamation-circle.svg' className='absolute right-10 top-11' /> : null}
+                                {errors.dateOfBirth && touched.dateOfBirth ? <img src='../../public/Exclamation-circle.svg' className='absolute right-10 top-11' /> : null} */}
                             </div>
 
                             <div className='relative mt-10'>
