@@ -18,13 +18,13 @@ function CourseItem(props) {
         <div className="footer-Line"></div>
         <div className="footerContents">
           <div className="lesson-count-container">
-            <img src="../../public/lesson-count-icon.svg" alt="" />
+            <img src="../../public/image/lesson-count-icon.svg" alt="" />
             <p className="courseSummary Body2 text-[--gray700] mx-[8px] ">
               {props.coursesummary}
             </p>
           </div>
           <div className="learningTime-container">
-            <img src="../../public/learningtime-icon.svg" alt="" />
+            <img src="../../public/image/learningtime-icon.svg" alt="" />
             <p className="Body2 text-[--gray700] mx-[8px]">
               {props.totallearningtime}
             </p>

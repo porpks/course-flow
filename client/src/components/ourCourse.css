@@ -1,12 +1,12 @@
 .canvas-ourCourse {
-  background-image: url("../../public/bg-headerOurCorse.svg");
+  background-image: url("../../public/image/bg-headerOurCorse.svg");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: start;
   position: relative;
-  /* border: 1px solid #000; */
   padding-bottom: 200px;
-  width: 100vw;
+  /* border: 1px solid #000; */
+  /* width: 100vw; */
 }
 
 .topSection {
