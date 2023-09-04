@@ -5,7 +5,7 @@ import Footer from "../components/Footer.jsx";
 function Profile() {
   return (
     <>
-      {/* <Navbar /> */}
+      <Navbar />
       <UpdateProfile />
       {/* <Footer /> */}
     </>
