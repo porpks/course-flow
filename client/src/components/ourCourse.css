@@ -6,6 +6,7 @@
   position: relative;
   /* border: 1px solid #000; */
   padding-bottom: 200px;
+  width: 100vw;
 }
 
 .topSection {
