@@ -23,17 +23,22 @@
   align-items: center;
   gap: 10px;
   border-radius: 8px;
-  border: 1px solid var(--gray-300, #ccd0d7);
+  border: 1px solid var(--gray300);
   background: #fff;
   margin-bottom: 100px;
   margin-top: 60px;
 }
+
+.input-container:focus-within {
+  border: 1px solid var(--orange500);
+}
+
 .input-container > input {
-  color: var(--gray-600, #9aa1b9);
+  color: var(--gray600);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
-  font-weight: 400;
+  /* font-weight: 400; */
   width: 100%;
   line-height: 150%; /* 24px */
   border: none;

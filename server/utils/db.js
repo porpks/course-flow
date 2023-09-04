@@ -1,9 +1,16 @@
-import { MongoClient } from "mongodb";
+import { createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
 
-const connectionString = "mongodb://127.0.0.1:27017";
+dotenv.config();
 
-export const client = new MongoClient(connectionString, {
-  useUnifiedTopology: true,
-});
+const supabase = createClient(
+  process.env.VITE_SUPABASE_URL,
+  process.env.VITE_SUPABASE_ANON_KEY
+);
 
-export const db = client.db("practice-mongo");
+// async function getCountries() {
+//   const result = await supabase.from("countries").select();
+// }
+
+
+export default supabase;

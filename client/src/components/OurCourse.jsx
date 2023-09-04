@@ -1,4 +1,3 @@
-import Navbar from "./Navbar.jsx";
 import CourseItem from "./CourseItem";
 import "./ourCourse.css";
 
@@ -7,6 +6,7 @@ let courseData = [
     course_id: 1,
     coursetype: "Course",
     coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
+     
     coursename: "Service Design Essentials",
     coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
     coursesummary: "6 Lesson",
@@ -70,6 +70,7 @@ let courseData = [
     course_id: 8,
     coursetype: "Course",
     coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
+
     coursename: "Service Design Essentials",
     coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
     coursesummary: "6 Lesson",
@@ -79,6 +80,7 @@ let courseData = [
     course_id: 9,
     coursetype: "Course",
     coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
+
     coursename: "Software Developer",
     coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
     coursesummary: "6 Lesson",
@@ -111,7 +113,6 @@ let courseData = [
     coursesummary: "6 Lesson",
     totallearningtime: "6 Hours",
   },
-
 ];
 function OurCourse() {
   return (

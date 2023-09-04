@@ -1,12 +1,12 @@
-import Navbar from '../components/Navbar.jsx'
-import Register from '../components/Register.jsx'
+import Navbar from "../components/Navbar.jsx";
+import Register from "../components/Register.jsx";
 
 function RegisterPage() {
-    return (
-        <>
-            <Navbar />
-            <Register />
-        </>
-    )
+  return (
+    <>
+      <Navbar />
+      <Register />
+    </>
+  );
 }
-export default RegisterPage
+export default RegisterPage;

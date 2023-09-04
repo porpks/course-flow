@@ -4,19 +4,27 @@ import React, { useState } from "react";
 const AuthContext = React.createContext();
 
 function AuthProvider(props) {
-  const [state, setState] = useState("eiei")
-  const [registerData, setRegisterData] = useState({})
-  const [loginData, setLoginData] = useState({})
+  const [state, setState] = useState("eiei");
+  const [registerData, setRegisterData] = useState({});
+  const [loginData, setLoginData] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Set initial state to false
+
   return (
     <AuthContext.Provider
       value={{
-        state, setState,
-        registerData, setRegisterData,
-        loginData, setLoginData,
-      }}>
+        state,
+        setState,
+        isLoggedIn,
+        setIsLoggedIn,
+        registerData,
+        setRegisterData,
+        loginData,
+        setLoginData,
+      }}
+    >
       {props.children}
     </AuthContext.Provider>
-  )
+  );
 }
 const useAuth = () => React.useContext(AuthContext);
 
