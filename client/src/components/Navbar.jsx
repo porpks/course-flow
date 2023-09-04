@@ -25,9 +25,10 @@ function Navbar() {
   //   setIsLoggedIn(true); // Simulate a login action
   // };
 
-  const handleLogout = async () => {
+  const handleLogout = async (userId) => {
     setIsLoggedIn(false);
-    const result = await axios.get('http://localhost:4000/auth/logout')
+    const result = await axios.get(`http://localhost:4000/auth/logout/${userId}`)
+    console.log(result);
   };
 
   const LoginButton = ({ buttonText }) => {

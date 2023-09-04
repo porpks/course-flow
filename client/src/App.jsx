@@ -25,7 +25,6 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile/:id" element={<Profile />} />
-            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={null} />
           </Routes>
         </AuthProvider>

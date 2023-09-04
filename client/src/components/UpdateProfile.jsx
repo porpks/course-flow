@@ -1,22 +1,49 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import calendarIcon from "../../public/image/calendarIcon.svg";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function UpdateProfile() {
+  const params = useParams()
+
+  const [userData, setUserData] = useState({
+    name: "",
+    dateOfBirth: null,
+    educationBackground: "",
+    email: "",
+  })
+
+  const getData = async (params) => {
+    const result = await axios.get(`http://localhost:4000/profile/${params.id}`)
+    console.log(result.data.data);
+    setUserData(result.data.data)
+  }
+
+  useEffect(() => {
+    getData(params)
+  }, [])
+
   const initialValues = {
     name: "",
     dateOfBirth: null,
-    edu: "",
+    educationBackground: "",
     email: "",
   };
 
-  const onSubmit = (values) => {
-    console.log("Form data", values);
-    navigate("/");
+  const onSubmit = async (values) => {
+    const newUserData = {
+      name: values.name,
+      dateOfBirth: values.dateOfBirth,
+      educationBackground: values.educationBackground,
+      email: values.email,
+    }
+    await axios.put(`http://localhost:4000/profile/${params.id}`, newUserData)
+    navigate("/ourcourse");
   };
 
   const validate = (values) => {
@@ -38,8 +65,8 @@ function UpdateProfile() {
       }
     }
 
-    if (!values.edu) {
-      errors.edu = "Required!";
+    if (!values.educationBackground) {
+      errors.educationBackground = "Required!";
     }
 
     if (!values.email) {
@@ -154,11 +181,10 @@ function UpdateProfile() {
                   type="text"
                   id="name"
                   name="name"
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.name && formik.errors.name
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.name && formik.errors.name
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
                   placeholder="Enter Name and Lastname"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -192,7 +218,7 @@ function UpdateProfile() {
                         borderRadius: "0.5rem",
                         border:
                           formik.errors.dateOfBirth &&
-                          formik.touched.dateOfBirth
+                            formik.touched.dateOfBirth
                             ? "2px solid #9B2FAC"
                             : "2px solid #CBD5E0",
                         padding: "12px",
@@ -239,25 +265,24 @@ function UpdateProfile() {
               <div className="relative h-[100%]">
                 <input
                   type="text"
-                  id="edu"
-                  name="edu"
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.edu && formik.errors.edu
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
-                  placeholder="Enter Educational Background"
+                  id="educationBackground"
+                  name="educationBackground"
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.educationBackground && formik.errors.educationBackground
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
+                  placeholder="Enter educationBackgroundcational Background"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.edu}
+                  value={formik.values.educationBackground}
                 />
 
-                {formik.touched.edu && formik.errors.edu ? (
+                {formik.touched.educationBackground && formik.errors.educationBackground ? (
                   <div className="text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]">
-                    {formik.errors.edu}
+                    {formik.errors.educationBackground}
                   </div>
                 ) : null}
-                {formik.touched.edu && formik.errors.edu ? (
+                {formik.touched.educationBackground && formik.errors.educationBackground ? (
                   <img
                     src="../../public/Exclamation-circle.svg"
                     className="absolute right-[16px] top-[16px]"
@@ -271,11 +296,10 @@ function UpdateProfile() {
                   type="email"
                   id="email"
                   name="email"
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.email && formik.errors.email
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.email && formik.errors.email
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
                   placeholder="Enter Email"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
