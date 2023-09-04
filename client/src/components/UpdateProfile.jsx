@@ -145,6 +145,7 @@ function UpdateProfile() {
             </svg>
           </button>
         </div>
+
         <form onSubmit={formik.handleSubmit}>
           <div className="w-[453px] Body2">
             <div>Name</div>
