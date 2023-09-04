@@ -66,7 +66,7 @@ function UpdateProfile() {
     }
 
     if (!isValidEmail(email)) {
-      alert("e-mail : เป็นรูปแบบ email มี @ และ .com และต้องไม่ซ้ำกัน");
+      alert("e-mail : เป็นรูปแบบ email มี @ และ .com และต้องไม่ซ้ำกันนะ");
       return;
     }
 
