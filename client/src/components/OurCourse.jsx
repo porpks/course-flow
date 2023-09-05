@@ -1,120 +1,25 @@
 import CourseItem from "./CourseItem";
 import "./ourCourse.css";
+// import { courseData } from "../assets/courseData.jsx";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-let courseData = [
-  {
-    course_id: 1,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-     
-    coursename: "Service Design Essentials",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-  {
-    course_id: 2,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-    coursename: "Software Developer ",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-  {
-    course_id: 3,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-    coursename: "UX/UI Design Beginer",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-  {
-    course_id: 4,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-    coursename: "Product Design for Business",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-  {
-    course_id: 5,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-    coursename: "Service Design Essentials",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-  {
-    course_id: 6,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-    coursename: "Service Design Essentials",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-  {
-    course_id: 7,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-    coursename: "UX/UI Design Beginer",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-  {
-    course_id: 8,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-
-    coursename: "Service Design Essentials",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-  {
-    course_id: 9,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-
-    coursename: "Software Developer",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-  {
-    course_id: 10,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-    coursename: "Software Developer",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-  {
-    course_id: 11,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-    coursename: "Software Developer",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-  {
-    course_id: 12,
-    coursetype: "Course",
-    coverimg: "http://dummyimage.com/350x350.png/dddddd/000000",
-    coursename: "Software Developer",
-    coursedetail: "Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.",
-    coursesummary: "6 Lesson",
-    totallearningtime: "6 Hours",
-  },
-];
 function OurCourse() {
+  const [dataCourse, setDataCourse] = useState([]);
+  console.log(`DataCourse : ${dataCourse}`);
+  useEffect(() => {
+    getDataCourse();
+  }, []);
+
+  async function getDataCourse() {
+    try {
+      const result = await axios.get(`http://localhost:4000/ourcourse`);
+      console.log(result.data.data);
+      setDataCourse(result.data.data);
+    } catch (error) {
+      message: error;
+    }
+  }
   return (
     <div className="canvas-ourCourse">
       <div className="topSection">
@@ -131,11 +36,10 @@ function OurCourse() {
       </div>
       <div className="content-Section">
         <div className="card-container">
-          {courseData.map((item) => (
+          {dataCourse.map((item) => (
             <CourseItem
               key={item.course_id}
               count={item.course_id}
-              coursetype={item.coursetype}
               coverimg={item.coverimg}
               coursename={item.coursename}
               coursedetail={item.coursedetail}
