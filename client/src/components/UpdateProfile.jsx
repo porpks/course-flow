@@ -50,15 +50,15 @@ function UpdateProfile() {
   };
 
   useEffect(() => {
-    getData(params);
+    // getData(params);
   }, []);
 
   const onSubmit = async (values) => {
     const newUserData = {
-      name: values.name,
-      dateOfBirth: values.dateOfBirth,
-      educationBackground: values.educationBackground,
-      email: values.email,
+      full_name: formik.values.full_name,
+      dateofbirth: formik.values.dateofbirth,
+      edu_background: formik.values.edu_background,
+      email: formik.values.email,
       avatar: avatar,
     };
 
