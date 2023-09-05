@@ -37,11 +37,35 @@ authRouter.post("/register", async (req, res) => {
 })
 
 authRouter.post("/login", async (req, res) => {
-    const data = req.body
-    return res.json({
-        message: "login",
-        data: data
-    })
+    
+    const loginData = {
+        email: req.body.email,
+        password: req.body.password
+    }
+    console.log(req.body)
+    console.log(loginData)
+
+
+    try {
+       await supabase.auth.signInWithPassword({
+            email: loginData.email,
+            password: loginData.password,
+          })
+          try {
+            const { data, error } = await supabase.from('register').select('user_id').eq('email',loginData.email)
+              res.json({data: data})
+              if (error) {
+                return res.status(500).json({ error: "Supabase query failed" });
+              }
+              
+        } catch (error) {
+            res.json({error: error})  
+        }   
+    } catch (error) {
+        res.json({ error: error})
+    }
+    
+    
 })
 
 authRouter.get("/logout/:userId", async (req, res) => {

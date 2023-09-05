@@ -1,7 +1,12 @@
 import { Router } from "express";
-import supabase from "../utils/db.js";
+import multer from "multer";
+import supabase from '../utils/db.js'
+import { v4 as uuidv4 } from 'uuid';
 
 const profileRouter = Router();
+
+const multerUpload = multer({});
+const avatarUpload = multerUpload.fields([{ name: "avatar", maxCount: 1 }]);
 
 profileRouter.get("/:userId", async (req, res) => {
   try {
@@ -42,7 +47,7 @@ profileRouter.get("/:userId", async (req, res) => {
   }
 });
 
-profileRouter.put("/:userId", async (req, res) => {
+profileRouter.put("/:userId",avatarUpload, async (req, res) => {
   const userId = req.params.userId;
 
   if (
@@ -77,6 +82,23 @@ profileRouter.put("/:userId", async (req, res) => {
       dateofbirth: req.body.dateofbirth,
       edu_background: req.body.edu_background,
       email: req.body.email,
+
+    const file = req.files.avatar[0]
+    const fileImage = new Blob([file.buffer], { type: file.mimetype })
+    const fileName = file.originalname;
+
+    const { data, error } = await supabase.storage
+        .from('test-avatar')
+        .upload(`profile/${uuidv4()}${fileName}`, fileImage);
+
+    if (error) {
+        console.error(error);
+    } else {
+        console.log('File uploaded successfully:', data);
+    }
+    return res.json({
+        message: `user ${userId}`,
+
     })
     .eq("user_id", userId);
   return res.json({

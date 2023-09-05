@@ -9,7 +9,7 @@ function CourseItem(props) {
       </div>
       <div className="bodyCard ">
         <div className="border border-sky-500">
-          <p className="Body3 text-[--orange500]">{props.coursetype}</p>
+          <p className="Body3 text-[--orange500]">Course</p>
           <h2 className="H3 text-[#000] py-[8px]">{props.coursename}</h2>
           <p className="Body2 text-[--gray700]">{props.coursedetail}</p>
         </div>
@@ -20,13 +20,13 @@ function CourseItem(props) {
           <div className="lesson-count-container">
             <img src="../../public/image/lesson-count-icon.svg" alt="" />
             <p className="courseSummary Body2 text-[--gray700] mx-[8px] ">
-              {props.coursesummary}
+              {`${props.coursesummary}  Lesson`}
             </p>
           </div>
           <div className="learningTime-container">
             <img src="../../public/image/learningtime-icon.svg" alt="" />
             <p className="Body2 text-[--gray700] mx-[8px]">
-              {props.totallearningtime}
+              {`${props.totallearningtime}  Hours`}
             </p>
           </div>
         </div>
