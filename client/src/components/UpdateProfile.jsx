@@ -14,44 +14,32 @@ function UpdateProfile() {
   const params = useParams();
 
   const [avatar, setAvatar] = useState({});
-  const [userData, setUserData] = useState({
-    full_name: "",
-    dateofbirth: null,
-    edu_background: "",
-    email: "",
-  });
 
-  const [check, setCheck] = useState(false);
-
-  // const initialValues = {
-  //   full_name: userData.full_name,
-  //   dateofbirth: userData.dateofbirth,
-  //   edu_background: userData.edu_background,
-  //   email: userData.full_name,
-  // };
-
-  let initialValues = {
-    full_name: "",
-    dateofbirth: "",
-    edu_background: "",
-    email: "",
-  };
-
-  const getData = async (params) => {
+  const getData = async () => {
     const result = await axios.get(
       `http://localhost:4000/profile/${params.id}`
     );
-    setUserData(result.data.data);
-    console.log(result.data.data);
+
+    const initialValues = {
+      full_name: result.data.data.full_name,
+      dateofbirth: dayjs(result.data.data.dateofbirth) || "",
+      edu_background: result.data.data.edu_background,
+      email: result.data.data.email,
+    };
+
+    formik.setValues(initialValues);
   };
 
   const handleFileChange = (event) => {
     setAvatar(event.target.files[0]);
   };
 
-  useEffect(() => {
-    // getData(params);
-  }, []);
+  const initialValues = {
+    full_name: "",
+    dateofbirth: null,
+    edu_background: "",
+    email: "",
+  };
 
   const onSubmit = async (values) => {
     const newUserData = {
@@ -112,7 +100,7 @@ function UpdateProfile() {
     formik.handleChange({
       target: {
         name: "dateofbirth",
-        value: timestamp,
+        value: dayjs(timestamp),
         type: "date",
       },
     });
@@ -120,6 +108,10 @@ function UpdateProfile() {
 
   const navigate = useNavigate();
   const today = dayjs();
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <div className="relative flex justify-center w-[100%]">
@@ -131,7 +123,7 @@ function UpdateProfile() {
             height="11"
             viewBox="0 0 11 11"
             fill="none">
-            <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" stroke-width="3" />
+            <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" strokeWidth="3" />
           </svg>
         </div>
 
@@ -167,7 +159,7 @@ function UpdateProfile() {
             <path
               d="M11.3581 19.9099L37.1499 15.9774L27.6597 40.28L11.3581 19.9099Z"
               stroke="#FBAA1C"
-              stroke-width="3"
+              strokeWidth="3"
             />
           </svg>
         </div>
@@ -189,9 +181,9 @@ function UpdateProfile() {
                 <path
                   d="M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764"
                   stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </button>
@@ -282,6 +274,7 @@ function UpdateProfile() {
                     maxDate={today}
                     // showDaysOutsideCurrentMonth
                     value={formik.values.dateofbirth}
+                    // onChange={formik.handleChange}
                     onChange={handleDatePickerChange}
                     onBlur={formik.handleBlur}
                   />
@@ -312,7 +305,7 @@ function UpdateProfile() {
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
                   }`}
-                  placeholder="Enter educationBackgroundcational Background"
+                  placeholder="Enter Educational Background"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.edu_background}
