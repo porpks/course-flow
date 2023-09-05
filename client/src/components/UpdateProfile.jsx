@@ -8,7 +8,6 @@ import calendarIcon from "../../public/image/calendarIcon.svg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
-import supabase from "../utils/db.js";
 
 function UpdateProfile() {
   const { userID, setUserID } = useAuth();
@@ -23,7 +22,6 @@ function UpdateProfile() {
   });
 
   const handleFileChange = (event) => {
-    // console.log(event.target.files[0]);
     setAvatar(event.target.files[0])
   }
 
@@ -53,25 +51,13 @@ function UpdateProfile() {
       email: values.email,
       avatar: avatar
     };
+
+
     await axios.put(`http://localhost:4000/profile/${params.id}`, newUserData,
       { headers: { "Content-Type": "multipart/form-data" }, }
     );
 
-    // console.log(avatar);
-    // const fileName = avatar.name.split(".")[0]
-    // const fileExt = avatar.name.split(".")[1]
-
-    // const { data, error } = await supabase.storage
-    //   .from('test-avatar') // Replace with your storage bucket name
-    //   .upload(`proflies/${fileName}.${fileExt}`, avatar);
-
-    // if (error) {
-    //   console.error(error);
-    // } else {
-    //   console.log('File uploaded successfully:', data);
-    // }
-
-    // navigate("/ourcourse");
+    navigate("/ourcourse");
   };
 
   const validate = (values) => {
