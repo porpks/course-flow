@@ -13,7 +13,8 @@ function UpdateProfile() {
   const { userID, setUserID } = useAuth();
   const params = useParams();
 
-  const [avatar, setAvatar] = useState({});
+  const [avatar, setAvatar] = useState({})
+  const [avatarUrl, setAvatarUrl] = useState("")
   const [userData, setUserData] = useState({
     full_name: "",
     dateofbirth: null,
@@ -36,6 +37,15 @@ function UpdateProfile() {
     edu_background: "",
     email: "",
   };
+  const handleFileChange = (event) => {
+    setAvatar(event.target.files[0])
+    setAvatarUrl(URL.createObjectURL(event.target.files[0]))
+  }
+
+  const handleRemoveImage = () => {
+    setAvatar({})
+    setAvatarUrl("")
+  }
 
   const getData = async (params) => {
     const result = await axios.get(
@@ -45,9 +55,6 @@ function UpdateProfile() {
     console.log(result.data.data);
   };
 
-  const handleFileChange = (event) => {
-    setAvatar(event.target.files[0]);
-  };
 
   useEffect(() => {
     // getData(params);
@@ -176,31 +183,34 @@ function UpdateProfile() {
         <div className="flex justify-between w-[930px] h-[521px] bg-cover">
           <div className="relative h-fit">
             <img
-              src="../public/image/user_profile.png"
-              className="relative w-[358px] h-[358px] object-cover	rounded-2xl	"
+              src={avatarUrl || '../public/image/user_profile.png'}
+              className='relative w-[358px] h-[358px] object-cover	rounded-2xl	'
             />
-            <button className="flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                viewBox="0 0 22 22"
-                fill="none">
-                <path
-                  d="M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </button>
+            {avatarUrl ?
+              <button className='flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer'
+                onClick={handleRemoveImage}
+              >
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='22'
+                  height='22'
+                  viewBox='0 0 22 22'
+                  fill='none'>
+                  <path
+                    d='M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764'
+                    stroke='white'
+                    stroke-width='1.5'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  />
+                </svg>
+              </button> :
+              null}
 
-            <div className="absolute w-1/2 h-1/2 top-1/4 left-1/4 rounded-full flex justify-center items-center hover:bg-white opacity-50 group">
-              <label
-                htmlFor="upload"
-                className="hidden group-hover:block w-full h-full text-center text-xl pt-20 rounded-full">
-                Upload Avatar
+            <div className="absolute w-[180px] h-[180px] top-[89px] left-[89px] rounded-full flex justify-center items-center hover:bg-[rgba(264,264,264,0.5)] border-[--blue500] border-[3px] hover:border-dashed group">
+              <label htmlFor="upload" className="hidden group-hover:block w-full h-full pt-[45px] text-[--blue500] text-center text-xl rounded-full cursor-pointer">
+                <div className="text-[48px] font-extralight mb-3">+</div>
+                <div className="text-[20px] font-medium">Upload Image</div>
                 <input
                   id="upload"
                   name="avatar"
@@ -219,11 +229,10 @@ function UpdateProfile() {
                   type="text"
                   id="full_name"
                   name="full_name"
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.full_name && formik.errors.full_name
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.full_name && formik.errors.full_name
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
                   placeholder="Enter Name and Lastname"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -257,7 +266,7 @@ function UpdateProfile() {
                         borderRadius: "0.5rem",
                         border:
                           formik.errors.dateofbirth &&
-                          formik.touched.dateofbirth
+                            formik.touched.dateofbirth
                             ? "2px solid #9B2FAC"
                             : "2px solid #CBD5E0",
                         padding: "12px",
@@ -306,12 +315,11 @@ function UpdateProfile() {
                   type="text"
                   id="edu_background"
                   name="edu_background"
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.edu_background &&
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.edu_background &&
                     formik.errors.edu_background
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
                   placeholder="Enter educationBackgroundcational Background"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -319,13 +327,13 @@ function UpdateProfile() {
                 />
 
                 {formik.touched.edu_background &&
-                formik.errors.edu_background ? (
+                  formik.errors.edu_background ? (
                   <div className="text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]">
                     {formik.errors.edu_background}
                   </div>
                 ) : null}
                 {formik.touched.edu_background &&
-                formik.errors.edu_background ? (
+                  formik.errors.edu_background ? (
                   <img
                     src="../../public/Exclamation-circle.svg"
                     className="absolute right-[16px] top-[16px]"
@@ -339,11 +347,10 @@ function UpdateProfile() {
                   type="email"
                   id="email"
                   name="email"
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.email && formik.errors.email
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.email && formik.errors.email
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
                   placeholder="Enter Email"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
