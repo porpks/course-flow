@@ -15,7 +15,7 @@ import CopyIcon from "../assets/CopyIcon.jsx";
 import StarIcon from "../assets/StarIcon.jsx";
 import LogoutIcon from "../assets/LogoutIcon.jsx";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'
+import axios from "axios";
 
 function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useAuth(); // Set initial state to false
@@ -27,7 +27,9 @@ function Navbar() {
 
   const handleLogout = async (userId) => {
     setIsLoggedIn(false);
-    const result = await axios.get(`http://localhost:4000/auth/logout/${userId}`)
+    const result = await axios.get(
+      `http://localhost:4000/auth/logout/${userId}`
+    );
     console.log(result);
   };
 
@@ -168,7 +170,7 @@ function Navbar() {
                 navigate("/ourcourse");
               }}
             >
-              Our Course
+              Our Course 1
             </a>
             {isLoggedIn ? (
               <div className="flex flex-row justify-center items-center space-x-3">
