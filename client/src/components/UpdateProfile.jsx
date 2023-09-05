@@ -8,12 +8,13 @@ import calendarIcon from "../../public/image/calendarIcon.svg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
+import supabase from "../utils/db.js";
 
 function UpdateProfile() {
   const { userID, setUserID } = useAuth();
-  console.log(userID);
   const params = useParams();
 
+  const [avatar, setAvatar] = useState({})
   const [userData, setUserData] = useState({
     name: "",
     dateOfBirth: null,
@@ -21,11 +22,15 @@ function UpdateProfile() {
     email: "",
   });
 
+  const handleFileChange = (event) => {
+    // console.log(event.target.files[0]);
+    setAvatar(event.target.files[0])
+  }
+
   const getData = async (params) => {
     const result = await axios.get(
       `http://localhost:4000/profile/${params.id}`
     );
-    console.log(result.data.data);
     setUserData(result.data.data);
   };
 
@@ -46,9 +51,27 @@ function UpdateProfile() {
       dateOfBirth: values.dateOfBirth,
       educationBackground: values.educationBackground,
       email: values.email,
+      avatar: avatar
     };
-    await axios.put(`http://localhost:4000/profile/${params.id}`, newUserData);
-    navigate("/ourcourse");
+    await axios.put(`http://localhost:4000/profile/${params.id}`, newUserData,
+      { headers: { "Content-Type": "multipart/form-data" }, }
+    );
+
+    // console.log(avatar);
+    // const fileName = avatar.name.split(".")[0]
+    // const fileExt = avatar.name.split(".")[1]
+
+    // const { data, error } = await supabase.storage
+    //   .from('test-avatar') // Replace with your storage bucket name
+    //   .upload(`proflies/${fileName}.${fileExt}`, avatar);
+
+    // if (error) {
+    //   console.error(error);
+    // } else {
+    //   console.log('File uploaded successfully:', data);
+    // }
+
+    // navigate("/ourcourse");
   };
 
   const validate = (values) => {
@@ -156,7 +179,7 @@ function UpdateProfile() {
 
         <h2 className='H2 pt-[100px] pb-[72px]'>Profile</h2>
         <div className='flex justify-between w-[930px] h-[521px] bg-cover'>
-          <div className='relative'>
+          <div className='relative h-fit'>
             <img
               src='../public/image/user_profile.png'
               className='relative w-[358px] h-[358px] object-cover	rounded-2xl	'
@@ -177,6 +200,21 @@ function UpdateProfile() {
                 />
               </svg>
             </button>
+
+            <div className="absolute w-1/2 h-1/2 top-1/4 left-1/4 rounded-full flex justify-center items-center hover:bg-white opacity-50 group">
+              <label htmlFor="upload" className="hidden group-hover:block w-full h-full text-center text-xl pt-20 rounded-full">
+                Upload Avatar
+                <input
+                  id="upload"
+                  name="avatar"
+                  type="file"
+                  onChange={(e) => handleFileChange(e)}
+                  hidden
+                />
+              </label>
+            </div>
+
+
           </div>
           <form onSubmit={formik.handleSubmit}>
             <div className='w-[453px] Body2'>
@@ -186,11 +224,10 @@ function UpdateProfile() {
                   type='text'
                   id='name'
                   name='name'
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.name && formik.errors.name
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.name && formik.errors.name
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
                   placeholder='Enter Name and Lastname'
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -224,7 +261,7 @@ function UpdateProfile() {
                         borderRadius: "0.5rem",
                         border:
                           formik.errors.dateOfBirth &&
-                          formik.touched.dateOfBirth
+                            formik.touched.dateOfBirth
                             ? "2px solid #9B2FAC"
                             : "2px solid #CBD5E0",
                         padding: "12px",
@@ -273,12 +310,11 @@ function UpdateProfile() {
                   type='text'
                   id='educationBackground'
                   name='educationBackground'
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.educationBackground &&
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.educationBackground &&
                     formik.errors.educationBackground
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
                   placeholder='Enter educationBackgroundcational Background'
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -286,13 +322,13 @@ function UpdateProfile() {
                 />
 
                 {formik.touched.educationBackground &&
-                formik.errors.educationBackground ? (
+                  formik.errors.educationBackground ? (
                   <div className='text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]'>
                     {formik.errors.educationBackground}
                   </div>
                 ) : null}
                 {formik.touched.educationBackground &&
-                formik.errors.educationBackground ? (
+                  formik.errors.educationBackground ? (
                   <img
                     src='../../public/Exclamation-circle.svg'
                     className='absolute right-[16px] top-[16px]'
@@ -306,11 +342,10 @@ function UpdateProfile() {
                   type='email'
                   id='email'
                   name='email'
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.email && formik.errors.email
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.email && formik.errors.email
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
                   placeholder='Enter Email'
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
