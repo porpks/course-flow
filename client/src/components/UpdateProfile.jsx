@@ -10,16 +10,41 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 
 function UpdateProfile() {
+
   const { userID, setUserID } = useAuth();
   const params = useParams();
 
   const [avatar, setAvatar] = useState({})
   const [userData, setUserData] = useState({
-    name: "",
-    dateOfBirth: null,
-    educationBackground: "",
+    full_name: "",
+    dateofbirth: null,
+    edu_background: "",
     email: "",
   });
+
+  const [check, setCheck] = useState(false);
+
+  // const initialValues = {
+  //   full_name: userData.full_name,
+  //   dateofbirth: userData.dateofbirth,
+  //   edu_background: userData.edu_background,
+  //   email: userData.full_name,
+  // };
+
+  let initialValues = {
+    full_name: "",
+    dateofbirth: "",
+    edu_background: "",
+    email: "",
+  };
+
+  const getData = async (params) => {
+    const result = await axios.get(
+      `http://localhost:4000/profile/${params.id}`
+    );
+    setUserData(result.data.data);
+    console.log(result.data.data);
+  };
 
   const handleFileChange = (event) => {
     setAvatar(event.target.files[0])
@@ -35,13 +60,6 @@ function UpdateProfile() {
   useEffect(() => {
     getData(params);
   }, []);
-
-  const initialValues = {
-    name: "",
-    dateOfBirth: null,
-    educationBackground: "",
-    email: "",
-  };
 
   const onSubmit = async (values) => {
     const newUserData = {
@@ -63,24 +81,24 @@ function UpdateProfile() {
   const validate = (values) => {
     let errors = {};
 
-    if (!values.name) {
-      errors.name = "Required!";
-    } else if (!/^[A-Z' -]+$/i.test(values.name)) {
-      errors.name = `Name must be included (A-Z) , (a-z) and (' , -)z`;
+    if (!values.full_name) {
+      errors.full_name = "Required!";
+    } else if (!/^[A-Z' -]+$/i.test(values.full_name)) {
+      errors.full_name = `Name must be included (A-Z) , (a-z) and (' , -)z`;
     }
 
-    if (!values.dateOfBirth) {
-      errors.dateOfBirth = "Required!";
+    if (!values.dateofbirth) {
+      errors.dateofbirth = "Required!";
     } else {
       const currentDate = new Date();
-      const selectedDate = new Date(values.dateOfBirth);
+      const selectedDate = new Date(values.dateofbirth);
       if (selectedDate > currentDate) {
-        errors.dateOfBirth = "Date must be in the past";
+        errors.dateofbirth = "Date must be in the past";
       }
     }
 
-    if (!values.educationBackground) {
-      errors.educationBackground = "Required!";
+    if (!values.edu_background) {
+      errors.edu_background = "Required!";
     }
 
     if (!values.email) {
@@ -102,7 +120,7 @@ function UpdateProfile() {
     const timestamp = new Date(newValue);
     formik.handleChange({
       target: {
-        name: "dateOfBirth",
+        name: "dateofbirth",
         value: timestamp,
         type: "date",
       },
@@ -207,25 +225,29 @@ function UpdateProfile() {
               <div>Name</div>
               <div className='relative h-[100%]'>
                 <input
-                  type='text'
-                  id='name'
-                  name='name'
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.name && formik.errors.name
-                    ? " border-[#9B2FAC]"
-                    : " border-[--gray500]"
-                    }`}
-                  placeholder='Enter Name and Lastname'
+
+                  type="text"
+                  id="full_name"
+                  name="full_name"
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
+                    formik.touched.full_name && formik.errors.full_name
+                      ? " border-[#9B2FAC]"
+                      : " border-[--gray500]"
+                  }`}
+                  placeholder="Enter Name and Lastname"
+
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.name}
+                  value={formik.values.full_name}
                 />
 
-                {formik.touched.name && formik.errors.name ? (
-                  <div className='text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]'>
-                    {formik.errors.name}
+                {formik.touched.full_name && formik.errors.full_name ? (
+                  <div className="text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]">
+                    {formik.errors.full_name}
+
                   </div>
                 ) : null}
-                {formik.touched.name && formik.errors.name ? (
+                {formik.touched.full_name && formik.errors.full_name ? (
                   <img
                     src='../../public/Exclamation-circle.svg'
                     className='absolute right-[16px] top-[16px]'
@@ -237,8 +259,10 @@ function UpdateProfile() {
               <div className='relative h-[100%]'>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    id='dateOfBirth'
-                    name='dateOfBirth'
+
+                    id="dateofbirth"
+                    name="dateofbirth"
+
                     slotProps={{ popper: { placement: "bottom-end" } }}
                     sx={{
                       width: 453,
@@ -246,8 +270,8 @@ function UpdateProfile() {
                         height: 48,
                         borderRadius: "0.5rem",
                         border:
-                          formik.errors.dateOfBirth &&
-                            formik.touched.dateOfBirth
+                          formik.errors.dateofbirth &&
+                          formik.touched.dateofbirth
                             ? "2px solid #9B2FAC"
                             : "2px solid #CBD5E0",
                         padding: "12px",
@@ -271,18 +295,20 @@ function UpdateProfile() {
                     format='DD-MM-YYYY'
                     maxDate={today}
                     // showDaysOutsideCurrentMonth
-                    value={formik.values.dateOfBirth}
+                    value={formik.values.dateofbirth}
                     onChange={handleDatePickerChange}
                     onBlur={formik.handleBlur}
                   />
                 </LocalizationProvider>
 
-                {formik.touched.dateOfBirth && formik.errors.dateOfBirth ? (
-                  <div className='text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]'>
-                    {formik.errors.dateOfBirth}
+
+                {formik.touched.dateofbirth && formik.errors.dateofbirth ? (
+                  <div className="text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]">
+                    {formik.errors.dateofbirth}
+
                   </div>
                 ) : null}
-                {formik.touched.dateOfBirth && formik.errors.dateOfBirth ? (
+                {formik.touched.dateofbirth && formik.errors.dateofbirth ? (
                   <img
                     src='../../public/Exclamation-circle.svg'
                     className='absolute right-[47px] top-[16px]'
@@ -293,28 +319,32 @@ function UpdateProfile() {
               <div>Educational Background</div>
               <div className='relative h-[100%]'>
                 <input
-                  type='text'
-                  id='educationBackground'
-                  name='educationBackground'
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.educationBackground &&
-                    formik.errors.educationBackground
-                    ? " border-[#9B2FAC]"
-                    : " border-[--gray500]"
-                    }`}
-                  placeholder='Enter educationBackgroundcational Background'
+                  type="text"
+                  id="edu_background"
+                  name="edu_background"
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
+                    formik.touched.edu_background &&
+                    formik.errors.edu_background
+                      ? " border-[#9B2FAC]"
+                      : " border-[--gray500]"
+                  }`}
+                  placeholder="Enter educationBackgroundcational Background"
+
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.educationBackground}
+                  value={formik.values.edu_background}
                 />
 
-                {formik.touched.educationBackground &&
-                  formik.errors.educationBackground ? (
-                  <div className='text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]'>
-                    {formik.errors.educationBackground}
+
+                {formik.touched.edu_background &&
+                formik.errors.edu_background ? (
+                  <div className="text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]">
+                    {formik.errors.edu_background}
                   </div>
                 ) : null}
-                {formik.touched.educationBackground &&
-                  formik.errors.educationBackground ? (
+                {formik.touched.edu_background &&
+                formik.errors.edu_background ? (
+
                   <img
                     src='../../public/Exclamation-circle.svg'
                     className='absolute right-[16px] top-[16px]'
@@ -325,14 +355,17 @@ function UpdateProfile() {
               <div>Email</div>
               <div className='relative'>
                 <input
-                  type='email'
-                  id='email'
-                  name='email'
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.email && formik.errors.email
-                    ? " border-[#9B2FAC]"
-                    : " border-[--gray500]"
-                    }`}
-                  placeholder='Enter Email'
+
+                  type="email"
+                  id="email"
+                  name="email"
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
+                    formik.touched.email && formik.errors.email
+                      ? " border-[#9B2FAC]"
+                      : " border-[--gray500]"
+                  }`}
+                  placeholder="Enter Email"
+
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.email}
