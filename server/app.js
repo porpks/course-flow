@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import authRouter from "./apps/auth.js";
 import profileRouter from "./apps/profile.js";
-// import postRouter from "./apps/posts.js";
+import courseRouter from "./apps/course.js";
 // import { client } from "./utils/db.js";
 // import dotenv from "dotenv";
 
@@ -17,6 +17,7 @@ async function init() {
 
   app.use("/auth", authRouter);
   app.use("/profile", profileRouter);
+  app.use("/ourcourse", courseRouter);
   //   app.use("/posts", postRouter);
 
   app.get("/", (req, res) => {

@@ -11,67 +11,93 @@ import { useAuth } from "../contexts/AuthContext";
 
 function UpdateProfile() {
   const { userID, setUserID } = useAuth();
-  console.log(userID);
   const params = useParams();
 
+  const [image, setImage] = useState("");
+
+  const [avatar, setAvatar] = useState({});
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [userData, setUserData] = useState({
-    name: "",
-    dateOfBirth: null,
-    educationBackground: "",
+    full_name: "",
+    dateofbirth: null,
+    edu_background: "",
     email: "",
   });
+
+  let initialValues = {
+    full_name: "",
+    dateofbirth: "",
+    edu_background: "",
+    email: "",
+  };
+  const handleFileChange = (event) => {
+    setAvatar(event.target.files[0]);
+    setAvatarUrl(URL.createObjectURL(event.target.files[0]));
+  };
+
+  const handleRemoveImage = async () => {
+    setAvatar({});
+    setAvatarUrl("");
+    await axios.put(`http://localhost:4000/profile/delete/${params.id}`);
+  };
 
   const getData = async (params) => {
     const result = await axios.get(
       `http://localhost:4000/profile/${params.id}`
     );
-    console.log(result.data.data);
     setUserData(result.data.data);
+    console.log(result.data.data);
+  };
+
+  const getDataImage = async () => {
+    const imageUrl = await axios.get(
+      `http://localhost:4000/profile/image/${params.id}`
+    );
+    setImage(imageUrl.data);
   };
 
   useEffect(() => {
-    getData(params);
-  }, []);
-
-  const initialValues = {
-    name: "",
-    dateOfBirth: null,
-    educationBackground: "",
-    email: "",
-  };
+    // getData(params);.
+    getDataImage();
+  }, [image]);
 
   const onSubmit = async (values) => {
     const newUserData = {
-      name: values.name,
-      dateOfBirth: values.dateOfBirth,
-      educationBackground: values.educationBackground,
-      email: values.email,
+      full_name: formik.values.full_name,
+      dateofbirth: formik.values.dateofbirth,
+      edu_background: formik.values.edu_background,
+      email: formik.values.email,
+      avatar: avatar,
     };
-    await axios.put(`http://localhost:4000/profile/${params.id}`, newUserData);
-    navigate("/ourcourse");
+
+    await axios.put(`http://localhost:4000/profile/${params.id}`, newUserData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    // navigate("/ourcourse");
   };
 
   const validate = (values) => {
     let errors = {};
 
-    if (!values.name) {
-      errors.name = "Required!";
-    } else if (!/^[A-Z' -]+$/i.test(values.name)) {
-      errors.name = `Name must be included (A-Z) , (a-z) and (' , -)z`;
+    if (!values.full_name) {
+      errors.full_name = "Required!";
+    } else if (!/^[A-Z' -]+$/i.test(values.full_name)) {
+      errors.full_name = `Name must be included (A-Z) , (a-z) and (' , -)z`;
     }
 
-    if (!values.dateOfBirth) {
-      errors.dateOfBirth = "Required!";
+    if (!values.dateofbirth) {
+      errors.dateofbirth = "Required!";
     } else {
       const currentDate = new Date();
-      const selectedDate = new Date(values.dateOfBirth);
+      const selectedDate = new Date(values.dateofbirth);
       if (selectedDate > currentDate) {
-        errors.dateOfBirth = "Date must be in the past";
+        errors.dateofbirth = "Date must be in the past";
       }
     }
 
-    if (!values.educationBackground) {
-      errors.educationBackground = "Required!";
+    if (!values.edu_background) {
+      errors.edu_background = "Required!";
     }
 
     if (!values.email) {
@@ -93,7 +119,7 @@ function UpdateProfile() {
     const timestamp = new Date(newValue);
     formik.handleChange({
       target: {
-        name: "dateOfBirth",
+        name: "dateofbirth",
         value: timestamp,
         type: "date",
       },
@@ -156,27 +182,53 @@ function UpdateProfile() {
 
         <h2 className='H2 pt-[100px] pb-[72px]'>Profile</h2>
         <div className='flex justify-between w-[930px] h-[521px] bg-cover'>
-          <div className='relative'>
+          <div className='relative h-fit'>
             <img
-              src='../public/image/user_profile.png'
+              src={
+                avatarUrl
+                  ? avatarUrl
+                  : image
+                  ? image
+                  : "../public/image/user_profile.png"
+              }
               className='relative w-[358px] h-[358px] object-cover	rounded-2xl	'
             />
-            <button className='flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='22'
-                height='22'
-                viewBox='0 0 22 22'
-                fill='none'>
-                <path
-                  d='M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764'
-                  stroke='white'
-                  stroke-width='1.5'
-                  stroke-linecap='round'
-                  stroke-linejoin='round'
+            {avatarUrl ? (
+              <button
+                className='flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer'
+                onClick={handleRemoveImage}>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='22'
+                  height='22'
+                  viewBox='0 0 22 22'
+                  fill='none'>
+                  <path
+                    d='M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764'
+                    stroke='white'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+              </button>
+            ) : null}
+
+            <div className='absolute w-[180px] h-[180px] top-[89px] left-[89px] rounded-full flex justify-center items-center hover:bg-[rgba(264,264,264,0.5)] border-[--blue500] border-[3px] hover:border-dashed group'>
+              <label
+                htmlFor='upload'
+                className='hidden group-hover:block w-full h-full pt-[45px] text-[--blue500] text-center text-xl rounded-full cursor-pointer'>
+                <div className='text-[48px] font-extralight mb-3'>+</div>
+                <div className='text-[20px] font-medium'>Upload Image</div>
+                <input
+                  id='upload'
+                  name='avatar'
+                  type='file'
+                  onChange={(e) => handleFileChange(e)}
+                  hidden
                 />
-              </svg>
-            </button>
+              </label>
+            </div>
           </div>
           <form onSubmit={formik.handleSubmit}>
             <div className='w-[453px] Body2'>
@@ -184,25 +236,25 @@ function UpdateProfile() {
               <div className='relative h-[100%]'>
                 <input
                   type='text'
-                  id='name'
-                  name='name'
+                  id='full_name'
+                  name='full_name'
                   className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.name && formik.errors.name
+                    formik.touched.full_name && formik.errors.full_name
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
                   }`}
                   placeholder='Enter Name and Lastname'
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.name}
+                  value={formik.values.full_name}
                 />
 
-                {formik.touched.name && formik.errors.name ? (
+                {formik.touched.full_name && formik.errors.full_name ? (
                   <div className='text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]'>
-                    {formik.errors.name}
+                    {formik.errors.full_name}
                   </div>
                 ) : null}
-                {formik.touched.name && formik.errors.name ? (
+                {formik.touched.full_name && formik.errors.full_name ? (
                   <img
                     src='../../public/Exclamation-circle.svg'
                     className='absolute right-[16px] top-[16px]'
@@ -214,8 +266,8 @@ function UpdateProfile() {
               <div className='relative h-[100%]'>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    id='dateOfBirth'
-                    name='dateOfBirth'
+                    id='dateofbirth'
+                    name='dateofbirth'
                     slotProps={{ popper: { placement: "bottom-end" } }}
                     sx={{
                       width: 453,
@@ -223,8 +275,8 @@ function UpdateProfile() {
                         height: 48,
                         borderRadius: "0.5rem",
                         border:
-                          formik.errors.dateOfBirth &&
-                          formik.touched.dateOfBirth
+                          formik.errors.dateofbirth &&
+                          formik.touched.dateofbirth
                             ? "2px solid #9B2FAC"
                             : "2px solid #CBD5E0",
                         padding: "12px",
@@ -248,18 +300,18 @@ function UpdateProfile() {
                     format='DD-MM-YYYY'
                     maxDate={today}
                     // showDaysOutsideCurrentMonth
-                    value={formik.values.dateOfBirth}
+                    value={formik.values.dateofbirth}
                     onChange={handleDatePickerChange}
                     onBlur={formik.handleBlur}
                   />
                 </LocalizationProvider>
 
-                {formik.touched.dateOfBirth && formik.errors.dateOfBirth ? (
+                {formik.touched.dateofbirth && formik.errors.dateofbirth ? (
                   <div className='text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]'>
-                    {formik.errors.dateOfBirth}
+                    {formik.errors.dateofbirth}
                   </div>
                 ) : null}
-                {formik.touched.dateOfBirth && formik.errors.dateOfBirth ? (
+                {formik.touched.dateofbirth && formik.errors.dateofbirth ? (
                   <img
                     src='../../public/Exclamation-circle.svg'
                     className='absolute right-[47px] top-[16px]'
@@ -271,28 +323,28 @@ function UpdateProfile() {
               <div className='relative h-[100%]'>
                 <input
                   type='text'
-                  id='educationBackground'
-                  name='educationBackground'
+                  id='edu_background'
+                  name='edu_background'
                   className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.educationBackground &&
-                    formik.errors.educationBackground
+                    formik.touched.edu_background &&
+                    formik.errors.edu_background
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
                   }`}
                   placeholder='Enter educationBackgroundcational Background'
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.educationBackground}
+                  value={formik.values.edu_background}
                 />
 
-                {formik.touched.educationBackground &&
-                formik.errors.educationBackground ? (
+                {formik.touched.edu_background &&
+                formik.errors.edu_background ? (
                   <div className='text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]'>
-                    {formik.errors.educationBackground}
+                    {formik.errors.edu_background}
                   </div>
                 ) : null}
-                {formik.touched.educationBackground &&
-                formik.errors.educationBackground ? (
+                {formik.touched.edu_background &&
+                formik.errors.edu_background ? (
                   <img
                     src='../../public/Exclamation-circle.svg'
                     className='absolute right-[16px] top-[16px]'
