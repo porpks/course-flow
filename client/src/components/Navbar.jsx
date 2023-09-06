@@ -45,7 +45,7 @@ function Navbar() {
   };
 
   const AfterLogin = () => {
-    console.log(username);
+    // console.log(username);
     return (
       <div className='flex flex-row space-x-2 items-center'>
         <Avatar alt={username.full_name} src={username.image_url} />
@@ -159,7 +159,7 @@ function Navbar() {
               }}>
               Our Course
             </div>
-            {isLoggedIn ? (
+            {isLoggedIn && username ? (
               <div className='flex flex-row justify-center items-center space-x-3'>
                 <AfterLogin profileImg='url' profileName='TESTS' />
               </div>

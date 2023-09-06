@@ -641,7 +641,7 @@ function Instructure() {
               that caters to all your educational needs!{" "}
             </p>
             <button
-              className='Primary text-center text-white text-base font-bold leading-normal w-[193px]'
+              className='Primary text-center text-white text-base font-bold leading-normal w-[193px] border-none h-[60px]'
               onClick={() => {
                 navigate("/ourcourse");
               }}>

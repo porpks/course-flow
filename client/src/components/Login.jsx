@@ -5,12 +5,12 @@ import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
-  const { userID, setUserID, setIsLoggedIn } = useAuth();
+  const { setUserID, setIsLoggedIn, setUsername } = useAuth();
   const [loginData, setLoginData] = useState({
     email: null,
     password: null,
   });
-  console.log(userID);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!loginData.email || !loginData.password) {
@@ -24,13 +24,22 @@ function Login() {
         setUserID(result.data.data[0].user_id);
         setIsLoggedIn(true);
         // navigate(`/profile/${result.data.data[0].user_id}`);
+        try {
+          const response = await axios.get(
+            `http://localhost:4000/profile/${result.data.data[0].user_id}`
+          );
+          setUsername(response.data.data);
+        } catch (error) {
+          alert(error.message);
+        }
+
         navigate("/ourcourse");
       } catch (error) {
         alert("Your email address is incorrect");
       }
     }
   };
-  console.log(userID);
+
   return (
     <div className='flex justify-center min-h-[100vh] relative overflow-hidden'>
       <div className='w-[450px] mt-[100px] bg-white overflow-visible'>
