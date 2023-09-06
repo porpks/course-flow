@@ -147,10 +147,6 @@ function Navbar() {
     );
   };
 
-  console.log(isLoggedIn);
-  console.log(username);
-  console.log(userID);
-
   return (
     <>
       <body

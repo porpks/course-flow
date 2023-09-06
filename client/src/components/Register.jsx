@@ -110,6 +110,7 @@ function Register() {
                   Name
                 </label>
                 <Field
+
                   type='text'
                   name='name'
                   id='name'
@@ -118,7 +119,7 @@ function Register() {
                     errors.name && touched.name
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
-                  }`}
+                    }`}
                 />
                 <ErrorMessage
                   name='name'
@@ -191,7 +192,7 @@ function Register() {
                     errors.eduBg && touched.eduBg
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
-                  }`}
+                    }`}
                 />
                 <ErrorMessage
                   name='eduBg'
@@ -211,6 +212,7 @@ function Register() {
                   Email
                 </label>
                 <Field
+
                   type='email'
                   name='email'
                   id='email'
@@ -219,7 +221,7 @@ function Register() {
                     errors.email && touched.email
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
-                  }`}
+                    }`}
                 />
                 <ErrorMessage
                   name='email'
@@ -247,7 +249,7 @@ function Register() {
                     errors.password && touched.password
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
-                  }`}
+                    }`}
                 />
                 <ErrorMessage
                   name='password'

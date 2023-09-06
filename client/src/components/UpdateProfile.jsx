@@ -27,6 +27,7 @@ function UpdateProfile() {
   const handleRemoveImage = async () => {
     setAvatar({});
     setAvatarUrl("");
+    setImage("")
     await axios.put(`http://localhost:4000/profile/delete/${params.id}`);
   };
 
@@ -197,13 +198,13 @@ function UpdateProfile() {
                 avatarUrl
                   ? avatarUrl
                   : image
-                  ? image
-                  : "../public/image/user_profile.png"
+                    ? image
+                    : "../public/image/noprofile.svg"
               }
               className="relative w-[358px] h-[358px] object-cover	rounded-2xl	"
             />
 
-            {avatarUrl ? (
+            {avatarUrl || image ? (
               <button
                 className="flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer"
                 onClick={handleRemoveImage}
@@ -251,11 +252,10 @@ function UpdateProfile() {
                   type="text"
                   id="full_name"
                   name="full_name"
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.full_name && formik.errors.full_name
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.full_name && formik.errors.full_name
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
                   placeholder="Enter Name and Lastname"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -289,7 +289,7 @@ function UpdateProfile() {
                         borderRadius: "0.5rem",
                         border:
                           formik.errors.dateofbirth &&
-                          formik.touched.dateofbirth
+                            formik.touched.dateofbirth
                             ? "2px solid #9B2FAC"
                             : "2px solid #CBD5E0",
                         padding: "12px",
@@ -339,12 +339,11 @@ function UpdateProfile() {
                   type="text"
                   id="edu_background"
                   name="edu_background"
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.edu_background &&
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.edu_background &&
                     formik.errors.edu_background
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
                   placeholder="Enter Educational Background"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -352,13 +351,13 @@ function UpdateProfile() {
                 />
 
                 {formik.touched.edu_background &&
-                formik.errors.edu_background ? (
+                  formik.errors.edu_background ? (
                   <div className="text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]">
                     {formik.errors.edu_background}
                   </div>
                 ) : null}
                 {formik.touched.edu_background &&
-                formik.errors.edu_background ? (
+                  formik.errors.edu_background ? (
                   <img
                     src="../../public/Exclamation-circle.svg"
                     className="absolute right-[16px] top-[16px]"
@@ -372,11 +371,10 @@ function UpdateProfile() {
                   type="email"
                   id="email"
                   name="email"
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    formik.touched.email && formik.errors.email
-                      ? " border-[#9B2FAC]"
-                      : " border-[--gray500]"
-                  }`}
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.email && formik.errors.email
+                    ? " border-[#9B2FAC]"
+                    : " border-[--gray500]"
+                    }`}
                   placeholder="Enter Email"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
