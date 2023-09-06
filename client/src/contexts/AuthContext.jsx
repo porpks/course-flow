@@ -68,8 +68,7 @@ function AuthProvider(props) {
         username,
         setUsername,
         logout,
-      }}
-    >
+      }}>
       {props.children}
     </AuthContext.Provider>
   );
