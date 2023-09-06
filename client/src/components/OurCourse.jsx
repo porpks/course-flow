@@ -6,11 +6,37 @@ import axios from "axios";
 
 function OurCourse() {
   const [dataCourse, setDataCourse] = useState([]);
-  console.log(`DataCourse : ${dataCourse}`);
+  const [searchKey, setSearchKey] = useState(""); //searchKeyword
+
   useEffect(() => {
     getDataCourse();
   }, []);
+  ///////////// useEffect for searchKeyword
+  useEffect(() => {
+    const getCourseByKeywords = async (keywords) => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/ourcourse/course",
+          {
+            params: { keywords },
+          }
+        );
+        console.log(`response : ${response}`);
+        const data = response.data.data;
+        setDataCourse(data);
+        setLoading(false);
+      } catch (error) {
+        message: error;
+      }
+    };
 
+    getCourseByKeywords(searchKey);
+  }, [searchKey]);
+
+  const handleSearch = (event) => {
+    setSearchKey(event.target.value);
+  };
+  /////////////////////////////////////////////////
   async function getDataCourse() {
     try {
       const result = await axios.get(`http://localhost:4000/ourcourse`);
@@ -27,10 +53,10 @@ function OurCourse() {
         <div className="input-container">
           <img src="../../public/image/search.svg" alt="searchIcon" />
           <input
-            type="search"
+            type="text"
             placeholder="Search..."
-            //   value=""
-            // onChange={}
+            value={searchKey}
+            onChange={handleSearch}
           />
         </div>
       </div>
