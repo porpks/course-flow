@@ -24,13 +24,8 @@ function Navbar() {
   const navigate = useNavigate();
 
   const handleLogout = async (userID) => {
-    // setIsLoggedIn(false);
     logout(userID);
     navigate("/");
-    // const result = await axios.get(
-    //   `http://localhost:4000/auth/logout/${userID}`
-    // );
-    // console.log(result);
   };
 
   const LoginButton = ({ buttonText }) => {
