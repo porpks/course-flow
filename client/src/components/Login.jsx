@@ -5,12 +5,12 @@ import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
-  const { userID, setUserID } = useAuth();
+  const { userID, setUserID, setIsLoggedIn } = useAuth();
   const [loginData, setLoginData] = useState({
     email: null,
     password: null,
   });
-
+  console.log(userID);
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!loginData.email || !loginData.password) {
@@ -22,7 +22,7 @@ function Login() {
           loginData
         );
         setUserID(result.data.data[0].user_id);
-
+        setIsLoggedIn(true);
         navigate(`/profile/${result.data.data[0].user_id}`);
       } catch (error) {
         alert(error.message);
