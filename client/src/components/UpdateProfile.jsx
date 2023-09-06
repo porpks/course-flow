@@ -72,6 +72,8 @@ function UpdateProfile() {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
+    setUserID(params.id);
+
     navigate("/ourcourse");
   };
 
@@ -141,7 +143,8 @@ function UpdateProfile() {
             width="11"
             height="11"
             viewBox="0 0 11 11"
-            fill="none">
+            fill="none"
+          >
             <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" strokeWidth="3" />
           </svg>
         </div>
@@ -152,7 +155,9 @@ function UpdateProfile() {
             width="27"
             height="27"
             viewBox="0 0 27 27"
-            fill="none">
+
+            fill="none"
+          >
             <circle cx="13.1741" cy="13.1741" r="13.1741" fill="#C6DCFF" />
           </svg>
         </div>
@@ -163,7 +168,10 @@ function UpdateProfile() {
             width="53"
             height="74"
             viewBox="0 0 53 74"
-            fill="none">
+
+            fill="none"
+          >
+
             <circle cx="37" cy="37" r="37" fill="#C6DCFF" />
           </svg>
         </div>
@@ -174,7 +182,10 @@ function UpdateProfile() {
             width="51"
             height="51"
             viewBox="0 0 51 51"
-            fill="none">
+
+            fill="none"
+          >
+
             <path
               d="M11.3581 19.9099L37.1499 15.9774L27.6597 40.28L11.3581 19.9099Z"
               stroke="#FBAA1C"
@@ -200,13 +211,19 @@ function UpdateProfile() {
             {avatarUrl ? (
               <button
                 className="flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer"
-                onClick={handleRemoveImage}>
+
+                onClick={handleRemoveImage}
+              >
+
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="22"
                   height="22"
                   viewBox="0 0 22 22"
-                  fill="none">
+
+                  fill="none"
+                >
+
                   <path
                     d="M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764"
                     stroke="white"
@@ -221,7 +238,10 @@ function UpdateProfile() {
             <div className="absolute w-[180px] h-[180px] top-[89px] left-[89px] rounded-full flex justify-center items-center hover:bg-[rgba(264,264,264,0.5)] border-[--blue500] border-[3px] hover:border-dashed group">
               <label
                 htmlFor="upload"
-                className="hidden group-hover:block w-full h-full pt-[45px] text-[--blue500] text-center text-xl rounded-full cursor-pointer">
+
+                className="hidden group-hover:block w-full h-full pt-[45px] text-[--blue500] text-center text-xl rounded-full cursor-pointer"
+              >
+
                 <div className="text-[48px] font-extralight mb-3">+</div>
                 <div className="text-[20px] font-medium">Upload Image</div>
                 <input
@@ -390,6 +410,7 @@ function UpdateProfile() {
               <button
                 className="Primary w-[100%] border-none cursor-pointer"
                 type="submit">
+
                 Update Profile
               </button>
             </div>

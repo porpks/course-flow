@@ -19,16 +19,16 @@ import axios from "axios";
 import { useEffect } from "react";
 
 function Navbar() {
-  const { isLoggedIn, setIsLoggedIn, username, setUsername, logout } =
+  const { isLoggedIn, setIsLoggedIn, username, setUsername, logout, userID } =
     useAuth(); // Set initial state to false
   const navigate = useNavigate();
 
-  const handleLogout = async (userId) => {
+  const handleLogout = async (userID) => {
     // setIsLoggedIn(false);
-    logout();
+    logout(userID);
     navigate("/");
     // const result = await axios.get(
-    //   `http://localhost:4000/auth/logout/${userId}`
+    //   `http://localhost:4000/auth/logout/${userID}`
     // );
     // console.log(result);
   };
