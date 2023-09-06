@@ -14,7 +14,7 @@ function AuthProvider(props) {
 
   const initializeUser = async (userID) => {
     try {
-      const response = await axios.get(`http://localhost:4000/profile/64`);
+      const response = await axios.get(`http://localhost:4000/profile/63`);
       setUsername(response.data);
     } catch (error) {
       // console.error(error);
