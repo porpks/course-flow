@@ -20,7 +20,7 @@ profileRouter.get("/:userId", async (req, res) => {
 
     const { data, error } = await supabase
       .from("register")
-      .select("full_name, dateofbirth, edu_background, email")
+      .select("full_name, dateofbirth, edu_background, email, image_url")
       .eq("user_id", userId);
 
     if (error) {
@@ -51,7 +51,6 @@ profileRouter.get("/image/:userId", async (req, res) => {
   const userId = req.params.userId;
 
   try {
-
     const { data, error } = await supabase
       .from("register")
       .select("image_url")
@@ -68,14 +67,12 @@ profileRouter.get("/image/:userId", async (req, res) => {
 
     const imageUrl = data[0].image_url;
 
-
     res.json(imageUrl);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
 
 profileRouter.put("/:userId", avatarUpload, async (req, res) => {
   const userId = req.params.userId;
@@ -107,7 +104,7 @@ profileRouter.put("/:userId", avatarUpload, async (req, res) => {
   try {
     const file = req.files.avatar[0];
     const fileImage = new Blob([file.buffer], { type: file.mimetype });
-    const fileName = file.originalname.replace(/ /g, '_');
+    const fileName = file.originalname.replace(/ /g, "_");
 
     const { data, error } = await supabase.storage
       .from("test-avatar")
@@ -121,7 +118,8 @@ profileRouter.put("/:userId", avatarUpload, async (req, res) => {
     const path = data.path;
     const imgUrl = `https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/${path}`;
     const now = new Date(); // Get the current date and time
-const formattedDate = now.toISOString().replace(/T/, ' ').replace(/\..+/, '') + '.682314+00';
+    const formattedDate =
+      now.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
 
     try {
       const { data, error } = await supabase
@@ -142,10 +140,7 @@ const formattedDate = now.toISOString().replace(/T/, ' ').replace(/\..+/, '') + 
     } catch (error) {
       console.error(error);
     }
-    
-
   } catch (error) {}
- 
 
   return res.json({
     message: "You profile has been update",
@@ -158,7 +153,7 @@ profileRouter.put("/delete/:userId", async (req, res) => {
     const { data, error } = await supabase
       .from("register")
       .update({
-        image_url: null, 
+        image_url: null,
       })
       .eq("user_id", userId);
 
@@ -173,6 +168,5 @@ profileRouter.put("/delete/:userId", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 export default profileRouter;

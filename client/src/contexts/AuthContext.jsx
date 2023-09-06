@@ -14,15 +14,18 @@ function AuthProvider(props) {
 
   const initializeUser = async (userID) => {
     try {
-      const response = await axios.get(`http://localhost:4000/profile/63`);
-      setUsername(response.data);
+      const response = await axios.get(
+        `http://localhost:4000/profile/${userID}`
+      );
+      setUsername(response.data.data);
+      console.log(response.data.data);
     } catch (error) {
       // console.error(error);
     }
   };
 
   useEffect(() => {
-    initializeUser();
+    initializeUser(userID);
     return () => {
       console.log("Component unmounted");
     };
