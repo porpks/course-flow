@@ -742,48 +742,48 @@ function Instructure() {
                     <path
                       d='M23.9209 16.955C25.2971 16.75 26.3567 15.4985 26.3597 13.9823C26.3597 12.4881 25.3327 11.2492 23.986 11.0148'
                       stroke='#5483D0'
-                      stroke-width='1.5'
-                      stroke-linecap='round'
-                      stroke-linejoin='round'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
                     />
                     <path
                       d='M25.7363 20.4642C27.0692 20.6756 27.9995 21.1705 27.9995 22.1908C27.9995 22.8929 27.5615 23.3491 26.8531 23.6358'
                       stroke='#5483D0'
-                      stroke-width='1.5'
-                      stroke-linecap='round'
-                      stroke-linejoin='round'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
                     />
                     <path
-                      fill-rule='evenodd'
-                      clip-rule='evenodd'
+                      fillRule='evenodd'
+                      clipRule='evenodd'
                       d='M18 20.8969C14.8292 20.8969 12.1211 21.4064 12.1211 23.4416C12.1211 25.4758 14.8124 26 18 26C21.1707 26 23.8778 25.4957 23.8778 23.4594C23.8778 21.4232 21.1875 20.8969 18 20.8969Z'
                       stroke='#5483D0'
-                      stroke-width='1.5'
-                      stroke-linecap='round'
-                      stroke-linejoin='round'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
                     />
                     <path
-                      fill-rule='evenodd'
-                      clip-rule='evenodd'
+                      fillRule='evenodd'
+                      clipRule='evenodd'
                       d='M18.0001 17.9922C20.0807 17.9922 21.7677 16.204 21.7677 13.9961C21.7677 11.7893 20.0807 10 18.0001 10C15.9195 10 14.2324 11.7893 14.2324 13.9961C14.2246 16.1956 15.8987 17.9849 17.9725 17.9922H18.0001Z'
                       stroke='#5483D0'
-                      stroke-width='1.5'
-                      stroke-linecap='round'
-                      stroke-linejoin='round'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
                     />
                     <path
                       d='M12.0794 16.955C10.7022 16.75 9.64358 15.4985 9.64062 13.9823C9.64062 12.4881 10.6676 11.2492 12.0143 11.0148'
                       stroke='#5483D0'
-                      stroke-width='1.5'
-                      stroke-linecap='round'
-                      stroke-linejoin='round'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
                     />
                     <path
                       d='M10.2632 20.4642C8.93032 20.6756 8 21.1705 8 22.1908C8 22.8929 8.43803 23.3491 9.14637 23.6358'
                       stroke='#5483D0'
-                      stroke-width='1.5'
-                      stroke-linecap='round'
-                      stroke-linejoin='round'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
                     />
                     <rect
                       x='0.5'
@@ -792,7 +792,7 @@ function Instructure() {
                       height='35'
                       rx='17.5'
                       stroke='#5483D0'
-                      stroke-dasharray='2 2'
+                      strokeDasharray='2 2'
                     />
                   </svg>
                   <div className='flex flex-col gap-[10px]'>
@@ -835,7 +835,7 @@ function Instructure() {
             <path
               d='M11.3581 19.9099L37.1499 15.9774L27.6597 40.28L11.3581 19.9099Z'
               stroke='#FBAA1C'
-              stroke-width='3'
+              strokeWidth='3'
             />
           </svg>
           <div className='flex flex-col gap-[60px]'>
@@ -877,14 +877,14 @@ function Instructure() {
             <path
               d='M13.843 609L8.83754 627.68'
               stroke='#2FAC61'
-              stroke-width='3'
-              stroke-linecap='round'
+              strokeWidth='3'
+              strokeLinecap='round'
             />
             <path
               d='M2.00035 615.837L20.6809 620.843'
               stroke='#2FAC61'
-              stroke-width='3'
-              stroke-linecap='round'
+              strokeWidth='3'
+              strokeLinecap='round'
             />
             <circle
               cx='1345.7'
@@ -901,8 +901,8 @@ function Instructure() {
                 x2='1378.43'
                 y2='78.6754'
                 gradientUnits='userSpaceOnUse'>
-                <stop stop-color='#95BEFF' />
-                <stop offset='1' stop-color='#0040E6' />
+                <stop stopColor='#95BEFF' />
+                <stop offset='1' stopColor='#0040E6' />
               </linearGradient>
             </defs>
           </svg>

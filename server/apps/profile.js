@@ -8,9 +8,11 @@ const profileRouter = Router();
 const multerUpload = multer({});
 const avatarUpload = multerUpload.fields([{ name: "avatar", maxCount: 1 }]);
 
+
 profileRouter.get("/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
+
 
     if (!userId || typeof userId !== "string") {
       return res.status(400).json({
@@ -23,7 +25,7 @@ profileRouter.get("/:userId", async (req, res) => {
       .select("full_name, dateofbirth, edu_background, email, image_url")
       .eq("user_id", userId);
 
-    if (error) {
+    if (error && (userId !== null)) {
       return res.status(500).json({
         message: "An error occurred while fetching data.",
         error: error.message,
