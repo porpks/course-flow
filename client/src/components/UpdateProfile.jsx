@@ -16,20 +16,9 @@ function UpdateProfile() {
   const [image, setImage] = useState("");
 
   const [avatar, setAvatar] = useState({});
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [userData, setUserData] = useState({
-    full_name: "",
-    dateofbirth: null,
-    edu_background: "",
-    email: "",
-  });
 
-  let initialValues = {
-    full_name: "",
-    dateofbirth: "",
-    edu_background: "",
-    email: "",
-  };
+  const [avatarUrl, setAvatarUrl] = useState("");
+
   const handleFileChange = (event) => {
     setAvatar(event.target.files[0]);
     setAvatarUrl(URL.createObjectURL(event.target.files[0]));
@@ -42,11 +31,19 @@ function UpdateProfile() {
   };
 
   const getData = async (params) => {
+
     const result = await axios.get(
       `http://localhost:4000/profile/${params.id}`
     );
-    setUserData(result.data.data);
-    console.log(result.data.data);
+
+    const initialValues = {
+      full_name: result.data.data.full_name,
+      dateofbirth: dayjs(result.data.data.dateofbirth) || "",
+      edu_background: result.data.data.edu_background,
+      email: result.data.data.email,
+    };
+
+    formik.setValues(initialValues);
   };
 
   const getDataImage = async () => {
@@ -55,11 +52,6 @@ function UpdateProfile() {
     );
     setImage(imageUrl.data);
   };
-
-  useEffect(() => {
-    // getData(params);.
-    getDataImage();
-  }, [image]);
 
   const onSubmit = async (values) => {
     const newUserData = {
@@ -120,7 +112,7 @@ function UpdateProfile() {
     formik.handleChange({
       target: {
         name: "dateofbirth",
-        value: timestamp,
+        value: dayjs(timestamp),
         type: "date",
       },
     });
@@ -129,17 +121,24 @@ function UpdateProfile() {
   const navigate = useNavigate();
   const today = dayjs();
 
+  useEffect(() => {
+    getData();
+    getDataImage();
+  }, [image]);
+
   return (
     <div className='relative flex justify-center w-[100%]'>
       <div className='flex flex-col items-center w-[1440px] h-[995px]'>
         <div className='absolute left-[102px] top-[100px]'>
           <svg
-            xmlns='http://www.w3.org/2000/svg'
-            width='11'
-            height='11'
-            viewBox='0 0 11 11'
-            fill='none'>
-            <circle cx='5.5' cy='5.5' r='4' stroke='#2F5FAC' stroke-width='3' />
+
+            xmlns="http://www.w3.org/2000/svg"
+            width="11"
+            height="11"
+            viewBox="0 0 11 11"
+            fill="none">
+            <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" strokeWidth="3" />
+
           </svg>
         </div>
 
@@ -173,9 +172,9 @@ function UpdateProfile() {
             viewBox='0 0 51 51'
             fill='none'>
             <path
-              d='M11.3581 19.9099L37.1499 15.9774L27.6597 40.28L11.3581 19.9099Z'
-              stroke='#FBAA1C'
-              stroke-width='3'
+              d="M11.3581 19.9099L37.1499 15.9774L27.6597 40.28L11.3581 19.9099Z"
+              stroke="#FBAA1C"
+              strokeWidth="3"
             />
           </svg>
         </div>
@@ -193,6 +192,7 @@ function UpdateProfile() {
               }
               className='relative w-[358px] h-[358px] object-cover	rounded-2xl	'
             />
+
             {avatarUrl ? (
               <button
                 className='flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer'
@@ -301,6 +301,7 @@ function UpdateProfile() {
                     maxDate={today}
                     // showDaysOutsideCurrentMonth
                     value={formik.values.dateofbirth}
+                    // onChange={formik.handleChange}
                     onChange={handleDatePickerChange}
                     onBlur={formik.handleBlur}
                   />
@@ -331,7 +332,9 @@ function UpdateProfile() {
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
                   }`}
-                  placeholder='Enter educationBackgroundcational Background'
+
+                  placeholder="Enter Educational Background"
+
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.edu_background}
