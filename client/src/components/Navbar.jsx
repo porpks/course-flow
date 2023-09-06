@@ -91,7 +91,7 @@ function Navbar() {
         >
           <MenuItem
             onClick={() => {
-              navigate("/profile");
+              navigate(`/profile/${userID}`);
             }}
             className=" space-x-4 "
             style={{ width: "216px" }}
@@ -147,6 +147,10 @@ function Navbar() {
     );
   };
 
+  console.log(isLoggedIn);
+  console.log(username);
+  console.log(userID);
+
   return (
     <>
       <body
@@ -154,25 +158,23 @@ function Navbar() {
         className="flex flex-row justify-center Shadow2 h-[88px]"
       >
         <nav className="flex flex-row justify-between items-center ju w-[80vw]">
-          <a
-            href=""
+          <div className="cursor-pointer"
             onClick={() => {
               navigate("/");
             }}
           >
             <CourseFlowIcon />
-          </a>
+          </div>
 
           <div className="flex flex-row items-center">
-            <a
-              href=""
-              className="no-underline text-[16px] font-[700] justify-center px-[24px] py-[32px] mx-[16px]"
+            <div
+              className="no-underline text-[16px] font-[700] justify-center px-[24px] py-[32px] mx-[16px] cursor-pointer"
               onClick={() => {
                 navigate("/ourcourse");
               }}
             >
               Our Course
-            </a>
+            </div>
             {isLoggedIn ? (
               <div className="flex flex-row justify-center items-center space-x-3">
                 <AfterLogin profileImg="url" profileName="TESTS" />
