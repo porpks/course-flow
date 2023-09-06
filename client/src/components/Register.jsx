@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useAuth } from "../contexts/AuthContext.jsx";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -22,7 +21,8 @@ function Register() {
       sendRegisterRequest();
       navigate("/login");
     }
-  }, [registerData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, registerData]);
 
   const handleRegister = (values) => {
     setRegisterData({
