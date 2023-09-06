@@ -20,6 +20,7 @@ courseRouter.get("/", async (req, res) => {
 courseRouter.get("/course", async (req, res) => {
   try {
     let keywords = req.query.keywords;
+
     if (keywords === undefined) {
       return res.status(400).json({
         message: "Please send keywords parameter in the URL endpoint",
@@ -28,13 +29,19 @@ courseRouter.get("/course", async (req, res) => {
 
     const regexKeywords = keywords
       .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-      .split(/\s+/)
-      .join("|");
+      .split(/\s+/) // Split on whitespace
+      .map((word) => word.replace(/\s/g, "\\s*"))
+      .join(" ");
+
+    const queryFullName = `coursename.ilike.${keywords}`;
+    const queryKeywords = `coursename.ilike.%${regexKeywords}%`;
+
+    console.log(`regexKeywords : ${regexKeywords}`);
 
     const { data, error } = await supabase
       .from("course")
       .select("*")
-      .ilike("coursename", `%${regexKeywords}%`)
+      .or(`${queryFullName},${queryKeywords}`)
       .order("course_id", { ascending: true });
 
     if (error) {
