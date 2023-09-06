@@ -5,6 +5,7 @@ import OurCoursePage from "./pages/OurCoursePage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import Profile from "./pages/Profile.jsx";
+import CourseDetailPage from "./pages/CourseDetailPage.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 
@@ -25,6 +26,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/ourcourse/coursedetail" element={<CourseDetailPage />} />
             <Route path="*" element={null} />
           </Routes>
         </AuthProvider>
