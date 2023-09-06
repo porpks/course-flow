@@ -20,7 +20,7 @@ function Register() {
   useEffect(() => {
     if (Object.keys(registerData).length > 0) {
       sendRegisterRequest();
-      navigate("/");
+      navigate("/login");
     }
   }, [registerData]);
 
@@ -115,11 +115,10 @@ function Register() {
                   name="name"
                   id="name"
                   placeholder="Enter Name and Lastname"
-                  className={`Body2 w-full mt-1 p-3 rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    errors.name && touched.name
+                  className={`Body2 w-full mt-1 p-3 rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${errors.name && touched.name
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
-                  }`}
+                    }`}
                 />
                 <ErrorMessage
                   name="name"
@@ -188,11 +187,10 @@ function Register() {
                   name="eduBg"
                   id="eduBg"
                   placeholder="Enter Education Background"
-                  className={`Body2 w-full mt-1 p-3 rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    errors.eduBg && touched.eduBg
+                  className={`Body2 w-full mt-1 p-3 rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${errors.eduBg && touched.eduBg
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
-                  }`}
+                    }`}
                 />
                 <ErrorMessage
                   name="eduBg"
@@ -216,11 +214,10 @@ function Register() {
                   name="email"
                   id="email"
                   placeholder="Enter Email"
-                  className={`Body2 w-full mt-1 p-3 rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    errors.email && touched.email
+                  className={`Body2 w-full mt-1 p-3 rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${errors.email && touched.email
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
-                  }`}
+                    }`}
                 />
                 <ErrorMessage
                   name="email"
@@ -244,11 +241,10 @@ function Register() {
                   name="password"
                   id="password"
                   placeholder="Enter Password"
-                  className={`Body2 w-full mt-1 p-3 rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                    errors.password && touched.password
+                  className={`Body2 w-full mt-1 p-3 rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${errors.password && touched.password
                       ? " border-[#9B2FAC]"
                       : " border-[--gray500]"
-                  }`}
+                    }`}
                 />
                 <ErrorMessage
                   name="password"

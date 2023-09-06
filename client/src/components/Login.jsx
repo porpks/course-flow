@@ -23,7 +23,8 @@ function Login() {
         );
         setUserID(result.data.data[0].user_id);
         setIsLoggedIn(true);
-        navigate(`/profile/${result.data.data[0].user_id}`);
+        // navigate(`/profile/${result.data.data[0].user_id}`);
+        navigate('/ourcourse')
       } catch (error) {
         alert(error.message);
       }
