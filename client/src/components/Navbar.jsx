@@ -16,21 +16,21 @@ import StarIcon from "../assets/StarIcon.jsx";
 import LogoutIcon from "../assets/LogoutIcon.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useEffect } from "react";
 
 function Navbar() {
-  const { isLoggedIn, setIsLoggedIn } = useAuth(); // Set initial state to false
+  const { isLoggedIn, setIsLoggedIn, username, setUsername, logout } =
+    useAuth(); // Set initial state to false
   const navigate = useNavigate();
 
-  // const handleLogin = () => {
-  //   setIsLoggedIn(true); // Simulate a login action
-  // };
-
   const handleLogout = async (userId) => {
-    setIsLoggedIn(false);
-    const result = await axios.get(
-      `http://localhost:4000/auth/logout/${userId}`
-    );
-    console.log(result);
+    // setIsLoggedIn(false);
+    logout();
+    navigate("/");
+    // const result = await axios.get(
+    //   `http://localhost:4000/auth/logout/${userId}`
+    // );
+    // console.log(result);
   };
 
   const LoginButton = ({ buttonText }) => {
@@ -48,12 +48,11 @@ function Navbar() {
     );
   };
 
-  const AfterLogin = ({ profileName, profileImg }) => {
+  const AfterLogin = () => {
     return (
       <div className="flex flex-row space-x-2 items-center">
-        <Avatar alt={profileImg} src={profileImg} />
-        <img src={profileImg} alt="profileImg" />
-        <p>{profileName}</p>
+        <Avatar alt={username.full_name} src={username.image_url} />
+        <p>{username.full_name}</p>
         <BasicMenu />
       </div>
     );
@@ -162,6 +161,7 @@ function Navbar() {
           >
             <CourseFlowIcon />
           </a>
+
           <div className="flex flex-row items-center">
             <a
               href=""
@@ -170,7 +170,7 @@ function Navbar() {
                 navigate("/ourcourse");
               }}
             >
-              Our Course 1
+              Our Course
             </a>
             {isLoggedIn ? (
               <div className="flex flex-row justify-center items-center space-x-3">
