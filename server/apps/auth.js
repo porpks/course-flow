@@ -10,13 +10,11 @@ authRouter.post("/register", async (req, res) => {
     edu_background: req.body.educationBackground,
     email: req.body.email,
   };
-  console.log(registerData);
   try {
     const { data, error } = await supabase
       .from("register")
       .insert([registerData])
       .select();
-    console.log(data);
     try {
       const { user, session, error } = await supabase.auth.signUp({
         email: req.body.email,
@@ -45,8 +43,6 @@ authRouter.post("/login", async (req, res) => {
     email: req.body.email,
     password: req.body.password,
   };
-  // console.log(req.body);
-  // console.log(loginData);
 
   try {
     const { data, error } = await supabase.auth.signInWithPassword({

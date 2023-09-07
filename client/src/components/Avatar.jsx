@@ -9,7 +9,6 @@ export default function Avatar({ url, size, onUpload }) {
     if (url) downloadImage(url);
   }, [url]);
 
-  console.log(url);
 
   async function downloadImage(path) {
     try {
@@ -22,7 +21,7 @@ export default function Avatar({ url, size, onUpload }) {
       const url = URL.createObjectURL(data);
       setAvatarUrl(url);
     } catch (error) {
-      console.log("Error downloading image: ", error.message);
+      alert("Error downloading image: ", error.message);
     }
   }
 

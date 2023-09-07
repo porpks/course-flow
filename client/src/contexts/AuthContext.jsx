@@ -11,28 +11,6 @@ function AuthProvider(props) {
   const [userID, setUserID] = useState(null);
   const [username, setUsername] = useState({});
 
-  // const initializeUser = async (userID) => {
-  //   try {
-  //     console.log("fetch context");
-  //     const response = await axios.get(
-  //       `http://localhost:4000/profile/${userID}`
-  //     );
-  //     setUsername(response.data.data);
-  //     console.log(response.data.data);
-  //   } catch (error) {
-  //     alert(error.message);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (userID) {
-  //     initializeUser(userID);
-  //     return () => {
-  //       console.log("Component unmounted");
-  //     };
-  //   }
-  // }, [userID]);
-
   const logout = async () => {
     try {
       if (!userID) {

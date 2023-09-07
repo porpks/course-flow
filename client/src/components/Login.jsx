@@ -14,7 +14,7 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!loginData.email || !loginData.password) {
-      console.log("nodata");
+      alert("nodata");
     } else {
       try {
         const result = await axios.post(

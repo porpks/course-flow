@@ -20,8 +20,24 @@ function UpdateProfile() {
   const [avatarUrl, setAvatarUrl] = useState("");
 
   const handleFileChange = (event) => {
-    setAvatar(event.target.files[0]);
-    setAvatarUrl(URL.createObjectURL(event.target.files[0]));
+    const file = event.target.files[0]
+    if (file) {
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+
+      if (allowedTypes.includes(file.type)) {
+
+        if (file.size <= 2 * 1024 * 1024) {
+          setAvatar(event.target.files[0]);
+          setAvatarUrl(URL.createObjectURL(event.target.files[0]));
+        } else {
+          alert('File size exceeds 2MB.');
+        }
+
+      } else {
+        alert('Invalid file type. Please choose a .jpg, .jpeg, or .png file.');
+      }
+    }
+
   };
 
   const handleRemoveImage = async () => {
@@ -43,7 +59,6 @@ function UpdateProfile() {
       edu_background: result.data.data.edu_background,
       email: result.data.data.email,
     };
-    console.log(result);
     formik.setValues(initialValues);
   };
 
@@ -80,7 +95,6 @@ function UpdateProfile() {
         `http://localhost:4000/profile/${userID}`
       );
       setUsername(response.data.data);
-      console.log(response.data.data);
     } catch (error) {
       alert(error.message);
     }
