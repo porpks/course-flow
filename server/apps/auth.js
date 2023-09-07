@@ -49,19 +49,19 @@ authRouter.post("/login", async (req, res) => {
   // console.log(loginData);
 
   try {
-    await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: loginData.email,
       password: loginData.password,
     });
+
+    if (error) {
+      return res.json({ error: error });
+    }
     try {
       const { data, error } = await supabase
         .from("register")
         .select("user_id")
         .eq("email", loginData.email);
-
-      console.log(data);
-      console.log(loginData);
-      console.log(loginData.email);
 
       res.json({ data: data });
       if (error) {

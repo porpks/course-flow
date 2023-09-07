@@ -21,6 +21,9 @@ function Login() {
           "http://localhost:4000/auth/login",
           loginData
         );
+        if (result.data.error) {
+          return alert(result.data.error.message)
+        }
         setUserID(result.data.data[0].user_id);
         setIsLoggedIn(true);
         // navigate(`/profile/${result.data.data[0].user_id}`);
@@ -35,7 +38,7 @@ function Login() {
 
         navigate("/ourcourse");
       } catch (error) {
-        alert("Your email address is incorrect");
+        alert(error);
       }
     }
   };
