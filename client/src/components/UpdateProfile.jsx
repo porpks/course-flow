@@ -41,14 +41,12 @@ function UpdateProfile() {
     setAvatar({});
     setAvatarUrl("");
     setImage("");
-    await axios.put(`http://localhost:4000/profile/delete/${params.id}`);
+    await axios.put(`http://localhost:4000/profile/delete/${userID}`);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getData = async (params) => {
-    const result = await axios.get(
-      `http://localhost:4000/profile/${params.id}`
-    );
+  const getData = async () => {
+    const result = await axios.get(`http://localhost:4000/profile/${userID}`);
 
     const initialValues = {
       full_name: result.data.data.full_name,
@@ -69,7 +67,7 @@ function UpdateProfile() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getDataImage = async () => {
     const imageUrl = await axios.get(
-      `http://localhost:4000/profile/image/${params.id}`
+      `http://localhost:4000/profile/image/${userID}`
     );
     setImage(imageUrl.data);
   };
@@ -158,9 +156,8 @@ function UpdateProfile() {
   const today = dayjs();
 
   useEffect(() => {
-    getData(params);
+    getData();
     getDataImage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [image, params, userID]);
 
   return (

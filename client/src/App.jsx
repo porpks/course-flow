@@ -13,7 +13,6 @@ import UnauthenticatedApp from "./components/UnauthenticatedApp.jsx";
 
 function App() {
   const isAuthenticated = Boolean(localStorage.getItem("token"));
-  console.log(isAuthenticated);
   return isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
 }
 export default App;
