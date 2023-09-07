@@ -3,7 +3,7 @@ import "./courseItem.css";
 
 function CourseItem(props) {
   return (
-    <div className="Shadow1 w-[357px] bg-[--white] rounded-t-[8px]">
+    <div className="cardItem Shadow1 w-[357px] bg-[--white] rounded-t-[8px]">
       <div className="topCard flex justify-center items-center ">
         <img className="" src={props.coverimg} alt={props.coursename} />
       </div>
