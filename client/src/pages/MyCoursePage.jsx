@@ -1,10 +1,10 @@
 import Mycourse from "../components/Mycourse.jsx";
 
-function LoginPage() {
+function MycoursePage() {
   return (
     <>
       <Mycourse />
     </>
   );
 }
-export default LoginPage;
+export default MycoursePage;
