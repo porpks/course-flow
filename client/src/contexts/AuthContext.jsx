@@ -10,7 +10,7 @@ function AuthProvider(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userID, setUserID] = useState(null);
   const [username, setUsername] = useState({});
-
+  const isAuthenticated = Boolean(localStorage.getItem("token"));
   const logout = async () => {
     try {
       if (!userID) {
@@ -48,6 +48,7 @@ function AuthProvider(props) {
         username,
         setUsername,
         logout,
+        isAuthenticated,
       }}>
       {props.children}
     </AuthContext.Provider>
