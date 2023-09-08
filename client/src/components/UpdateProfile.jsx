@@ -81,13 +81,9 @@ function UpdateProfile() {
       avatar: avatar,
     };
 
-    const result = await axios.put(
-      `http://localhost:4000/profile/${userID}`,
-      newUserData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
+    await axios.put(`http://localhost:4000/profile/${userID}`, newUserData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 
     try {
       const response = await axios.get(
