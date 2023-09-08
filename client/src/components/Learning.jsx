@@ -74,6 +74,7 @@ function Learning() {
     const [isShowAsm, setIsShowAsm] = useState(false)
 
     const handleShowVideo = (sublessonName, sublessonKey) => {
+        setIsShowAsm(false)
         setIsShowVdo(false)
         setTimeout(() => {
             setVideoHead(sublessonName)
