@@ -1,11 +1,11 @@
 import { useState } from 'react';
+import ReactPlayer from 'react-player'
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import LearnigDropdown from '../assets/LearnigDropdown';
 import './Learning.css'
-import LearningVdo from './LearningVdo';
 
 const mockdata = {
     course_name: "Service Design Essentials",
@@ -68,10 +68,28 @@ function Learning() {
 
     const [videoHead, setVideoHead] = useState("")
     const [videoKey, setVideoKey] = useState(null)
+    // const [currentTime, setCurrentTime] = useState(0)
+    // const playerRef = useRef(null)
+    const [isShowVdo, setIsShowVdo] = useState(false)
+    const [isShowAsm, setIsShowAsm] = useState(false)
 
-    const handleVideo = (sublessonName, sublessonKey) => {
-        setVideoHead(sublessonName)
-        setVideoKey(sublessonKey)
+    const handleShowVideo = (sublessonName, sublessonKey) => {
+        setIsShowVdo(false)
+        setTimeout(() => {
+            setVideoHead(sublessonName)
+            setVideoKey(sublessonKey)
+            setIsShowVdo(true)
+        }, 500)
+
+    }
+
+    const handlePause = (pauseTime) => {
+        console.log(pauseTime);
+        // setProgressTime(pauseTime);
+        // playerRef.current.seekTo(currentTime, 'seconds');
+    }
+    const handleEnd = () => {
+        setIsShowAsm(true)
     }
 
     return (
@@ -122,7 +140,7 @@ function Learning() {
                                                         <SublessonIcon subStatus={sublesson.status} asigmentStatus={sublesson.asigment_status} />
                                                     </div>
                                                     <p className='text-[--gray700] cursor-pointer'
-                                                        onClick={() => handleVideo(sublesson.name, sublesson.sublesson_id)}
+                                                        onClick={() => handleShowVideo(sublesson.name, sublesson.sublesson_id)}
                                                     >{sublesson.name}
                                                     </p>
                                                 </div>
@@ -139,14 +157,55 @@ function Learning() {
 
                 <div className="flex flex-col w-full">
                     <div className='mb-20'>
-                        <LearningVdo videoHead={videoHead} videoKey={videoKey} />
+                        <div className="h-[90px]">
+                            <h1 className="H2">{videoHead}</h1>
+                        </div>
+                        {isShowVdo ? <div className="w-full">
+                            <h1 className="H3">VDO: {videoKey}</h1>
+                            <div className='rounded-lg overflow-hidden '>
+
+
+                                <ReactPlayer
+                                    url='https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/1%20Minute%20Sample%20Video.mp4?t=2023-09-08T15%3A26%3A51.001Z'
+                                    width="100%"
+                                    height="100%"
+                                    controls={true}
+                                    light={true}
+                                    playIcon={<svg className='min-h-[460px]' xmlns="http://www.w3.org/2000/svg" width="104" height="104" viewBox="0 0 104 104" fill="none">
+                                        <rect width="104" height="104" rx="52" fill="#020202" fillOpacity="0.5" />
+                                        <path d="M77 52.5L40.25 73.7176L40.25 31.2824L77 52.5Z" fill="white" />
+                                    </svg>}
+                                    start={33}
+                                    // progressInterval={progressTime}
+                                    // onPlay={handlePlay}
+                                    onPause={(e) => handlePause(e.target.currentTime)}
+                                    onEnded={handleEnd}
+
+                                />
+
+                            </div>
+                        </div> :
+                            null}
                     </div>
-                    {/* <div className='mb-20 bg-[--blue100] h-[200px]'>
-                        <h1>Assigment</h1>
-                    </div> */}
+                    {isShowAsm ?
+                        <div className='mb-20 bg-[--blue100] h-[300px] p-6'>
+                            <div className='flex justify-between'>
+                                <h1 className='Body1 mb-6'>Assigment</h1>
+                                <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>status</div>
+                            </div>
+                            <p className='Body2 mb-1'>Question ?</p>
+                            <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
+                                <p className='Body2 text-[--gray600]'>Answer...</p>
+                            </div>
+                            <div className='flex justify-between items-center'>
+                                <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>Send Assignment</button>
+                                <p className='Body2 text-[--gray700]'>Assign within 2 days</p>
+                            </div>
+                        </div> :
+                        null}
                 </div>
 
-            </div>
+            </div >
 
         </>
     )
