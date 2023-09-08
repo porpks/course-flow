@@ -12,7 +12,7 @@ import AuthenticatedApp from "./components/AuthenticatedApp.jsx";
 import UnauthenticatedApp from "./components/UnauthenticatedApp.jsx";
 
 function App() {
-  const auth = useAuth();
+  const auth = useAuth()
   return auth.isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
 }
 export default App;

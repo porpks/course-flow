@@ -91,7 +91,7 @@ function Navbar() {
 
           <MenuItem
             onClick={() => {
-              navigate("/ourcourse");
+              navigate("/mycourse");
             }}
             className=' space-x-4 '>
             <BookIcon width='16px' height='16px' stroke='#8DADE0' />
@@ -101,7 +101,7 @@ function Navbar() {
           </MenuItem>
           <MenuItem
             onClick={() => {
-              navigate("/ourcourse");
+              navigate("/assignment");
             }}
             className=' space-x-4 '>
             <CopyIcon width='16px' height='16px' stroke='#8DADE0' />
@@ -111,7 +111,7 @@ function Navbar() {
           </MenuItem>
           <MenuItem
             onClick={() => {
-              navigate("/ourcourse");
+              navigate("/desire");
             }}
             className=' space-x-4 '>
             <StarIcon width='16px' height='16px' stroke='#8DADE0' />
