@@ -12,7 +12,7 @@ import { useAuth } from "../contexts/AuthContext.jsx";
 
 function AuthenticatedApp() {
   const { userID } = useAuth();
-  console.log(userID);
+
   return (
     <>
       <Routes>

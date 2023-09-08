@@ -21,7 +21,7 @@ function Login() {
           "http://localhost:4000/auth/login",
           loginData
         );
-        console.log(result);
+
         const token = result.data.token;
         localStorage.setItem("token", token);
         if (result.data.error) {

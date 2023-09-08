@@ -13,8 +13,7 @@ const avatarUpload = multerUpload.fields([{ name: "avatar", maxCount: 1 }]);
 profileRouter.get("/:userId",validateTokenMiddleware, async (req, res) => {
   try {
     const userId = req.params.userId;
-    console.log(userId);
-
+   
     if (!userId || typeof userId !== "string") {
       return res.status(400).json({
         message: "Invalid url.",
@@ -111,7 +110,7 @@ profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req
       const file = req.files.avatar[0];
       const fileImage = new Blob([file.buffer], { type: file.mimetype });
       const fileName = file.originalname.replace(/ /g, "_");
-      console.log(file)
+
     const { data, error } = await supabase.storage
       .from("test-avatar")
       .upload(`profile/${uuidv4()}${fileName}`, fileImage);
@@ -140,7 +139,6 @@ profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req
           updated_at: formattedDate1,
         })
         .eq("user_id", userId);
-       console.log(data);
       if (error) {
         console.log(error);
       }
@@ -148,7 +146,6 @@ profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req
     console.error(error);
   }
 } else {
-  console.log(req.body)
     const now2 = new Date(); // Get the current date and time
     const formattedDate2 =
       now2.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
@@ -161,7 +158,7 @@ profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req
   //   updated_at: formattedDate,
   // })
  
-  console.log(formattedDate2)
+
     try {
       const { data, error } = await supabase
         .from("register")
@@ -173,7 +170,7 @@ profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req
           updated_at: formattedDate2,
         })
         .eq("user_id", userId);
-       console.log(data);
+     
       if (error) {
         console.log(error);
       }
