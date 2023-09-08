@@ -62,7 +62,7 @@ function DesireCoursePage() {
             </svg>
           </div>
           <h2 className="H2 pt-[100px] pb-[72px]">Desire Course</h2>
-          <div className="grid grid-cols-3 gap-[24px] mb-[200px]">
+          <div className="grid grid-cols-3 gap-x-[24px] gap-y-[40px] mb-[200px]">
             <CourseItem
               key="test"
               count="test"
