@@ -1,11 +1,12 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Learning from "../components/Learning";
 
 function LearningPage() {
     return (
         <>
             <Navbar />
-            <h1>LearningPage</h1>
+            <Learning />
             <Footer />
         </>
     );
