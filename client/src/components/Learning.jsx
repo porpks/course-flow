@@ -141,9 +141,9 @@ function Learning() {
                     <div className='mb-20'>
                         <LearningVdo videoHead={videoHead} videoKey={videoKey} />
                     </div>
-                    <div className='mb-20 bg-[--blue100] h-[200px]'>
+                    {/* <div className='mb-20 bg-[--blue100] h-[200px]'>
                         <h1>Assigment</h1>
-                    </div>
+                    </div> */}
                 </div>
 
             </div>
