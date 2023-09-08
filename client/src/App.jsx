@@ -7,12 +7,12 @@ import "./index.css";
 // import Profile from "./pages/Profile.jsx";
 
 // import jwtInterceptor from "./utils/jwtInterceptors";
-// import { useAuth } from "./contexts/AuthContext.jsx";
+import { useAuth } from "./contexts/AuthContext.jsx";
 import AuthenticatedApp from "./components/AuthenticatedApp.jsx";
 import UnauthenticatedApp from "./components/UnauthenticatedApp.jsx";
 
 function App() {
-  const isAuthenticated = Boolean(localStorage.getItem("token"));
-  return isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
+  const auth = useAuth();
+  return auth.isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
 }
 export default App;

@@ -80,9 +80,9 @@ function UpdateProfile() {
       email: formik.values.email,
       avatar: avatar,
     };
-
+    console.log(newUserData);
     const result = await axios.put(
-      `http://localhost:4000/profile/${params.id}`,
+      `http://localhost:4000/profile/${userID}`,
       newUserData,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -97,8 +97,8 @@ function UpdateProfile() {
     } catch (error) {
       alert(error.message);
     }
-
-    setUserID(params.id);
+    const useid = userID;
+    setUserID(params.id ? params.id : useid);
 
     navigate("/ourcourse");
   };

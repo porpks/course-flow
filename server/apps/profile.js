@@ -79,7 +79,7 @@ profileRouter.get("/image/:userId",validateTokenMiddleware, async (req, res) => 
 
 profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req, res) => {
   const userId = req.params.userId;
-
+  
   if (
     !req.body.full_name ||
     !req.body.dateofbirth ||
@@ -104,11 +104,14 @@ profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req
       message: "invalid email",
     });
   }
+  
   try {
-    const file = req.files.avatar[0];
-    const fileImage = new Blob([file.buffer], { type: file.mimetype });
-    const fileName = file.originalname.replace(/ /g, "_");
 
+    if (req.files.length > 0 || req.files.avatar) {
+      const file = req.files.avatar[0];
+      const fileImage = new Blob([file.buffer], { type: file.mimetype });
+      const fileName = file.originalname.replace(/ /g, "_");
+      console.log(file)
     const { data, error } = await supabase.storage
       .from("test-avatar")
       .upload(`profile/${uuidv4()}${fileName}`, fileImage);
@@ -118,11 +121,12 @@ profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req
     } else {
       console.log("File uploaded successfully:", data);
     }
+
     const path = data.path;
     const imgUrl = `https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/${path}`;
-    const now = new Date(); // Get the current date and time
-    const formattedDate =
-      now.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
+    const now1 = new Date(); // Get the current date and time
+    const formattedDate1 =
+      now1.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
 
     try {
       const { data, error } = await supabase
@@ -133,17 +137,53 @@ profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req
           edu_background: req.body.edu_background,
           email: req.body.email,
           image_url: imgUrl,
-          updated_at: formattedDate,
+          updated_at: formattedDate1,
         })
         .eq("user_id", userId);
-       
+       console.log(data);
+      if (error) {
+        console.log(error);
+      }
+  } catch (error) {
+    console.error(error);
+  }
+} else {
+  console.log(req.body)
+    const now2 = new Date(); // Get the current date and time
+    const formattedDate2 =
+      now2.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
+
+  //   console.log({name: req.body.full_name,
+  //   date:req.body.dateofbirth,
+  //   edu:req.body.edu_background,
+  //   email:req.body.email,
+  //   imgUrl:imgUrl,
+  //   updated_at: formattedDate,
+  // })
+ 
+  console.log(formattedDate2)
+    try {
+      const { data, error } = await supabase
+        .from("register")
+        .update({
+          full_name: req.body.full_name,
+          dateofbirth: req.body.dateofbirth,
+          edu_background: req.body.edu_background,
+          email: req.body.email,
+          updated_at: formattedDate2,
+        })
+        .eq("user_id", userId);
+       console.log(data);
       if (error) {
         console.log(error);
       }
     } catch (error) {
       console.error(error);
     }
-  } catch (error) {}
+  }
+  } catch (error) {
+    console.log(error);
+  }
 
   return res.json({
     message: "You profile has been update",
