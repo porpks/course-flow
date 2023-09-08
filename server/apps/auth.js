@@ -1,16 +1,9 @@
 import { Router } from "express";
 import supabase from "../utils/db.js";
-
+import jwt from "jsonwebtoken";
 const authRouter = Router();
 
 authRouter.post("/register", async (req, res) => {
-  const registerData = {
-    full_name: req.body.name,
-    dateofbirth: req.body.dateOfBirth,
-    edu_background: req.body.educationBackground,
-    email: req.body.email,
-  };
-  console.log(registerData);
   try {
     const { data, error } = await supabase
       .from("register")
@@ -45,43 +38,33 @@ authRouter.post("/login", async (req, res) => {
     email: req.body.email,
     password: req.body.password,
   };
-  // console.log(req.body);
-  // console.log(loginData);
-
   try {
-    await supabase.auth.signInWithPassword({
+    const result = await supabase.auth.signInWithPassword({
       email: loginData.email,
       password: loginData.password,
     });
+    const accessToken = result.data.session.access_token;
+
     try {
       const { data, error } = await supabase
         .from("register")
-        .select("user_id")
+        .select("*")
         .eq("email", loginData.email);
-
       console.log(data);
-      console.log(loginData);
-      console.log(loginData.email);
-
-      res.json({ data: data });
-      if (error) {
-        return res.status(500).json({ error: "Supabase query failed" });
-      }
+      return res.json({ accessToken: accessToken, data: data });
     } catch (error) {
-      res.json({ error: error });
+      res.status(500).json({ error: error.message });
     }
-  } catch (error) {
-    res.json({ error: error });
-  }
+  } catch (error) {}
 });
 
-authRouter.get("/logout/:userId", async (req, res) => {
-  await supabase.auth.signOut();
-  const userId = req.params.userId;
-  return res.json({
-    message: "logout",
-    data: userId,
-  });
-});
+// authRouter.get("/logout/:userId", async (req, res) => {
+//   await supabase.auth.signOut();
+//   const userId = req.params.userId;
+//   return res.json({
+//     message: "logout",
+//     data: userId,
+//   });
+// });
 
 export default authRouter;

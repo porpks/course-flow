@@ -8,6 +8,8 @@ import Profile from "./pages/Profile.jsx";
 import MycoursePage from "./pages/MyCoursePage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import jwtInterceptor from "./utils/jwtInterceptor";
+jwtInterceptor();
 
 function App() {
   return (

@@ -5,7 +5,7 @@ import authRouter from "./apps/auth.js";
 import profileRouter from "./apps/profile.js";
 import courseRouter from "./apps/course.js";
 // import { client } from "./utils/db.js";
-// import dotenv from "dotenv";
+import dotenv from "dotenv";
 
 async function init() {
   //   dotenv.config();

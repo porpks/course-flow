@@ -44,7 +44,6 @@ function Navbar() {
   };
 
   const AfterLogin = () => {
-    console.log(username);
     return (
       <div className="flex flex-row space-x-2 items-center">
         <Avatar alt={username.full_name} src={username.image_url} />

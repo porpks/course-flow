@@ -5,31 +5,40 @@ import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
-  const { userID, setUserID, setIsLoggedIn } = useAuth();
-  const [loginData, setLoginData] = useState({
-    email: null,
-    password: null,
-  });
-  console.log(userID);
+  const { userID, setUserID, setIsLoggedIn, login } = useAuth();
+  // const [loginData, setLoginData] = useState({
+  //   email: null,
+  //   password: null,
+  // });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  // console.log(userID);
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   if (!loginData.email || !loginData.password) {
+  //     console.log("nodata");
+  //   } else {
+  //     try {
+  //       const result = await axios.post(
+  //         "http://localhost:4000/auth/login",
+  //         loginData
+  //       );
+  //       setUserID(result.data.data[0].user_id);
+  //       setIsLoggedIn(true);
+  //       navigate(`/profile/${result.data.data[0].user_id}`);
+  //     } catch (error) {
+  //       alert(error.message);
+  //     }
+  //   }
+  // };
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!loginData.email || !loginData.password) {
-      console.log("nodata");
-    } else {
-      try {
-        const result = await axios.post(
-          "http://localhost:4000/auth/login",
-          loginData
-        );
-        setUserID(result.data.data[0].user_id);
-        setIsLoggedIn(true);
-        navigate(`/profile/${result.data.data[0].user_id}`);
-      } catch (error) {
-        alert(error.message);
-      }
-    }
+    login({
+      email: email,
+      password: password,
+    });
   };
-  console.log(userID);
+
   return (
     <div className="flex justify-center min-h-[100vh] relative overflow-hidden">
       <div className="w-[450px] mt-[100px] bg-white overflow-visible">
@@ -42,9 +51,8 @@ function Login() {
           <input
             type="email"
             id="email"
-            onChange={(e) =>
-              setLoginData({ ...loginData, email: e.target.value })
-            }
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
             className="Body2 mt-1 p-3 rounded-lg border-solid border-[--gray500] focus:border-[--orange500] focus:outline-none"
             placeholder="Enter Email"
           />
@@ -54,9 +62,8 @@ function Login() {
           <input
             type="password"
             id="password"
-            onChange={(e) =>
-              setLoginData({ ...loginData, password: e.target.value })
-            }
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
             className="Body2 mt-1 p-3 rounded-lg border-solid border-[--gray500] focus:border-[--orange500] focus:outline-none"
             placeholder="Enter Password"
           />
