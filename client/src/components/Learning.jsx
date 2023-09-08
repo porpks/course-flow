@@ -76,9 +76,9 @@ function Learning() {
 
     return (
         <>
-            <div className="flex py-[100px] px-[160px]">
+            <div className="flex justify-center py-[100px] px-[160px]">
 
-                <div className="flex flex-col w-1/3 mr-[24px] Shadow1 px-6 py-8">
+                <div className="flex flex-col w-[360px] mr-[24px] px-6 py-8 shadow-[4px_4px_24px_0px_rgba(0,0,0,0.08)]">
                     <div className="">
                         <h1 className="Body3 text-[--orange500] mb-6">Course</h1>
                         <h1 className="H3 mb-2">{mockdata.course_name}</h1>
@@ -137,7 +137,7 @@ function Learning() {
 
                 </div>
 
-                <div className="flex flex-col w-2/3">
+                <div className="flex flex-col w-full">
                     <div className='mb-20'>
                         <LearningVdo videoHead={videoHead} videoKey={videoKey} />
                     </div>

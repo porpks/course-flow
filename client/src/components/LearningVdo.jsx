@@ -4,7 +4,7 @@ function LearningVdo({ videoHead, videoKey }) {
     if (videoKey) {
         return (
             <>
-                <div className="">
+                <div className="h-[90px]">
                     <h1 className="H2">{videoHead}</h1>
                 </div>
                 <div className="w-full">
