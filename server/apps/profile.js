@@ -58,13 +58,10 @@ profileRouter.get("/image/:userId",validateTokenMiddleware, async (req, res) => 
       .select("image_url")
       .eq("user_id", userId);
 
+    console.log(data);  
     if (error) {
       console.error(error);
       return res.status(500).json({ message: "Internal server error" });
-    }
-
-    if (data.length === 0 || !data[0].image_url) {
-      return res.status(404).json({ message: "Image not found" });
     }
 
     const imageUrl = data[0].image_url;
@@ -196,7 +193,7 @@ profileRouter.put("/delete/:userId", async (req, res) => {
         image_url: null,
       })
       .eq("user_id", userId);
-
+      
     if (error) {
       console.log(error);
       res.status(500).json({ error: "Failed to update image_url" });
