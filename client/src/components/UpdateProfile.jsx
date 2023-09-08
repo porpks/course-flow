@@ -81,14 +81,10 @@ function UpdateProfile() {
       avatar: avatar,
     };
 
-    const result = await axios.put(
-      `http://localhost:4000/profile/${params.id}`,
-      newUserData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
-    console.log(result);
+    await axios.put(`http://localhost:4000/profile/${userID}`, newUserData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
     try {
       const response = await axios.get(
         `http://localhost:4000/profile/${userID}`
@@ -97,8 +93,8 @@ function UpdateProfile() {
     } catch (error) {
       alert(error.message);
     }
-
-    setUserID(params.id);
+    const useid = userID;
+    setUserID(params.id ? params.id : useid);
 
     navigate("/ourcourse");
   };

@@ -21,9 +21,10 @@ function AuthProvider(props) {
         `http://localhost:4000/auth/logout/${userID}`
       );
       if (response.status === 200) {
+        localStorage.removeItem("token");
         setIsLoggedIn(false);
         setUserID("");
-        console.log("Logout successful");
+        alert("Logout successful");
       } else {
         console.error("Logout failed: Unexpected server response");
       }

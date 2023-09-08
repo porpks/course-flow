@@ -17,7 +17,7 @@ import LearningPage from "../pages/LearningPage";
 
 function AuthenticatedApp() {
   const { userID } = useAuth();
-  console.log(userID);
+
   return (
     <>
       <Routes>
