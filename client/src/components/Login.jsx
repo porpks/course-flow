@@ -21,12 +21,15 @@ function Login() {
           "http://localhost:4000/auth/login",
           loginData
         );
+        console.log(result);
+        const token = result.data.token;
+        localStorage.setItem("token", token);
         if (result.data.error) {
-          return alert(result.data.error.message)
+          return alert(result.data.error.message);
         }
         setUserID(result.data.data[0].user_id);
         setIsLoggedIn(true);
-        // navigate(`/profile/${result.data.data[0].user_id}`);
+
         try {
           const response = await axios.get(
             `http://localhost:4000/profile/${result.data.data[0].user_id}`

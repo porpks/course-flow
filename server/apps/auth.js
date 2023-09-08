@@ -53,19 +53,31 @@ authRouter.post("/login", async (req, res) => {
     if (error) {
       return res.json({ error: error });
     }
+    
+    if(data){
+      const token = data.session.access_token
+      
     try {
       const { data, error } = await supabase
         .from("register")
         .select("user_id")
         .eq("email", loginData.email);
 
-      res.json({ data: data });
+      const userId = data
+
       if (error) {
         return res.status(500).json({ error: "Supabase query failed" });
       }
+      return res.json({ 
+        message: "login succesfully",
+        token ,
+        data : userId
+      })
     } catch (error) {
       res.json({ error: error });
     }
+    
+  }
   } catch (error) {
     res.json({ error: error });
   }

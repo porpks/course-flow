@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import supabase from "../utils/db.js";
 import { v4 as uuidv4 } from "uuid";
+import { validateTokenMiddleware } from "../middlewares/protect.js";
 
 const profileRouter = Router();
 
@@ -9,10 +10,10 @@ const multerUpload = multer({});
 const avatarUpload = multerUpload.fields([{ name: "avatar", maxCount: 1 }]);
 
 
-profileRouter.get("/:userId", async (req, res) => {
+profileRouter.get("/:userId",validateTokenMiddleware, async (req, res) => {
   try {
     const userId = req.params.userId;
-
+    console.log(userId);
 
     if (!userId || typeof userId !== "string") {
       return res.status(400).json({
@@ -49,7 +50,7 @@ profileRouter.get("/:userId", async (req, res) => {
   }
 });
 
-profileRouter.get("/image/:userId", async (req, res) => {
+profileRouter.get("/image/:userId",validateTokenMiddleware, async (req, res) => {
   const userId = req.params.userId;
 
   try {
@@ -76,7 +77,7 @@ profileRouter.get("/image/:userId", async (req, res) => {
   }
 });
 
-profileRouter.put("/:userId", avatarUpload, async (req, res) => {
+profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req, res) => {
   const userId = req.params.userId;
 
   if (
@@ -135,7 +136,7 @@ profileRouter.put("/:userId", avatarUpload, async (req, res) => {
           updated_at: formattedDate,
         })
         .eq("user_id", userId);
-      console.log(data);
+       
       if (error) {
         console.log(error);
       }
