@@ -1,17 +1,24 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./courseDetail.css";
 import Collapsible from "../assets/Collapsible.jsx";
 function CourseDetail() {
+  const navigate = useNavigate();
   return (
-    <section className="flex justify-center items-center border">
+    <section className="flex justify-center items-center border-2 border-sky-500">
       <div className="canvas_CourseDetail ">
         <div className="back-btn">
-          <a className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer">
+          <a
+            onClick={() => {
+              navigate("/ourcourse");
+            }}
+            className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
+          >
             <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
-            <p className="text-[--blue500] font-[700] text-[16px]">Backup</p>
+            <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
           </a>
         </div>
-        <div className="flex gap-[24px]">
+        <div className="flex gap-[30px]">
           <div className="CourseDetail">
             <div className="vdo-preview">
               <img
@@ -64,7 +71,7 @@ function CourseDetail() {
                   title="Introduction"
                   content="This is the content 01"
                 />
-                <Collapsible
+                {/* <Collapsible
                   title="Introduction"
                   content="This is the content 02"
                 />
@@ -83,14 +90,32 @@ function CourseDetail() {
                 <Collapsible
                   title="Introduction"
                   content="This is the content 06"
-                />
+                /> */}
               </div>
             </div>
           </div>
 
           <div className="Subscribe_box Shadow1">
-            <div className="Subscribe-content w-[245px] h-[100%] bg-black flex justify-center items-center">
-              <p className="text-white">Content</p>
+            <div>
+              <p className="Body3 text-[--orange500]">Course</p>
+            </div>
+            <div className="course-Subscribe flex flex-col gap-[8px]">
+              <p className="course-title H3">Service Design Essentials</p>
+              <p className="course-description Body2 text-[--gray700]">
+                Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.
+              </p>
+            </div>
+            <div className="course-price  H3 text-[--gray700] flex flex-row justify-center items-center">
+              <p className="mr-[1rem]">THB</p>
+              <p>3,559.00</p>
+            </div>
+            <div className="btn-grp">
+              <button className="Secondary w-[100%]">
+                Get in Desire Course
+              </button>
+              <button className="Primary w-[100%]">
+                Subscribe This Course
+              </button>
             </div>
           </div>
         </div>
