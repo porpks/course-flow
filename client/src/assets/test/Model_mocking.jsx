@@ -13,7 +13,7 @@ const style = {
   padding: "16px",
 };
 
-function Model() {
+function Model_mocking() {
   return (
     <div className="model-box Shadow1 rounded-[24px] flex flex-col gap-[24px] p-[24px]" style={style}>
       <div className="top-model flex flex-row justify-between items-center">
@@ -45,4 +45,4 @@ function Model() {
   );
 }
 
-export default Model;s
+export default Model_mocking
