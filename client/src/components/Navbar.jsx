@@ -119,6 +119,20 @@ function Navbar() {
               My Desire Courses
             </p>
           </MenuItem>
+
+          {/* mock navigate to learning page */}
+          <MenuItem
+            onClick={() => {
+              navigate("/learning");
+            }}
+            className=' space-x-4 '>
+            {/* <StarIcon width='16px' height='16px' stroke='#8DADE0' /> */}
+            <p className='Body3 text-[--gray700]' style={{ fontWeight: "500" }}>
+              Learning Page
+            </p>
+          </MenuItem>
+
+
           <Divider />
           <MenuItem onClick={handleLogout} className=' space-x-4 '>
             <LogoutIcon width='16px' height='16px' stroke='#646D89' />
