@@ -1,9 +1,19 @@
 import React from "react";
+
 import { useNavigate } from "react-router-dom";
 import "./courseDetail.css";
 import Collapsible from "../assets/Collapsible.jsx";
+
+import Modal from "@mui/material/Modal";
+
+import Model from "../assets/test/Model.jsx";
+
 function CourseDetail() {
   const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <section className="flex justify-center items-center border-2 border-sky-500">
       <div className="canvas_CourseDetail ">
@@ -113,9 +123,17 @@ function CourseDetail() {
               <button className="Secondary w-[100%]">
                 Get in Desire Course
               </button>
-              <button className="Primary w-[100%]">
+              <button onClick={handleOpen} className="Primary w-[100%]">
                 Subscribe This Course
               </button>
+              <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Model />
+              </Modal>
             </div>
           </div>
         </div>
