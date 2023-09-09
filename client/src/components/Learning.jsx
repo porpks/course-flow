@@ -15,16 +15,16 @@ const mockdata = {
         {
             lessonname: "Introduction",
             sublesson: [
-                { sublesson_id: 1, sublessonname: "Welcome to the Course", status: "complete" },
-                { sublesson_id: 2, sublessonname: "Course Overview", status: "complete" },
-                { sublesson_id: 3, sublessonname: "Getting to Know You", status: "complete" },
-                { sublesson_id: 4, sublessonname: "What is Service Design ?", status: "complete" },
-                { sublesson_id: 5, sublessonname: "Service Design vs. UX vs. UI vs. Design  Thinking", status: "complete" },
-                { sublesson_id: 6, sublessonname: "4 Levels of Service Design in an Organization", status: "inprogress" },
-                { sublesson_id: 7, sublessonname: "Scope of Service Design", status: null },
-                { sublesson_id: 8, sublessonname: "Develop an Entirely New Service - U Drink I Drive", status: null },
-                { sublesson_id: 9, sublessonname: "Improving Existing Services - Credit Cards", status: null },
-                { sublesson_id: 10, sublessonname: "Improving Existing Services - MK Levels of Impact", status: null },
+                { sublesson_id: 1, sublessonname: "Welcome to the Course", sublesson_status: "complete" },
+                { sublesson_id: 2, sublessonname: "Course Overview", sublesson_status: "complete" },
+                { sublesson_id: 3, sublessonname: "Getting to Know You", sublesson_status: "complete" },
+                { sublesson_id: 4, sublessonname: "What is Service Design ?", sublesson_status: "complete" },
+                { sublesson_id: 5, sublessonname: "Service Design vs. UX vs. UI vs. Design  Thinking", sublesson_status: "complete" },
+                { sublesson_id: 6, sublessonname: "4 Levels of Service Design in an Organization", sublesson_status: "inprogress" },
+                { sublesson_id: 7, sublessonname: "Scope of Service Design", sublesson_status: null },
+                { sublesson_id: 8, sublessonname: "Develop an Entirely New Service - U Drink I Drive", sublesson_status: null },
+                { sublesson_id: 9, sublessonname: "Improving Existing Services - Credit Cards", sublesson_status: null },
+                { sublesson_id: 10, sublessonname: "Improving Existing Services - MK Levels of Impact", sublesson_status: null },
             ]
         },
         {
@@ -140,7 +140,7 @@ function Learning() {
                                             return (
                                                 <div key={index} className='flex items-center mb-6'>
                                                     <div className='mr-4 h-[20px]'>
-                                                        <SublessonIcon subStatus={sublesson.status} />
+                                                        <SublessonIcon subStatus={sublesson.sublesson_status} />
                                                     </div>
                                                     <p className='text-[--gray700] cursor-pointer'
                                                         onClick={() => handleShowVideo(sublesson.sublessonname, sublesson.sublesson_id)}
