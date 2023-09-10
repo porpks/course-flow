@@ -1,10 +1,14 @@
+import { useNavigate } from "react-router-dom";
 function SubFooterIMG(props) {
+  const navigate = useNavigate();
   return (
     <svg
       width={props.width || "529"}
       height={props.height || "450"}
       viewBox='0 0 592 450'
       fill='none'
+      className='hover-scale'
+      onClick={() => navigate("/ourcourse")}
       xmlns='http://www.w3.org/2000/svg'>
       <g opacity='0.8'>
         <g opacity='0.5'>
