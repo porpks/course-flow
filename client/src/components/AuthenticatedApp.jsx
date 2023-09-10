@@ -21,17 +21,17 @@ function AuthenticatedApp() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/ourcourse' element={<OurCoursePage />} />
-        <Route path='/register' element={<RegisterPage />} />
-        <Route path='/login' element={<LoginPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/ourcourse" element={<OurCoursePage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path={`/profile/:${userID}`} element={<Profile />} />
         <Route path="/ourcourse/coursedetail" element={<CourseDetailPage />} />
         <Route path="/mycourse" element={<MyCoursePage />} />
         <Route path="/desire" element={<DesireCoursePage />} />
         <Route path="/assignment" element={<AssignmentPage />} />
         <Route path="/learning" element={<LearningPage />} />
-        <Route path='*' element={null} />
+        <Route path="*" element={null} />
       </Routes>
     </>
   );
