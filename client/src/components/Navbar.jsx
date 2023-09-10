@@ -143,11 +143,11 @@ function Navbar() {
 
   return (
     <>
-      <body
+      <div
         id="homepage"
         className="flex flex-row justify-center Shadow2 h-[88px]"
       >
-        <nav className="flex flex-row justify-between items-center ju w-[80vw]">
+        <div className="flex flex-row justify-between items-center ju w-[80vw]">
           <a
             href=""
             onClick={() => {
@@ -175,8 +175,8 @@ function Navbar() {
               <LoginButton buttonText="Log in" />
             )}
           </div>
-        </nav>
-      </body>
+        </div>
+      </div>
     </>
   );
 }

@@ -4,6 +4,8 @@ import cors from "cors";
 import authRouter from "./apps/auth.js";
 import profileRouter from "./apps/profile.js";
 import courseRouter from "./apps/course.js";
+import MyCourseRouter from "./apps/mycourse.js";
+
 // import { client } from "./utils/db.js";
 import dotenv from "dotenv";
 
@@ -19,6 +21,7 @@ async function init() {
   app.use("/profile", profileRouter);
   app.use("/ourcourse", courseRouter);
   //   app.use("/posts", postRouter);
+  app.use("/mycourse", MyCourseRouter);
 
   app.get("/", (req, res) => {
     res.send("Hello World!");

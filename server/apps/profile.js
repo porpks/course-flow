@@ -87,9 +87,9 @@ profileRouter.put("/:userId", avatarUpload, async (req, res) => {
       message: "Please enter all information.",
     });
   }
-  if (
-    
-  )
+  // if (
+
+  // )
 
   const nameValidate = /^[a-zA-Z' -]+$/;
   if (!nameValidate.test(req.body.full_name)) {
