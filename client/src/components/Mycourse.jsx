@@ -13,6 +13,9 @@ function MyCourse() {
   const [allCourse, setAllCourse] = useState(true);
   const [inprogress, setInprogress] = useState(false);
   const [complete, setComplete] = useState(false);
+  const [userName, setUserName] = useState("");
+  // const { userID } = useAuth();
+  const [userID, setUserID] = useState(122);
 
   function handleAllCourse() {
     setAllCourse(true);
@@ -38,24 +41,24 @@ function MyCourse() {
 
   useEffect(() => {
     getDataCourse();
-  }, []);
+  }, [userID]);
 
   const getDataCourse = async () => {
     try {
-      const result = await axios.get(`http://localhost:4000/ourcourse`);
-      console.log(result.data.data);
-      setDataCourse(result.data.data);
+      const result = await axios.get(
+        `http://localhost:4000/mycourse/${userID}`
+      );
+      const newDataCourse = result.data.data;
+      setDataCourse(newDataCourse);
+
+      if (newDataCourse.length > 0) {
+        const username = newDataCourse[0].register.full_name;
+        setUserName(username);
+      } else {
+        setUserName("No User Data Available");
+      }
     } catch (error) {
-      message: error;
-    }
-  };
-  const getDataAllCourse = async () => {
-    try {
-      const result = await axios.get(`http://localhost:4000/ourcourse`);
-      console.log(result.data.data);
-      setDataCourse(result.data.data);
-    } catch (error) {
-      message: error;
+      console.error("Error fetching data:", error);
     }
   };
 
@@ -65,13 +68,13 @@ function MyCourse() {
         <p>AllCourse</p>
         {dataCourse.map((item) => (
           <CourseCard
-            key={item.course_id}
-            count={item.course_id}
-            coverimg={item.coverimg}
-            coursename={item.coursename}
-            coursedetail={item.coursedetail}
-            coursesummary={item.coursesummary}
-            totallearningtime={item.totallearningtime}
+            key={item.course.course_id}
+            count={item.course.course_id}
+            coverimg={item.course.coverimg}
+            coursename={item.course.coursename}
+            coursedetail={item.course.coursedetail}
+            coursesummary={item.course.coursesummary}
+            totallearningtime={item.course.totallearningtime}
           />
         ))}
       </div>
@@ -136,7 +139,7 @@ function MyCourse() {
       <div className="flex flex-row mt-[40px]">
         <div className="flex flex-col w-[357px] h-fit Shadow2 px-[24px] py-[32px] content-center items-center mr-[24px] rounded-lg">
           <Avatar alt="" src="" sx={{ width: 120, height: 120 }} />
-          <h2 className="my-[24px]">Max Mayfield</h2>
+          <h2 className="my-[24px]">{userName}</h2>
           <div className="flex flex-row ">
             <div className="flex flex-col justify-between p-[16px] w-[142.5px] h-[134px] bg-[--gray200] mx-[12px]">
               <p className="Body2">Course Inprogress</p>

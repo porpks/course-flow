@@ -3,23 +3,16 @@ import supabase from "../utils/db.js";
 
 const MyCourseRouter = Router();
 
-// MyCourseRouter.get("/", async (req, res) => {
-//   try {
-//     const { data, error } = await supabase
-//       .from("course")
-//       .select("*")
-//       .order("course_id", { ascending: true });
-//     return res.json({
-//       data,
-//     });
-//   } catch (error) {
-//     message: `Get course error message ${error}`;
-//   }
-// });
-
-MyCourseRouter.get("/", async (req, res) => {
+MyCourseRouter.get("/:userID", async (req, res) => {
+  const { userID } = req.params;
   try {
-    const { data, error } = await supabase.from("usercourse").select("*");
+    const { data, error } = await supabase
+      .from(`userscourse`)
+      .select(
+        "*, course(course_id, coursename, coursedetail, coverimg, totallearningtime, coursesummary), register(full_name)"
+      )
+      .eq("user_id", userID);
+    console.log(data);
     // .order("course_id", { ascending: true });
     return res.json({
       data,
