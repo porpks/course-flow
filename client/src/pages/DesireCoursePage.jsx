@@ -3,6 +3,62 @@ import Footer from "../components/Footer";
 import CourseItem from "../components/CourseItem";
 
 function DesireCoursePage() {
+  const mockData = [
+    {
+      key: "tezst",
+      count: "teszasdasdt",
+      coverimg: "test",
+      coursename: "React in 30 days",
+      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
+      coursesummary: "6",
+      totallearningtime: "6",
+    },
+    {
+      key: "tezst",
+      count: "teszasdasdt",
+      coverimg: "test",
+      coursename: "Node.js in 30 days",
+      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
+      coursesummary: 6,
+      totallearningtime: 6,
+    },
+    {
+      key: "tezst",
+      count: "teszasdasdt",
+      coverimg: "test",
+      coursename: "Meemo in 7 days",
+      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
+      coursesummary: 6,
+      totallearningtime: 6,
+    },
+    {
+      key: "tezst",
+      count: "teszasdasdt",
+      coverimg: "test",
+      coursename: "React in 30 days",
+      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
+      coursesummary: "6",
+      totallearningtime: "6",
+    },
+    {
+      key: "tezst",
+      count: "teszasdasdt",
+      coverimg: "test",
+      coursename: "Node.js in 30 days",
+      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
+      coursesummary: 6,
+      totallearningtime: 6,
+    },
+    {
+      key: "tezst",
+      count: "teszasdasdt",
+      coverimg: "test",
+      coursename: "Meemo in 7 days",
+      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
+      coursesummary: 6,
+      totallearningtime: 6,
+    },
+  ];
   return (
     <>
       <Navbar />
@@ -63,63 +119,17 @@ function DesireCoursePage() {
           </div>
           <h2 className="H2 pt-[100px] pb-[72px]">Desire Course</h2>
           <div className="grid grid-cols-3 gap-x-[24px] gap-y-[40px] mb-[200px]">
-            <CourseItem
-              key="test"
-              count="test"
-              coverimg="test"
-              coursename="test"
-              coursedetail="test"
-              coursesummary="test"
-              totallearningtime="test"
-            />
-            <CourseItem
-              key="test"
-              count="test"
-              coverimg="test"
-              coursename="test"
-              coursedetail="test"
-              coursesummary="test"
-              totallearningtime="test"
-            />
-            <CourseItem
-              key="test"
-              count="test"
-              coverimg="test"
-              coursename="test"
-              coursedetail="test"
-              coursesummary="test"
-              totallearningtime="test"
-            />
-
-            <CourseItem
-              key="test"
-              count="test"
-              coverimg="test"
-              coursename="test"
-              coursedetail="test"
-              coursesummary="test"
-              totallearningtime="test"
-            />
-
-            <CourseItem
-              key="test"
-              count="test"
-              coverimg="test"
-              coursename="test"
-              coursedetail="test"
-              coursesummary="test"
-              totallearningtime="test"
-            />
-
-            <CourseItem
-              key="test"
-              count="test"
-              coverimg="test"
-              coursename="test"
-              coursedetail="test"
-              coursesummary="test"
-              totallearningtime="test"
-            />
+            {mockData.map((item) => (
+              <CourseItem
+                key={item.key}
+                count={item.count}
+                coverimg={item.coverimg}
+                coursename={item.coursename}
+                coursedetail={item.coursedetail}
+                coursesummary={item.coursesummary}
+                totallearningtime={item.totallearningtime}
+              />
+            ))}
           </div>
         </div>
       </div>
