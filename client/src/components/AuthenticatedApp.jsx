@@ -15,6 +15,7 @@ import { Routes, Route } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import LearningPage from "../pages/LearningPage";
 import { useParams } from "react-router-dom";
+import Mymodal from "./Mymodal";
 
 function AuthenticatedApp() {
   const { userID } = useAuth();
@@ -33,17 +34,21 @@ function AuthenticatedApp() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/ourcourse' element={<OurCoursePage />} />
-        <Route path='/register' element={<RegisterPage />} />
-        <Route path='/login' element={<LoginPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/ourcourse" element={<OurCoursePage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path={`/profile/:id`} element={<ProtectedProfileRoute />} />
-        <Route path='/ourcourse/coursedetail' element={<CourseDetailPage />} />
-        <Route path='/mycourse' element={<MyCoursePage />} />
-        <Route path='/desire' element={<DesireCoursePage />} />
-        <Route path='/assignment' element={<AssignmentPage />} />
-        <Route path='/learning' element={<LearningPage />} />
-        <Route path='*' element={null} />
+        <Route path="/ourcourse/coursedetail" element={<CourseDetailPage />} />
+        <Route path="/mycourse" element={<MyCoursePage />} />
+        <Route path="/desire" element={<DesireCoursePage />} />
+        <Route path="/assignment" element={<AssignmentPage />} />
+        <Route path="/learning" element={<LearningPage />} />
+        <Route
+          path="/mymodal"
+          element={<Mymodal yes="asdas" no="sdasd" description="asdas" />}
+        />
+        <Route path="*" element={null} />
       </Routes>
     </>
   );

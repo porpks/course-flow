@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./courseDetail.css";
 import Collapsible from "../assets/Collapsible.jsx";
@@ -7,6 +7,8 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Model_mocking from "../assets/test/Model_mocking";
+import Mymodal from "../components/Mymodal";
+import { Hidden } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -21,9 +23,13 @@ const style = {
 
 function CourseDetail() {
   const navigate = useNavigate();
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [desireToggle, setDesireToggle] = useState(false);
+  const openDesire = () => setDesireToggle(true);
+  const closeDesire = () => setDesireToggle(false);
+
+  const [subscribeToggle, setSubscribeToggle] = useState(false);
+  const openSubscribe = () => setSubscribeToggle(true);
+  const closeSubscribe = () => setSubscribeToggle(false);
 
   return (
     <section className="flex justify-center items-center border-2 border-sky-500">
@@ -33,8 +39,7 @@ function CourseDetail() {
             onClick={() => {
               navigate("/ourcourse");
             }}
-            className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
-          >
+            className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer">
             <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
             <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
           </a>
@@ -131,98 +136,36 @@ function CourseDetail() {
               <p>3,559.00</p>
             </div>
             <div className="btn-grp">
-              <button  onClick={handleOpen} className="Secondary w-[100%]">
+              <button onClick={openDesire} className="Secondary w-[100%]">
                 Get in Desire Course
               </button>
-              <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                {/* <Model_mocking /> */}
-
-                <div
-                  className="model-box Shadow1 rounded-[24px] flex flex-col gap-[24px] p-[24px]"
-                  style={style}
-                >
-                  <div className="top-model flex flex-row justify-between items-center">
-                    <p className="Body1">Confirmation</p>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="41"
-                      height="40"
-                      viewBox="0 0 41 40"
-                      fill="none"
-                    >
-                      <path
-                        d="M15.5303 24.8483L25.4697 15.1514M15.5303 15.1514L25.4697 24.8483"
-                        stroke="#C8CCDB"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <div className="detail-model flex flex-col gap-[24px] ">
-                    <p>
-                      Do you sure to subscribe Service Design Essentials Course?
-                    </p>
-                    <div className="btn-box flex gap-[16px]">
-                      <button className="Secondary">No, I don’t</button>
-                      <button className="Primary">
-                        Yes, I want to subscribe
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </Modal>
-              <button onClick={handleOpen} className="Primary w-[100%]">
+              {desireToggle ? (
+                <Mymodal
+                  open={desireToggle}
+                  onClose={closeDesire}
+                  closeButton={closeDesire}
+                  description="Do you sure to add Service Design Essentials to your desire Course?"
+                  yesDes="Yes, add this to my desire course"
+                  noDes="No, I don’t"
+                />
+              ) : (
+                Hidden
+              )}
+              {subscribeToggle ? (
+                <Mymodal
+                  open={subscribeToggle}
+                  onClose={closeSubscribe}
+                  closeButton={closeSubscribe}
+                  description="Do you sure to subscribe Service Design Essentials Course?"
+                  yesDes="Yes, I want to subscribe"
+                  noDes="No, I don’t"
+                />
+              ) : (
+                Hidden
+              )}
+              <button onClick={openSubscribe} className="Primary w-[100%]">
                 Subscribe This Course
               </button>
-              <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                {/* <Model_mocking /> */}
-
-                <div
-                  className="model-box Shadow1 rounded-[24px] flex flex-col gap-[24px] p-[24px]"
-                  style={style}
-                >
-                  <div className="top-model flex flex-row justify-between items-center">
-                    <p className="Body1">Confirmation</p>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="41"
-                      height="40"
-                      viewBox="0 0 41 40"
-                      fill="none"
-                    >
-                      <path
-                        d="M15.5303 24.8483L25.4697 15.1514M15.5303 15.1514L25.4697 24.8483"
-                        stroke="#C8CCDB"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <div className="detail-model flex flex-col gap-[24px] ">
-                    <p>
-                      Do you sure to subscribe Service Design Essentials Course?
-                    </p>
-                    <div className="btn-box flex gap-[16px]">
-                      <button className="Secondary">No, I don’t</button>
-                      <button className="Primary">
-                        Yes, I want to subscribe
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </Modal>
             </div>
           </div>
         </div>
