@@ -1,14 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import axios from "axios";
-<<<<<<< HEAD
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-=======
-
-const AuthContext = React.createContext();
-
->>>>>>> 4999396e16914f9695ca3c3f9ece7810f9e493cc
 function AuthProvider(props) {
   const [state, setState] = useState({
     loading: null,
@@ -20,7 +14,6 @@ function AuthProvider(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userID, setUserID] = useState(null);
   const [username, setUsername] = useState({});
-<<<<<<< HEAD
   const navigate = useNavigate();
 
   const login = async (data) => {
@@ -55,9 +48,6 @@ function AuthProvider(props) {
     };
   }, [userID]);
 
-=======
-  const isAuthenticated = Boolean(localStorage.getItem("token"));
->>>>>>> 4999396e16914f9695ca3c3f9ece7810f9e493cc
   const logout = async () => {
     try {
       if (!userID) {
@@ -96,15 +86,10 @@ function AuthProvider(props) {
         username,
         setUsername,
         logout,
-<<<<<<< HEAD
         login,
         isAuthenticated,
       }}
     >
-=======
-        isAuthenticated,
-      }}>
->>>>>>> 4999396e16914f9695ca3c3f9ece7810f9e493cc
       {props.children}
     </AuthContext.Provider>
   );
