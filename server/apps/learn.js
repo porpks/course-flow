@@ -21,8 +21,7 @@ learnRouter.get("/", async (req, res) => {
             .single();
 
         if (courseError) {
-            console.error('Error fetching course:', courseError);
-            return;
+            return res.status(404).json({ 'message': courseError });
         }
 
         const { data: lessonData, error: lessonError } = await supabase
@@ -31,47 +30,27 @@ learnRouter.get("/", async (req, res) => {
             .eq('course_id', courseID);
 
         if (lessonError) {
-            console.error('Error fetching lessons:', lessonError);
-            return;
+            return res.status(404).json({ 'message': lessonError });
         }
 
         const result = {
             ...courseData,
-            lessons: lessonData,
+            lesson: lessonData,
         }
 
-        await Promise.all(result.lessons.map(async (lesson) => {
-            lesson.sublesson = []
+        await Promise.all(result.lesson.map(async (lesson) => {
             const { data: sublessonData, error: sublessonError } = await supabase
                 .from('sublesson')
                 .select('sublesson_id, sublessonname')
                 .eq('lesson_id', lesson.lesson_id)
 
             if (sublessonError) {
-                console.error('Error fetching sublessons:', sublessonError);
-                return;
+                return res.status(404).json({ 'message': sublessonError });
             }
             else {
-                lesson.sublesson.push(sublessonData)
+                lesson.sublesson = sublessonData
             }
         }))
-
-        // await Promise.all(result.lessons.map(async (lesson) => {
-        //     lesson.sublesson.map(async (sublesson) => {
-        //         const { data: substatusData, error: substatusError } = await supabase
-        //             .from('usersublesson')
-        //             .select('sublesson_status')
-        //             .eq('user_id', userID)
-        //             .eq('sublesson_id', sublesson.sublesson_id)
-        //         if (substatusError) {
-        //             console.error('Error fetching sublessons:', substatusError);
-        //             return;
-        //         }
-        //         else {
-        //             console.log(substatusData);
-        //         }
-        //     })
-        // }))
 
         return res.json({
             'data': result
@@ -80,6 +59,36 @@ learnRouter.get("/", async (req, res) => {
     } catch (err) {
         return res.status(400).json({ 'Error:': err.message });
     }
+})
+
+learnRouter.get('/status', async (req, res) => {
+    const userID = Number(req.query.userID);
+    const sublessonID = Number(req.query.sublessonID);
+
+    if (!userID || !sublessonID) {
+        return res.status(400).json({
+            message: "Invalid query"
+        })
+    }
+
+
+    const { data, error } = await supabase
+        .from('usersublesson')
+        .select('sublesson_status')
+        // .eq('user_id', userID)
+        .eq('sublesson_id', sublessonID);
+
+
+    if (error) {
+        return res.status(404).json({ 'message': error });
+    }
+
+    if (data) {
+        return res.json({ 'data': data[0].sublesson_status });
+    } else {
+        return res.status(404).json({ message: 'No data found for the specified criteria.' });
+    }
+
 })
 
 export default learnRouter;
