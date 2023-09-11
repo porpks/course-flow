@@ -25,7 +25,6 @@ async function init() {
   app.use("/desire", desireRouter);
   app.use("/mycourse", MyCourseRouter);
 
-
   //   app.use("/posts", postRouter);
 
   app.get("/", (req, res) => {
