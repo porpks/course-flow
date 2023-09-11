@@ -5,7 +5,7 @@ import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
-  const { userID, setUserID } = useAuth();
+  const { setUserID, setIsLoggedIn, setUsername } = useAuth();
   const [loginData, setLoginData] = useState({
     email: null,
     password: null,
@@ -14,22 +14,38 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!loginData.email || !loginData.password) {
-      console.log("nodata");
+      alert("nodata");
     } else {
       try {
         const result = await axios.post(
           "http://localhost:4000/auth/login",
           loginData
         );
-        setUserID(result.data.data[0].user_id);
 
-        navigate(`/profile/${result.data.data[0].user_id}`);
+        const token = result.data.token;
+        localStorage.setItem("token", token);
+        if (result.data.error) {
+          return alert(result.data.error.message);
+        }
+        setUserID(result.data.data[0].user_id);
+        setIsLoggedIn(true);
+
+        try {
+          const response = await axios.get(
+            `http://localhost:4000/profile/${result.data.data[0].user_id}`
+          );
+          setUsername(response.data.data);
+        } catch (error) {
+          alert(error.message);
+        }
+
+        navigate("/ourcourse");
       } catch (error) {
-        alert(error.message);
+        alert(error);
       }
     }
   };
-  console.log(userID);
+
   return (
     <div className='flex justify-center min-h-[100vh] relative overflow-hidden'>
       <div className='w-[450px] mt-[100px] bg-white overflow-visible'>

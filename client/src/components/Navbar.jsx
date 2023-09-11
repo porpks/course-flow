@@ -1,5 +1,5 @@
 import CourseFlowIcon from "../assets/CourseFlowIcon.jsx";
-import React, { useState } from "react";
+import React from "react";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
@@ -15,43 +15,35 @@ import CopyIcon from "../assets/CopyIcon.jsx";
 import StarIcon from "../assets/StarIcon.jsx";
 import LogoutIcon from "../assets/LogoutIcon.jsx";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'
 
 function Navbar() {
-  const { isLoggedIn, setIsLoggedIn } = useAuth(); // Set initial state to false
+  const { isLoggedIn, username, logout, userID } = useAuth(); // Set initial state to falseSet initial state to false
   const navigate = useNavigate();
 
-  // const handleLogin = () => {
-  //   setIsLoggedIn(true); // Simulate a login action
-  // };
-
-  const handleLogout = async (userId) => {
-    setIsLoggedIn(false);
-    const result = await axios.get(`http://localhost:4000/auth/logout/${userId}`)
-    console.log(result);
+  const handleLogout = async (userID) => {
+    logout(userID);
+    navigate("/");
   };
 
   const LoginButton = ({ buttonText }) => {
     return (
       <div>
         <button
-          className="Shadow1 text-[16px] font-[700] w-[112px] h-[60px] rounded-[12px] border-none bg-[--blue500] text-white mx-[16px] hover:bg-[--blue400] active:bg-[--blue700] disabled:bg-[--gre400] disabled:text-[--gray600]"
+          className='Shadow1 text-[16px] font-[700] w-[112px] h-[60px] rounded-[12px] border-none bg-[--blue500] text-white mx-[16px] hover:bg-[--blue400] active:bg-[--blue700] disabled:bg-[--gre400] disabled:text-[--gray600]'
           onClick={() => {
             navigate("/login");
-          }}
-        >
+          }}>
           {buttonText}
         </button>
       </div>
     );
   };
 
-  const AfterLogin = ({ profileName, profileImg }) => {
+  const AfterLogin = () => {
     return (
-      <div className="flex flex-row space-x-2 items-center">
-        <Avatar alt={profileImg} src={profileImg} />
-        <img src={profileImg} alt="profileImg" />
-        <p>{profileName}</p>
+      <div className='flex flex-row space-x-2 items-center'>
+        <Avatar alt={username.full_name} src={username.image_url} />
+        <p>{username.full_name}</p>
         <BasicMenu />
       </div>
     );
@@ -68,75 +60,69 @@ function Navbar() {
     };
 
     return (
-      <div className="Body3">
+      <div className='Body3'>
         <Button
-          id="basic-button"
+          id='basic-button'
           aria-controls={open ? "basic-menu" : undefined}
-          aria-haspopup="true"
+          aria-haspopup='true'
           aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}
-        >
-          <ion-icon name="caret-down-outline"></ion-icon>
+          onClick={handleClick}>
+          <ion-icon name='caret-down-outline'></ion-icon>
         </Button>
         <Menu
-          id="basic-menu"
+          id='basic-menu'
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
           MenuListProps={{
             "aria-labelledby": "basic-button",
-          }}
-        >
+          }}>
           <MenuItem
             onClick={() => {
-              navigate("/profile");
+              navigate(`/profile/${userID}`);
             }}
-            className=" space-x-4 "
-            style={{ width: "216px" }}
-          >
-            <PeopleIcon width="16px" height="16px" stroke="#8DADE0" />
-            <p className="Body3 text-[--gray700]" style={{ fontWeight: "500" }}>
+            className=' space-x-4 '
+            style={{ width: "216px" }}>
+            <PeopleIcon width='16px' height='16px' stroke='#8DADE0' />
+            <p className='Body3 text-[--gray700]' style={{ fontWeight: "500" }}>
               Profile{" "}
             </p>
           </MenuItem>
 
           <MenuItem
             onClick={() => {
-              navigate("/ourcourse");
+              navigate("/mycourse");
             }}
-            className=" space-x-4 "
-          >
-            <BookIcon width="16px" height="16px" stroke="#8DADE0" />
-            <p className="Body3 text-[--gray700]" style={{ fontWeight: "500" }}>
+            className=' space-x-4 '>
+            <BookIcon width='16px' height='16px' stroke='#8DADE0' />
+            <p className='Body3 text-[--gray700]' style={{ fontWeight: "500" }}>
               My Course
             </p>
           </MenuItem>
           <MenuItem
             onClick={() => {
-              navigate("/ourcourse");
+              navigate("/assignment");
             }}
-            className=" space-x-4 "
-          >
-            <CopyIcon width="16px" height="16px" stroke="#8DADE0" />
-            <p className="Body3 text-[--gray700]" style={{ fontWeight: "500" }}>
+            className=' space-x-4 '>
+            <CopyIcon width='16px' height='16px' stroke='#8DADE0' />
+            <p className='Body3 text-[--gray700]' style={{ fontWeight: "500" }}>
               My Homework
             </p>
           </MenuItem>
           <MenuItem
             onClick={() => {
-              navigate("/ourcourse");
+              navigate("/desire");
             }}
-            className=" space-x-4 "
-          >
-            <StarIcon width="16px" height="16px" stroke="#8DADE0" />
-            <p className="Body3 text-[--gray700]" style={{ fontWeight: "500" }}>
+            className=' space-x-4 '>
+            <StarIcon width='16px' height='16px' stroke='#8DADE0' />
+            <p className='Body3 text-[--gray700]' style={{ fontWeight: "500" }}>
               My Desire Courses
             </p>
           </MenuItem>
           <Divider />
-          <MenuItem onClick={handleLogout} className=" space-x-4 ">
-            <LogoutIcon width="16px" height="16px" stroke="#646D89" />
-            <p className="Body3 text-[--gray700]" style={{ fontWeight: "500" }}>
+          <MenuItem onClick={handleLogout} className=' space-x-4 '>
+            <LogoutIcon width='16px' height='16px' stroke='#646D89' />
+            <p className='Body3 text-[--gray700]' style={{ fontWeight: "500" }}>
               Logout
             </p>
           </MenuItem>
@@ -147,39 +133,36 @@ function Navbar() {
 
   return (
     <>
-      <body
-        id="homepage"
-        className="flex flex-row justify-center Shadow2 h-[88px]"
-      >
-        <nav className="flex flex-row justify-between items-center ju w-[80vw]">
-          <a
-            href=""
+      <div
+        id='homepage'
+        className='flex flex-row justify-center Shadow2 h-[88px]'>
+        <nav className='flex flex-row justify-between items-center ju w-[80vw]'>
+          <div
+            className='cursor-pointer'
             onClick={() => {
               navigate("/");
-            }}
-          >
+            }}>
             <CourseFlowIcon />
-          </a>
-          <div className="flex flex-row items-center">
-            <a
-              href=""
-              className="no-underline text-[16px] font-[700] justify-center px-[24px] py-[32px] mx-[16px]"
+          </div>
+
+          <div className='flex flex-row items-center'>
+            <div
+              className='no-underline text-[16px] font-[700] justify-center px-[24px] py-[32px] mx-[16px] cursor-pointer hover-scale'
               onClick={() => {
                 navigate("/ourcourse");
-              }}
-            >
+              }}>
               Our Course
-            </a>
-            {isLoggedIn ? (
-              <div className="flex flex-row justify-center items-center space-x-3">
-                <AfterLogin profileImg="url" profileName="TESTS" />
+            </div>
+            {isLoggedIn && username ? (
+              <div className='flex flex-row justify-center items-center space-x-3'>
+                <AfterLogin profileImg='url' profileName='TESTS' />
               </div>
             ) : (
-              <LoginButton buttonText="Log in" />
+              <LoginButton buttonText='Log in' />
             )}
           </div>
         </nav>
-      </body>
+      </div>
     </>
   );
 }
