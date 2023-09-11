@@ -276,7 +276,7 @@ function AssignmentPage() {
                         </div>
                       </div>
                       <div
-                        className={`InputField self-stretch pl-3 pr-4 py-3 ${
+                        className={`InputField self-stretch pl-3 pr-4 py-3 bg-none ${
                           assignment.assignmentstatus === "Submitted"
                             ? "bg-none"
                             : "bg-white"
