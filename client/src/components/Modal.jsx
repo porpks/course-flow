@@ -1,6 +1,6 @@
 import React from "react";
 
-function Modal() {
+function Modal(props) {
   return (
     <div className="bg-[#fff] rounded-[25px] shadow-lg shadow-gray-300 w-[528px] h-[212px]">
       <div className="flex justify-between items-center h-[56px] px-[24px] py-[8px]">
@@ -24,14 +24,10 @@ function Modal() {
       </div>
       <div className="bg-gray-200 w-[100%] h-[1px]"></div>
       <div className="p-[24px] Body2">
-        <div className="text-[#646D89]">
-          Do you sure to subscribe Service Design Essentials Course?
-        </div>
+        <div className="text-[#646D89]">{props.description}</div>
         <div className="flex gap-[16px] mt-[24px]">
-          <button className="Secondary">No, I don’t</button>
-          <button className="Primary border-none">
-            Yes, I want to subscribe
-          </button>
+          <button className="Secondary">{props.no}</button>
+          <button className="Primary border-none">{props.yes}</button>
         </div>
       </div>
     </div>
