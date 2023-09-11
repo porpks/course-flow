@@ -149,7 +149,7 @@ function CourseDetail() {
                   noDes="No, I don’t"
                 />
               ) : (
-                Hidden
+                null
               )}
               {subscribeToggle ? (
                 <Mymodal
@@ -161,7 +161,7 @@ function CourseDetail() {
                   noDes="No, I don’t"
                 />
               ) : (
-                Hidden
+                null
               )}
               <button onClick={openSubscribe} className="Primary w-[100%]">
                 Subscribe This Course
