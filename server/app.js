@@ -4,7 +4,9 @@ import cors from "cors";
 import authRouter from "./apps/auth.js";
 import profileRouter from "./apps/profile.js";
 import courseRouter from "./apps/course.js";
+import desireRouter from "./apps/desire.js";
 import MyCourseRouter from "./apps/mycourse.js";
+
 // import { client } from "./utils/db.js";
 // import dotenv from "dotenv";
 import { validateTokenMiddleware } from "./middlewares/protect.js";
@@ -20,7 +22,9 @@ async function init() {
   app.use("/auth", authRouter);
   app.use("/profile", profileRouter);
   app.use("/ourcourse", courseRouter);
+  app.use("/desire", desireRouter);
   app.use("/mycourse", MyCourseRouter);
+
 
   //   app.use("/posts", postRouter);
 
