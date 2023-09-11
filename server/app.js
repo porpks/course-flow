@@ -7,7 +7,12 @@ import courseRouter from "./apps/course.js";
 import MyCourseRouter from "./apps/mycourse.js";
 
 // import { client } from "./utils/db.js";
+<<<<<<< HEAD
 import dotenv from "dotenv";
+=======
+// import dotenv from "dotenv";
+import { validateTokenMiddleware } from "./middlewares/protect.js";
+>>>>>>> 4999396e16914f9695ca3c3f9ece7810f9e493cc
 
 async function init() {
   //   dotenv.config();
@@ -17,9 +22,11 @@ async function init() {
   app.use(cors());
   app.use(bodyParser.json());
 
+  
   app.use("/auth", authRouter);
   app.use("/profile", profileRouter);
   app.use("/ourcourse", courseRouter);
+
   //   app.use("/posts", postRouter);
   app.use("/mycourse", MyCourseRouter);
 

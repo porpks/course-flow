@@ -21,7 +21,6 @@ function OurCourse() {
             params: { keywords },
           }
         );
-        console.log(`response : ${response}`);
         const data = response.data.data;
         setDataCourse(data);
         setLoading(false);
@@ -40,7 +39,6 @@ function OurCourse() {
   async function getDataCourse() {
     try {
       const result = await axios.get(`http://localhost:4000/ourcourse`);
-      console.log(result.data.data);
       setDataCourse(result.data.data);
     } catch (error) {
       message: error;

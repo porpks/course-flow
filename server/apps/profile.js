@@ -2,16 +2,18 @@ import { Router } from "express";
 import multer from "multer";
 import supabase from "../utils/db.js";
 import { v4 as uuidv4 } from "uuid";
+import { validateTokenMiddleware } from "../middlewares/protect.js";
 
 const profileRouter = Router();
 
 const multerUpload = multer({});
 const avatarUpload = multerUpload.fields([{ name: "avatar", maxCount: 1 }]);
 
-profileRouter.get("/:userId", async (req, res) => {
+
+profileRouter.get("/:userId",validateTokenMiddleware, async (req, res) => {
   try {
     const userId = req.params.userId;
-
+   
     if (!userId || typeof userId !== "string") {
       return res.status(400).json({
         message: "Invalid url.",
@@ -23,7 +25,7 @@ profileRouter.get("/:userId", async (req, res) => {
       .select("full_name, dateofbirth, edu_background, email, image_url")
       .eq("user_id", userId);
 
-    if (error) {
+    if (error && (userId !== null)) {
       return res.status(500).json({
         message: "An error occurred while fetching data.",
         error: error.message,
@@ -47,7 +49,7 @@ profileRouter.get("/:userId", async (req, res) => {
   }
 });
 
-profileRouter.get("/image/:userId", async (req, res) => {
+profileRouter.get("/image/:userId",validateTokenMiddleware, async (req, res) => {
   const userId = req.params.userId;
 
   try {
@@ -56,13 +58,10 @@ profileRouter.get("/image/:userId", async (req, res) => {
       .select("image_url")
       .eq("user_id", userId);
 
+    console.log(data);  
     if (error) {
       console.error(error);
       return res.status(500).json({ message: "Internal server error" });
-    }
-
-    if (data.length === 0 || !data[0].image_url) {
-      return res.status(404).json({ message: "Image not found" });
     }
 
     const imageUrl = data[0].image_url;
@@ -74,9 +73,9 @@ profileRouter.get("/image/:userId", async (req, res) => {
   }
 });
 
-profileRouter.put("/:userId", avatarUpload, async (req, res) => {
+profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req, res) => {
   const userId = req.params.userId;
-
+  
   if (
     !req.body.full_name ||
     !req.body.dateofbirth ||
@@ -104,10 +103,13 @@ profileRouter.put("/:userId", avatarUpload, async (req, res) => {
       message: "invalid email",
     });
   }
+  
   try {
-    const file = req.files.avatar[0];
-    const fileImage = new Blob([file.buffer], { type: file.mimetype });
-    const fileName = file.originalname.replace(/ /g, "_");
+
+    if (req.files.length > 0 || req.files.avatar) {
+      const file = req.files.avatar[0];
+      const fileImage = new Blob([file.buffer], { type: file.mimetype });
+      const fileName = file.originalname.replace(/ /g, "_");
 
     const { data, error } = await supabase.storage
       .from("test-avatar")
@@ -118,11 +120,12 @@ profileRouter.put("/:userId", avatarUpload, async (req, res) => {
     } else {
       console.log("File uploaded successfully:", data);
     }
+
     const path = data.path;
     const imgUrl = `https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/${path}`;
-    const now = new Date(); // Get the current date and time
-    const formattedDate =
-      now.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
+    const now1 = new Date(); // Get the current date and time
+    const formattedDate1 =
+      now1.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
 
     try {
       const { data, error } = await supabase
@@ -133,17 +136,51 @@ profileRouter.put("/:userId", avatarUpload, async (req, res) => {
           edu_background: req.body.edu_background,
           email: req.body.email,
           image_url: imgUrl,
-          updated_at: formattedDate,
+          updated_at: formattedDate1,
         })
         .eq("user_id", userId);
-      console.log(data);
+      if (error) {
+        console.log(error);
+      }
+  } catch (error) {
+    console.error(error);
+  }
+} else {
+    const now2 = new Date(); // Get the current date and time
+    const formattedDate2 =
+      now2.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
+
+  //   console.log({name: req.body.full_name,
+  //   date:req.body.dateofbirth,
+  //   edu:req.body.edu_background,
+  //   email:req.body.email,
+  //   imgUrl:imgUrl,
+  //   updated_at: formattedDate,
+  // })
+ 
+
+    try {
+      const { data, error } = await supabase
+        .from("register")
+        .update({
+          full_name: req.body.full_name,
+          dateofbirth: req.body.dateofbirth,
+          edu_background: req.body.edu_background,
+          email: req.body.email,
+          updated_at: formattedDate2,
+        })
+        .eq("user_id", userId);
+     
       if (error) {
         console.log(error);
       }
     } catch (error) {
       console.error(error);
     }
-  } catch (error) {}
+  }
+  } catch (error) {
+    console.log(error);
+  }
 
   return res.json({
     message: "You profile has been update",
@@ -159,7 +196,7 @@ profileRouter.put("/delete/:userId", async (req, res) => {
         image_url: null,
       })
       .eq("user_id", userId);
-
+      
     if (error) {
       console.log(error);
       res.status(500).json({ error: "Failed to update image_url" });

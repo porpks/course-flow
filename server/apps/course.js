@@ -36,7 +36,6 @@ courseRouter.get("/course", async (req, res) => {
     const queryFullName = `coursename.ilike.${keywords}`;
     const queryKeywords = `coursename.ilike.%${regexKeywords}%`;
 
-    console.log(`regexKeywords : ${regexKeywords}`);
 
     const { data, error } = await supabase
       .from("course")

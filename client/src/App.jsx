@@ -1,5 +1,6 @@
 import "./App.css";
 import "./index.css";
+<<<<<<< HEAD
 import HomePage from "./pages/HomePage.jsx";
 import OurCoursePage from "./pages/OurCoursePage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
@@ -35,6 +36,21 @@ function App() {
       </BrowserRouter>
     </>
   );
-}
+=======
+// import HomePage from "./pages/HomePage.jsx";
+// import OurCoursePage from "./pages/OurCoursePage.jsx";
+// import RegisterPage from "./pages/RegisterPage.jsx";
+// import LoginPage from "./pages/LoginPage.jsx";
+// import Profile from "./pages/Profile.jsx";
 
+// import jwtInterceptor from "./utils/jwtInterceptors";
+import { useAuth } from "./contexts/AuthContext.jsx";
+import AuthenticatedApp from "./components/AuthenticatedApp.jsx";
+import UnauthenticatedApp from "./components/UnauthenticatedApp.jsx";
+
+function App() {
+  const auth = useAuth()
+  return auth.isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
+>>>>>>> 4999396e16914f9695ca3c3f9ece7810f9e493cc
+}
 export default App;
