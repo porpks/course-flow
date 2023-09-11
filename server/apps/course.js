@@ -7,7 +7,9 @@ courseRouter.get("/", async (req, res) => {
   try {
     const { data, error } = await supabase
       .from("course")
-      .select("*")
+      .select(
+        "*,lesson(lesson_id,lessonname,sublesson(sublessonname,sublesson_id))"
+      )
       .order("course_id", { ascending: true });
     return res.json({
       data,
@@ -35,7 +37,6 @@ courseRouter.get("/course", async (req, res) => {
 
     const queryFullName = `coursename.ilike.${keywords}`;
     const queryKeywords = `coursename.ilike.%${regexKeywords}%`;
-
 
     const { data, error } = await supabase
       .from("course")
