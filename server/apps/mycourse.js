@@ -9,10 +9,9 @@ MyCourseRouter.get("/:userID", async (req, res) => {
     const { data, error } = await supabase
       .from(`userscourse`)
       .select(
-        "*, course(course_id, coursename, coursedetail, coverimg, totallearningtime, coursesummary), register(full_name)"
+        "*, course(course_id, coursename, coursedetail, coverimg, totallearningtime, coursesummary), register(full_name,image_url)"
       )
       .eq("user_id", userID);
-    console.log(data);
     // .order("course_id", { ascending: true });
     return res.json({
       data,

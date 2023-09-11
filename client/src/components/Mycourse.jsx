@@ -15,27 +15,27 @@ function MyCourse() {
   const [complete, setComplete] = useState(false);
   const [userName, setUserName] = useState("");
   // const { userID } = useAuth();
-  const [userID, setUserID] = useState(122);
+  const [userID, setUserID] = useState(172); //122,172,130
+  const [inProgressCount, setInProgressCount] = useState(0);
+  const [completeCount, setCompleteCount] = useState(0);
+  const [avatar, SetAvatar] = useState(0);
 
   function handleAllCourse() {
     setAllCourse(true);
     setInprogress(false);
     setComplete(false);
-    console.log("allCourse");
     return;
   }
   function handleInprogress() {
     setAllCourse(false);
     setInprogress(true);
     setComplete(false);
-    console.log("inprogress");
     return;
   }
   function handleComplete() {
     setAllCourse(false);
     setInprogress(false);
     setComplete(true);
-    console.log("complete");
     return;
   }
 
@@ -53,7 +53,22 @@ function MyCourse() {
 
       if (newDataCourse.length > 0) {
         const username = newDataCourse[0].register.full_name;
+        const avatar = newDataCourse[0].register.image_url;
         setUserName(username);
+        SetAvatar(avatar);
+        let inProgressCount = 0;
+        let completeCount = 0;
+        newDataCourse.forEach((course) => {
+          if (course.coursestatus === false) {
+            // Course is in progress
+            inProgressCount++;
+          } else {
+            // Course is complete
+            completeCount++;
+          }
+        });
+        setInProgressCount(inProgressCount);
+        setCompleteCount(completeCount);
       } else {
         setUserName("No User Data Available");
       }
@@ -65,7 +80,6 @@ function MyCourse() {
   function AllCourse() {
     return (
       <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]">
-        <p>AllCourse</p>
         {dataCourse.map((item) => (
           <CourseCard
             key={item.course.course_id}
@@ -82,36 +96,38 @@ function MyCourse() {
   }
 
   function Inprogress() {
+    const inProgressCourses = dataCourse.filter((item) => !item.coursestatus);
+
     return (
       <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]">
-        <p>Inprogress</p>
-        {dataCourse.map((item) => (
+        {inProgressCourses.map((item) => (
           <CourseCard
-            key={item.course_id}
-            count={item.course_id}
-            coverimg={item.coverimg}
-            coursename={item.coursename}
-            coursedetail={item.coursedetail}
-            coursesummary={item.coursesummary}
-            totallearningtime={item.totallearningtime}
+            key={item.course.course_id}
+            count={item.course.course_id}
+            coverimg={item.course.coverimg}
+            coursename={item.course.coursename}
+            coursedetail={item.course.coursedetail}
+            coursesummary={item.course.coursesummary}
+            totallearningtime={item.course.totallearningtime}
           />
         ))}
       </div>
     );
   }
   function Complete() {
+    const completeCourses = dataCourse.filter((item) => item.coursestatus);
+
     return (
       <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]">
-        <p>Complete</p>
-        {dataCourse.map((item) => (
+        {completeCourses.map((item) => (
           <CourseCard
-            key={item.course_id}
-            count={item.course_id}
-            coverimg={item.coverimg}
-            coursename={item.coursename}
-            coursedetail={item.coursedetail}
-            coursesummary={item.coursesummary}
-            totallearningtime={item.totallearningtime}
+            key={item.course.course_id}
+            count={item.course.course_id}
+            coverimg={item.course.coverimg}
+            coursename={item.course.coursename}
+            coursedetail={item.course.coursedetail}
+            coursesummary={item.course.coursesummary}
+            totallearningtime={item.course.totallearningtime}
           />
         ))}
       </div>
@@ -138,16 +154,16 @@ function MyCourse() {
       </div>
       <div className="flex flex-row mt-[40px]">
         <div className="flex flex-col w-[357px] h-fit Shadow2 px-[24px] py-[32px] content-center items-center mr-[24px] rounded-lg">
-          <Avatar alt="" src="" sx={{ width: 120, height: 120 }} />
+          <Avatar alt="" src={avatar} sx={{ width: 120, height: 120 }} />
           <h2 className="my-[24px]">{userName}</h2>
           <div className="flex flex-row ">
             <div className="flex flex-col justify-between p-[16px] w-[142.5px] h-[134px] bg-[--gray200] mx-[12px]">
               <p className="Body2">Course Inprogress</p>
-              <p className="H3"> 3</p>
+              <p className="H3">{inProgressCount}</p>
             </div>
             <div className="flex flex-col justify-between p-[16px] w-[142.5px] h-[134px] bg-[--gray200] mx-[12px]">
               <p className="Body2">Course Complete</p>
-              <p className="H3">2</p>
+              <p className="H3">{completeCount}</p>
             </div>
           </div>
         </div>
