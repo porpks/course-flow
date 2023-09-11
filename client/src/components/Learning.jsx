@@ -36,7 +36,6 @@ const mockdata = {
 }
 let percent = 15
 
-
 // eslint-disable-next-line react/prop-types
 function SublessonIcon({ subStatus }) {
     if (subStatus === "complete") {
