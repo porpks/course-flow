@@ -54,10 +54,6 @@ function UpdateProfile() {
       edu_background: result.data.data.edu_background,
       email: result.data.data.email,
     };
-<<<<<<< HEAD
-    // console.log(result);
-=======
->>>>>>> 4999396e16914f9695ca3c3f9ece7810f9e493cc
     formik.setValues(initialValues);
   };
 
