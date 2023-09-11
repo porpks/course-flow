@@ -7,10 +7,10 @@ import SubFooter from "../components/SubFooter.jsx";
 function CourseDetailPage() {
   return (
     <>
-      {/* <Navbar /> */}
+      <Navbar />
       <CourseDetail />
-      {/* <SubFooter /> */}
-      {/* <Footer /> */}
+      <SubFooter />
+      <Footer />
     </>
   );
 }
