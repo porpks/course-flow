@@ -147,7 +147,7 @@ function Navbar() {
 
           <div className='flex flex-row items-center'>
             <div
-              className='no-underline text-[16px] font-[700] justify-center px-[24px] py-[32px] mx-[16px] cursor-pointer'
+              className='no-underline text-[16px] font-[700] justify-center px-[24px] py-[32px] mx-[16px] cursor-pointer hover-scale'
               onClick={() => {
                 navigate("/ourcourse");
               }}>

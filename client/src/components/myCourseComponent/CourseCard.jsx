@@ -1,9 +1,9 @@
 import React from "react";
-import "./courseItem.css";
+import "./CourseCard.css";
 
-function CourseItem(props) {
+function CourseCard(props) {
   return (
-    <div className="cardItem Shadow1 w-[357px] bg-[--white] rounded-t-[8px]">
+    <div className="Shadow1 w-[357px] bg-[--white] rounded-t-[8px]">
       <div className="topCard flex justify-center items-center ">
         <img className="" src={props.coverimg} alt={props.coursename} />
       </div>
@@ -35,4 +35,4 @@ function CourseItem(props) {
   );
 }
 
-export default CourseItem;
+export default CourseCard;

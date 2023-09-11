@@ -17,13 +17,15 @@ function SubFooter() {
             <h1 className='H2 text-white w-[70%]'>
               Interested in Becoming a Software Developer?
             </h1>
-            <button
-              className='Secondary'
-              onClick={() => {
-                navigate("/ourcourse");
-              }}>
-              Check Out Our Course
-            </button>
+            <a href=''>
+              <button
+                className='Secondary'
+                onClick={() => {
+                  navigate("/ourcourse");
+                }}>
+                Check Out Our Course
+              </button>
+            </a>
           </div>
 
           <svg
@@ -42,7 +44,9 @@ function SubFooter() {
             />
           </svg>
           <div className='w-[40vw] self-end'>
-            <SubFooterIMG height='448.594' width='592' />
+            <a href=''>
+              <SubFooterIMG height='448.594' width='592' />
+            </a>
             <svg
               width='37'
               height='37'
