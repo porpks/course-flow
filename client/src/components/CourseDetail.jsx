@@ -166,7 +166,49 @@ function CourseDetail() {
               <button onClick={openSubscribe} className="Primary w-[100%]">
                 Subscribe This Course
               </button>
-             
+              <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                {/* <Model_mocking /> */}
+
+                <div
+                  className="model-box Shadow1 rounded-[24px] flex flex-col gap-[24px] p-[24px]"
+                  style={style}
+                >
+                  <div className="top-model flex flex-row justify-between items-center">
+                    <p className="Body1">Confirmation</p>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="41"
+                      height="40"
+                      viewBox="0 0 41 40"
+                      fill="none"
+                    >
+                      <path
+                        d="M15.5303 24.8483L25.4697 15.1514M15.5303 15.1514L25.4697 24.8483"
+                        stroke="#C8CCDB"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <div className="detail-model flex flex-col gap-[24px] ">
+                    <p>
+                      Do you sure to subscribe Service Design Essentials Course?
+                    </p>
+                    <div className="btn-box flex gap-[16px]">
+                      <button className="Secondary">No, I don’t</button>
+                      <button className="Primary">
+                        Yes, I want to subscribe
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </Modal>
             </div>
           </div>
         </div>
