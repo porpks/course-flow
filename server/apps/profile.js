@@ -86,6 +86,9 @@ profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req
       message: "Please enter all information.",
     });
   }
+  // if (
+
+  // )
 
   const nameValidate = /^[a-zA-Z' -]+$/;
   if (!nameValidate.test(req.body.full_name)) {

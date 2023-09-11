@@ -1,3 +1,27 @@
+<<<<<<< HEAD
+import jwt from "jsonwebtoken";
+
+export const protect = async (req, res, next) => {
+  const token = req.headers.authorization;
+
+  if (!token || !token.startsWith("Bearer ")) {
+    return res.status(401).json({
+      message: "Token has invalid format",
+    });
+  }
+
+  const tokenWithoutBearer = token.split(" ")[1];
+
+  jwt.verify(tokenWithoutBearer, process.env.SECRET_KEY, (err, payload) => {
+    if (err) {
+      return res.status(401).json({
+        message: "Token is invalid",
+      });
+    }
+    req.user = payload;
+    next();
+  });
+=======
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import supabase from "../utils/db.js";
@@ -34,4 +58,5 @@ export const validateTokenMiddleware = async (req, res, next) => {
   } catch (error) {
     return res.status(401).json({ error: 'Token is invalid' });
   }
+>>>>>>> 4999396e16914f9695ca3c3f9ece7810f9e493cc
 };

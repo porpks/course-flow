@@ -5,6 +5,46 @@ import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
+<<<<<<< HEAD
+  const { userID, setUserID, setIsLoggedIn, login } = useAuth();
+  // const [loginData, setLoginData] = useState({
+  //   email: null,
+  //   password: null,
+  // });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  // console.log(userID);
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   if (!loginData.email || !loginData.password) {
+  //     console.log("nodata");
+  //   } else {
+  //     try {
+  //       const result = await axios.post(
+  //         "http://localhost:4000/auth/login",
+  //         loginData
+  //       );
+  //       setUserID(result.data.data[0].user_id);
+  //       setIsLoggedIn(true);
+  //       navigate(`/profile/${result.data.data[0].user_id}`);
+  //     } catch (error) {
+  //       alert(error.message);
+  //     }
+  //   }
+  // };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    login({
+      email: email,
+      password: password,
+    });
+  };
+
+  return (
+    <div className="flex justify-center min-h-[100vh] relative overflow-hidden">
+      <div className="w-[450px] mt-[100px] bg-white overflow-visible">
+        <h1 className="H2 text-[#22269E]">Welcome back!</h1>
+=======
   const { setUserID, setIsLoggedIn, setUsername } = useAuth();
   const [loginData, setLoginData] = useState({
     email: null,
@@ -45,6 +85,7 @@ function Login() {
       }
     }
   };
+>>>>>>> 4999396e16914f9695ca3c3f9ece7810f9e493cc
 
   return (
     <div className='flex justify-center min-h-[100vh] relative overflow-hidden'>
@@ -56,6 +97,14 @@ function Login() {
             Email
           </label>
           <input
+<<<<<<< HEAD
+            type="email"
+            id="email"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            className="Body2 mt-1 p-3 rounded-lg border-solid border-[--gray500] focus:border-[--orange500] focus:outline-none"
+            placeholder="Enter Email"
+=======
             type='email'
             id='email'
             onChange={(e) =>
@@ -63,11 +112,20 @@ function Login() {
             }
             className='Body2 mt-1 p-3 rounded-lg border-solid border-[--gray500] focus:border-[--orange500] focus:outline-none'
             placeholder='Enter Email'
+>>>>>>> 4999396e16914f9695ca3c3f9ece7810f9e493cc
           />
           <label htmlFor='password' className='Body2 mt-10'>
             Password
           </label>
           <input
+<<<<<<< HEAD
+            type="password"
+            id="password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            className="Body2 mt-1 p-3 rounded-lg border-solid border-[--gray500] focus:border-[--orange500] focus:outline-none"
+            placeholder="Enter Password"
+=======
             type='password'
             id='password'
             onChange={(e) =>
@@ -75,6 +133,7 @@ function Login() {
             }
             className='Body2 mt-1 p-3 rounded-lg border-solid border-[--gray500] focus:border-[--orange500] focus:outline-none'
             placeholder='Enter Password'
+>>>>>>> 4999396e16914f9695ca3c3f9ece7810f9e493cc
           />
           <button
             type='submit'
