@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player'
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import LearnigDropdown from '../assets/LearnigDropdown';
 import './Learning.css'
 import { useAuth } from "../contexts/AuthContext.jsx";
+import axios from 'axios';
 
 const mockdata = {
     coursename: "Service Design Essentials",
@@ -66,21 +67,64 @@ function SublessonIcon({ subStatus }) {
 }
 
 function Learning() {
-    const { userID, setUserID } = useAuth();
+    const { userID } = useAuth();
 
+    const [courseData, setCourseData] = useState({
+        coursename: "",
+        coursedetail: "",
+        lesson: []
+    })
+    // const [sublessonStatus, setSublessonStatus] = useState("")
     const [videoHead, setVideoHead] = useState("")
     const [videoKey, setVideoKey] = useState(null)
-    // const [currentTime, setCurrentTime] = useState(0)
-    // const playerRef = useRef(null)
+
     const [isShowVdo, setIsShowVdo] = useState(false)
     const [isShowAsm, setIsShowAsm] = useState(false)
 
-    const handleShowVideo = (sublessonName, sublessonKey) => {
+    const getDataCourse = async () => {
+        let course_id = Math.round(Math.random() * 20)
+        if (course_id === 13) {
+            course_id = course_id + 1
+        }
+
+        try {
+            const result = await axios.get(
+                "http://localhost:4000/learn/",
+                {
+                    params: { userID: 172, courseID: 20 },
+                }
+            );
+            const data = result.data.data;
+            setCourseData(data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const getStatus = async (userID, sublesson_id) => {
+        try {
+            if (sublesson_id && userID) {
+                const result = await axios.get(
+                    "http://localhost:4000/learn/status/",
+                    {
+                        params: { userID, sublessonID: sublesson_id },
+                    }
+                );
+                // console.log(result.data.data);
+                return result.data.data
+            }
+
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleShowVideo = (sublessonName, sublessonID) => {
         setIsShowAsm(false)
         setIsShowVdo(false)
         setTimeout(() => {
             setVideoHead(sublessonName)
-            setVideoKey(sublessonKey)
+            setVideoKey(sublessonID)
             setIsShowVdo(true)
         }, 500)
 
@@ -88,13 +132,15 @@ function Learning() {
 
     const handlePause = (pauseTime) => {
         console.log(pauseTime);
-        // setProgressTime(pauseTime);
-        // playerRef.current.seekTo(currentTime, 'seconds');
     }
     const handleEnd = () => {
         setIsShowAsm(true)
     }
-    console.log(userID);
+
+    useEffect(() => {
+        getDataCourse()
+    }, [])
+
     return (
         <>
             <div className="flex justify-center py-[100px] px-[160px]">
@@ -102,10 +148,10 @@ function Learning() {
                 <div className="flex flex-col w-[360px] mr-[24px] px-6 py-8 shadow-[4px_4px_24px_0px_rgba(0,0,0,0.08)]">
                     <div className="">
                         <h1 className="Body3 text-[--orange500] mb-6">Course</h1>
-                        <h1 className="H3 mb-2">{mockdata.coursename}</h1>
-                        <p className="Body2 text-[--gray700] mb-6 leading-8">
-                            {mockdata.coursedetail}
-                        </p>
+                        <h1 className="H3 mb-2">{courseData.coursename}</h1>
+                        <h1 className="Body2 text-[--gray700] mb-6 leading-8">
+                            {courseData.coursedetail}
+                        </h1>
                     </div>
                     <div className="mb-6">
                         <h1 className="Body2 text-[--gray700] mb-2">{percent}% Complete</h1>
@@ -114,10 +160,9 @@ function Learning() {
                         </div>
                     </div>
 
-                    {mockdata.lesson.map((lesson, index) => {
+                    {courseData.lesson.map((lesson, index) => {
                         let seq = ""
                         index + 1 < 10 ? seq = "0" + (index + 1) : seq = String(index + 1)
-
                         return (
                             <Accordion key={index}>
                                 <AccordionSummary
@@ -137,15 +182,17 @@ function Learning() {
                                     <div className='px-2 py-3'>
 
                                         {lesson.sublesson.map((sublesson, index) => {
+                                            let sublessonStatus = getStatus(userID, sublesson.sublesson_id)
+                                            console.log(sublessonStatus)
                                             return (
                                                 <div key={index} className='flex items-center mb-6'>
                                                     <div className='mr-4 h-[20px]'>
-                                                        <SublessonIcon subStatus={sublesson.sublesson_status} />
+                                                        <SublessonIcon subStatus={sublessonStatus} />
                                                     </div>
-                                                    <p className='text-[--gray700] cursor-pointer'
+                                                    <h1 className='Body3 text-[--gray700] cursor-pointer'
                                                         onClick={() => handleShowVideo(sublesson.sublessonname, sublesson.sublesson_id)}
                                                     >{sublesson.sublessonname}
-                                                    </p>
+                                                    </h1>
                                                 </div>
                                             )
                                         })}
@@ -196,13 +243,13 @@ function Learning() {
                                 <h1 className='Body1 mb-6'>Assigment</h1>
                                 <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>status</div>
                             </div>
-                            <p className='Body2 mb-1'>Question ?</p>
+                            <h1 className='Body2 mb-1'>Question ?</h1>
                             <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
-                                <p className='Body2 text-[--gray600]'>Answer...</p>
+                                <h1 className='Body2 text-[--gray600]'>Answer...</h1>
                             </div>
                             <div className='flex justify-between items-center'>
                                 <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>Send Assignment</button>
-                                <p className='Body2 text-[--gray700]'>Assign within 2 days</p>
+                                <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
                             </div>
                         </div> :
                         null}
