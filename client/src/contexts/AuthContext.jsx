@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react/prop-types */
+import React, { useState } from "react";
 import axios from "axios";
 
 const AuthContext = React.createContext();
@@ -24,7 +25,6 @@ function AuthProvider(props) {
         localStorage.removeItem("token");
         setIsLoggedIn(false);
         setUserID("");
-        alert("Logout successful");
       } else {
         console.error("Logout failed: Unexpected server response");
       }

@@ -1,5 +1,6 @@
 import "./App.css";
 import "./index.css";
+
 // import HomePage from "./pages/HomePage.jsx";
 // import OurCoursePage from "./pages/OurCoursePage.jsx";
 // import RegisterPage from "./pages/RegisterPage.jsx";
@@ -14,5 +15,6 @@ import UnauthenticatedApp from "./components/UnauthenticatedApp.jsx";
 function App() {
   const auth = useAuth()
   return auth.isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
+
 }
 export default App;

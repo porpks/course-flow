@@ -14,24 +14,36 @@ import { Routes, Route } from "react-router-dom";
 // import jwtInterceptor from "./utils/jwtInterceptors"
 import { useAuth } from "../contexts/AuthContext.jsx";
 import LearningPage from "../pages/LearningPage";
+import { useParams } from "react-router-dom";
 
 function AuthenticatedApp() {
   const { userID } = useAuth();
 
+  const ProtectedProfileRoute = () => {
+    const params = useParams();
+    const userId = Number(params.id);
+    if (userID == userId) {
+      return <Profile />;
+    } else {
+      localStorage.removeItem("token");
+      return <LoginPage />;
+    }
+  };
+
   return (
     <>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/ourcourse" element={<OurCoursePage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path={`/profile/:${userID}`} element={<Profile />} />
-        <Route path="/ourcourse/coursedetail" element={<CourseDetailPage />} />
-        <Route path="/mycourse" element={<MyCoursePage />} />
-        <Route path="/desire" element={<DesireCoursePage />} />
-        <Route path="/assignment" element={<AssignmentPage />} />
-        <Route path="/learning" element={<LearningPage />} />
-        <Route path="*" element={null} />
+        <Route path='/' element={<HomePage />} />
+        <Route path='/ourcourse' element={<OurCoursePage />} />
+        <Route path='/register' element={<RegisterPage />} />
+        <Route path='/login' element={<LoginPage />} />
+        <Route path={`/profile/:id`} element={<ProtectedProfileRoute />} />
+        <Route path='/ourcourse/coursedetail' element={<CourseDetailPage />} />
+        <Route path='/mycourse' element={<MyCoursePage />} />
+        <Route path='/desire' element={<DesireCoursePage />} />
+        <Route path='/assignment' element={<AssignmentPage />} />
+        <Route path='/learning' element={<LearningPage />} />
+        <Route path='*' element={null} />
       </Routes>
     </>
   );

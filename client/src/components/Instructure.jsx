@@ -11,11 +11,12 @@ import {
   FreeMode,
 } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/keyboard";
-// import Frame427320903 from "../assets/image/Frame427320903.png";
+
 function Instructure() {
   const navigate = useNavigate();
   return (
@@ -104,7 +105,8 @@ function Instructure() {
             height='448'
             viewBox='0 0 452 448'
             fill='none'
-            className='absolute right-[161px] bottom-[101px]'
+            className='absolute right-[161px] bottom-[101px] hover-scale'
+            onClick={() => navigate("/ourcourse")}
             xmlns='http://www.w3.org/2000/svg'>
             <g clipPath='url(#clip0_12_4273)'>
               <path
@@ -693,7 +695,11 @@ function Instructure() {
           </svg>
           <div className='inline-flex flex-col gap-[120px]'>
             <div className='flex flex-start gap-[119px]'>
-              <img src='../public/image/Frame427320903(1).png' alt='' />
+              <img
+                src='../public/image/Frame427320903(1).png'
+                className='hover-scale'
+                alt=''
+              />
               <div className='flex flex-col gap-[40px]'>
                 <h1 className='H2 self-stretch'>
                   Learning experience has been <br />
@@ -819,7 +825,7 @@ function Instructure() {
               <img
                 src='../public/image/Frame427320903.jpg'
                 alt='other photo'
-                className='w-[454px] h-[330px]'
+                className='w-[454px] h-[330px] hover-scale'
               />
             </div>
           </div>
@@ -838,24 +844,24 @@ function Instructure() {
               strokeWidth='3'
             />
           </svg>
-          <div className='flex flex-col gap-[60px]'>
+          <div className='flex flex-col gap-[60px] '>
             <h1 className='H2 text-center'>Our Professional Intructor</h1>
-            <div className='flex gap-[24px]'>
-              <div className='flex flex-col gap-[24px]'>
+            <div className='flex gap-[24px] '>
+              <div className='flex flex-col gap-[24px] hover-scale'>
                 <img src='../../public/image/Frame 427320910.png' alt='' />
                 <div className='text-center'>
                   <h1 className='H3'>Jane Cooper</h1>
                   <p className='body2 text-[--blue400]'>UX/UI Designer</p>
                 </div>
               </div>
-              <div className='flex flex-col gap-[24px]'>
+              <div className='flex flex-col gap-[24px] hover-scale'>
                 <img src='../../public/image/Frame 427320911.png' alt='' />
                 <div className='text-center'>
                   <h1 className='H3'>Esther Howard</h1>
                   <p className='body2 text-[--blue400]'>Program Manager</p>
                 </div>
               </div>
-              <div className='flex flex-col gap-[24px]'>
+              <div className='flex flex-col gap-[24px] hover-scale'>
                 <img src='../../public/image/Frame 427320912.png' alt='' />
                 <div className='text-center'>
                   <h1 className='H3'>Brooklyn Simmons</h1>
@@ -918,7 +924,7 @@ function Instructure() {
                   Mousewheel,
                   FreeMode,
                 ]}
-                spaceBetween={80}
+                spaceBetween={160}
                 slidesPerView={2}
                 centeredSlides={true}
                 virtual
@@ -926,10 +932,10 @@ function Instructure() {
                 freeMode
                 loop={true}
                 navigation
-                autoplay={{ delay: 1000 }}
+                autoplay={{ delay: 3000 }}
                 keyboard={{ enabled: true }}>
-                <SwiperSlide>
-                  <div className='w-[737.758px] h-[309.485px] relative flex  items-center'>
+                <SwiperSlide className='hover-scale'>
+                  <div className='w-[737.758px] h-[309.485px] relative flex  items-center '>
                     <svg
                       width='82'
                       height='57'
@@ -979,7 +985,7 @@ function Instructure() {
                     </div>
                   </div>
                 </SwiperSlide>
-                <SwiperSlide>
+                <SwiperSlide className='hover-scale'>
                   <div className='w-[737.758px] h-[309.485px] relative flex  items-center'>
                     <svg
                       width='82'
@@ -1031,7 +1037,7 @@ function Instructure() {
                     </div>
                   </div>
                 </SwiperSlide>
-                <SwiperSlide>
+                <SwiperSlide className='hover-scale'>
                   <div className='w-[737.758px] h-[309.485px] relative flex  items-center'>
                     <svg
                       width='82'
