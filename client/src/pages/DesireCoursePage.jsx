@@ -1,64 +1,27 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import CourseItem from "../components/CourseItem";
+import { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import axios from "axios";
 
 function DesireCoursePage() {
-  const mockData = [
-    {
-      key: "tezst",
-      count: "teszasdasdt",
-      coverimg: "test",
-      coursename: "React in 30 days",
-      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
-      coursesummary: "6",
-      totallearningtime: "6",
-    },
-    {
-      key: "tezst",
-      count: "teszasdasdt",
-      coverimg: "test",
-      coursename: "Node.js in 30 days",
-      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
-      coursesummary: 6,
-      totallearningtime: 6,
-    },
-    {
-      key: "tezst",
-      count: "teszasdasdt",
-      coverimg: "test",
-      coursename: "Meemo in 7 days",
-      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
-      coursesummary: 6,
-      totallearningtime: 6,
-    },
-    {
-      key: "tezst",
-      count: "teszasdasdt",
-      coverimg: "test",
-      coursename: "React in 30 days",
-      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
-      coursesummary: "6",
-      totallearningtime: "6",
-    },
-    {
-      key: "tezst",
-      count: "teszasdasdt",
-      coverimg: "test",
-      coursename: "Node.js in 30 days",
-      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
-      coursesummary: 6,
-      totallearningtime: 6,
-    },
-    {
-      key: "tezst",
-      count: "teszasdasdt",
-      coverimg: "test",
-      coursename: "Meemo in 7 days",
-      coursedetail: "deserunt quidem ducimus distinctio nam facilis rerum?",
-      coursesummary: 6,
-      totallearningtime: 6,
-    },
-  ];
+  const { userID } = useAuth();
+  const [desireData, setDesireData] = useState([]);
+  const getDataDesireCourse = async () => {
+    try {
+      const result = await axios.get(`http://localhost:4000/desire/${userID}`);
+      const newDataCourse = result.data;
+      setDesireData(newDataCourse);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    getDataDesireCourse();
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -119,15 +82,14 @@ function DesireCoursePage() {
           </div>
           <h2 className="H2 pt-[100px] pb-[72px]">Desire Course</h2>
           <div className="grid grid-cols-3 gap-x-[24px] gap-y-[40px] mb-[200px]">
-            {mockData.map((item) => (
+            {desireData.map((item, index) => (
               <CourseItem
-                key={item.key}
-                count={item.count}
-                coverimg={item.coverimg}
-                coursename={item.coursename}
-                coursedetail={item.coursedetail}
-                coursesummary={item.coursesummary}
-                totallearningtime={item.totallearningtime}
+                key={index}
+                coverimg={item.course.coverimg}
+                coursename={item.course.coursename}
+                coursedetail={item.course.coursedetail}
+                coursesummary={item.course.lesson.length}
+                totallearningtime={item.course.totallearningtime}
               />
             ))}
           </div>
