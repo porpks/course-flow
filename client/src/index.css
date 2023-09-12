@@ -143,6 +143,7 @@
   font-weight: 700;
   line-height: 150%;
   transition: background 0.3s ease-out;
+  cursor: pointer;
 }
 
 .Primary:hover {
@@ -175,6 +176,7 @@
   font-weight: 700;
   line-height: 150%;
   transition: background 0.3s ease-out;
+  cursor: pointer;
 }
 
 .Secondary:hover {

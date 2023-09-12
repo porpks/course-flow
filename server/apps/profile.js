@@ -10,9 +10,9 @@ const multerUpload = multer({});
 const avatarUpload = multerUpload.fields([{ name: "avatar", maxCount: 1 }]);
 
 profileRouter.get("/:userId", validateTokenMiddleware, async (req, res) => {
+  const userId = req.params.userId;
   try {
-    const userId = req.params.userId;
-
+    
     if (!userId || typeof userId !== "string") {
       return res.status(400).json({
         message: "Invalid url.",
@@ -21,13 +21,14 @@ profileRouter.get("/:userId", validateTokenMiddleware, async (req, res) => {
 
     const { data, error } = await supabase
       .from("users")
-      .select("full_name, date_of_birth, edu_background, email, image_url")
+      .select("*")
       .eq("user_id", userId);
-
+  
+   
     if (error && userId !== null) {
       return res.status(500).json({
         message: "An error occurred while fetching data.",
-        error: error.message,
+        error2: error.message,
       });
     }
 
@@ -43,7 +44,7 @@ profileRouter.get("/:userId", validateTokenMiddleware, async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      "error2": error.message,
     });
   }
 });
