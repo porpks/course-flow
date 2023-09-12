@@ -7,6 +7,7 @@ import Mymodal from "../components/Mymodal";
 import { Hidden } from "@mui/material";
 import axios from "axios";
 import ReactPlayer from "react-player";
+import CircularIndeterminate from "../assets/loadingProgress";
 
 const style = {
   position: "absolute",
@@ -37,12 +38,13 @@ function CourseDetail() {
         `http://localhost:4000/ourcourse/coursedetail`
       );
       setDataCourse(dataDetailCourse.data.data);
-      console.log(`dataCourse : ${dataCourse}`);
+      // console.log(dataDetailCourse.data.data);
     } catch (error) {
       message: error;
-      // console.log(error);
+      console.log(error);
     }
   }
+  console.log(dataCourse);
   // console.log(`mmmmmm ${dataCourse}`);
   useEffect(() => {
     getDetailCourse();
@@ -58,8 +60,16 @@ function CourseDetail() {
   };
 
   const dataDetail = dataCourse;
-  console.log(`dataDetail: ${dataDetail[1].course_name}`);
-
+  // console.log(`dataDetail: ${dataDetail[1].course_name}`);
+  console.log(`dataDetail: ${dataDetail[0]}`);
+  if (dataCourse.length === 0) {
+    return (
+      <div className="flex justify-center items-center absolute top-[150px] w-[100%] h-[100vh] text-slate-100">
+        <h1> Loading...</h1>
+        <CircularIndeterminate />
+      </div>
+    );
+  }
   return (
     <section className="flex justify-center items-center border-2 border-sky-500">
       <div className="canvas_CourseDetail ">
@@ -119,34 +129,7 @@ function CourseDetail() {
               </div>
               <div className="courseDetail_body">
                 <p className="Body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Elementum aenean fermentum, velit vel, scelerisque morbi
-                  accumsan. Nec, tellus leo id leo id felis egestas. Quam sit
-                  lorem quis vitae ut mus imperdiet. Volutpat placerat dignissim
-                  dolor faucibus elit ornare fringilla. Vivamus amet risus
-                  ullamcorper auctor nibh. Maecenas morbi nec vestibulum ac
-                  tempus vehicula.
-                  <br />
-                  <br />
-                  Vel, sit magna nisl cras non cursus. Sed sed sit ullamcorper
-                  neque. Dictum sapien amet, dictumst maecenas. Mattis nulla
-                  tellus ut neque euismod cras amet, volutpat purus. Semper
-                  purus viverra turpis in tempus ac nunc. Morbi ullamcorper sed
-                  elit enim turpis. Scelerisque rhoncus morbi pulvinar donec at
-                  sed fermentum. Duis non urna lacus, sit amet. Accumsan orci
-                  elementum nisl tellus sit quis. Integer turpis lectus eu
-                  blandit sit. At at cras viverra odio neque nisl consectetur.
-                  Arcu senectus aliquet vulputate urna, ornare. Mi sem tellus
-                  elementum at commodo blandit nunc. Viverra elit adipiscing ut
-                  dui, tellus viverra nec.
-                  <br />
-                  <br />
-                  <br />
-                  Lectus pharetra eget curabitur lobortis gravida gravida eget
-                  ut. Nullam velit morbi quam a at. Sed eu orci, sociis nulla at
-                  sit. Nunc quam integer metus vitae elementum pulvinar mattis
-                  nulla molestie. Quis eget vestibulum, faucibus malesuada eu.
-                  Et lectus molestie egestas faucibus auctor auctor.
+                {dataCourse[0].course_detail}
                 </p>
               </div>
             </div>
