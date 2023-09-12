@@ -19,7 +19,7 @@ courseRouter.get("/", async (req, res) => {
   }
 });
 
-courseRouter.get("/course", async (req, res) => {
+courseRouter.get("/courses", async (req, res) => {
   try {
     let keywords = req.query.keywords;
 
@@ -35,11 +35,11 @@ courseRouter.get("/course", async (req, res) => {
       .map((word) => word.replace(/\s/g, "\\s*"))
       .join(" ");
 
-    const queryFullName = `coursename.ilike.${keywords}`;
-    const queryKeywords = `coursename.ilike.%${regexKeywords}%`;
+    const queryFullName = `course_name.ilike.${keywords}`;
+    const queryKeywords = `course_name.ilike.%${regexKeywords}%`;
 
     const { data, error } = await supabase
-      .from("course")
+      .from("courses")
       .select("*")
       .or(`${queryFullName},${queryKeywords}`)
       .order("course_id", { ascending: true });
