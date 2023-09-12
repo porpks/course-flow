@@ -17,10 +17,10 @@ const AssignmentBox = () => {
       coursename: "Service Design Essentials",
       lessonname: "introduction",
       sublessonname: "4 Levels of Service Design in an Organization",
-      assignmentstatus: "Pending",
+      assignmentstatus: "Submitted",
       assignmentquestion: "What are the 4 elements of service design?",
       assignmentduedate: "2",
-      assignmentanswer: null,
+      assignmentanswer: "test Answer",
     },
     {
       assignment_id: 3,
@@ -156,8 +156,17 @@ const AssignmentBox = () => {
                     </div>
                   </div>
                   <div
-                    className={`InputField self-stretch bg-white pl-3 pr-4 py-3 rounded-lg border border-solid border-gray-300 justify-start items-start gap-2 inline-flex`}>
-                    <div className='ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex'>
+                    className={`InputField self-stretch  pl-3 pr-4 py-3 rounded-lg border border-solid${
+                      assignment.assignmentstatus === "Submitted"
+                        ? "bg-none "
+                        : " bg-white"
+                    } border-gray-300 justify-start items-start gap-2 inline-flex`}>
+                    <div
+                      className={`ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex ${
+                        assignment.assignmentstatus === "Submitted"
+                          ? "bg-none "
+                          : " bg-white"
+                      }`}>
                       <textarea
                         className={`${
                           assignment.assignmentstatus === "Submitted"
