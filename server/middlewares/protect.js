@@ -18,7 +18,7 @@ export const validateTokenMiddleware = async (req, res, next) => {
     const email = decodedToken.email;
 
     const { data, error } = await supabase
-      .from("register")
+      .from("users")
       .select("user_id")
       .eq("email", email);
 

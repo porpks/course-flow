@@ -19,7 +19,7 @@ function SubFooter() {
             </h1>
             <a href=''>
               <button
-                className='Secondary'
+                className='Secondary hover-scale'
                 onClick={() => {
                   navigate("/ourcourse");
                 }}>

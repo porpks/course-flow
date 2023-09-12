@@ -1,41 +1,41 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../components/Assignment.css";
-import { useState } from "react";
-import { useEffect } from "react";
-// import { useAuth } from "../contexts/AuthContext";
+import { useState, useEffect } from "react";
 import axios from "axios";
-// import axios from "axios";
+import { useAuth } from "../contexts/AuthContext";
+
 function AssignmentPage() {
-  // const { userID } = useAuth();
-  const [data, setData] = useState();
+  const { userID, setUserID } = useAuth();
+  const [data, setData] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [answers, setAnswers] = useState([]);
 
   useEffect(() => {
-    const getAssignmentData = async (id) => {
+    const getAssignmentData = async () => {
       try {
+        setUserID(170);
         const response = await axios.get(
-          `http://localhost:4000/assignment/${id}`
+          `http://localhost:4000/assignment/${170}`
         );
         setData(response.data.data);
-        setAnswers(
-          response.data.data.map((assignment) => ({
-            answer: "",
-            assignment_id: assignment.assignment_id,
-          }))
-        );
+
+        const initialAnswers = response.data.data.map((assignment) => ({
+          assignment_id: assignment.assignment_id,
+          assignment_answer: assignment.assignment_answer || "",
+          assignment_status: assignment.assignment_status,
+        }));
+        setAnswers(initialAnswers);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    getAssignmentData(2);
+    getAssignmentData();
   }, []);
 
   const pageSize = 4;
-
-  const [selectedFilter, setSelectedFilter] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [answers, setAnswers] = useState({});
 
   const handleFilterSelect = (filter) => {
     setSelectedFilter(filter);
@@ -43,21 +43,16 @@ function AssignmentPage() {
   };
 
   const filteredAssignments = data?.filter((assignment) => {
-    const isAssignmentNull =
-      assignment.assignment_answer === null ||
-      assignment.assignment_status === "Submitted" ||
-      assignment.assignment_status === "Submitted late";
     return (
-      (selectedFilter === "All" ||
-        (selectedFilter === "Submitted late" &&
-          assignment.assignment_status === "Submitted late") ||
-        (selectedFilter === "Pending" &&
-          assignment.assignment_status === "Pending") ||
-        (selectedFilter === "Submitted" &&
-          assignment.assignment_status === "Submitted") ||
-        (selectedFilter === "Overdue" &&
-          assignment.assignment_status === "Overdue")) &&
-      isAssignmentNull
+      selectedFilter === "All" ||
+      (selectedFilter === "Submitted late" &&
+        assignment.assignment_status === "Submitted late") ||
+      (selectedFilter === "Pending" &&
+        assignment.assignment_status === "Pending") ||
+      (selectedFilter === "Submitted" &&
+        assignment.assignment_status === "Submitted") ||
+      (selectedFilter === "Overdue" &&
+        assignment.assignment_status === "Overdue")
     );
   });
 
@@ -74,24 +69,49 @@ function AssignmentPage() {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-  const handleAnswerChange = (e, assignmentId) => {
-    // Find the index of the answer in the answers array
-    const answerIndex = answers.findIndex(
-      (answer) => answer.assignment_id === assignmentId
-    );
 
-    // Create a copy of the answers array and update the answer for the specific assignment
-    const newAnswers = [...answers];
-    newAnswers[answerIndex].answer = e.target.value;
-
-    // Update the answers state with the new array
-    setAnswers(newAnswers);
+  const handleAnswerChange = (e, assignmentId, status) => {
+    const updatedAnswers = answers.map((answer) => {
+      if (answer.assignment_id === assignmentId) {
+        return {
+          ...answer,
+          assignment_answer: e.target.value,
+          assignment_status: status,
+        };
+      }
+      return answer;
+    });
+    setAnswers(updatedAnswers);
   };
 
   const handleSubmit = async () => {
-    // const results = await axios.put("", answers)
+    setUserID(170);
+    try {
+      const assignmentAnswers = answers.map((answer) => ({
+        assignment_id: answer.assignment_id,
+        assignment_answer: answer.assignment_answer,
+        assignment_status: answer.assignment_status,
+      }));
+
+      const response = await axios.put(
+        `http://localhost:4000/assignment/${userID}`,
+        assignmentAnswers
+      );
+
+      if (response.status === 200) {
+        const updatedDataResponse = await axios.get(
+          `http://localhost:4000/assignment/${userID}`
+        );
+
+        setData(updatedDataResponse.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+      console.log(error.message);
+    }
   };
 
+  console.log(answers);
   return (
     <>
       <div className='flex flex-col items-center relative '>
@@ -238,8 +258,10 @@ function AssignmentPage() {
                         </div>
                         <div
                           className={`InputField self-stretch pl-3 pr-4 py-3 bg-none ${
-                            assignment.assignment_status === "Submitted" ||
-                            assignment.assignment_status === "Submitted late"
+                            (assignment.assignment_status === "Submitted" ||
+                              assignment.assignment_status ===
+                                "Submitted late") &&
+                            !assignment.assignment_answer
                               ? "bg-none"
                               : "bg-white"
                           }  ${
@@ -250,9 +272,10 @@ function AssignmentPage() {
                           <div className='ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex'>
                             <textarea
                               className={`${
-                                assignment.assignment_status === "Submitted" ||
-                                assignment.assignment_status ===
-                                  "Submitted late"
+                                (assignment.assignment_status === "Submitted" ||
+                                  assignment.assignment_status ===
+                                    "Submitted late") &&
+                                !assignment.assignment_answer
                                   ? "bg-slate-200 text-slate-500 "
                                   : "bg-white  text-slate-400"
                               }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
@@ -261,20 +284,30 @@ function AssignmentPage() {
                                 answers.find(
                                   (a) =>
                                     a.assignment_id === assignment.assignment_id
-                                )?.answer ||
+                                )?.assignment_answer ||
                                 assignment.assignment_answer ||
                                 ""
                               }
                               onChange={(e) =>
-                                handleAnswerChange(e, assignment.assignment_id)
+                                handleAnswerChange(
+                                  e,
+                                  assignment.assignment_id,
+                                  assignment.assignment_status
+                                )
+                              }
+                              style={{ resize: "none" }}
+                              readOnly={
+                                assignment.assignment_status === "Submitted" ||
+                                assignment.assignment_status ===
+                                  "Submitted late"
                               }
                             />
                           </div>
                         </div>
                       </div>
                       <div className='Frame427321003 flex-col  items-start gap-4 inline-flex justify-center'>
-                        {selectedFilter !== "Submitted late" &&
-                          selectedFilter !== "Submitted" && (
+                        {assignment.assignment_status !== "Submitted late" &&
+                          assignment.assignment_status !== "Submitted" && (
                             <>
                               <div
                                 className=' cursor-pointer Primary mb-[20px] self-stretch px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 inline-flex'

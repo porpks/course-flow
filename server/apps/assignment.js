@@ -61,4 +61,46 @@ assignmentRouter.get("/:userID", async (req, res) => {
     res.json({ data:flatData});
 });
 
+assignmentRouter.put('/:userID', async (req, res) => {
+    const body = req.body;
+    const userId = req.params.userID;
+
+    if (!Array.isArray(body)) {
+        return res.status(400).json({ error: 'Invalid request body' });
+    }
+
+    try {
+        for (const assignment of body) {
+            if (
+                assignment &&
+                assignment.assignment_status &&
+                assignment.assignment_status.trim() === 'Overdue' &&
+                assignment.assignment_answer &&
+                assignment.assignment_answer.trim() !== ''
+            ) {
+                assignment.assignment_status = 'Submitted late';
+            } else if (
+                assignment &&
+                assignment.assignment_answer &&
+                assignment.assignment_answer.trim() !== ''
+            ) {
+                assignment.assignment_status = 'Submitted';
+            }
+        }
+
+        const { data, error } = await supabase
+            .from('assignments')
+            .upsert(body, { onConflict: ['assignment_id'] });
+
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json({ data });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 export default assignmentRouter;

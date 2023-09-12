@@ -105,7 +105,7 @@ function Instructure() {
             height='448'
             viewBox='0 0 452 448'
             fill='none'
-            className='absolute right-[161px] bottom-[101px] hover-scale'
+            className='absolute right-[161px] bottom-[101px] hover-scale cursor-pointer'
             onClick={() => navigate("/ourcourse")}
             xmlns='http://www.w3.org/2000/svg'>
             <g clipPath='url(#clip0_12_4273)'>
