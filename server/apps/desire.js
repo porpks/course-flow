@@ -8,9 +8,9 @@ desireRouter.get("/:userId", async (req, res) => {
     const userId = req.params.userId;
 
     const { data, error } = await supabase
-      .from("desirecourse")
+      .from("desire_courses")
       .select(
-        `*,course(course_id,coursename,coverimg,coursedetail,totallearningtime,lesson(lesson_id,lessonname))`
+        `*,courses(course_id,course_name,cover_img,course_detail,total_time,lessons(lesson_id,lessonname))`
       )
       .eq("user_id", userId);
 
