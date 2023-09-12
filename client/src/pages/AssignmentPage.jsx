@@ -1,26 +1,24 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../components/Assignment.css";
-import { useState } from "react";
-import { useEffect } from "react";
-// import { useAuth } from "../contexts/AuthContext";
+import { useState, useEffect } from "react";
 import axios from "axios";
-// import axios from "axios";
+
 function AssignmentPage() {
-  // const { userID } = useAuth();
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [answers, setAnswers] = useState([]);
 
   useEffect(() => {
-    const getAssignmentData = async (id) => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/assignment/${id}`
-        );
+        const response = await axios.get("http://localhost:4000/assignment/2");
         setData(response.data.data);
         setAnswers(
           response.data.data.map((assignment) => ({
-            answer: "",
             assignment_id: assignment.assignment_id,
+            assignment_answer: "",
           }))
         );
       } catch (error) {
@@ -28,18 +26,36 @@ function AssignmentPage() {
       }
     };
 
-    getAssignmentData(2);
+    fetchData();
   }, []);
 
   const pageSize = 4;
 
-  const [selectedFilter, setSelectedFilter] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [answers, setAnswers] = useState({});
-
   const handleFilterSelect = (filter) => {
     setSelectedFilter(filter);
     setCurrentPage(1);
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+  const handleAnswerChange = (e, assignmentId) => {
+    const updatedAnswers = answers.map((answer) =>
+      answer.assignment_id === assignmentId
+        ? { ...answer, assignment_answer: e.target.value }
+        : answer
+    );
+    setAnswers(updatedAnswers);
+  };
+
+  const handleSubmit = async () => {
+    // try {
+    //   // Send the answers to the server
+    //   const response = await axios.put("YOUR_API_ENDPOINT", answers);
+    //   // Handle success or display a success message to the user
+    // } catch (error) {
+    //   console.error("Error submitting answers:", error);
+    // }
   };
 
   const filteredAssignments = data?.filter((assignment) => {
@@ -61,7 +77,7 @@ function AssignmentPage() {
     );
   });
 
-  const totalPages = Math.ceil((filteredAssignments || []).length / pageSize);
+  const totalPages = Math.ceil(filteredAssignments.length || [] / pageSize);
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = currentPage * pageSize;
@@ -70,27 +86,6 @@ function AssignmentPage() {
     startIndex,
     endIndex
   );
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
-  const handleAnswerChange = (e, assignmentId) => {
-    // Find the index of the answer in the answers array
-    const answerIndex = answers.findIndex(
-      (answer) => answer.assignment_id === assignmentId
-    );
-
-    // Create a copy of the answers array and update the answer for the specific assignment
-    const newAnswers = [...answers];
-    newAnswers[answerIndex].answer = e.target.value;
-
-    // Update the answers state with the new array
-    setAnswers(newAnswers);
-  };
-
-  const handleSubmit = async () => {
-    // const results = await axios.put("", answers)
-  };
 
   return (
     <>

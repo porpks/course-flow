@@ -61,4 +61,20 @@ assignmentRouter.get("/:userID", async (req, res) => {
     res.json({ data:flatData});
 });
 
+assignmentRouter.put('/:userID' ,async(req,res) => {
+    const body = req.body;
+    
+    const { data, error } = await supabase
+    .from('assignments') 
+    .upsert(body, { onConflict: ['assignment_id'] });
+
+
+    res.json({data});
+    if(error){
+        res.json({error: error});
+    }
+   
+   
+    
+})
 export default assignmentRouter;
