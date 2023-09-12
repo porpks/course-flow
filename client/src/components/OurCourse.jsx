@@ -43,7 +43,7 @@ function OurCourse() {
     setSearchKey(event.target.value);
   };
   /////////////////////////////////////////////////
-
+console.log(`dataCourse:${dataCourse}`);
   return (
     <div className="canvas-ourCourse">
       <div className="topSection">

@@ -6,6 +6,7 @@ import Collapsible from "../assets/Collapsible.jsx";
 import Mymodal from "../components/Mymodal";
 import { Hidden } from "@mui/material";
 import axios from "axios";
+import ReactPlayer from "react-player";
 
 const style = {
   position: "absolute",
@@ -28,23 +29,36 @@ function CourseDetail() {
   const openSubscribe = () => setSubscribeToggle(true);
   const closeSubscribe = () => setSubscribeToggle(false);
 
+  const [dataCourse, setDataCourse] = useState([]);
+
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
         `http://localhost:4000/ourcourse/coursedetail`
-        );
-        console.log(dataDetailCourse);
+      );
+      setDataCourse(dataDetailCourse.data.data);
+      console.log(`dataCourse : ${dataCourse}`);
     } catch (error) {
       message: error;
       // console.log(error);
     }
   }
-  
-
-
+  // console.log(`mmmmmm ${dataCourse}`);
   useEffect(() => {
     getDetailCourse();
   }, []);
+
+  const handlePause = (pauseTime) => {
+    // console.log(pauseTime);
+    // setProgressTime(pauseTime);
+    // playerRef.current.seekTo(currentTime, 'seconds');
+  };
+  const handleEnd = () => {
+    setIsShowAsm(true);
+  };
+
+  const dataDetail = dataCourse;
+  console.log(`dataDetail: ${dataDetail[1].course_name}`);
 
   return (
     <section className="flex justify-center items-center border-2 border-sky-500">
@@ -62,16 +76,46 @@ function CourseDetail() {
         </div>
         <div className="flex gap-[30px]">
           <div className="CourseDetail">
-            <div className="vdo-preview">
-              <img
-                src="../../public/image/VDO_coursePreview.svg"
-                alt=""
-                className="rounded-[8px] w-[739px] h-[460px] cursor-pointer"
+            <div className="vdo-preview rounded-[8px] w-[739px] h-[460px] cursor-pointer ">
+              <ReactPlayer
+                url="https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/1%20Minute%20Sample%20Video.mp4?t=2023-09-08T15%3A26%3A51.001Z"
+                width="100%"
+                height="100%"
+                controls={true}
+                light={true}
+                playIcon={
+                  <svg
+                    className="min-h-[460px]"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="104"
+                    height="104"
+                    viewBox="0 0 104 104"
+                    fill="none"
+                  >
+                    <rect
+                      width="104"
+                      height="104"
+                      rx="52"
+                      fill="#020202"
+                      fillOpacity="0.5"
+                    />
+                    <path
+                      d="M77 52.5L40.25 73.7176L40.25 31.2824L77 52.5Z"
+                      fill="white"
+                    />
+                  </svg>
+                }
+                start={33}
+                // progressInterval={progressTime}
+                // onPlay={handlePlay}
+                onPause={(e) => handlePause(e.target.currentTime)}
+                onEnded={handleEnd}
               />
             </div>
+
             <div className="CourseDetail_description flex flex-col gap-[24px]">
               <div className="courseDetail_title ">
-                <p className="H2">Course Detail</p>
+                <p className="H2">{dataCourse[0].course_name}</p>
               </div>
               <div className="courseDetail_body">
                 <p className="Body2">
@@ -155,7 +199,7 @@ function CourseDetail() {
               <button onClick={openDesire} className="Secondary w-[100%]">
                 Get in Desire Course
               </button>
-      
+
               {desireToggle ? (
                 <Mymodal
                   open={desireToggle}
@@ -165,9 +209,7 @@ function CourseDetail() {
                   yesDes="Yes, add this to my desire course"
                   noDes="No, I don’t"
                 />
-              ) : (
-                null
-              )}
+              ) : null}
               {subscribeToggle ? (
                 <Mymodal
                   open={subscribeToggle}
@@ -177,9 +219,7 @@ function CourseDetail() {
                   yesDes="Yes, I want to subscribe"
                   noDes="No, I don’t"
                 />
-              ) : (
-                null
-              )}
+              ) : null}
               <button onClick={openSubscribe} className="Primary w-[100%]">
                 Subscribe This Course
               </button>
