@@ -9,78 +9,6 @@ import axios from "axios";
 function AssignmentPage() {
   // const { userID } = useAuth();
   const [data, setData] = useState();
-  // const mockAssignment = [
-  //   {
-  //     assignment_id: 1,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Pending",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: 2,
-  //     assignmentanswer: null,
-  //   },
-  //   {
-  //     assignment_id: 2,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Pending",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: null,
-  //   },
-  //   {
-  //     assignment_id: 3,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Pending",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: null,
-  //   },
-  //   {
-  //     assignment_id: 4,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Submitted late",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: "test answer",
-  //   },
-  //   {
-  //     assignment_id: 5,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Submitted",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: "test answer",
-  //   },
-  //   {
-  //     assignment_id: 6,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Overdue",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: null,
-  //   },
-  //   {
-  //     assignment_id: 7,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Overdue",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: null,
-  //   },
-  // ];
 
   useEffect(() => {
     const getAssignmentData = async (id) => {
@@ -89,7 +17,6 @@ function AssignmentPage() {
           `http://localhost:4000/assignment/${id}`
         );
         setData(response.data.data);
-        // Initialize answers state based on data received
         setAnswers(
           response.data.data.map((assignment) => ({
             answer: "",
@@ -103,7 +30,7 @@ function AssignmentPage() {
 
     getAssignmentData(2);
   }, []);
-  console.log(data);
+
   const pageSize = 4;
 
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -117,19 +44,19 @@ function AssignmentPage() {
 
   const filteredAssignments = data?.filter((assignment) => {
     const isAssignmentNull =
-      assignment.assignmentanswer === null ||
-      assignment.assignmentstatus === "Submitted" ||
-      assignment.assignmentstatus === "Submitted late";
+      assignment.assignment_answer === null ||
+      assignment.assignment_status === "Submitted" ||
+      assignment.assignment_status === "Submitted late";
     return (
       (selectedFilter === "All" ||
         (selectedFilter === "Submitted late" &&
-          assignment.assignmentstatus === "Submitted late") ||
+          assignment.assignment_status === "Submitted late") ||
         (selectedFilter === "Pending" &&
-          assignment.assignmentstatus === "Pending") ||
+          assignment.assignment_status === "Pending") ||
         (selectedFilter === "Submitted" &&
-          assignment.assignmentstatus === "Submitted") ||
+          assignment.assignment_status === "Submitted") ||
         (selectedFilter === "Overdue" &&
-          assignment.assignmentstatus === "Overdue")) &&
+          assignment.assignment_status === "Overdue")) &&
       isAssignmentNull
     );
   });
@@ -253,77 +180,79 @@ function AssignmentPage() {
                     <div className='Frame427321001 w-[100%] justify-start items-start gap-6 inline-flex'>
                       <div className='Frame427321000 grow shrink basis-0 flex-col justify-start items-start gap-3 inline-flex w-[100%]'>
                         <div className='CourseServiceDesignEssentials self-stretch text-black text-2xl font-medium leading-loose w-[100%]'>
-                          Course: {assignment.coursename}
+                          Course: {assignment.course_name}
                         </div>
                         <div className='Introduction4LevelsOfServiceDesignInAnOrganization self-stretch text-slate-500 text-base font-normal leading-normal'>
-                          {assignment.lessonname}: {assignment.sublessonname}
+                          {assignment.lesson_name}: {assignment.sublesson_name}
                         </div>
                       </div>
                       <div className='Frame427321007 flex-col justify-start items-end gap-2 inline-flex'>
                         <div
                           className={`StatusHomework px-2 py-1 ${
-                            assignment.assignmentstatus === "Pending"
+                            assignment.assignment_status === "Pending"
                               ? "bg-[#FFFBDA]"
-                              : assignment.assignmentstatus === "Submitted late"
+                              : assignment.assignment_status ===
+                                "Submitted late"
                               ? "bg-[#EAF0FF]"
-                              : assignment.assignmentstatus === "Submitted"
+                              : assignment.assignment_status === "Submitted"
                               ? "bg-[#DCF8EE]"
-                              : assignment.assignmentstatus === "Overdue"
+                              : assignment.assignment_status === "Overdue"
                               ? "bg-[#FAE7F4]"
                               : null
                           } rounded justify-start items-start gap-2 inline-flex`}>
                           <div
                             className={`${
-                              assignment.assignmentstatus === "Pending"
+                              assignment.assignment_status === "Pending"
                                 ? " text-[#996400]"
-                                : assignment.assignmentstatus ===
+                                : assignment.assignment_status ===
                                   "Submitted late"
                                 ? "text-[#3456CF]"
-                                : assignment.assignmentstatus === "Submitted"
+                                : assignment.assignment_status === "Submitted"
                                 ? "text-[#0A7B60]"
-                                : assignment.assignmentstatus === "Overdue"
+                                : assignment.assignment_status === "Overdue"
                                 ? "text-[#9B2FAC]"
                                 : null
                             } text-base font-medium leading-normal`}>
-                            {assignment.assignmentstatus}
+                            {assignment.assignment_status}
                           </div>
                         </div>
-                        {assignment.assignmentduedate !== "Overdue" ? (
+                        {assignment.assignment_duedate !== "Overdue" ? (
                           <div className='Email text-slate-500 text-base font-normal leading-normal'>
-                            Assign within {assignment.assignmentduedate}
+                            Assign within {assignment.assignment_duedate}
                           </div>
                         ) : null}
                       </div>
                     </div>
                     <div
                       className={`w-[100%] Frame427321002  p-6  ${
-                        assignment.assignmentstatus === "Submitted" ||
-                        assignment.assignmentstatus === "Submitted late"
+                        assignment.assignment_status === "Submitted" ||
+                        assignment.assignment_status === "Submitted late"
                           ? "bg-none "
                           : " bg-white"
                       } rounded-lg border border-gray-300 justify-start items-end gap-6 inline-flex`}>
                       <div className='InputStyle grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex'>
                         <div className='Label self-stretch justify-start items-start gap-1 inline-flex'>
                           <div className='Email grow shrink basis-0 Body2'>
-                            {assignment.assignmentquestion}
+                            {assignment.assignment_question}
                           </div>
                         </div>
                         <div
                           className={`InputField self-stretch pl-3 pr-4 py-3 bg-none ${
-                            assignment.assignmentstatus === "Submitted" ||
-                            assignment.assignmentstatus === "Submitted late"
+                            assignment.assignment_status === "Submitted" ||
+                            assignment.assignment_status === "Submitted late"
                               ? "bg-none"
                               : "bg-white"
                           }  ${
-                            assignment.assignmentanswer
+                            assignment.assignment_answer
                               ? "border-none"
                               : "rounded-lg border border-solid border-gray-300"
                           } justify-start items-start gap-2 inline-flex`}>
                           <div className='ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex'>
                             <textarea
                               className={`${
-                                assignment.assignmentstatus === "Submitted" ||
-                                assignment.assignmentstatus === "Submitted late"
+                                assignment.assignment_status === "Submitted" ||
+                                assignment.assignment_status ===
+                                  "Submitted late"
                                   ? "bg-slate-200 text-slate-500 "
                                   : "bg-white  text-slate-400"
                               }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
@@ -333,7 +262,7 @@ function AssignmentPage() {
                                   (a) =>
                                     a.assignment_id === assignment.assignment_id
                                 )?.answer ||
-                                assignment.assignmentanswer ||
+                                assignment.assignment_answer ||
                                 ""
                               }
                               onChange={(e) =>
