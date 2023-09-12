@@ -6,9 +6,9 @@ const courseRouter = Router();
 courseRouter.get("/", async (req, res) => {
   try {
     const { data, error } = await supabase
-      .from("course")
+      .from("courses")
       .select(
-        "*,lesson(lesson_id,lessonname,sublesson(sublessonname,sublesson_id))"
+        "*,lessons(*,sublessons(*))"
       )
       .order("course_id", { ascending: true });
     return res.json({
