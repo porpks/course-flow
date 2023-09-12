@@ -43,7 +43,7 @@ function OurCourse() {
     setSearchKey(event.target.value);
   };
   /////////////////////////////////////////////////
-console.log(`dataCourse:${dataCourse}`);
+  console.log(`dataCourse:${dataCourse}`);
   return (
     <div className="canvas-ourCourse">
       <div className="topSection">
@@ -62,6 +62,7 @@ console.log(`dataCourse:${dataCourse}`);
         <div className="card-container">
           {dataCourse.map((item) => (
             <CourseItem
+              // onClick={() => navigate(`/ourcourse/coursedetail/${item.course_id}`)}
               key={item.course_id}
               count={item.course_id}
               coverimg={item.cover_img}
