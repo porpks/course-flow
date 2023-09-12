@@ -15,8 +15,8 @@ learnRouter.get("/", async (req, res) => {
 
     try {
         const { data: courseData, error: courseError } = await supabase
-            .from('course')
-            .select('coursename, coursedetail')
+            .from('courses')
+            .select('course_name, course_detail')
             .eq('course_id', courseID)
             .single();
 
@@ -25,8 +25,8 @@ learnRouter.get("/", async (req, res) => {
         }
 
         const { data: lessonData, error: lessonError } = await supabase
-            .from('lesson')
-            .select('lesson_id, lessonname')
+            .from('lessons')
+            .select('lesson_id, lesson_name')
             .eq('course_id', courseID);
 
         if (lessonError) {
@@ -40,8 +40,8 @@ learnRouter.get("/", async (req, res) => {
 
         await Promise.all(result.lesson.map(async (lesson) => {
             const { data: sublessonData, error: sublessonError } = await supabase
-                .from('sublesson')
-                .select('sublesson_id, sublessonname')
+                .from('sublessons')
+                .select('sublesson_id, sublesson_name')
                 .eq('lesson_id', lesson.lesson_id)
 
             if (sublessonError) {
@@ -73,7 +73,7 @@ learnRouter.get('/status', async (req, res) => {
 
 
     const { data, error } = await supabase
-        .from('usersublesson')
+        .from('user_sublessons')
         .select('sublesson_status')
         // .eq('user_id', userID)
         .eq('sublesson_id', sublessonID);
