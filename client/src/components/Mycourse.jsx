@@ -10,6 +10,8 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { StickyContainer, Sticky } from "react-sticky";
 import { bgcolor } from "@mui/system";
+import Ellipse5 from "../assets/myCourseAssets/Ellipse5";
+import Polygon3 from "../assets/myCourseAssets/Polygon3";
 
 function MyCourse() {
   const [dataCourse, setDataCourse] = useState([]);
@@ -55,14 +57,14 @@ function MyCourse() {
       setDataCourse(newDataCourse);
 
       if (newDataCourse.length > 0) {
-        const username = newDataCourse[0].register.full_name;
-        const avatar = newDataCourse[0].register.image_url;
+        const username = newDataCourse[0].users.full_name;
+        const avatar = newDataCourse[0].users.image_url;
         setUserName(username);
         SetAvatar(avatar);
         let inProgressCount = 0;
         let completeCount = 0;
         newDataCourse.forEach((course) => {
-          if (course.coursestatus === false) {
+          if (course.course_status === false) {
             // Course is in progress
             inProgressCount++;
           } else {
@@ -87,11 +89,11 @@ function MyCourse() {
           <CourseCard
             key={item.course.course_id}
             count={item.course.course_id}
-            coverimg={item.course.coverimg}
-            coursename={item.course.coursename}
-            coursedetail={item.course.coursedetail}
-            coursesummary={item.course.coursesummary}
-            totallearningtime={item.course.totallearningtime}
+            coverimg={item.course.cover_img}
+            coursename={item.course.course_name}
+            coursedetail={item.course.course_detail}
+            coursesummary={item.course.course_summary}
+            totallearningtime={item.course.total_time}
           />
         ))}
       </div>
@@ -107,11 +109,11 @@ function MyCourse() {
           <CourseCard
             key={item.course.course_id}
             count={item.course.course_id}
-            coverimg={item.course.coverimg}
-            coursename={item.course.coursename}
-            coursedetail={item.course.coursedetail}
-            coursesummary={item.course.coursesummary}
-            totallearningtime={item.course.totallearningtime}
+            coverimg={item.course.cover_img}
+            coursename={item.course.course_name}
+            coursedetail={item.course.course_detail}
+            coursesummary={item.course.course_summary}
+            totallearningtime={item.course.total_time}
           />
         ))}
       </div>
@@ -126,18 +128,24 @@ function MyCourse() {
           <CourseCard
             key={item.course.course_id}
             count={item.course.course_id}
-            coverimg={item.course.coverimg}
-            coursename={item.course.coursename}
-            coursedetail={item.course.coursedetail}
-            coursesummary={item.course.coursesummary}
-            totallearningtime={item.course.totallearningtime}
+            coverimg={item.course.cover_img}
+            coursename={item.course.course_name}
+            coursedetail={item.course.course_detail}
+            coursesummary={item.course.course_summary}
+            totallearningtime={item.course.total_time}
           />
         ))}
       </div>
     );
   }
   return (
-    <div className="w-[100%] flex flex-col justify-center items-center mt-[100px] mb-[200px]">
+    <div className="w-[100%] flex flex-col justify-center items-center mt-[100px] mb-[200px] relative ">
+      <div className=" absolute right-0 top-[110px]">
+        <Ellipse5 className="top-1/2 absolute" style={{ top: "50%" }} />
+      </div>
+      <div className=" absolute right-0 top-[0px]">
+        <Polygon3 />
+      </div>
       <div className="flex flex-col items-center justify-center ">
         <h2 className="H2">My Course</h2>
         <div className="flex flex-row mt-[60px]">
