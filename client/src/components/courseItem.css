@@ -1,9 +1,11 @@
 .cardItem:hover {
   scale: 1.0125;
   transform: scale(1);
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.2s ease-in-out;
   transform: scale(1.05);
+  cursor: pointer;
 }
+
 .footerCard {
   display: flex;
   flex-direction: column;

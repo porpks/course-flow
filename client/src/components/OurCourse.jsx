@@ -8,6 +8,14 @@ function OurCourse() {
   const [dataCourse, setDataCourse] = useState([]);
   const [searchKey, setSearchKey] = useState(""); //searchKeyword
 
+  async function getDataCourse() {
+    try {
+      const result = await axios.get(`http://localhost:4000/ourcourse`);
+      setDataCourse(result.data.data);
+    } catch (error) {
+      message: error;
+    }
+  }
   useEffect(() => {
     getDataCourse();
   }, []);
@@ -16,7 +24,7 @@ function OurCourse() {
     const getCourseByKeywords = async (keywords) => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/ourcourse/course",
+          "http://localhost:4000/ourcourse/courses",
           {
             params: { keywords },
           }
@@ -31,19 +39,11 @@ function OurCourse() {
 
     getCourseByKeywords(searchKey);
   }, [searchKey]);
-
   const handleSearch = (event) => {
     setSearchKey(event.target.value);
   };
   /////////////////////////////////////////////////
-  async function getDataCourse() {
-    try {
-      const result = await axios.get(`http://localhost:4000/ourcourse`);
-      setDataCourse(result.data.data);
-    } catch (error) {
-      message: error;
-    }
-  }
+
   return (
     <div className="canvas-ourCourse">
       <div className="topSection">
@@ -64,11 +64,11 @@ function OurCourse() {
             <CourseItem
               key={item.course_id}
               count={item.course_id}
-              coverimg={item.coverimg}
-              coursename={item.coursename}
-              coursedetail={item.coursedetail}
-              coursesummary={item.coursesummary}
-              totallearningtime={item.totallearningtime}
+              coverimg={item.cover_img}
+              coursename={item.course_name}
+              coursedetail={item.course_detail}
+              coursesummary={item.course_summary}
+              totallearningtime={item.total_time}
             />
           ))}
         </div>
