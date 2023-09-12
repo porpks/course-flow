@@ -1,14 +1,11 @@
 import React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./courseDetail.css";
 import Collapsible from "../assets/Collapsible.jsx";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Model_mocking from "../assets/test/Model_mocking";
 import Mymodal from "../components/Mymodal";
 import { Hidden } from "@mui/material";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -31,6 +28,24 @@ function CourseDetail() {
   const openSubscribe = () => setSubscribeToggle(true);
   const closeSubscribe = () => setSubscribeToggle(false);
 
+  async function getDetailCourse() {
+    try {
+      const dataDetailCourse = await axios.get(
+        `http://localhost:4000/ourcourse/coursedetail`
+        );
+        console.log(dataDetailCourse);
+    } catch (error) {
+      message: error;
+      // console.log(error);
+    }
+  }
+  
+
+
+  useEffect(() => {
+    getDetailCourse();
+  }, []);
+
   return (
     <section className="flex justify-center items-center border-2 border-sky-500">
       <div className="canvas_CourseDetail ">
@@ -39,7 +54,8 @@ function CourseDetail() {
             onClick={() => {
               navigate("/ourcourse");
             }}
-            className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer">
+            className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
+          >
             <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
             <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
           </a>
@@ -139,6 +155,7 @@ function CourseDetail() {
               <button onClick={openDesire} className="Secondary w-[100%]">
                 Get in Desire Course
               </button>
+      
               {desireToggle ? (
                 <Mymodal
                   open={desireToggle}
@@ -149,7 +166,7 @@ function CourseDetail() {
                   noDes="No, I don’t"
                 />
               ) : (
-                Hidden
+                null
               )}
               {subscribeToggle ? (
                 <Mymodal
@@ -161,12 +178,11 @@ function CourseDetail() {
                   noDes="No, I don’t"
                 />
               ) : (
-                Hidden
+                null
               )}
               <button onClick={openSubscribe} className="Primary w-[100%]">
                 Subscribe This Course
               </button>
-             
             </div>
           </div>
         </div>

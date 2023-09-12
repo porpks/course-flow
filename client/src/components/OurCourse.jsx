@@ -8,6 +8,14 @@ function OurCourse() {
   const [dataCourse, setDataCourse] = useState([]);
   const [searchKey, setSearchKey] = useState(""); //searchKeyword
 
+  async function getDataCourse() {
+    try {
+      const result = await axios.get(`http://localhost:4000/ourcourse`);
+      setDataCourse(result.data.data);
+    } catch (error) {
+      message: error;
+    }
+  }
   useEffect(() => {
     getDataCourse();
   }, []);
@@ -35,17 +43,7 @@ function OurCourse() {
     setSearchKey(event.target.value);
   };
   /////////////////////////////////////////////////
-  async function getDataCourse() {
-    try {
-      const result = await axios.get(`http://localhost:4000/ourcourse`);
 
-      setDataCourse(result.data.data);
-    } catch (error) {
-      message: error;
-    }
-
-
-  }
   return (
     <div className="canvas-ourCourse">
       <div className="topSection">
