@@ -12,7 +12,7 @@ authRouter.post("/register", async (req, res) => {
   };
   try {
     const { data, error } = await supabase
-      .from("register")
+      .from("users")
       .insert([registerData])
       .select();
     try {
@@ -53,31 +53,30 @@ authRouter.post("/login", async (req, res) => {
     if (error) {
       return res.json({ error: error });
     }
-    
-    if(data){
-      const token = data.session.access_token
-      
-    try {
-      const { data, error } = await supabase
-        .from("register")
-        .select("user_id")
-        .eq("email", loginData.email);
 
-      const userId = data
+    if (data) {
+      const token = data.session.access_token;
 
-      if (error) {
-        return res.status(500).json({ error: "Supabase query failed" });
+      try {
+        const { data, error } = await supabase
+          .from("users")
+          .select("user_id")
+          .eq("email", loginData.email);
+
+        const userId = data;
+
+        if (error) {
+          return res.status(500).json({ error: "Supabase query failed" });
+        }
+        return res.json({
+          message: "login succesfully",
+          token,
+          data: userId,
+        });
+      } catch (error) {
+        res.json({ error: error });
       }
-      return res.json({ 
-        message: "login succesfully",
-        token ,
-        data : userId
-      })
-    } catch (error) {
-      res.json({ error: error });
     }
-    
-  }
   } catch (error) {
     res.json({ error: error });
   }
