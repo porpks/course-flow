@@ -68,6 +68,7 @@ function SublessonIcon({ userID, sublessonID, totalLesson, setTotalLesson, total
 
 function Learning() {
     const { userID } = useAuth();
+    let sublessonIdArray = []
 
     const [courseData, setCourseData] = useState({
         course_name: "",
@@ -94,7 +95,7 @@ function Learning() {
             const result = await axios.get(
                 "http://localhost:4000/learn/",
                 {
-                    params: { userID: 172, courseID: 20 },
+                    params: { userID: 172, courseID: course_id },
                 }
             );
             const data = result.data.data;
@@ -129,7 +130,7 @@ function Learning() {
 
     return (
         <>
-            <div className="flex justify-center py-[100px] px-[160px]">
+            <div className="flex justify-center pt-[100px] px-[160px]">
 
                 <div className="flex flex-col w-[360px] mr-[24px] px-6 py-8 shadow-[4px_4px_24px_0px_rgba(0,0,0,0.08)]">
                     <div className="">
@@ -169,6 +170,8 @@ function Learning() {
 
                                             {lesson.sublesson.map((sublesson, index) => {
                                                 {/* setTotalLesson(totalLesson + 1) */ }
+                                                sublessonIdArray.push(sublesson.sublesson_id)
+                                                console.log(sublessonIdArray)
                                                 return (
                                                     <label key={index} id={sublesson.sublesson_id} className='flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500]'
                                                         onClick={() => handleShowVideo(sublesson.sublesson_name, sublesson.sublesson_id)}
@@ -252,8 +255,11 @@ function Learning() {
                         null}
                 </div>
 
-            </div >
-
+            </div>
+            <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>
+                <button className='bg-white px-2 py-1 border-none text-[16px] text-[--blue500] font-bold cursor-pointer hover:text-[--blue300] duration-300'>Previous Lesson</button>
+                <button className='Primary border-none cursor-pointer'>Next Lesson</button>
+            </div>
         </>
     )
 }
