@@ -6,6 +6,7 @@ import profileRouter from "./apps/profile.js";
 import courseRouter from "./apps/course.js";
 import desireRouter from "./apps/desire.js";
 import MyCourseRouter from "./apps/mycourse.js";
+import assignmentRouter from "./apps/assignment.js";
 
 // import { client } from "./utils/db.js";
 // import dotenv from "dotenv";
@@ -25,6 +26,7 @@ async function init() {
   app.use("/ourcourse/coursedetail", courseRouter);
   app.use("/desire", desireRouter);
   app.use("/mycourse", MyCourseRouter);
+  app.use("/assignment",assignmentRouter);
 
   //   app.use("/posts", postRouter);
 
