@@ -3,8 +3,10 @@ import "./ourCourse.css";
 // import { courseData } from "../assets/courseData.jsx";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function OurCourse() {
+  const navigate = useNavigate();
   const [dataCourse, setDataCourse] = useState([]);
   const [searchKey, setSearchKey] = useState(""); //searchKeyword
 
@@ -38,7 +40,7 @@ function OurCourse() {
     };
     getCourseByKeywords(searchKey);
   }, [searchKey]);
-  
+
   const handleSearch = (event) => {
     setSearchKey(event.target.value);
   };
@@ -69,14 +71,14 @@ function OurCourse() {
         <div className="card-container bg-red-200">
           {dataCourse.map((item) => (
             <CourseItem
-            key={item.course_id}
-            count={item.course_id}
-            coverimg={item.cover_img}
-            coursename={item.course_name}
-            coursedetail={item.course_detail}
-            coursesummary={item.course_summary}
-            totallearningtime={item.total_time}
-            onClick={() => navigate(`/ourcourse/coursedetail/${item.course_id}`)}
+              key={item.course_id}
+              count={item.course_id}
+              coverimg={item.cover_img}
+              coursename={item.course_name}
+              coursedetail={item.course_detail}
+              coursesummary={item.course_summary}
+              totallearningtime={item.total_time}
+              onClick={() => navigate(`/ourcourse/coursedetail/${item.course_id}`)}
             />
           ))}
         </div>

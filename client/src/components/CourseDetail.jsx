@@ -35,7 +35,7 @@ function CourseDetail() {
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
-        `http://localhost:4000/ourcourse/coursedetail`
+        `http://localhost:4000/coursedetail`
       );
       setDataCourse(dataDetailCourse.data.data);
       // console.log(dataDetailCourse.data.data);
@@ -128,9 +128,7 @@ function CourseDetail() {
                 <p className="H2">{dataCourse[0].course_name}</p>
               </div>
               <div className="courseDetail_body">
-                <p className="Body2">
-                {dataCourse[0].course_detail}
-                </p>
+                <p className="Body2">{dataCourse[0].course_detail}</p>
               </div>
             </div>
             <div className="lesson_sample">
