@@ -50,7 +50,7 @@ function UpdateProfile() {
 
     const initialValues = {
       full_name: result.data.data.full_name,
-      dateofbirth: dayjs(result.data.data.dateofbirth) || "",
+      date_of_birth: dayjs(result.data.data.date_of_birth) || "",
       edu_background: result.data.data.edu_background,
       email: result.data.data.email,
     };
@@ -59,7 +59,7 @@ function UpdateProfile() {
 
   const initialValues = {
     full_name: "",
-    dateofbirth: null,
+    date_of_birth: null,
     edu_background: "",
     email: "",
   };
@@ -75,7 +75,7 @@ function UpdateProfile() {
   const onSubmit = async () => {
     const newUserData = {
       full_name: formik.values.full_name,
-      dateofbirth: formik.values.dateofbirth,
+      date_of_birth: formik.values.date_of_birth,
       edu_background: formik.values.edu_background,
       email: formik.values.email,
       avatar: avatar,
@@ -108,13 +108,13 @@ function UpdateProfile() {
       errors.full_name = `Name must be included (A-Z) , (a-z) and (' , -)z`;
     }
 
-    if (!values.dateofbirth) {
-      errors.dateofbirth = "Required!";
+    if (!values.date_of_birth) {
+      errors.date_of_birth = "Required!";
     } else {
       const currentDate = new Date();
-      const selectedDate = new Date(values.dateofbirth);
+      const selectedDate = new Date(values.date_of_birth);
       if (selectedDate > currentDate) {
-        errors.dateofbirth = "Date must be in the past";
+        errors.date_of_birth = "Date must be in the past";
       }
     }
 
@@ -141,7 +141,7 @@ function UpdateProfile() {
     const timestamp = new Date(newValue);
     formik.handleChange({
       target: {
-        name: "dateofbirth",
+        name: "date_of_birth",
         value: dayjs(timestamp),
         type: "date",
       },
@@ -294,8 +294,8 @@ function UpdateProfile() {
               <div className="relative h-[100%]">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    id="dateofbirth"
-                    name="dateofbirth"
+                    id="date_of_birth"
+                    name="date_of_birth"
                     // slotProps={{ popper: { placement: "bottom-end" } }}
                     sx={{
                       width: 453,
@@ -303,8 +303,8 @@ function UpdateProfile() {
                         height: 48,
                         borderRadius: "0.5rem",
                         border:
-                          formik.errors.dateofbirth &&
-                          formik.touched.dateofbirth
+                          formik.errors.date_of_birth &&
+                          formik.touched.date_of_birth
                             ? "2px solid #9B2FAC"
                             : "2px solid #CBD5E0",
                         width: "100%",
@@ -326,18 +326,18 @@ function UpdateProfile() {
                     format="DD-MM-YYYY"
                     maxDate={today}
                     // showDaysOutsideCurrentMonth
-                    value={formik.values.dateofbirth}
+                    value={formik.values.date_of_birth}
                     onChange={handleDatePickerChange}
                     onBlur={formik.handleBlur}
                   />
                 </LocalizationProvider>
 
-                {formik.touched.dateofbirth && formik.errors.dateofbirth ? (
+                {formik.touched.date_of_birth && formik.errors.date_of_birth ? (
                   <div className="text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]">
-                    {formik.errors.dateofbirth}
+                    {formik.errors.date_of_birth}
                   </div>
                 ) : null}
-                {formik.touched.dateofbirth && formik.errors.dateofbirth ? (
+                {formik.touched.date_of_birth && formik.errors.date_of_birth ? (
                   <img
                     src="../../public/Exclamation-circle.svg"
                     className="absolute right-[47px] top-[16px]"

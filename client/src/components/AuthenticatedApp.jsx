@@ -15,7 +15,6 @@ import { Routes, Route } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import LearningPage from "../pages/LearningPage";
 import { useParams } from "react-router-dom";
-import Mymodal from "./Mymodal";
 
 function AuthenticatedApp() {
   const { userID } = useAuth();
@@ -41,13 +40,10 @@ function AuthenticatedApp() {
         <Route path={`/profile/:id`} element={<ProtectedProfileRoute />} />
         <Route path="/ourcourse/coursedetail" element={<CourseDetailPage />} />
         <Route path="/mycourse" element={<MyCoursePage />} />
-        <Route path="/desire" element={<DesireCoursePage />} />
+        <Route path="/desire/:userId" element={<DesireCoursePage />} />
         <Route path="/assignment" element={<AssignmentPage />} />
         <Route path="/learning" element={<LearningPage />} />
-        <Route
-          path="/mymodal"
-          element={<Mymodal yes="asdas" no="sdasd" description="asdas" />}
-        />
+
         <Route path="*" element={null} />
       </Routes>
     </>

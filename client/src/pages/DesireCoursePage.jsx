@@ -4,13 +4,16 @@ import CourseItem from "../components/CourseItem";
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 function DesireCoursePage() {
-  const { userID } = useAuth();
+  // const { userId } = useAuth();
+  const params = useParams();
+  const userId = params.userId;
   const [desireData, setDesireData] = useState([]);
   const getDataDesireCourse = async () => {
     try {
-      const result = await axios.get(`http://localhost:4000/desire/${userID}`);
+      const result = await axios.get(`http://localhost:4000/desire/${userId}`);
       const newDataCourse = result.data;
       setDesireData(newDataCourse);
     } catch (error) {
@@ -85,11 +88,11 @@ function DesireCoursePage() {
             {desireData.map((item, index) => (
               <CourseItem
                 key={index}
-                coverimg={item.course.coverimg}
-                coursename={item.course.coursename}
-                coursedetail={item.course.coursedetail}
-                coursesummary={item.course.lesson.length}
-                totallearningtime={item.course.totallearningtime}
+                coverimg={item.courses.cover_img}
+                coursename={item.courses.course_name}
+                coursedetail={item.courses.course_detail}
+                coursesummary={item.courses.lessons.length}
+                totallearningtime={item.courses.total_time}
               />
             ))}
           </div>
