@@ -9,11 +9,10 @@ const profileRouter = Router();
 const multerUpload = multer({});
 const avatarUpload = multerUpload.fields([{ name: "avatar", maxCount: 1 }]);
 
-
-profileRouter.get("/:userId",validateTokenMiddleware, async (req, res) => {
+profileRouter.get("/:userId", validateTokenMiddleware, async (req, res) => {
   try {
     const userId = req.params.userId;
-   
+
     if (!userId || typeof userId !== "string") {
       return res.status(400).json({
         message: "Invalid url.",
@@ -21,11 +20,11 @@ profileRouter.get("/:userId",validateTokenMiddleware, async (req, res) => {
     }
 
     const { data, error } = await supabase
-      .from("register")
-      .select("full_name, dateofbirth, edu_background, email, image_url")
+      .from("users")
+      .select("full_name, date_of_birth, edu_background, email, image_url")
       .eq("user_id", userId);
 
-    if (error && (userId !== null)) {
+    if (error && userId !== null) {
       return res.status(500).json({
         message: "An error occurred while fetching data.",
         error: error.message,
@@ -49,151 +48,159 @@ profileRouter.get("/:userId",validateTokenMiddleware, async (req, res) => {
   }
 });
 
-profileRouter.get("/image/:userId",validateTokenMiddleware, async (req, res) => {
-  const userId = req.params.userId;
-
-  try {
-    const { data, error } = await supabase
-      .from("register")
-      .select("image_url")
-      .eq("user_id", userId);
-
-    console.log(data);  
-    if (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Internal server error" });
-    }
-
-    const imageUrl = data[0].image_url;
-
-    res.json(imageUrl);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-profileRouter.put("/:userId", [avatarUpload,validateTokenMiddleware], async (req, res) => {
-  const userId = req.params.userId;
-  
-  if (
-    !req.body.full_name ||
-    !req.body.dateofbirth ||
-    !req.body.edu_background ||
-    !req.body.email
-  ) {
-    return res.status(400).json({
-      message: "Please enter all information.",
-    });
-  }
-
-  const nameValidate = /^[a-zA-Z' -]+$/;
-  if (!nameValidate.test(req.body.full_name)) {
-    return res.status(400).json({
-      message: "Invalid name",
-    });
-  }
-
-  const emailValidate = /^[a-zA-Z0-9._-]+@[^.]+\.(com)$/;
-  if (!emailValidate.test(req.body.email)) {
-    return res.status(400).json({
-      message: "invalid email",
-    });
-  }
-  
-  try {
-
-    if (req.files.length > 0 || req.files.avatar) {
-      const file = req.files.avatar[0];
-      const fileImage = new Blob([file.buffer], { type: file.mimetype });
-      const fileName = file.originalname.replace(/ /g, "_");
-
-    const { data, error } = await supabase.storage
-      .from("test-avatar")
-      .upload(`profile/${uuidv4()}${fileName}`, fileImage);
-
-    if (error) {
-      console.error(error);
-    } else {
-      console.log("File uploaded successfully:", data);
-    }
-
-    const path = data.path;
-    const imgUrl = `https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/${path}`;
-    const now1 = new Date(); // Get the current date and time
-    const formattedDate1 =
-      now1.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
+profileRouter.get(
+  "/image/:userId",
+  validateTokenMiddleware,
+  async (req, res) => {
+    const userId = req.params.userId;
 
     try {
       const { data, error } = await supabase
         .from("register")
-        .update({
-          full_name: req.body.full_name,
-          dateofbirth: req.body.dateofbirth,
-          edu_background: req.body.edu_background,
-          email: req.body.email,
-          image_url: imgUrl,
-          updated_at: formattedDate1,
-        })
+        .select("image_url")
         .eq("user_id", userId);
-      if (error) {
-        console.log(error);
-      }
-  } catch (error) {
-    console.error(error);
-  }
-} else {
-    const now2 = new Date(); // Get the current date and time
-    const formattedDate2 =
-      now2.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
 
-  //   console.log({name: req.body.full_name,
-  //   date:req.body.dateofbirth,
-  //   edu:req.body.edu_background,
-  //   email:req.body.email,
-  //   imgUrl:imgUrl,
-  //   updated_at: formattedDate,
-  // })
- 
-
-    try {
-      const { data, error } = await supabase
-        .from("register")
-        .update({
-          full_name: req.body.full_name,
-          dateofbirth: req.body.dateofbirth,
-          edu_background: req.body.edu_background,
-          email: req.body.email,
-          updated_at: formattedDate2,
-        })
-        .eq("user_id", userId);
-     
+      console.log(data);
       if (error) {
-        console.log(error);
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
       }
+
+      const imageUrl = data[0].image_url;
+
+      res.json(imageUrl);
     } catch (error) {
       console.error(error);
+      res.status(500).json({ message: "Internal server error" });
     }
   }
-  } catch (error) {
-    console.log(error);
-  }
+);
 
-  return res.json({
-    message: "You profile has been update",
-  });
-});
+profileRouter.put(
+  "/:userId",
+  [avatarUpload, validateTokenMiddleware],
+  async (req, res) => {
+    const userId = req.params.userId;
+
+    if (
+      !req.body.full_name ||
+      !req.body.dateofbirth ||
+      !req.body.edu_background ||
+      !req.body.email
+    ) {
+      return res.status(400).json({
+        message: "Please enter all information.",
+      });
+    }
+
+    const nameValidate = /^[a-zA-Z' -]+$/;
+    if (!nameValidate.test(req.body.full_name)) {
+      return res.status(400).json({
+        message: "Invalid name",
+      });
+    }
+
+    const emailValidate = /^[a-zA-Z0-9._-]+@[^.]+\.(com)$/;
+    if (!emailValidate.test(req.body.email)) {
+      return res.status(400).json({
+        message: "invalid email",
+      });
+    }
+
+    try {
+      if (req.files.length > 0 || req.files.avatar) {
+        const file = req.files.avatar[0];
+        const fileImage = new Blob([file.buffer], { type: file.mimetype });
+        const fileName = file.originalname.replace(/ /g, "_");
+
+        const { data, error } = await supabase.storage
+          .from("test-avatar")
+          .upload(`profile/${uuidv4()}${fileName}`, fileImage);
+
+        if (error) {
+          console.error(error);
+        } else {
+          console.log("File uploaded successfully:", data);
+        }
+
+        const path = data.path;
+        const imgUrl = `https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/${path}`;
+        const now1 = new Date(); // Get the current date and time
+        const formattedDate1 =
+          now1.toISOString().replace(/T/, " ").replace(/\..+/, "") +
+          ".682314+00";
+
+        try {
+          const { data, error } = await supabase
+            .from("users")
+            .update({
+              full_name: req.body.full_name,
+              dateofbirth: req.body.dateofbirth,
+              edu_background: req.body.edu_background,
+              email: req.body.email,
+              image_url: imgUrl,
+              updated_at: formattedDate1,
+            })
+            .eq("user_id", userId);
+          if (error) {
+            console.log(error);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        const now2 = new Date(); // Get the current date and time
+        const formattedDate2 =
+          now2.toISOString().replace(/T/, " ").replace(/\..+/, "") +
+          ".682314+00";
+
+        //   console.log({name: req.body.full_name,
+        //   date:req.body.dateofbirth,
+        //   edu:req.body.edu_background,
+        //   email:req.body.email,
+        //   imgUrl:imgUrl,
+        //   updated_at: formattedDate,
+        // })
+
+        try {
+          const { data, error } = await supabase
+            .from("users")
+            .update({
+              full_name: req.body.full_name,
+              dateofbirth: req.body.dateofbirth,
+              edu_background: req.body.edu_background,
+              email: req.body.email,
+              updated_at: formattedDate2,
+            })
+            .eq("user_id", userId);
+
+          if (error) {
+            console.log(error);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    return res.json({
+      message: "You profile has been update",
+    });
+  }
+);
 
 profileRouter.put("/delete/:userId", async (req, res) => {
   const userId = req.params.userId;
   try {
     const { data, error } = await supabase
-      .from("register")
+      .from("users")
       .update({
         image_url: null,
       })
       .eq("user_id", userId);
-      
+
     if (error) {
       console.log(error);
       res.status(500).json({ error: "Failed to update image_url" });
