@@ -22,7 +22,7 @@ async function init() {
   app.use("/auth", authRouter);
   app.use("/profile", profileRouter);
   app.use("/ourcourse", courseRouter);
-  app.use("/ourcourse/coursedetail", courseRouter);
+  app.use("/coursedetail", courseRouter);
   app.use("/desire", desireRouter);
   app.use("/mycourse", MyCourseRouter);
 
