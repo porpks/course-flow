@@ -77,6 +77,7 @@ function Learning() {
     const [totalLesson, setTotalLesson] = useState(0)
     const [totalCompleted, setTotaCompleted] = useState(0)
     const [percentCompleted, setPercentCompleted] = useState(0)
+    const [videoThumbnail, setVideoThumbnail] = useState("")
     const [videoHead, setVideoHead] = useState("")
     const [videoKey, setVideoKey] = useState(null)
 
@@ -98,6 +99,7 @@ function Learning() {
             );
             const data = result.data.data;
             setCourseData(data);
+            setVideoThumbnail(data.cover_img)
         } catch (error) {
             console.log(error);
         }
@@ -143,53 +145,56 @@ function Learning() {
                             <div className={`w-[12%] h-full Linear1 rounded-full`}></div>
                         </div>
                     </div>
+                    <form>
+                        {courseData.lesson.map((lesson, index) => {
+                            let seq = ""
+                            index + 1 < 10 ? seq = "0" + (index + 1) : seq = String(index + 1)
+                            return (
+                                <Accordion key={index}>
+                                    <AccordionSummary
+                                        expandIcon={<LearnigDropdown />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <Typography>
+                                            <div className='flex'>
+                                                <h1 className='Body2 mr-6 text-[--gray700]'>{seq}</h1>
+                                                <h1 className='Body2'>{lesson.lesson_name}</h1>
+                                            </div>
+                                        </Typography>
+                                    </AccordionSummary>
+                                    <hr />
+                                    <AccordionDetails>
+                                        <div className=''>
 
-                    {courseData.lesson.map((lesson, index) => {
-                        let seq = ""
-                        index + 1 < 10 ? seq = "0" + (index + 1) : seq = String(index + 1)
-                        return (
-                            <Accordion key={index}>
-                                <AccordionSummary
-                                    expandIcon={<LearnigDropdown />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography>
-                                        <div className='flex'>
-                                            <h1 className='Body2 mr-6 text-[--gray700]'>{seq}</h1>
-                                            <h1 className='Body2'>{lesson.lesson_name}</h1>
-                                        </div>
-                                    </Typography>
-                                </AccordionSummary>
-                                <hr />
-                                <AccordionDetails>
-                                    <div className='px-2 py-3'>
-
-                                        {lesson.sublesson.map((sublesson, index) => {
-                                            {/* setTotalLesson(totalLesson + 1) */ }
-                                            return (
-                                                <div key={index} className='flex items-center mb-6'>
-                                                    <div className='mr-4 h-[20px]'>
-                                                        <SublessonIcon userID={userID} sublessonID={sublesson.sublesson_id}
-                                                        // totalLesson={totalLesson} setTotalLesson={setTotalLesson}
-                                                        // totalCompleted={totalCompleted} setTotaCompleted={setTotaCompleted}
-                                                        // setPercentCompleted={setPercentCompleted}
-                                                        />
-                                                    </div>
-                                                    <h1 className='Body3 text-[--gray700] cursor-pointer'
+                                            {lesson.sublesson.map((sublesson, index) => {
+                                                {/* setTotalLesson(totalLesson + 1) */ }
+                                                return (
+                                                    <label key={index} id={sublesson.sublesson_id} className='flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500]'
                                                         onClick={() => handleShowVideo(sublesson.sublesson_name, sublesson.sublesson_id)}
-                                                    >{sublesson.sublesson_name}
-                                                    </h1>
-                                                </div>
-                                            )
-                                        })}
+                                                    >
+                                                        <div className='mr-4 h-[20px]'>
+                                                            <SublessonIcon userID={userID} sublessonID={sublesson.sublesson_id}
+                                                            // totalLesson={totalLesson} setTotalLesson={setTotalLesson}
+                                                            // totalCompleted={totalCompleted} setTotaCompleted={setTotaCompleted}
+                                                            // setPercentCompleted={setPercentCompleted}
+                                                            />
+                                                        </div>
+                                                        <h1 className='Body3 text-[--gray700]'
+                                                        >{sublesson.sublesson_name}
+                                                        </h1>
+                                                        {/* <input type='radio' htmlFor={sublesson.sublesson_id} name='lesson' className=' checked:bg-red-500' /> */}
+                                                    </label>
 
-                                    </div>
-                                </AccordionDetails>
-                            </Accordion>
-                        )
-                    })}
+                                                )
+                                            })}
 
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>
+                            )
+                        })}
+                    </form>
                 </div>
 
                 <div className="flex flex-col w-full">
@@ -207,14 +212,19 @@ function Learning() {
                                     width="100%"
                                     height="100%"
                                     controls={true}
-                                    light={true}
-                                    playIcon={<svg className='min-h-[460px]' xmlns="http://www.w3.org/2000/svg" width="104" height="104" viewBox="0 0 104 104" fill="none">
-                                        <rect width="104" height="104" rx="52" fill="#020202" fillOpacity="0.5" />
-                                        <path d="M77 52.5L40.25 73.7176L40.25 31.2824L77 52.5Z" fill="white" />
-                                    </svg>}
+                                    // light={true}
+                                    light={videoThumbnail}
+                                    playIcon={
+                                        <div className={`flex justify-center items-center min-h-[32vw] w-full`}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="104" height="104" viewBox="0 0 104 104" fill="none">
+                                                <rect width="104" height="104" rx="52" fill="#020202" fillOpacity="0.5" />
+                                                <path d="M77 52.5L40.25 73.7176L40.25 31.2824L77 52.5Z" fill="white" />
+                                            </svg>
+                                        </div>}
                                     start={33}
                                     // progressInterval={progressTime}
                                     // onPlay={handlePlay}
+                                    playing={true}
                                     onPause={(e) => handlePause(e.target.currentTime)}
                                     onEnded={handleEnd}
 
@@ -242,7 +252,7 @@ function Learning() {
                         null}
                 </div>
 
-            </div>
+            </div >
 
         </>
     )

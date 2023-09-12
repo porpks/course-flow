@@ -16,7 +16,7 @@ learnRouter.get("/", async (req, res) => {
     try {
         const { data: courseData, error: courseError } = await supabase
             .from('courses')
-            .select('course_name, course_detail')
+            .select('course_name, course_detail, cover_img')
             .eq('course_id', courseID)
             .single();
 
