@@ -32,15 +32,13 @@ function CourseDetail() {
     try {
       const dataDetailCourse = await axios.get(
         `http://localhost:4000/ourcourse/coursedetail`
-        );
-        console.log(dataDetailCourse);
+      );
+      console.log(dataDetailCourse);
     } catch (error) {
       message: error;
       // console.log(error);
     }
   }
-  
-
 
   useEffect(() => {
     getDetailCourse();
@@ -54,8 +52,7 @@ function CourseDetail() {
             onClick={() => {
               navigate("/ourcourse");
             }}
-            className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
-          >
+            className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer">
             <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
             <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
           </a>
@@ -155,7 +152,7 @@ function CourseDetail() {
               <button onClick={openDesire} className="Secondary w-[100%]">
                 Get in Desire Course
               </button>
-      
+
               {desireToggle ? (
                 <Mymodal
                   open={desireToggle}
@@ -165,9 +162,7 @@ function CourseDetail() {
                   yesDes="Yes, add this to my desire course"
                   noDes="No, I don’t"
                 />
-              ) : (
-                null
-              )}
+              ) : null}
               {subscribeToggle ? (
                 <Mymodal
                   open={subscribeToggle}
@@ -177,10 +172,10 @@ function CourseDetail() {
                   yesDes="Yes, I want to subscribe"
                   noDes="No, I don’t"
                 />
-              ) : (
-                null
-              )}
-              <button onClick={openSubscribe} className="Primary w-[100%]">
+              ) : null}
+              <button
+                onClick={openSubscribe}
+                className="Primary w-[100%] border-none">
                 Subscribe This Course
               </button>
             </div>
