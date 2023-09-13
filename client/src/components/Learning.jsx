@@ -129,10 +129,10 @@ function Learning() {
     const handleLesson = (action) => {
         if (action === "next") {
             setVideoKey(sublessonIdArray[sublessonIdArray.findIndex((element) => element === videoKey) + 1])
-            boxRef.current.scrollIntoView()
+            boxRef.current.scrollIntoView({ behavior: "smooth", })
         } else if (action === "prev") {
             setVideoKey(sublessonIdArray[sublessonIdArray.findIndex((element) => element === videoKey) - 1])
-            boxRef.current.scrollIntoView()
+            boxRef.current.scrollIntoView({ behavior: "smooth", })
         }
     }
 
