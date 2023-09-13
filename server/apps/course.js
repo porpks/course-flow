@@ -9,6 +9,7 @@ courseRouter.get("/", async (req, res) => {
       .from("courses")
       .select("*")
       .order("course_id", { ascending: true });
+    console.log(data);
     return res.json({
       data,
     });
