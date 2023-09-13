@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "../contexts/AuthContext.jsx";
+
 import "./Assignment.css";
 const AssignmentBox = () => {
-  const { userID, setUserID } = useAuth();
   // const mockAssignment = [
   //   {
   //     assignment_id: 1,
@@ -84,9 +83,8 @@ const AssignmentBox = () => {
   useEffect(() => {
     const getAssignmentData = async () => {
       try {
-        setUserID(170);
         const response = await axios.get(
-          `http://localhost:4000/assignment/${userID}`
+          `http://localhost:4000/assignment/${localStorage.getItem("userID")}`
         );
         setData(response.data.data);
 
@@ -130,7 +128,6 @@ const AssignmentBox = () => {
   };
 
   const handleSubmit = async () => {
-    setUserID(170);
     try {
       const assignmentAnswers = answers.map((answer) => ({
         assignment_id: answer.assignment_id,
@@ -139,13 +136,13 @@ const AssignmentBox = () => {
       }));
 
       const response = await axios.put(
-        `http://localhost:4000/assignment/${userID}`,
+        `http://localhost:4000/assignment/${localStorage.getItem("UserID")}`,
         assignmentAnswers
       );
 
       if (response.status === 200) {
         const updatedDataResponse = await axios.get(
-          `http://localhost:4000/assignment/${userID}`
+          `http://localhost:4000/assignment/${localStorage.getItem("UserID")}`
         );
 
         setData(updatedDataResponse.data.data);
@@ -158,102 +155,110 @@ const AssignmentBox = () => {
 
   return (
     <>
-      <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex '>
+      <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex'>
         {data &&
-          assignmentsToDisplay.map((assignment) => {
+          assignmentsToDisplay.map((assignment, index) => {
             return (
               <>
-                <div
-                  className='Frame427320997 self-stretch justify-start items-start inline-flex'
-                  key={assignment.assignment_id}>
-                  <div className='Assignment grow shrink basis-0 h-8 text-black text-xl font-normal leading-loose'>
-                    Assignment
-                  </div>
-                  <div
-                    className={`StatusHomework px-2 py-1 ${
-                      assignment.assignment_status === "Pending"
-                        ? "bg-[#FFFBDA]"
-                        : assignment.assignmen_tstatus === "Submitted late"
-                        ? "bg-[#EAF0FF]"
-                        : assignment.assignment_status === "Submitted"
-                        ? "bg-[#DCF8EE]"
-                        : assignment.assignment_status === "Overdue"
-                        ? "bg-[#FAE7F4]"
-                        : null
-                    } rounded justify-start items-start gap-2 inline-flex`}>
-                    <div
-                      className={`${
-                        assignment.assignment_status === "Pending"
-                          ? " text-[#996400]"
-                          : assignment.assignment_status === "Submitted late"
-                          ? "text-[#3456CF]"
-                          : assignment.assignment_status === "Submitted"
-                          ? "text-[#0A7B60]"
-                          : assignment.assignment_status === "Overdue"
-                          ? "text-[#9B2FAC]"
-                          : null
-                      } text-base font-medium leading-normal`}>
-                      {assignment.assignment_status}
+                <div key={index} className='w-[100%]'>
+                  <div className='Frame427320997 self-stretch flex items-start justify-between'>
+                    <div className='Assignment grow shrink basis-0 h-8 text-black text-xl font-normal leading-loose'>
+                      Assignment
                     </div>
-                  </div>
-                </div>
-
-                <div
-                  className={`w-[100%] Frame427321002  p-6   rounded-lg border border-gray-300 justify-start items-end gap-6 inline-flex`}>
-                  <div className='InputStyle grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex'>
-                    <div className='Label self-stretch justify-start items-start gap-1 inline-flex'>
-                      <div className='Email grow shrink basis-0 Body2'>
-                        {assignment.assignment_question}
+                    <div
+                      className={`StatusHomework px-2 py-1 ${
+                        assignment.assignment_status === "Pending"
+                          ? "bg-[#FFFBDA]"
+                          : assignment.assignment_status === "Submitted late"
+                          ? "bg-[#EAF0FF]"
+                          : assignment.assignment_status === "Submitted"
+                          ? "bg-[#DCF8EE]"
+                          : assignment.assignment_status === "Overdue"
+                          ? "bg-[#FAE7F4]"
+                          : null
+                      } rounded justify-start items-start gap-2 inline-flex `}>
+                      <div
+                        className={`${
+                          assignment.assignment_status === "Pending"
+                            ? " text-[#996400]"
+                            : assignment.assignment_status === "Submitted late"
+                            ? "text-[#3456CF]"
+                            : assignment.assignment_status === "Submitted"
+                            ? "text-[#0A7B60]"
+                            : assignment.assignment_status === "Overdue"
+                            ? "text-[#9B2FAC]"
+                            : null
+                        } text-base font-medium leading-normal`}>
+                        {assignment.assignment_status}
                       </div>
                     </div>
-                    <div
-                      className={`InputField self-stretch  pl-3 pr-4 py-3 rounded-lg border border-solid${
-                        assignment.assignment_status === "Submitted"
-                          ? "bg-none "
-                          : " bg-white"
-                      } border-gray-300 justify-start items-start gap-2 inline-flex`}>
+                  </div>
+
+                  <div
+                    key={index}
+                    className={`w-[100%] Frame427321002  p-6   rounded-lg border border-gray-300 justify-start items-end gap-6 inline-flex`}>
+                    <div className='InputStyle grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex'>
+                      <div className='Label self-stretch justify-start items-start gap-1 inline-flex'>
+                        <div className='Email grow shrink basis-0 Body2'>
+                          {assignment.assignment_question}
+                        </div>
+                      </div>
                       <div
-                        className={`ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex ${
-                          assignment.assignment_status === "Submitted"
+                        className={`InputField self-stretch  pl-3 pr-4 py-3 rounded-lg border border-solid${
+                          assignment.assignment_status === "Submitted" ||
+                          assignment.assignment_status === "Submitted late"
                             ? "bg-none "
                             : " bg-white"
-                        }`}>
-                        <textarea
-                          className={`${
-                            assignment.assignment_status === "Submitted"
-                              ? "bg-slate-200 text-slate-500 "
-                              : "bg-white  text-slate-400"
-                          }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
-                          placeholder='Answer...'
-                          value={
-                            answers.find(
-                              (a) =>
-                                a.assignment_id === assignment.assignment_id
-                            )?.assignment_answer ||
-                            assignment.assignment_answer ||
-                            ""
-                          }
-                          onChange={(e) =>
-                            handleAnswerChange(e, assignment.assignment_id)
-                          }
-                        />
+                        } border-gray-300 justify-start items-start gap-2 inline-flex`}>
+                        <div
+                          className={`ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex ${
+                            assignment.assignment_status === "Submitted" ||
+                            assignment.assignment_status === "Submitted late"
+                              ? "bg-none "
+                              : " bg-white"
+                          }`}>
+                          <textarea
+                            className={`${
+                              assignment.assignment_status === "Submitted" ||
+                              assignment.assignment_status === "Submitted late"
+                                ? "bg-slate-200 text-slate-500 "
+                                : "bg-white  text-slate-400"
+                            }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
+                            placeholder='Answer...'
+                            value={
+                              answers.find(
+                                (a) =>
+                                  a.assignment_id === assignment.assignment_id
+                              )?.assignment_answer ||
+                              assignment.assignment_answer ||
+                              ""
+                            }
+                            onChange={(e) =>
+                              handleAnswerChange(e, assignment.assignment_id)
+                            }
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className='Frame427321005 self-stretch justify-between items-center gap-6 inline-flex'>
                   <div
-                    className='Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex '
-                    onClick={handleSubmit}>
-                    <div className=' text-center text-white text-base font-bold leading-normal'>
-                      Send Assignment
-                    </div>
+                    className='Frame427321005 self-stretch justify-between items-center gap-6 flex'
+                    key={index + "00"}>
+                    {assignment.assignment_status !== "Pending" ? null : (
+                      <div
+                        className='Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex '
+                        onClick={handleSubmit}>
+                        <div className=' text-center text-white text-base font-bold leading-normal'>
+                          Send Assignment
+                        </div>
+                      </div>
+                    )}
+                    {assignment.assignment_status === "Pending" ? (
+                      <div className='Email text-slate-500 text-base font-normal leading-normal'>
+                        Assign within {assignment.assignment_duedate}
+                      </div>
+                    ) : null}
                   </div>
-                  {assignment.assignment_status === "Pending" ? (
-                    <div className='Email text-slate-500 text-base font-normal leading-normal'>
-                      Assign within {assignment.assignment_duedate}
-                    </div>
-                  ) : null}
                 </div>
               </>
             );

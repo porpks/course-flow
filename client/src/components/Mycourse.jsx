@@ -1,4 +1,3 @@
-import React from "react";
 import Avatar from "@mui/material/Avatar";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
@@ -19,7 +18,15 @@ function MyCourse() {
   const [inprogress, setInprogress] = useState(false);
   const [complete, setComplete] = useState(false);
   const [userName, setUserName] = useState("");
-  // const { userID } = useAuth();
+  const {
+    setCourseId,
+    courseId,
+    setIsShowVdo,
+    setIsShowAsm,
+    setVideoHead,
+    setVideoKey,
+    setPauseTime,
+  } = useAuth();
   // const [userID, setUserID] = useState(172); //122,172,130
   const [inProgressCount, setInProgressCount] = useState(0);
   const [completeCount, setCompleteCount] = useState(0);
@@ -81,17 +88,41 @@ function MyCourse() {
   };
 
   useEffect(() => {
+    const getDataCourse2 = async () => {
+      try {
+        const result = await axios.get(
+          "http://localhost:4000/learn/videotime",
+          {
+            params: { userID: userID, courseID: courseId },
+          }
+        );
+        const data = result.data.data;
+        console.log(data);
+        if (data.length > 0) {
+          const handleShowVideo = (sublessonName, sublessonID) => {
+            setVideoHead(sublessonName);
+            setVideoKey(sublessonID);
+            setIsShowVdo(true);
+            setIsShowAsm(true);
+            setPauseTime(data[0].sublesson_video_timestop);
+          };
+          handleShowVideo(data[0].sublesson_name, data[0].sublesson_id);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDataCourse2();
     getDataCourse();
-  }, [userID]);
+  }, [userID, courseId]);
 
   function AllCourse() {
     return (
-      <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]">
+      <div className='grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]'>
         {dataCourse.map((item) => (
           <div
             key={item.courses.course_id}
-            onClick={() => setCourseId(item.courses.course_id)}
-          >
+            onClick={() => setCourseId(item.courses.course_id)}>
             <CourseCard
               key={item.courses.course_id}
               coverimg={item.courses.cover_img}
@@ -110,7 +141,7 @@ function MyCourse() {
     if (dataCourse.length > 0) {
       const inProgressCourses = dataCourse.filter((item) => !item.coursestatus);
       return (
-        <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]">
+        <div className='grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]'>
           {inProgressCourses.map((item) => (
             <CourseCard
               key={item.courses.course_id}
@@ -130,7 +161,7 @@ function MyCourse() {
     if (dataCourse.length > 0) {
       const completeCourses = dataCourse.filter((item) => item.coursestatus);
       return (
-        <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]  w-[740px]">
+        <div className='grid grid-cols-2 gap-x-[26px] gap-y-[40px]  w-[740px]'>
           {completeCourses.map((item) => (
             <CourseCard
               key={item.courses.course_id}
@@ -148,49 +179,46 @@ function MyCourse() {
   }
 
   return (
-    <div className="w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative ">
-      <div className="w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative ">
-        <div className=" absolute right-0 top-[216px]">
-          <Ellipse5 className="top-1/2 absolute" style={{ top: "50%" }} />
+    <div className='w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative '>
+      <div className='w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative '>
+        <div className=' absolute right-0 top-[216px]'>
+          <Ellipse5 className='top-1/2 absolute' style={{ top: "50%" }} />
         </div>
-        <div className=" absolute right-[126.22px] top-[126px]">
+        <div className=' absolute right-[126.22px] top-[126px]'>
           <Polygon3 />
         </div>
-        <div className=" absolute left-[280px] top-[232px]">
+        <div className=' absolute left-[280px] top-[232px]'>
           <Cross5 />
         </div>
-        <div className=" absolute left-[43px] top-[159px]">
+        <div className=' absolute left-[43px] top-[159px]'>
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="27"
-            height="27"
-            viewBox="0 0 27 27"
-            fill="none"
-          >
-            <circle cx="13.1741" cy="13.1741" r="13.1741" fill="#C6DCFF" />
+            xmlns='http://www.w3.org/2000/svg'
+            width='27'
+            height='27'
+            viewBox='0 0 27 27'
+            fill='none'>
+            <circle cx='13.1741' cy='13.1741' r='13.1741' fill='#C6DCFF' />
           </svg>
         </div>
-        <div className=" absolute left-[102px] top-[100px]">
+        <div className=' absolute left-[102px] top-[100px]'>
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="11"
-            height="11"
-            viewBox="0 0 11 11"
-            fill="none"
-          >
-            <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" strokeWidth="3" />
+            xmlns='http://www.w3.org/2000/svg'
+            width='11'
+            height='11'
+            viewBox='0 0 11 11'
+            fill='none'>
+            <circle cx='5.5' cy='5.5' r='4' stroke='#2F5FAC' strokeWidth='3' />
           </svg>
         </div>
-        <div className="flex flex-col items-center justify-center ">
-          <h2 className="H2">My Course</h2>
-          <div className="flex flex-row mt-[60px]">
-            <Stack direction="row" spacing={2} className="">
+        <div className='flex flex-col items-center justify-center '>
+          <h2 className='H2'>My Course</h2>
+          <div className='flex flex-row mt-[60px]'>
+            <Stack direction='row' spacing={2} className=''>
               <Paper>
-                <MenuList className="flex fle-row">
+                <MenuList className='flex fle-row'>
                   <MenuItem
                     style={{ backgroundColor: "red" }}
-                    onClick={handleAllCourse}
-                  >
+                    onClick={handleAllCourse}>
                     All Course
                   </MenuItem>
                   <MenuItem onClick={handleInprogress}>Inprogress</MenuItem>
@@ -200,20 +228,20 @@ function MyCourse() {
             </Stack>
           </div>
         </div>
-        <div className="flex flex-row mt-[40px]  ">
-          <div className="flex flex-col w-[357px] h-fit Shadow2 px-[24px] py-[32px] content-center items-center mr-[24px] rounded-lg  sticky top-0 ">
-            <div className="">
-              <Avatar alt="" src={avatar} sx={{ width: 120, height: 120 }} />
-              <h2 className="my-[24px]">{userName}</h2>
+        <div className='flex flex-row mt-[40px]  '>
+          <div className='flex flex-col w-[357px] h-fit Shadow2 px-[24px] py-[32px] content-center items-center mr-[24px] rounded-lg  sticky top-0 '>
+            <div className=''>
+              <Avatar alt='' src={avatar} sx={{ width: 120, height: 120 }} />
+              <h2 className='my-[24px]'>{userName}</h2>
             </div>
-            <div className="flex flex-row ">
-              <div className="flex flex-col justify-between p-[16px] w-[142.5px] h-[134px] bg-[--gray200] mx-[12px]">
-                <p className="Body2">Course Inprogress</p>
-                <p className="H3">{inProgressCount}</p>
+            <div className='flex flex-row '>
+              <div className='flex flex-col justify-between p-[16px] w-[142.5px] h-[134px] bg-[--gray200] mx-[12px]'>
+                <p className='Body2'>Course Inprogress</p>
+                <p className='H3'>{inProgressCount}</p>
               </div>
-              <div className="flex flex-col justify-between p-[16px] w-[142.5px] h-[134px] bg-[--gray200] mx-[12px]">
-                <p className="Body2">Course Complete</p>
-                <p className="H3">{completeCount}</p>
+              <div className='flex flex-col justify-between p-[16px] w-[142.5px] h-[134px] bg-[--gray200] mx-[12px]'>
+                <p className='Body2'>Course Complete</p>
+                <p className='H3'>{completeCount}</p>
               </div>
             </div>
           </div>
