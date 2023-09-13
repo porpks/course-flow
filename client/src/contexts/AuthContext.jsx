@@ -17,6 +17,7 @@ function AuthProvider(props) {
   const [isShowAsm, setIsShowAsm] = useState(false);
   const [videoHead, setVideoHead] = useState("");
   const [videoKey, setVideoKey] = useState(null);
+  const [pauseTime, setPauseTime] = useState(0);
 
   const navigate = useNavigate();
 
@@ -62,6 +63,7 @@ function AuthProvider(props) {
   //           setVideoKey(sublessonID);
   //           setIsShowVdo(true);
   //           setIsShowAsm(true);
+  //           setPauseTime(data[0].sublesson_video_timestop)
   //         };
   //         handleShowVideo(data[0].sublesson_name, data[0].sublesson_id);
   //       }
@@ -145,6 +147,8 @@ function AuthProvider(props) {
         setVideoHead,
         videoKey,
         setVideoKey,
+        pauseTime,
+        setPauseTime,
         login,
         logout,
       }}
