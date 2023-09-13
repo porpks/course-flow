@@ -7,7 +7,7 @@ courseRouter.get("/", async (req, res) => {
   try {
     const { data, error } = await supabase
       .from("courses")
-      .select("*")
+      .select("*,lessons(*,sublessons(*))")
       .order("course_id", { ascending: true });
     // console.log(data);
     return res.json({
@@ -55,6 +55,26 @@ courseRouter.get("/courses", async (req, res) => {
       message: "An error occurred while fetching data from Supabase",
       error: error.message,
     });
+  }
+});
+
+courseRouter.get("/:courseId", async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+    const { data, error } = await supabase
+      .from("courses")
+      .select("*,lessons(*,sublessons(sublesson_name,sublesson_id))")
+      .eq("course_id", courseId);
+
+    if (error) {
+      throw error;
+    }
+
+    return res.json({
+      data: data[0],
+    });
+  } catch (error) {
+    message: error;
   }
 });
 

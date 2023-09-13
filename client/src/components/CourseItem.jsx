@@ -12,7 +12,7 @@ function CourseItem(props) {
           <p className="Body3 text-[--orange500]">Course</p>
           <h2 className="H3 text-[#000] py-[8px]">{props.coursename}</h2>
           <p className="Body2 text-[--gray700]">
-            {props.coursedetail.slice(0, 65) + "..."}
+            {props.coursedetail.slice(0, 65) + " ..."}
           </p>
         </div>
       </div>

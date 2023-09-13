@@ -3,8 +3,10 @@ import "./ourCourse.css";
 // import { courseData } from "../assets/courseData.jsx";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function OurCourse() {
+  const navigate = useNavigate();
   const [dataCourse, setDataCourse] = useState([]);
   const [searchKey, setSearchKey] = useState(""); //searchKeyword
 
@@ -36,14 +38,21 @@ function OurCourse() {
         message: error;
       }
     };
-
     getCourseByKeywords(searchKey);
   }, [searchKey]);
+
   const handleSearch = (event) => {
     setSearchKey(event.target.value);
   };
   /////////////////////////////////////////////////
-
+  // console.log(`dataCourse:${dataCourse[0].course_id}`);
+  if (dataCourse.length === 0) {
+    return (
+      <div className="flex justify-center items-center absolute top-[150px] w-[100%] h-[100vh] text-slate-100">
+        <h1> Loading...</h1>
+      </div>
+    );
+  }
   return (
     <div className="canvas-ourCourse">
       <div className="topSection">
@@ -61,15 +70,23 @@ function OurCourse() {
       <div className="content-Section">
         <div className="card-container">
           {dataCourse.map((item) => (
-            <CourseItem
-              key={item.course_id}
-              count={item.course_id}
-              coverimg={item.cover_img}
-              coursename={item.course_name}
-              coursedetail={item.course_detail}
-              coursesummary={item.course_summary}
-              totallearningtime={item.total_time}
-            />
+            <a
+              onClick={() =>
+                navigate(`/ourcourse/coursedetail/${item.course_id}`)
+              }
+              href="#homepage"
+              className="no-underline"
+            >
+              <CourseItem
+                key={item.course_id}
+                count={item.course_id}
+                coverimg={item.cover_img}
+                coursename={item.course_name}
+                coursedetail={item.course_detail}
+                coursesummary={item.course_summary}
+                totallearningtime={item.total_time}
+              />
+            </a>
           ))}
         </div>
       </div>
