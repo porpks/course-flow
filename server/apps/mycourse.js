@@ -14,6 +14,7 @@ MyCourseRouter.get("/:userID", async (req, res) => {
       .eq("user_id", userID);
     // .order("course_id", { ascending: true });
     console.log(data);
+    console.log(data);
     return res.json({
       data,
     });

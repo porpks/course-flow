@@ -184,6 +184,12 @@ function MyCourse() {
                 >
                   All Course
                 </MenuItem>
+                <MenuItem
+                  style={{ backgroundColor: "red" }}
+                  onClick={handleAllCourse}
+                >
+                  All Course
+                </MenuItem>
                 <MenuItem onClick={handleInprogress}>Inprogress</MenuItem>
                 <MenuItem onClick={handleComplete}>Complete</MenuItem>
               </MenuList>
@@ -194,6 +200,12 @@ function MyCourse() {
           <a className="Body2 p-[8px] m-[8px]">Complete</a> */}
         </div>
       </div>
+      <div className="flex flex-row mt-[40px]  ">
+        <div className="flex flex-col w-[357px] h-fit Shadow2 px-[24px] py-[32px] content-center items-center mr-[24px] rounded-lg  sticky top-0 ">
+          <div className="">
+            <Avatar alt="" src={avatar} sx={{ width: 120, height: 120 }} />
+            <h2 className="my-[24px]">{userName}</h2>
+          </div>
       <div className="flex flex-row mt-[40px]  ">
         <div className="flex flex-col w-[357px] h-fit Shadow2 px-[24px] py-[32px] content-center items-center mr-[24px] rounded-lg  sticky top-0 ">
           <div className="">
