@@ -67,4 +67,37 @@ learnRouter.get('/status', async (req, res) => {
 
 })
 
+learnRouter.get('/videotime', async (req, res) => {
+    const userID = Number(req.query.userID);
+    const courseID = Number(req.query.courseID);
+    console.log(userID, courseID);
+    if (!userID || !courseID) {
+        return res.status(400).json({
+            message: "Invalid query"
+        });
+    }
+
+    try {
+        const { data: interval, error: courseError } = await supabase
+            .from('user_sublessons')
+            .select('assign_status,sublesson_video_timestop,sublessons(sublesson_id,sublesson_name)')
+            .eq('user_id', userID);
+
+        for (const dataItem of interval) {
+            dataItem.sublesson_id = dataItem.sublessons.sublesson_id;
+            dataItem.sublesson_name = dataItem.sublessons.sublesson_name
+            delete dataItem.sublessons;
+        }
+
+        // Filter the interval array
+        const filteredInterval = interval.filter(dataItem => {
+            return dataItem.assign_status === "inprogress" || dataItem.sublesson_video_timestop !== null;
+        });
+
+        res.json({ data: filteredInterval });
+    } catch (e) {
+        // Handle errors here
+    }
+});
+
 export default learnRouter;
