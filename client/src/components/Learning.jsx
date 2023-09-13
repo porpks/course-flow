@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import ReactPlayer from "react-player";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import LearnigDropdown from "../assets/LearnigDropdown";
-import "./Learning.css";
+import { useState, useEffect, useRef } from 'react';
+import ReactPlayer from 'react-player'
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import LearnigDropdown from '../assets/LearnigDropdown';
+import './Learning.css'
 import { useAuth } from "../contexts/AuthContext.jsx";
 import axios from "axios";
 
@@ -93,6 +93,12 @@ function SublessonIcon({
 }
 
 function Learning() {
+    const playerRef = useRef(null);
+    const boxRef = useRef(null)
+    let sublessonIdArray = []
+
+    const [pauseTime, setPauseTime] = useState(0)
+
   const {
     userID,
     isShowAsm,
@@ -104,7 +110,6 @@ function Learning() {
     videoKey,
     setVideoKey,
   } = useAuth();
-  let sublessonIdArray = [];
 
   const [courseData, setCourseData] = useState({
     course_name: "",
@@ -134,6 +139,16 @@ function Learning() {
     }
   };
 
+    const handleLesson = (action) => {
+        if (action === "next") {
+            setVideoKey(sublessonIdArray[sublessonIdArray.findIndex((element) => element === videoKey) + 1])
+            boxRef.current.scrollIntoView({ behavior: "smooth", })
+        } else if (action === "prev") {
+            setVideoKey(sublessonIdArray[sublessonIdArray.findIndex((element) => element === videoKey) - 1])
+            boxRef.current.scrollIntoView({ behavior: "smooth", })
+        }
+    }
+
   const handleShowVideo = (sublessonName, sublessonID) => {
     setIsShowAsm(false);
     setIsShowVdo(false);
@@ -151,136 +166,114 @@ function Learning() {
     setIsShowAsm(true);
   };
 
-  useEffect(() => {
+    useEffect(() => {
     getDataCourse();
   }, []);
+  
+    return (
+        <>
+            <div className="flex justify-center pt-[100px] px-[160px]">
 
-  return (
-    <>
-      <div className='flex justify-center pt-[100px] px-[160px]'>
-        <div className='flex flex-col w-[360px] mr-[24px] px-6 py-8 shadow-[4px_4px_24px_0px_rgba(0,0,0,0.08)]'>
-          <div className=''>
-            <h1 className='Body3 text-[--orange500] mb-6'>Course</h1>
-            <h1 className='H3 mb-2'>{courseData.course_name}</h1>
-            <h1 className='Body2 text-[--gray700] mb-6 leading-8'>
-              {courseData.course_detail}
-            </h1>
-          </div>
-          <div className='mb-6'>
-            <h1 className='Body2 text-[--gray700] mb-2'>{100}% Complete</h1>
-            <div className='w-full h-[10px] bg-[--gray300] rounded-full'>
-              <div className={`w-[12%] h-full Linear1 rounded-full`}></div>
-            </div>
-          </div>
-          <form>
-            {courseData.lessons.map((lesson, index) => {
-              let seq = "";
-              index + 1 < 10
-                ? (seq = "0" + (index + 1))
-                : (seq = String(index + 1));
-              return (
-                <Accordion key={index}>
-                  <AccordionSummary
-                    expandIcon={<LearnigDropdown />}
-                    aria-controls='panel1a-content'
-                    id='panel1a-header'>
-                    <Typography>
-                      <div className='flex'>
-                        <h1 className='Body2 mr-6 text-[--gray700]'>{seq}</h1>
-                        <h1 className='Body2'>{lesson.lesson_name}</h1>
-                      </div>
-                    </Typography>
-                  </AccordionSummary>
-                  <hr />
-                  <AccordionDetails>
-                    <div className=''>
-                      {lesson.sublessons.map((sublesson, index) => {
-                        {
-                          /* setTotalLesson(totalLesson + 1) */
-                        }
-                        sublessonIdArray.push(sublesson.sublesson_id);
-                        console.log(sublessonIdArray);
-                        return (
-                          <label
-                            key={index}
-                            id={sublesson.sublesson_id}
-                            className='flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500]'
-                            onClick={() =>
-                              handleShowVideo(
-                                sublesson.sublesson_name,
-                                sublesson.sublesson_id
-                              )
-                            }>
-                            <div className='mr-4 h-[20px]'>
-                              <SublessonIcon
-                                userID={userID}
-                                sublessonID={sublesson.sublesson_id}
-                                // totalLesson={totalLesson} setTotalLesson={setTotalLesson}
-                                // totalCompleted={totalCompleted} setTotaCompleted={setTotaCompleted}
-                                // setPercentCompleted={setPercentCompleted}
-                              />
-                            </div>
-                            <h1 className='Body3 text-[--gray700]'>
-                              {sublesson.sublesson_name}
-                            </h1>
-                            {/* <input type='radio' htmlFor={sublesson.sublesson_id} name='lesson' className=' checked:bg-red-500' /> */}
-                          </label>
-                        );
-                      })}
+                <div className="flex flex-col w-[360px] mr-[24px] px-6 py-8 shadow-[4px_4px_24px_0px_rgba(0,0,0,0.08)]">
+                    <div className="">
+                        <h1 className="Body3 text-[--orange500] mb-6">Course</h1>
+                        <h1 className="H3 mb-2">{courseData.course_name}</h1>
+                        <h1 className="Body2 text-[--gray700] mb-6 leading-8">
+                            {courseData.course_detail}
+                        </h1>
                     </div>
-                  </AccordionDetails>
-                </Accordion>
-              );
-            })}
-          </form>
-        </div>
+                    <div className="mb-6">
+                        <h1 className="Body2 text-[--gray700] mb-2">{percentCompleted}% Complete</h1>
+                        <div className="w-full h-[10px] bg-[--gray300] rounded-full">
+                            <div className={`w-[12%] h-full Linear1 rounded-full`}></div>
+                        </div>
+                    </div>
+                    <form>
+                        {courseData.lessons.map((lesson, index) => {
+                            let seq = ""
+                            index + 1 < 10 ? seq = "0" + (index + 1) : seq = String(index + 1)
+                            return (
+                                <Accordion key={index}>
+                                    <AccordionSummary
+                                        expandIcon={<LearnigDropdown />}
+                                        aria-controls="panel1a-content"
+                                        id="panel1a-header"
+                                    >
+                                        <Typography>
+                                            <div className='flex'>
+                                                <h1 className='Body2 mr-6 text-[--gray700]'>{seq}</h1>
+                                                <h1 className='Body2'>{lesson.lesson_name}</h1>
+                                            </div>
+                                        </Typography>
+                                    </AccordionSummary>
+                                    <hr />
+                                    <AccordionDetails>
+                                        <div className=''>
 
-        <div className='flex flex-col w-full'>
-          <div className='mb-20'>
-            <div className='h-[90px]'>
-              <h1 className='H2'>{videoHead}</h1>
-            </div>
-            {isShowVdo ? (
-              <div className='w-full'>
-                <h1 className='H3'>VDO: {videoKey}</h1>
-                <div className='rounded-lg overflow-hidden '>
-                  <ReactPlayer
-                    url='https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/1%20Minute%20Sample%20Video.mp4?t=2023-09-08T15%3A26%3A51.001Z'
-                    width='100%'
-                    height='100%'
-                    controls={true}
-                    // light={true}
-                    light={videoThumbnail}
-                    playIcon={
-                      <div
-                        className={`flex justify-center items-center min-h-[32vw] w-full`}>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          width='104'
-                          height='104'
-                          viewBox='0 0 104 104'
-                          fill='none'>
-                          <rect
-                            width='104'
-                            height='104'
-                            rx='52'
-                            fill='#020202'
-                            fillOpacity='0.5'
-                          />
-                          <path
-                            d='M77 52.5L40.25 73.7176L40.25 31.2824L77 52.5Z'
-                            fill='white'
-                          />
-                        </svg>
-                      </div>
-                    }
-                    start={33}
-                    // progressInterval={progressTime}
-                    // onPlay={handlePlay}
-                    playing={true}
-                    onPause={(e) => handlePause(e.target.currentTime)}
-                    onEnded={handleEnd}
-                  />
+                                            {lesson.sublessons.map((sublesson, index) => {
+                                                {/* setTotalLesson(totalLesson + 1) */ }
+                                                sublessonIdArray.push(sublesson.sublesson_id)
+                                                return (
+                                                    <label key={index} id={sublesson.sublesson_id} className='flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500]'
+                                                        onClick={() => handleShowVideo(sublesson.sublesson_name, sublesson.sublesson_id)}
+                                                    >
+                                                        <div className='mr-4 h-[20px]'>
+                                                            <SublessonIcon userID={userID} sublessonID={sublesson.sublesson_id}
+                                                            // totalLesson={totalLesson} setTotalLesson={setTotalLesson}
+                                                            // totalCompleted={totalCompleted} setTotaCompleted={setTotaCompleted}
+                                                            // setPercentCompleted={setPercentCompleted}
+                                                            />
+                                                        </div>
+                                                        <h1 className='Body3 text-[--gray700]'
+                                                        >{sublesson.sublesson_name}
+                                                        </h1>
+                                                        {/* <input type='radio' htmlFor={sublesson.sublesson_id} name='lesson' className=' checked:bg-red-500' /> */}
+                                                    </label>
+
+                                                )
+                                            })}
+
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>
+                            )
+                        })}
+                    </form>
+                </div>
+
+                <div className="flex flex-col w-full" ref={boxRef}>
+                    <div className='mb-20'>
+                        <div className="h-[90px]">
+                            <h1 className="H2">{videoHead}</h1>
+                        </div>
+                        {isShowVdo ? <div className="w-full">
+                            <h1 className="H3">VDO: {videoKey}</h1>
+                            <div className='rounded-lg overflow-hidden '>
+
+
+                                <ReactPlayer
+                                    ref={playerRef}
+                                    url='https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/1%20Minute%20Sample%20Video.mp4?t=2023-09-08T15%3A26%3A51.001Z'
+                                    width="100%"
+                                    height="100%"
+                                    controls={true}
+                                    // light={true}
+                                    light={videoThumbnail}
+                                    playIcon={
+                                        <div className={`flex justify-center items-center min-h-[32vw] w-full`}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="104" height="104" viewBox="0 0 104 104" fill="none">
+                                                <rect width="104" height="104" rx="52" fill="#020202" fillOpacity="0.5" />
+                                                <path d="M77 52.5L40.25 73.7176L40.25 31.2824L77 52.5Z" fill="white" />
+                                            </svg>
+                                        </div>}
+                                    start={33}
+                                    // progressInterval={progressTime}
+                                    onPlay={() => { playerRef.current.seekTo(pauseTime, 'seconds') }}
+                                    playing={true}
+                                    onPause={(e) => handlePause(e.target.currentTime)}
+                                    onEnded={handleEnd}
+
+                                />
                 </div>
               </div>
             ) : null}
@@ -308,12 +301,18 @@ function Learning() {
         </div>
       </div>
       <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>
-        <button className='bg-white px-2 py-1 border-none text-[16px] text-[--blue500] font-bold cursor-pointer hover:text-[--blue300] duration-300'>
-          Previous Lesson
-        </button>
-        <button className='Primary border-none cursor-pointer'>
-          Next Lesson
-        </button>
+                {sublessonIdArray.findIndex((element) => element === videoKey) > 0 ?
+                    <button className='bg-white p-[20px] border-none text-[16px] text-[--blue500] font-bold cursor-pointer hover:text-[--blue300] duration-300'
+                        onClick={() => handleLesson("prev")}>
+                        Previous Lesson
+                    </button>
+                    : <div></div>}
+                {sublessonIdArray.findIndex((element) => element === videoKey) < sublessonIdArray.length - 1 ?
+                    <button className='Primary border-none cursor-pointer'
+                        onClick={() => handleLesson("next")}>
+                        Next Lesson
+                    </button>
+                    : <div></div>}
       </div>
     </>
   );
