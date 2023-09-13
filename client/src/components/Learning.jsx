@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player'
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -68,6 +68,8 @@ function SublessonIcon({ userID, sublessonID, totalLesson, setTotalLesson, total
 
 function Learning() {
     const { userID } = useAuth();
+    const playerRef = useRef(null);
+    const boxRef = useRef(null)
     let sublessonIdArray = []
 
     const [courseData, setCourseData] = useState({
@@ -81,6 +83,7 @@ function Learning() {
     const [videoThumbnail, setVideoThumbnail] = useState("")
     const [videoHead, setVideoHead] = useState("")
     const [videoKey, setVideoKey] = useState(null)
+    const [pauseTime, setPauseTime] = useState(0)
 
     const [isShowVdo, setIsShowVdo] = useState(false)
     const [isShowAsm, setIsShowAsm] = useState(false)
@@ -117,11 +120,20 @@ function Learning() {
 
     }
 
-    const handlePause = (pauseTime) => {
-        console.log(pauseTime);
+    const handlePause = (time) => {
+        setPauseTime(time)
     }
     const handleEnd = () => {
         setIsShowAsm(true)
+    }
+    const handleLesson = (action) => {
+        if (action === "next") {
+            setVideoKey(sublessonIdArray[sublessonIdArray.findIndex((element) => element === videoKey) + 1])
+            boxRef.current.scrollIntoView()
+        } else if (action === "prev") {
+            setVideoKey(sublessonIdArray[sublessonIdArray.findIndex((element) => element === videoKey) - 1])
+            boxRef.current.scrollIntoView()
+        }
     }
 
     useEffect(() => {
@@ -171,7 +183,6 @@ function Learning() {
                                             {lesson.sublessons.map((sublesson, index) => {
                                                 {/* setTotalLesson(totalLesson + 1) */ }
                                                 sublessonIdArray.push(sublesson.sublesson_id)
-                                                console.log(sublessonIdArray)
                                                 return (
                                                     <label key={index} id={sublesson.sublesson_id} className='flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500]'
                                                         onClick={() => handleShowVideo(sublesson.sublesson_name, sublesson.sublesson_id)}
@@ -200,7 +211,7 @@ function Learning() {
                     </form>
                 </div>
 
-                <div className="flex flex-col w-full">
+                <div className="flex flex-col w-full" ref={boxRef}>
                     <div className='mb-20'>
                         <div className="h-[90px]">
                             <h1 className="H2">{videoHead}</h1>
@@ -211,6 +222,7 @@ function Learning() {
 
 
                                 <ReactPlayer
+                                    ref={playerRef}
                                     url='https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/1%20Minute%20Sample%20Video.mp4?t=2023-09-08T15%3A26%3A51.001Z'
                                     width="100%"
                                     height="100%"
@@ -226,7 +238,7 @@ function Learning() {
                                         </div>}
                                     start={33}
                                     // progressInterval={progressTime}
-                                    // onPlay={handlePlay}
+                                    onPlay={() => { playerRef.current.seekTo(pauseTime, 'seconds') }}
                                     playing={true}
                                     onPause={(e) => handlePause(e.target.currentTime)}
                                     onEnded={handleEnd}
@@ -257,8 +269,20 @@ function Learning() {
 
             </div>
             <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>
-                <button className='bg-white px-2 py-1 border-none text-[16px] text-[--blue500] font-bold cursor-pointer hover:text-[--blue300] duration-300'>Previous Lesson</button>
-                <button className='Primary border-none cursor-pointer'>Next Lesson</button>
+                {sublessonIdArray.findIndex((element) => element === videoKey) > 0 ?
+                    <button className='bg-white p-[20px] border-none text-[16px] text-[--blue500] font-bold cursor-pointer hover:text-[--blue300] duration-300'
+                        onClick={() => handleLesson("prev")}>
+                        Previous Lesson
+                    </button>
+                    : <div></div>}
+                {sublessonIdArray.findIndex((element) => element === videoKey) < sublessonIdArray.length - 1 ?
+                    <button className='Primary border-none cursor-pointer'
+                        onClick={() => handleLesson("next")}>
+                        Next Lesson
+                    </button>
+                    : <div></div>}
+
+
             </div>
         </>
     )
