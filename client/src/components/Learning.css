@@ -5,3 +5,6 @@
 hr {
   border: 1px solid var(--gray300);
 }
+.radio-custom:checked ~ label {
+  background-color: blue !important;
+}
