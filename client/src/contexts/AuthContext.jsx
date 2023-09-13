@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,12 @@ function AuthProvider(props) {
   const [userID, setUserID] = useState(null);
   const [username, setUsername] = useState({});
   const isAuthenticated = Boolean(localStorage.getItem("token"));
+  const [courseId, setCourseId] = useState(null);
+  const [isShowVdo, setIsShowVdo] = useState(false);
+  const [isShowAsm, setIsShowAsm] = useState(false);
+  const [videoHead, setVideoHead] = useState("");
+  const [videoKey, setVideoKey] = useState(null);
+
   const navigate = useNavigate();
   const logout = async () => {
     try {
@@ -36,6 +42,36 @@ function AuthProvider(props) {
     }
   };
 
+  useEffect(() => {
+    const getDataCourse = async () => {
+      try {
+        const result = await axios.get(
+          "http://localhost:4000/learn/videotime",
+          {
+            params: { userID: userID, courseID: courseId },
+          }
+        );
+        const data = result.data.data;
+        console.log(data);
+        if (data.length > 0) {
+          const handleShowVideo = (sublessonName, sublessonID) => {
+            setVideoHead(sublessonName);
+            setVideoKey(sublessonID);
+            setIsShowVdo(true);
+            setIsShowAsm(true);
+          };
+          handleShowVideo(data[0].sublesson_name, data[0].sublesson_id);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDataCourse();
+  }, [courseId]);
+
+  console.log(videoHead);
+  console.log(videoKey);
+  console.log(isShowVdo);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -89,8 +125,16 @@ function AuthProvider(props) {
         setUsername,
         logout,
         isAuthenticated,
-        login,
-        isLoggedIn,
+        courseId,
+        setCourseId,
+        isShowVdo,
+        setIsShowVdo,
+        isShowAsm,
+        setIsShowAsm,
+        videoHead,
+        setVideoHead,
+        videoKey,
+        setVideoKey,
       }}
     >
       {props.children}

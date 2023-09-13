@@ -85,17 +85,20 @@ function MyCourse() {
 
   function AllCourse() {
     return (
-      <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]  w-[740px]">
+      <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]">
         {dataCourse.map((item) => (
-          <CourseCard
-            key={item.courses.course_id}
-            // count={item.course.course_id}
-            coverimg={item.courses.cover_img}
-            coursename={item.courses.course_name}
-            coursedetail={item.courses.course_detail}
-            coursesummary={item.courses.course_summary}
-            totallearningtime={item.courses.total_time}
-          />
+          <>
+            <div onClick={() => setCourseId(item.courses.course_id)}>
+              <CourseCard
+                key={item.courses.course_id}
+                coverimg={item.courses.cover_img}
+                coursename={item.courses.course_name}
+                coursedetail={item.courses.course_detail}
+                coursesummary={item.courses.course_summary}
+                totallearningtime={item.courses.total_time}
+              />
+            </div>
+          </>
         ))}
       </div>
     );

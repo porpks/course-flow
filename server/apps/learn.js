@@ -16,7 +16,7 @@ learnRouter.get("/", async (req, res) => {
     try {
         const { data: courseData, error: courseError } = await supabase
             .from('courses')
-            .select('course_name, course_detail, cover_img')
+            .select('course_name, course_detail, cover_img, lessons(lesson_id, lesson_name, sublessons(sublesson_id, sublesson_name))')
             .eq('course_id', courseID)
             .single();
 
@@ -24,33 +24,9 @@ learnRouter.get("/", async (req, res) => {
             return res.status(404).json({ 'message': courseError });
         }
 
-        const { data: lessonData, error: lessonError } = await supabase
-            .from('lessons')
-            .select('lesson_id, lesson_name')
-            .eq('course_id', courseID);
-
-        if (lessonError) {
-            return res.status(404).json({ 'message': lessonError });
-        }
-
         const result = {
             ...courseData,
-            lesson: lessonData,
         }
-
-        await Promise.all(result.lesson.map(async (lesson) => {
-            const { data: sublessonData, error: sublessonError } = await supabase
-                .from('sublessons')
-                .select('sublesson_id, sublesson_name')
-                .eq('lesson_id', lesson.lesson_id)
-
-            if (sublessonError) {
-                return res.status(404).json({ 'message': sublessonError });
-            }
-            else {
-                lesson.sublesson = sublessonData
-            }
-        }))
 
         return res.json({
             'data': result
@@ -90,5 +66,38 @@ learnRouter.get('/status', async (req, res) => {
     }
 
 })
+
+learnRouter.get('/videotime', async (req, res) => {
+    const userID = Number(req.query.userID);
+    const courseID = Number(req.query.courseID);
+    console.log(userID, courseID);
+    if (!userID || !courseID) {
+        return res.status(400).json({
+            message: "Invalid query"
+        });
+    }
+
+    try {
+        const { data: interval, error: courseError } = await supabase
+            .from('user_sublessons')
+            .select('assign_status,sublesson_video_timestop,sublessons(sublesson_id,sublesson_name)')
+            .eq('user_id', userID);
+
+        for (const dataItem of interval) {
+            dataItem.sublesson_id = dataItem.sublessons.sublesson_id;
+            dataItem.sublesson_name = dataItem.sublessons.sublesson_name
+            delete dataItem.sublessons;
+        }
+
+        // Filter the interval array
+        const filteredInterval = interval.filter(dataItem => {
+            return dataItem.assign_status === "inprogress" || dataItem.sublesson_video_timestop !== null;
+        });
+
+        res.json({ data: filteredInterval });
+    } catch (e) {
+        // Handle errors here
+    }
+});
 
 export default learnRouter;
