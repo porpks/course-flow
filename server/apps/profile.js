@@ -10,7 +10,7 @@ const multerUpload = multer({});
 const avatarUpload = multerUpload.fields([{ name: "avatar", maxCount: 1 }]);
 // , validateTokenMiddleware
 profileRouter.get("/:userId", async (req, res) => {
-  const userId = req.params.userId
+  const userId = req.params.userId;
   try {
     if (!userId || typeof userId !== "string") {
       return res.status(400).json({
@@ -18,8 +18,10 @@ profileRouter.get("/:userId", async (req, res) => {
       });
     }
     // full_name, date_of_birth, edu_background, email, image_url
-    const { data, error } = await supabase.from("users").select("*");
-    // .eq("user_id", userId);
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("user_id", userId);
     console.log(error);
     if (error && userId !== null) {
       return res.status(500).json({
@@ -132,7 +134,7 @@ profileRouter.put(
             .from("users")
             .update({
               full_name: req.body.full_name,
-              dateofbirth: req.body.dateofbirth,
+              date_of_birth: req.body.date_of_birth,
               edu_background: req.body.edu_background,
               email: req.body.email,
               image_url: imgUrl,
