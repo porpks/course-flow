@@ -39,12 +39,12 @@ function Mymodal(props) {
           <div className="p-[24px] Body2">
             <div className="text-[#646D89]">{props.description}</div>
             <div className="flex gap-[16px] mt-[24px]">
-              <button className="Secondary" onClick={props.noOnClcik}>
+              <button className="Secondary" onClick={props.noOnClick}>
                 {props.noDes}
               </button>
               <button
                 className="Primary border-none"
-                onClick={props.yesOnclick}>
+                onClick={props.yesOnClick}>
                 {props.yesDes}
               </button>
             </div>
