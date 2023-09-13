@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
-
+import { useAuth } from "../contexts/AuthContext.jsx";
 import "./Assignment.css";
 const AssignmentBox = () => {
+  const { userID, setUserID } = useAuth();
   // const mockAssignment = [
   //   {
   //     assignment_id: 1,
@@ -81,25 +82,26 @@ const AssignmentBox = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const getAssignmentData = async (id) => {
+    const getAssignmentData = async () => {
       try {
+        setUserID(170);
         const response = await axios.get(
-          `http://localhost:4000/assignment/${id}`
+          `http://localhost:4000/assignment/${userID}`
         );
         setData(response.data.data);
-        // Initialize answers state based on data received
-        setAnswers(
-          response.data.data.map((assignment) => ({
-            answer: "",
-            assignment_id: assignment.assignment_id,
-          }))
-        );
+
+        const initialAnswers = response.data.data.map((assignment) => ({
+          assignment_id: assignment.assignment_id,
+          assignment_answer: assignment.assignment_answer || "",
+          assignment_status: assignment.assignment_status,
+        }));
+        setAnswers(initialAnswers);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    getAssignmentData(2);
+    getAssignmentData();
   }, []);
   const pageSize = 1;
 
@@ -113,14 +115,45 @@ const AssignmentBox = () => {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
+  const handleAnswerChange = (e, assignmentId, status) => {
+    const updatedAnswers = answers.map((answer) => {
+      if (answer.assignment_id === assignmentId) {
+        return {
+          ...answer,
+          assignment_answer: e.target.value,
+          assignment_status: status,
+        };
+      }
+      return answer;
+    });
+    setAnswers(updatedAnswers);
+  };
 
-  const handleAnswerChange = (e, assignmentId) => {
-    const answerIndex = answers.findIndex(
-      (answer) => answer.assignment_id === assignmentId
-    );
-    const newAnswers = [...answers];
-    newAnswers[answerIndex].answer = e.target.value;
-    setAnswers(newAnswers);
+  const handleSubmit = async () => {
+    setUserID(170);
+    try {
+      const assignmentAnswers = answers.map((answer) => ({
+        assignment_id: answer.assignment_id,
+        assignment_answer: answer.assignment_answer,
+        assignment_status: answer.assignment_status,
+      }));
+
+      const response = await axios.put(
+        `http://localhost:4000/assignment/${userID}`,
+        assignmentAnswers
+      );
+
+      if (response.status === 200) {
+        const updatedDataResponse = await axios.get(
+          `http://localhost:4000/assignment/${userID}`
+        );
+
+        setData(updatedDataResponse.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+      console.log(error.message);
+    }
   };
 
   return (
@@ -196,7 +229,7 @@ const AssignmentBox = () => {
                             answers.find(
                               (a) =>
                                 a.assignment_id === assignment.assignment_id
-                            )?.answer ||
+                            )?.assignment_answer ||
                             assignment.assignment_answer ||
                             ""
                           }
@@ -209,14 +242,18 @@ const AssignmentBox = () => {
                   </div>
                 </div>
                 <div className='Frame427321005 self-stretch justify-between items-center gap-6 inline-flex'>
-                  <div className='Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex'>
+                  <div
+                    className='Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex '
+                    onClick={handleSubmit}>
                     <div className=' text-center text-white text-base font-bold leading-normal'>
                       Send Assignment
                     </div>
                   </div>
-                  <div className='Email text-slate-500 text-base font-normal leading-normal'>
-                    Assign within {assignment.assignment_duedate} days
-                  </div>
+                  {assignment.assignment_status === "Pending" ? (
+                    <div className='Email text-slate-500 text-base font-normal leading-normal'>
+                      Assign within {assignment.assignment_duedate}
+                    </div>
+                  ) : null}
                 </div>
               </>
             );

@@ -213,7 +213,7 @@ function AssignmentPage() {
                               ? "bg-[#FFFBDA]"
                               : assignment.assignment_status ===
                                 "Submitted late"
-                              ? "bg-[#EAF0FF]"
+                              ? "bg-red-100"
                               : assignment.assignment_status === "Submitted"
                               ? "bg-[#DCF8EE]"
                               : assignment.assignment_status === "Overdue"
@@ -226,7 +226,7 @@ function AssignmentPage() {
                                 ? " text-[#996400]"
                                 : assignment.assignment_status ===
                                   "Submitted late"
-                                ? "text-[#3456CF]"
+                                ? "text-red-500"
                                 : assignment.assignment_status === "Submitted"
                                 ? "text-[#0A7B60]"
                                 : assignment.assignment_status === "Overdue"
@@ -236,7 +236,7 @@ function AssignmentPage() {
                             {assignment.assignment_status}
                           </div>
                         </div>
-                        {assignment.assignment_duedate !== "Overdue" ? (
+                        {assignment.assignment_status === "Pending" ? (
                           <div className='Email text-slate-500 text-base font-normal leading-normal'>
                             Assign within {assignment.assignment_duedate}
                           </div>
