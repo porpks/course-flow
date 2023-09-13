@@ -80,18 +80,19 @@ learnRouter.get('/videotime', async (req, res) => {
     try {
         const { data: interval, error: courseError } = await supabase
             .from('user_sublessons')
-            .select('assign_status,sublesson_video_timestop,sublessons(sublesson_id,sublesson_name)')
-            .eq('user_id', userID);
-
+            .select('sublesson_status,sublesson_video_timestop,sublessons(*,lessons(*))')
+            
+           
         for (const dataItem of interval) {
             dataItem.sublesson_id = dataItem.sublessons.sublesson_id;
             dataItem.sublesson_name = dataItem.sublessons.sublesson_name
+            dataItem.course_id = dataItem.sublessons.lessons.course_id
             delete dataItem.sublessons;
         }
 
         // Filter the interval array
         const filteredInterval = interval.filter(dataItem => {
-            return dataItem.assign_status === "inprogress" || dataItem.sublesson_video_timestop !== null;
+            return (dataItem.sublesson_status === "inprogress" && dataItem.sublesson_video_timestop !== null) && (dataItem.course_id === courseID)
         });
 
         res.json({ data: filteredInterval });
