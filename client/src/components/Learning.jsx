@@ -95,7 +95,7 @@ function Learning() {
             const result = await axios.get(
                 "http://localhost:4000/learn/",
                 {
-                    params: { userID: 172, courseID: course_id },
+                    params: { userID: 172, courseID: 20 },
                 }
             );
             const data = result.data.data;
