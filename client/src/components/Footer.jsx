@@ -7,14 +7,14 @@ function Footer() {
     <div className="footerBg bg-[--blue700]">
       <div className="footerGrid">
         <div className="courseLogo cursor-default ">
-          <a
-            href="#homepage"
+          <div
             onClick={() => {
               navigate("/");
+              window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
             }}
           >
             <CourseFlowIcon />
-          </a>
+          </div>
         </div>
         <div className="linkContents">
           <a

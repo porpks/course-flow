@@ -10,16 +10,6 @@ import ReactPlayer from "react-player";
 import CircularIndeterminate from "../assets/loadingProgress";
 // import ExampleComponent from "../assets/test/ParamTest";
 import { useParams } from "react-router-dom";
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "480px",
-  backgroundColor: "white",
-  boxShadow: "0px 0px 24px rgba(0, 0, 0, 0.2)",
-  padding: "16px",
-};
 
 function CourseDetail() {
   const navigate = useNavigate();
@@ -56,10 +46,14 @@ function CourseDetail() {
     // playerRef.current.seekTo(currentTime, 'seconds');
   };
   const handleEnd = () => {
-    setIsShowAsm(true);
+    // setIsShowAsm(true);
   };
 
   const dataDetail = dataCourse;
+
+  const param = useParams();
+  const courseID = Number(param.id) - 1;
+
 
   // console.log(`dataDetail: ${dataDetail[0]}`);
   if (dataCourse.length === 0) {
@@ -71,14 +65,9 @@ function CourseDetail() {
     );
   }
 
-  const param = useParams();
-  const courseID = Number(param.id) - 1;
-
   return (
     <>
-      <section
-        className="flex justify-center items-center border-2 border-sky-500"
-      >
+      <section className="flex justify-center items-center border-2 border-sky-500">
         <div className="canvas_CourseDetail ">
           <div className="back-btn">
             <a
@@ -125,17 +114,17 @@ function CourseDetail() {
                   start={33}
                   // progressInterval={progressTime}
                   // onPlay={handlePlay}
-                  onPause={(e) => handlePause(e.target.currentTime)}
-                  onEnded={handleEnd}
+                  // onPause={(e) => handlePause(e.target.currentTime)}
+                  // onEnded={handleEnd}
                 />
               </div>
 
               <div className="CourseDetail_description flex flex-col gap-[24px]">
                 <div className="courseDetail_title ">
-                  <p className="H2">{dataCourse[courseID].course_name}</p>
+                  <p className="H2">{dataCourse[0].course_name}</p>
                 </div>
                 <div className="courseDetail_body">
-                  <p className="Body2">{dataCourse[courseID].course_detail}</p>
+                  <p className="Body2">{dataCourse[0].course_detail}</p>
                 </div>
               </div>
               <div className="lesson_sample">
@@ -177,9 +166,7 @@ function CourseDetail() {
                     yesDes="Yes, add this to my desire course"
                     noDes="No, I don’t"
                   />
-                ) : (
-                  null
-                )}
+                ) : null}
                 {subscribeToggle ? (
                   <Mymodal
                     open={subscribeToggle}
@@ -189,9 +176,7 @@ function CourseDetail() {
                     yesDes="Yes, I want to subscribe"
                     noDes="No, I don’t"
                   />
-                ) : (
-                  null
-                )}
+                ) : null}
                 <button onClick={openSubscribe} className="Primary w-[100%]">
                   Subscribe This Course
                 </button>
