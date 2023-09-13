@@ -12,7 +12,7 @@ function Polygon3() {
       <path
         d="M11.3572 19.9099L37.1489 15.9774L27.6587 40.28L11.3572 19.9099Z"
         stroke="#FBAA1C"
-        stroke-width="3"
+        strokeWidth="3"
       />
     </svg>
   );

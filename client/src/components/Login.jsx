@@ -11,17 +11,12 @@ function Login() {
     email: null,
     password: null,
   });
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (!loginData.email || !loginData.password) {
       alert("nodata");
     } else {
-      try {
-        // Call the login function from the AuthContext with the login data.
-        await login(loginData);
-      } catch (error) {
-        alert(error);
-      }
+      login(loginData);
     }
   };
 

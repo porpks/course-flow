@@ -13,14 +13,14 @@ function Cross5() {
         <path
           d="M13.843 1.99998L8.83754 20.6805"
           stroke="#2FAC61"
-          stroke-width="3"
-          stroke-linecap="round"
+          strokeWidth="3"
+          strokeLinecap="round"
         />
         <path
           d="M2.00035 8.83751L20.6809 13.8429"
           stroke="#2FAC61"
-          stroke-width="3"
-          stroke-linecap="round"
+          strokeWidth="3"
+          strokeLinecap="round"
         />
       </svg>
     </div>

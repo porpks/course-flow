@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 const AuthContext = React.createContext();
 
@@ -20,9 +19,10 @@ function AuthProvider(props) {
   const [videoKey, setVideoKey] = useState(null);
 
   const navigate = useNavigate();
+
   const logout = async () => {
     try {
-      if (!userID) {
+      if (!localStorage.getItem("userID")) {
         console.error("Cannot log out: User ID is not available.");
         return;
       }
@@ -30,8 +30,11 @@ function AuthProvider(props) {
         `http://localhost:4000/auth/logout/${userID}`
       );
       if (response.status === 200) {
-        // localStorage.removeItem("token");
+        localStorage.removeItem("token");
         localStorage.removeItem("userID");
+        localStorage.removeItem("username");
+        localStorage.removeItem("userimage");
+        localStorage.removeItem("isLoggedIn");
         setIsLoggedIn(false);
         setUserID("");
       } else {
@@ -42,42 +45,33 @@ function AuthProvider(props) {
     }
   };
 
-  useEffect(() => {
-    const getDataCourse = async () => {
-      try {
-        const result = await axios.get(
-          "http://localhost:4000/learn/videotime",
-          {
-            params: { userID: userID, courseID: courseId },
-          }
-        );
-        const data = result.data.data;
-        console.log(data);
-        if (data.length > 0) {
-          const handleShowVideo = (sublessonName, sublessonID) => {
-            setVideoHead(sublessonName);
-            setVideoKey(sublessonID);
-            setIsShowVdo(true);
-            setIsShowAsm(true);
-          };
-          handleShowVideo(data[0].sublesson_name, data[0].sublesson_id);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getDataCourse();
-  }, [courseId]);
-
-  console.log(videoHead);
-  console.log(videoKey);
-  console.log(isShowVdo);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const getDataCourse = async () => {
+  //     try {
+  //       const result = await axios.get(
+  //         "http://localhost:4000/learn/videotime",
+  //         {
+  //           params: { userID: userID, courseID: courseId },
+  //         }
+  //       );
+  //       const data = result.data.data;
+  //       console.log(data);
+  //       if (data.length > 0) {
+  //         const handleShowVideo = (sublessonName, sublessonID) => {
+  //           setVideoHead(sublessonName);
+  //           setVideoKey(sublessonID);
+  //           setIsShowVdo(true);
+  //           setIsShowAsm(true);
+  //         };
+  //         handleShowVideo(data[0].sublesson_name, data[0].sublesson_id);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getDataCourse();
+  //
+  // }, [courseId]);
 
   const login = async (userData) => {
     try {
@@ -89,19 +83,35 @@ function AuthProvider(props) {
       setUserID(result.data.data[0].user_id);
       localStorage.setItem("token", token);
       localStorage.setItem("userID", result.data.data[0].user_id);
-
       setIsLoggedIn(true);
-      const response = await axios.get(
-        `http://localhost:4000/profile/${localStorage.getItem(userID)}`
-      );
+      localStorage.setItem("isLoggedIn", true);
+      // const response = await axios.get(
+      //   `http://localhost:4000/profile/${userID}`
+      // );
+      setTimeout(async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:4000/profile/${result.data.data[0].user_id}`
+          );
+          setUsername(response.data.data);
+          console.log(response.data.data);
+          localStorage.setItem("username", response.data.data.full_name);
+          localStorage.setItem("userimage", response.data.data.image_url);
+          localStorage.setItem("isLoggedIn", true);
+          console.log(username);
+        } catch (error) {
+          console.error(error);
+        }
+      }, 500);
+
       // const response = await axios.get(
       //   `http://localhost:4000/profile/${result.data.data[0].user_id}`
       // );
-      setUsername(response.data.data);
-      console.log(response);
-      localStorage.setItem("username", response.data.data.full_name);
-      localStorage.setItem("userimage", response.data.data.image_url);
-      console.log(username);
+      // setUsername(response.data.data);
+
+      // localStorage.setItem("username", response.data.data.full_name);
+      // localStorage.setItem("userimage", response.data.data.image_url);
+      // console.log(username);
       navigate("/ourcourse");
     } catch (error) {
       alert(error);
@@ -135,6 +145,8 @@ function AuthProvider(props) {
         setVideoHead,
         videoKey,
         setVideoKey,
+        login,
+        logout,
       }}
     >
       {props.children}

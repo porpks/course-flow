@@ -23,11 +23,10 @@ function Navbar() {
   const userID = localStorage.getItem("userID");
   const userName = localStorage.getItem("username");
   const userImage = localStorage.getItem("userimage");
+  const storedIsLoggedIn = localStorage.getItem("isLoggedIn");
 
   const handleLogout = async (userID) => {
     logout();
-    setIsLoggedIn(false);
-    setUserID("");
     navigate("/");
   };
 
@@ -55,7 +54,12 @@ function Navbar() {
       </div>
     );
   };
-  useEffect(() => {}, [userID]);
+  useEffect(() => {
+    const storedIsLoggedIn = localStorage.getItem("isLoggedIn");
+    if (storedIsLoggedIn) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const BasicMenu = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -184,14 +188,14 @@ function Navbar() {
             >
               Our Course
             </div>
-            {/* {isLoggedIn && username ? (
+            {isLoggedIn && username ? (
               <div className="flex flex-row justify-center items-center space-x-3">
                 <AfterLogin profileImg="url" profileName="TESTS" />
               </div>
             ) : (
               <LoginButton buttonText="Log in" />
-            )} */}{" "}
-            {isLoggedIn ? <AfterLogin /> : <LoginButton buttonText="Login" />}
+            )}
+            {/* {isLoggedIn ? <AfterLogin /> : <LoginButton buttonText="Login" />} */}
           </div>
         </nav>
       </div>

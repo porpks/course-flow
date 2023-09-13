@@ -23,7 +23,7 @@ function MyCourse() {
   // const [userID, setUserID] = useState(172); //122,172,130
   const [inProgressCount, setInProgressCount] = useState(0);
   const [completeCount, setCompleteCount] = useState(0);
-  const [avatar, SetAvatar] = useState(0);
+  const [avatar, setAvatar] = useState(null);
   const userID = localStorage.getItem("userID");
 
   function handleAllCourse() {
@@ -53,27 +53,28 @@ function MyCourse() {
       const newDataCourse = result.data.data;
       setDataCourse(newDataCourse);
 
-      try {
-        if (newDataCourse.length > 0) {
-          const username = newDataCourse[0].users.full_name;
-          const avatar = newDataCourse[0].users.image_url;
-          setUserName(username);
-          SetAvatar(avatar);
-          let inProgressCount = 0;
-          let completeCount = 0;
-          newDataCourse.forEach((course) => {
-            if (course.course_status === false) {
-              inProgressCount++;
-            } else {
-              completeCount++;
-            }
-          });
-          setInProgressCount(inProgressCount);
-          setCompleteCount(completeCount);
-        } else {
-          setUserName("No User Data Available");
-        }
-      } catch (error) {}
+      if (newDataCourse.length > 0) {
+        const username = newDataCourse[0].users.full_name;
+        const avatar = newDataCourse[0].users.image_url;
+        setUserName(username);
+        setAvatar(avatar);
+
+        let inProgressCount = 0;
+        let completeCount = 0;
+
+        newDataCourse.forEach((course) => {
+          if (course.course_status === false) {
+            inProgressCount++;
+          } else {
+            completeCount++;
+          }
+        });
+
+        setInProgressCount(inProgressCount);
+        setCompleteCount(completeCount);
+      } else {
+        setUserName("No User Data Available");
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -87,18 +88,19 @@ function MyCourse() {
     return (
       <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]">
         {dataCourse.map((item) => (
-          <>
-            <div onClick={() => setCourseId(item.courses.course_id)}>
-              <CourseCard
-                key={item.courses.course_id}
-                coverimg={item.courses.cover_img}
-                coursename={item.courses.course_name}
-                coursedetail={item.courses.course_detail}
-                coursesummary={item.courses.course_summary}
-                totallearningtime={item.courses.total_time}
-              />
-            </div>
-          </>
+          <div
+            key={item.courses.course_id}
+            onClick={() => setCourseId(item.courses.course_id)}
+          >
+            <CourseCard
+              key={item.courses.course_id}
+              coverimg={item.courses.cover_img}
+              coursename={item.courses.course_name}
+              coursedetail={item.courses.course_detail}
+              coursesummary={item.courses.course_summary}
+              totallearningtime={item.courses.total_time}
+            />
+          </div>
         ))}
       </div>
     );
@@ -127,7 +129,6 @@ function MyCourse() {
   function Complete() {
     if (dataCourse.length > 0) {
       const completeCourses = dataCourse.filter((item) => item.coursestatus);
-
       return (
         <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]  w-[740px]">
           {completeCourses.map((item) => (
@@ -148,37 +149,6 @@ function MyCourse() {
 
   return (
     <div className="w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative ">
-      <div className=" absolute right-0 top-[216px]">
-        <Ellipse5 className="top-1/2 absolute" style={{ top: "50%" }} />
-      </div>
-      <div className=" absolute right-[126.22px] top-[126px]">
-        <Polygon3 />
-      </div>
-      <div className=" absolute left-[280px] top-[232px]">
-        <Cross5 />
-      </div>
-      <div className=" absolute left-[43px] top-[159px]">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="27"
-          height="27"
-          viewBox="0 0 27 27"
-          fill="none"
-        >
-          <circle cx="13.1741" cy="13.1741" r="13.1741" fill="#C6DCFF" />
-        </svg>
-      </div>
-      <div className=" absolute left-[102px] top-[100px]">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="11"
-          height="11"
-          viewBox="0 0 11 11"
-          fill="none"
-        >
-          <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" stroke-width="3" />
-        </svg>
-      </div>
       <div className="w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative ">
         <div className=" absolute right-0 top-[216px]">
           <Ellipse5 className="top-1/2 absolute" style={{ top: "50%" }} />
@@ -208,7 +178,7 @@ function MyCourse() {
             viewBox="0 0 11 11"
             fill="none"
           >
-            <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" stroke-width="3" />
+            <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" strokeWidth="3" />
           </svg>
         </div>
         <div className="flex flex-col items-center justify-center ">
