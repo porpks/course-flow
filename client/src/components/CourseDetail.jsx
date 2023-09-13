@@ -10,6 +10,7 @@ import ReactPlayer from "react-player";
 import CircularIndeterminate from "../assets/loadingProgress";
 // import ExampleComponent from "../assets/test/ParamTest";
 import { useParams } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 function CourseDetail() {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ function CourseDetail() {
 
   const [dataCourse, setDataCourse] = useState([]);
   const param = useParams();
+  // console.log(param);
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
@@ -42,6 +44,8 @@ function CourseDetail() {
     getDetailCourse();
   }, []);
 
+ 
+
   if (dataCourse.length === 0) {
     return (
       <div className="flex justify-center items-center absolute top-[150px] w-[100%] h-[100vh] text-slate-100">
@@ -50,10 +54,9 @@ function CourseDetail() {
       </div>
     );
   }
-
   const coursePrice = dataDetail.price.toLocaleString("en-US", {
     minimumFractionDigits: 2,
-  }); // เพิ่มทศนิยม
+  });
   const lessonTotal = dataDetail.lessons;
   return (
     <>
@@ -117,7 +120,7 @@ function CourseDetail() {
                 <div className="collapsible-contents H3">
                   {lessonTotal.map((item, index) => (
                     <Collapsible
-                      key={index}
+                      key={uuidv4()}
                       number={index < 10 ? "0" + (index + 1) : index + 1}
                       title={item.lesson_name}
                       content={item.sublessons}
