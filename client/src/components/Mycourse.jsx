@@ -12,6 +12,7 @@ import { StickyContainer, Sticky } from "react-sticky";
 import { bgcolor } from "@mui/system";
 import Ellipse5 from "../assets/myCourseAssets/Ellipse5";
 import Polygon3 from "../assets/myCourseAssets/Polygon3";
+import Cross5 from "../assets/myCourseAssets/Cross5";
 
 function MyCourse() {
   const [dataCourse, setDataCourse] = useState([]);
@@ -84,16 +85,16 @@ function MyCourse() {
 
   function AllCourse() {
     return (
-      <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]">
+      <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]  w-[740px]">
         {dataCourse.map((item) => (
           <CourseCard
-            key={item.course.course_id}
-            count={item.course.course_id}
-            coverimg={item.course.cover_img}
-            coursename={item.course.course_name}
-            coursedetail={item.course.course_detail}
-            coursesummary={item.course.course_summary}
-            totallearningtime={item.course.total_time}
+            key={item.courses.course_id}
+            // count={item.course.course_id}
+            coverimg={item.courses.cover_img}
+            coursename={item.courses.course_name}
+            coursedetail={item.courses.course_detail}
+            coursesummary={item.courses.course_summary}
+            totallearningtime={item.courses.total_time}
           />
         ))}
       </div>
@@ -104,16 +105,16 @@ function MyCourse() {
     const inProgressCourses = dataCourse.filter((item) => !item.coursestatus);
 
     return (
-      <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]">
+      <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]">
         {inProgressCourses.map((item) => (
           <CourseCard
-            key={item.course.course_id}
-            count={item.course.course_id}
-            coverimg={item.course.cover_img}
-            coursename={item.course.course_name}
-            coursedetail={item.course.course_detail}
-            coursesummary={item.course.course_summary}
-            totallearningtime={item.course.total_time}
+            key={item.courses.course_id}
+            count={item.courses.course_id}
+            coverimg={item.courses.cover_img}
+            coursename={item.courses.course_name}
+            coursedetail={item.courses.course_detail}
+            coursesummary={item.courses.course_summary}
+            totallearningtime={item.courses.total_time}
           />
         ))}
       </div>
@@ -123,28 +124,53 @@ function MyCourse() {
     const completeCourses = dataCourse.filter((item) => item.coursestatus);
 
     return (
-      <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]">
+      <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]  w-[740px]">
         {completeCourses.map((item) => (
           <CourseCard
-            key={item.course.course_id}
-            count={item.course.course_id}
-            coverimg={item.course.cover_img}
-            coursename={item.course.course_name}
-            coursedetail={item.course.course_detail}
-            coursesummary={item.course.course_summary}
-            totallearningtime={item.course.total_time}
+            key={item.courses.course_id}
+            count={item.courses.course_id}
+            coverimg={item.courses.cover_img}
+            coursename={item.courses.course_name}
+            coursedetail={item.courses.course_detail}
+            coursesummary={item.courses.course_summary}
+            totallearningtime={item.courses.total_time}
           />
         ))}
       </div>
     );
   }
   return (
-    <div className="w-[100%] flex flex-col justify-center items-center mt-[100px] mb-[200px] relative ">
-      <div className=" absolute right-0 top-[110px]">
+    <div className="w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative ">
+      <div className=" absolute right-0 top-[216px]">
         <Ellipse5 className="top-1/2 absolute" style={{ top: "50%" }} />
       </div>
-      <div className=" absolute right-0 top-[0px]">
+      <div className=" absolute right-[126.22px] top-[126px]">
         <Polygon3 />
+      </div>
+      <div className=" absolute left-[280px] top-[232px]">
+        <Cross5 />
+      </div>
+      <div className=" absolute left-[43px] top-[159px]">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="27"
+          height="27"
+          viewBox="0 0 27 27"
+          fill="none"
+        >
+          <circle cx="13.1741" cy="13.1741" r="13.1741" fill="#C6DCFF" />
+        </svg>
+      </div>
+      <div className=" absolute left-[102px] top-[100px]">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="11"
+          height="11"
+          viewBox="0 0 11 11"
+          fill="none"
+        >
+          <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" stroke-width="3" />
+        </svg>
       </div>
       <div className="flex flex-col items-center justify-center ">
         <h2 className="H2">My Course</h2>
