@@ -25,4 +25,23 @@ desireRouter.get("/:userId", async (req, res) => {
   }
 });
 
+desireRouter.post("/add", async (req, res) => {
+  try {
+    const desireData = {
+      user_id: req.body.user_id,
+      course_id: req.body.course_id,
+    };
+
+    const { error } = await supabase.from("desire_courses").insert(desireData);
+
+    if (error) {
+      throw error;
+    }
+
+    res.json({ message: "desire course has been add" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 export default desireRouter;
