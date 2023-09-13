@@ -16,7 +16,7 @@ learnRouter.get("/", async (req, res) => {
     try {
         const { data: courseData, error: courseError } = await supabase
             .from('courses')
-            .select('course_name, course_detail, cover_img')
+            .select('course_name, course_detail, cover_img, lessons(lesson_id, lesson_name, sublessons(sublesson_id, sublesson_name))')
             .eq('course_id', courseID)
             .single();
 
@@ -24,33 +24,9 @@ learnRouter.get("/", async (req, res) => {
             return res.status(404).json({ 'message': courseError });
         }
 
-        const { data: lessonData, error: lessonError } = await supabase
-            .from('lessons')
-            .select('lesson_id, lesson_name')
-            .eq('course_id', courseID);
-
-        if (lessonError) {
-            return res.status(404).json({ 'message': lessonError });
-        }
-
         const result = {
             ...courseData,
-            lesson: lessonData,
         }
-
-        await Promise.all(result.lesson.map(async (lesson) => {
-            const { data: sublessonData, error: sublessonError } = await supabase
-                .from('sublessons')
-                .select('sublesson_id, sublesson_name')
-                .eq('lesson_id', lesson.lesson_id)
-
-            if (sublessonError) {
-                return res.status(404).json({ 'message': sublessonError });
-            }
-            else {
-                lesson.sublesson = sublessonData
-            }
-        }))
 
         return res.json({
             'data': result
