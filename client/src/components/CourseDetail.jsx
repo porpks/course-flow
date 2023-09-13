@@ -22,40 +22,26 @@ function CourseDetail() {
   const closeSubscribe = () => setSubscribeToggle(false);
 
   const [dataCourse, setDataCourse] = useState([]);
-
+  const param = useParams();
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
-        `http://localhost:4000/coursedetail`
+        `http://localhost:4000/coursedetail/${param.id}` // You might want to include courseID in the URL
       );
-      setDataCourse(dataDetailCourse.data.data);
-      // console.log(dataDetailCourse.data.data);
+      const data = dataDetailCourse.data.data;
+      // console.log(data);
+      setDataCourse(data);
     } catch (error) {
-      message: error;
-      console.log(error);
+      // console.error(error);
     }
   }
-  // console.log(dataCourse);
+
+  const dataDetail = dataCourse;
+
   useEffect(() => {
     getDetailCourse();
   }, []);
 
-  const handlePause = (pauseTime) => {
-    // console.log(pauseTime);
-    // setProgressTime(pauseTime);
-    // playerRef.current.seekTo(currentTime, 'seconds');
-  };
-  const handleEnd = () => {
-    // setIsShowAsm(true);
-  };
-
-  const dataDetail = dataCourse;
-
-  const param = useParams();
-  const courseID = Number(param.id) - 1;
-
-
-  // console.log(`dataDetail: ${dataDetail[0]}`);
   if (dataCourse.length === 0) {
     return (
       <div className="flex justify-center items-center absolute top-[150px] w-[100%] h-[100vh] text-slate-100">
@@ -65,6 +51,10 @@ function CourseDetail() {
     );
   }
 
+  const coursePrice = dataDetail.price.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+  }); // เพิ่มทศนิยม
+  const lessonTotal = dataDetail.lessons;
   return (
     <>
       <section className="flex justify-center items-center border-2 border-sky-500">
@@ -88,7 +78,7 @@ function CourseDetail() {
                   width="100%"
                   height="100%"
                   controls={true}
-                  light={true}
+                  light={dataDetail.cover_img}
                   playIcon={
                     <svg
                       className="min-h-[460px]"
@@ -111,29 +101,28 @@ function CourseDetail() {
                       />
                     </svg>
                   }
-                  start={33}
-                  // progressInterval={progressTime}
-                  // onPlay={handlePlay}
-                  // onPause={(e) => handlePause(e.target.currentTime)}
-                  // onEnded={handleEnd}
                 />
               </div>
 
               <div className="CourseDetail_description flex flex-col gap-[24px]">
                 <div className="courseDetail_title ">
-                  <p className="H2">{dataCourse[0].course_name}</p>
+                  <p className="H2">{dataDetail.course_name}</p>
                 </div>
                 <div className="courseDetail_body">
-                  <p className="Body2">{dataCourse[0].course_detail}</p>
+                  <p className="Body2">{dataDetail.course_detail}</p>
                 </div>
               </div>
               <div className="lesson_sample">
                 <p className="H2 text-[--black] mb-[24px]">Module Samples</p>
-                <div className="collapsible-contents">
-                  <Collapsible
-                    title="Introduction"
-                    content="This is the content 01"
-                  />
+                <div className="collapsible-contents H3">
+                  {lessonTotal.map((item, index) => (
+                    <Collapsible
+                      key={index}
+                      number={index < 10 ? "0" + (index + 1) : index + 1}
+                      title={item.lesson_name}
+                      content={item.sublessons}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -143,14 +132,14 @@ function CourseDetail() {
                 <p className="Body3 text-[--orange500]">Course</p>
               </div>
               <div className="course-Subscribe flex flex-col gap-[8px]">
-                <p className="course-title H3">Service Design Essentials</p>
+                <p className="course-title H3">{dataDetail.course_name}</p>
                 <p className="course-description Body2 text-[--gray700]">
-                  Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.
+                  {dataDetail.course_detail.slice(0, 65)}
                 </p>
               </div>
               <div className="course-price  H3 text-[--gray700] flex flex-row justify-center items-center">
                 <p className="mr-[1rem]">THB</p>
-                <p>3,559.00</p>
+                <p>{coursePrice}</p>
               </div>
               <div className="btn-grp">
                 <button onClick={openDesire} className="Secondary w-[100%]">
@@ -177,7 +166,10 @@ function CourseDetail() {
                     noDes="No, I don’t"
                   />
                 ) : null}
-                <button onClick={openSubscribe} className="Primary w-[100%]">
+                <button
+                  onClick={openSubscribe}
+                  className="Primary w-[100%] border-none"
+                >
                   Subscribe This Course
                 </button>
               </div>
