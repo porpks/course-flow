@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "../contexts/AuthContext.jsx";
+
 import "./Assignment.css";
 const AssignmentBox = () => {
-  const { userID, setUserID } = useAuth();
   // const mockAssignment = [
   //   {
   //     assignment_id: 1,
@@ -84,9 +83,8 @@ const AssignmentBox = () => {
   useEffect(() => {
     const getAssignmentData = async () => {
       try {
-        setUserID(170);
         const response = await axios.get(
-          `http://localhost:4000/assignment/${userID}`
+          `http://localhost:4000/assignment/${localStorage.getItem("userID")}`
         );
         setData(response.data.data);
 
@@ -130,7 +128,6 @@ const AssignmentBox = () => {
   };
 
   const handleSubmit = async () => {
-    setUserID(170);
     try {
       const assignmentAnswers = answers.map((answer) => ({
         assignment_id: answer.assignment_id,
@@ -139,13 +136,13 @@ const AssignmentBox = () => {
       }));
 
       const response = await axios.put(
-        `http://localhost:4000/assignment/${userID}`,
+        `http://localhost:4000/assignment/${localStorage.getItem("UserID")}`,
         assignmentAnswers
       );
 
       if (response.status === 200) {
         const updatedDataResponse = await axios.get(
-          `http://localhost:4000/assignment/${userID}`
+          `http://localhost:4000/assignment/${localStorage.getItem("UserID")}`
         );
 
         setData(updatedDataResponse.data.data);
@@ -158,9 +155,9 @@ const AssignmentBox = () => {
 
   return (
     <>
-      <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex '>
+      <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex'>
         {data &&
-          assignmentsToDisplay.map((assignment) => {
+          assignmentsToDisplay.map((assignment, index) => {
             return (
               <>
                 <div
@@ -199,6 +196,7 @@ const AssignmentBox = () => {
                 </div>
 
                 <div
+                  key={index}
                   className={`w-[100%] Frame427321002  p-6   rounded-lg border border-gray-300 justify-start items-end gap-6 inline-flex`}>
                   <div className='InputStyle grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex'>
                     <div className='Label self-stretch justify-start items-start gap-1 inline-flex'>
@@ -241,7 +239,9 @@ const AssignmentBox = () => {
                     </div>
                   </div>
                 </div>
-                <div className='Frame427321005 self-stretch justify-between items-center gap-6 inline-flex'>
+                <div
+                  className='Frame427321005 self-stretch justify-between items-center gap-6 inline-flex'
+                  key={index + "00"}>
                   <div
                     className='Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex '
                     onClick={handleSubmit}>

@@ -68,10 +68,9 @@ learnRouter.get('/status', async (req, res) => {
 })
 
 learnRouter.get('/videotime', async (req, res) => {
-    const userID = Number(req.query.userID);
     const courseID = Number(req.query.courseID);
-    console.log(userID, courseID);
-    if (!userID || !courseID) {
+    
+    if (!courseID) {
         return res.status(400).json({
             message: "Invalid query"
         });

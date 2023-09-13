@@ -14,7 +14,7 @@ function HomePage() {
       <Instructure />
       <SubFooter />
       <Footer />
-      {/* <AssignmentBox /> */}
+      <AssignmentBox />
     </>
   );
 }

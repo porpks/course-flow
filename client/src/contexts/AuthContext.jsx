@@ -46,34 +46,36 @@ function AuthProvider(props) {
     }
   };
 
-  // useEffect(() => {
-  //   const getDataCourse = async () => {
-  //     try {
-  //       const result = await axios.get(
-  //         "http://localhost:4000/learn/videotime",
-  //         {
-  //           params: { userID: userID, courseID: courseId },
-  //         }
-  //       );
-  //       const data = result.data.data;
-  //       console.log(data);
-  //       if (data.length > 0) {
-  //         const handleShowVideo = (sublessonName, sublessonID) => {
-  //           setVideoHead(sublessonName);
-  //           setVideoKey(sublessonID);
-  //           setIsShowVdo(true);
-  //           setIsShowAsm(true);
-  //           setPauseTime(data[0].sublesson_video_timestop)
-  //         };
-  //         handleShowVideo(data[0].sublesson_name, data[0].sublesson_id);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getDataCourse();
-  //
-  // }, [courseId]);
+  useEffect(() => {
+    console.log(localStorage.getItem("UserID"));
+    const getDataCourse = async () => {
+      try {
+        const result = await axios.get(
+          "http://localhost:4000/learn/videotime",
+          {
+            params: {
+              userID: localStorage.getItem("UserID"),
+              courseID: courseId,
+            },
+          }
+        );
+        const data = result.data.data;
+        console.log(result);
+        if (data.length > 0) {
+          const handleShowVideo = (sublessonName, sublessonID) => {
+            setVideoHead(sublessonName);
+            setVideoKey(sublessonID);
+            setIsShowVdo(true);
+            setIsShowAsm(true);
+          };
+          handleShowVideo(data[0].sublesson_name, data[0].sublesson_id);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDataCourse();
+  }, [courseId]);
 
   const login = async (userData) => {
     try {
@@ -119,7 +121,7 @@ function AuthProvider(props) {
       alert(error);
     }
   };
-  // console.log(username);
+
   return (
     <AuthContext.Provider
       value={{
@@ -150,9 +152,7 @@ function AuthProvider(props) {
         pauseTime,
         setPauseTime,
         login,
-        logout,
-      }}
-    >
+      }}>
       {props.children}
     </AuthContext.Provider>
   );
