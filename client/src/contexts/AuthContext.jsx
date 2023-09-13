@@ -50,7 +50,8 @@ function AuthProvider(props) {
         setUsername,
         logout,
         isAuthenticated,
-      }}>
+      }}
+    >
       {props.children}
     </AuthContext.Provider>
   );

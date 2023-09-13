@@ -8,23 +8,18 @@ const profileRouter = Router();
 
 const multerUpload = multer({});
 const avatarUpload = multerUpload.fields([{ name: "avatar", maxCount: 1 }]);
-
-profileRouter.get("/:userId", validateTokenMiddleware, async (req, res) => {
-  const userId = req.params.userId;
+// , validateTokenMiddleware
+profileRouter.get("/:userId", async (req, res) => {
   try {
-    
     if (!userId || typeof userId !== "string") {
       return res.status(400).json({
         message: "Invalid url.",
       });
     }
-
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("user_id", userId);
-  
-   
+    // full_name, date_of_birth, edu_background, email, image_url
+    const { data, error } = await supabase.from("users").select("*");
+    // .eq("user_id", userId);
+    console.log(error);
     if (error && userId !== null) {
       return res.status(500).json({
         message: "An error occurred while fetching data.",
@@ -33,6 +28,7 @@ profileRouter.get("/:userId", validateTokenMiddleware, async (req, res) => {
     }
 
     if (!data || data.length === 0) {
+      console.log(data);
       return res.status(404).json({
         message: "User not found.",
       });
@@ -44,7 +40,7 @@ profileRouter.get("/:userId", validateTokenMiddleware, async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      "error2": error.message,
+      error2: error.message,
     });
   }
 });
@@ -57,10 +53,9 @@ profileRouter.get(
 
     try {
       const { data, error } = await supabase
-        .from("register")
+        .from("users")
         .select("image_url")
         .eq("user_id", userId);
-
       console.log(data);
       if (error) {
         console.error(error);
@@ -85,7 +80,7 @@ profileRouter.put(
 
     if (
       !req.body.full_name ||
-      !req.body.dateofbirth ||
+      !req.body.date_of_birth ||
       !req.body.edu_background ||
       !req.body.email
     ) {
@@ -168,7 +163,7 @@ profileRouter.put(
             .from("users")
             .update({
               full_name: req.body.full_name,
-              dateofbirth: req.body.dateofbirth,
+              date_of_birth: req.body.date_of_birth,
               edu_background: req.body.edu_background,
               email: req.body.email,
               updated_at: formattedDate2,
