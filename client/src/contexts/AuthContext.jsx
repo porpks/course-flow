@@ -47,26 +47,23 @@ function AuthProvider(props) {
   };
 
   useEffect(() => {
-    console.log(localStorage.getItem("UserID"));
     const getDataCourse = async () => {
       try {
         const result = await axios.get(
           "http://localhost:4000/learn/videotime",
           {
-            params: {
-              userID: localStorage.getItem("UserID"),
-              courseID: courseId,
-            },
+            params: { userID: userID, courseID: courseId },
           }
         );
         const data = result.data.data;
-        console.log(result);
+        console.log(data);
         if (data.length > 0) {
           const handleShowVideo = (sublessonName, sublessonID) => {
             setVideoHead(sublessonName);
             setVideoKey(sublessonID);
             setIsShowVdo(true);
             setIsShowAsm(true);
+            setPauseTime(data[0].sublesson_video_timestop);
           };
           handleShowVideo(data[0].sublesson_name, data[0].sublesson_id);
         }
