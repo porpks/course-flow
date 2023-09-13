@@ -9,6 +9,7 @@ import LearnigDropdown from "../assets/LearnigDropdown";
 import "./Learning.css";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import axios from "axios";
+import AssignmentBox from "./AssignmentBox";
 
 function SublessonIcon({
   userID,
@@ -312,25 +313,26 @@ function Learning() {
             ) : null}
           </div>
           {isShowAsm ? (
-            <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
-              <div className='flex justify-between'>
-                <h1 className='Body1 mb-6'>Assigment</h1>
-                <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
-                  status
-                </div>
-              </div>
-              <h1 className='Body2 mb-1'>Question ?</h1>
-              <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
-                <h1 className='Body2 text-[--gray600]'>Answer...</h1>
-              </div>
-              <div className='flex justify-between items-center'>
-                <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
-                  Send Assignment
-                </button>
-                <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
-              </div>
-            </div>
-          ) : null}
+            <AssignmentBox />
+          ) : // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
+          //   <div className='flex justify-between'>
+          //     <h1 className='Body1 mb-6'>Assigment</h1>
+          //     <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
+          //       status
+          //     </div>
+          //   </div>
+          //   <h1 className='Body2 mb-1'>Question ?</h1>
+          //   <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
+          //     <h1 className='Body2 text-[--gray600]'>Answer...</h1>
+          //   </div>
+          //   <div className='flex justify-between items-center'>
+          //     <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
+          //       Send Assignment
+          //     </button>
+          //     <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
+          //   </div>
+          // </div>
+          null}
         </div>
       </div>
       <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>
