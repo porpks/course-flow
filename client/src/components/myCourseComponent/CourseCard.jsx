@@ -3,7 +3,7 @@ import "./CourseCard.css";
 
 function CourseCard(props) {
   return (
-    <div className="Shadow1 w-[357px] bg-[--white] rounded-t-[8px]">
+    <div className="Shadow1 courseCard-con w-[357px] bg-[--white] rounded-t-[8px]">
       <div className="topCard flex justify-center items-center ">
         <img className="" src={props.coverimg} alt={props.coursename} />
       </div>

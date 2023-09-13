@@ -68,18 +68,25 @@ function OurCourse() {
         </div>
       </div>
       <div className="content-Section">
-        <div className="card-container bg-red-200">
+        <div className="card-container">
           {dataCourse.map((item) => (
-            <CourseItem
-              key={item.course_id}
-              count={item.course_id}
-              coverimg={item.cover_img}
-              coursename={item.course_name}
-              coursedetail={item.course_detail}
-              coursesummary={item.course_summary}
-              totallearningtime={item.total_time}
-              onClick={() => navigate(`/ourcourse/coursedetail/${item.course_id}`)}
-            />
+            <a
+              onClick={() =>
+                navigate(`/ourcourse/coursedetail/${item.course_id}`)
+              }
+              href="#homepage"
+              className="no-underline"
+            >
+              <CourseItem
+                key={item.course_id}
+                count={item.course_id}
+                coverimg={item.cover_img}
+                coursename={item.course_name}
+                coursedetail={item.course_detail}
+                coursesummary={item.course_summary}
+                totallearningtime={item.total_time}
+              />
+            </a>
           ))}
         </div>
       </div>
