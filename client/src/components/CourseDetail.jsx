@@ -14,6 +14,8 @@ import { v4 as uuidv4 } from "uuid";
 
 function CourseDetail() {
   const navigate = useNavigate();
+  const [isDesireExist, setIsDesireExist] = useState([]);
+
   const [desireToggle, setDesireToggle] = useState(false);
   const openDesire = () => setDesireToggle(true);
   const closeDesire = () => setDesireToggle(false);
@@ -28,11 +30,7 @@ function CourseDetail() {
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
-<<<<<<< HEAD
         `http://localhost:4000/coursedetail/${param.id}` // You might want to include courseID in the URL
-=======
-        `http://localhost:4000/coursedetail/${param.id}`
->>>>>>> a531f61 (feat:fix desire api)
       );
       const data = dataDetailCourse.data.data;
       // console.log(data);
@@ -41,36 +39,13 @@ function CourseDetail() {
       // console.error(error);
     }
   }
-<<<<<<< HEAD
 
   const dataDetail = dataCourse;
 
-=======
-  console.log(dataCourse);
->>>>>>> a531f61 (feat:fix desire api)
   useEffect(() => {
-    getDetailCourse();
+    fetchData();
   }, []);
 
-<<<<<<< HEAD
-=======
-  const handlePause = (pauseTime) => {
-    // console.log(pauseTime);
-    // setProgressTime(pauseTime);
-    // playerRef.current.seekTo(currentTime, 'seconds');
-  };
-  const handleEnd = () => {
-    // setIsShowAsm(true);
-  };
-
-  const dataDetail = dataCourse;
-
-  const param = useParams();
-  const courseID = Number(param.id) - 1;
-  console.log(param);
-
-  // console.log(`dataDetail: ${dataDetail[0]}`);
->>>>>>> a531f61 (feat:fix desire api)
   if (dataCourse.length === 0) {
     return (
       <div className="flex justify-center items-center absolute top-[150px] w-[100%] h-[100vh] text-slate-100">
@@ -132,17 +107,10 @@ function CourseDetail() {
 
               <div className="CourseDetail_description flex flex-col gap-[24px]">
                 <div className="courseDetail_title ">
-<<<<<<< HEAD
                   <p className="H2">{dataDetail.course_name}</p>
                 </div>
                 <div className="courseDetail_body">
                   <p className="Body2">{dataDetail.course_detail}</p>
-=======
-                  <p className="H2">{dataCourse.course_name}</p>
-                </div>
-                <div className="courseDetail_body">
-                  <p className="Body2">{dataCourse.course_detail}</p>
->>>>>>> a531f61 (feat:fix desire api)
                 </div>
               </div>
               <div className="lesson_sample">
@@ -175,7 +143,9 @@ function CourseDetail() {
                 <p>{coursePrice}</p>
               </div>
               <div className="btn-grp">
-                <button onClick={openDesire} className="Secondary w-[100%]">
+                <button
+                  onClick={userID ? openDesire : noAuthHandle}
+                  className="Secondary w-[100%]">
                   Get in Desire Course
                 </button>
 

@@ -12,6 +12,7 @@ function DesireCoursePage() {
   const navigate = useNavigate();
 
   const [desireData, setDesireData] = useState([]);
+
   const getDataDesireCourse = async () => {
     try {
       const result = await axios.get(`http://localhost:4000/desire/${userID}`);
@@ -87,23 +88,18 @@ function DesireCoursePage() {
           <h2 className="H2 pt-[100px] pb-[72px]">Desire Course</h2>
           <div className="grid grid-cols-3 gap-x-[24px] gap-y-[40px] mb-[200px]">
             {desireData.map((item, index) => (
-              <a
-                onClick={() =>
-                  navigate(
-                    `/ourcourse/coursedetail/${Number(item.course_id) - 1}`
-                  )
-                }
-                href="#homepage"
-                className="no-underline">
-                <CourseItem
-                  key={index}
-                  coverimg={item.courses.cover_img}
-                  coursename={item.courses.course_name}
-                  coursedetail={item.courses.course_detail}
-                  coursesummary={item.courses.lessons.length}
-                  totallearningtime={item.courses.total_time}
-                />
-              </a>
+              <CourseItem
+                key={index}
+                coverimg={item.courses.cover_img}
+                coursename={item.courses.course_name}
+                coursedetail={item.courses.course_detail}
+                coursesummary={item.courses.lessons.length}
+                totallearningtime={item.courses.total_time}
+                onClick={() => {
+                  navigate(`/ourcourse/coursedetail/${item.course_id}`);
+                  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                }}
+              />
             ))}
           </div>
         </div>
