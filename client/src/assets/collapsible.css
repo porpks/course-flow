@@ -22,10 +22,14 @@
 
 .collapsible-content {
   display: none;
-  padding: 10px;
+  /* padding: 10px; */
   background-color: #fff;
 }
 
 .collapsible-content.show {
   display: block;
+}
+
+.list-Con{
+  border: 1px solid #000;
 }
