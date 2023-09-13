@@ -73,7 +73,7 @@ function Learning() {
     const [courseData, setCourseData] = useState({
         course_name: "",
         course_detail: "",
-        lesson: []
+        lessons: []
     })
     const [totalLesson, setTotalLesson] = useState(0)
     const [totalCompleted, setTotaCompleted] = useState(0)
@@ -95,7 +95,7 @@ function Learning() {
             const result = await axios.get(
                 "http://localhost:4000/learn/",
                 {
-                    params: { userID: 172, courseID: course_id },
+                    params: { userID: 172, courseID: 20 },
                 }
             );
             const data = result.data.data;
@@ -147,7 +147,7 @@ function Learning() {
                         </div>
                     </div>
                     <form>
-                        {courseData.lesson.map((lesson, index) => {
+                        {courseData.lessons.map((lesson, index) => {
                             let seq = ""
                             index + 1 < 10 ? seq = "0" + (index + 1) : seq = String(index + 1)
                             return (
@@ -168,7 +168,7 @@ function Learning() {
                                     <AccordionDetails>
                                         <div className=''>
 
-                                            {lesson.sublesson.map((sublesson, index) => {
+                                            {lesson.sublessons.map((sublesson, index) => {
                                                 {/* setTotalLesson(totalLesson + 1) */ }
                                                 sublessonIdArray.push(sublesson.sublesson_id)
                                                 console.log(sublessonIdArray)
