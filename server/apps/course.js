@@ -9,7 +9,7 @@ courseRouter.get("/", async (req, res) => {
       .from("courses")
       .select("*,lessons(*,sublessons(*))")
       .order("course_id", { ascending: true });
-    // console.log(data);
+
     return res.json({
       data,
     });
@@ -18,7 +18,7 @@ courseRouter.get("/", async (req, res) => {
   }
 });
 
-courseRouter.get("/courses", async (req, res) => {
+courseRouter.get("/course", async (req, res) => {
   try {
     let keywords = req.query.keywords;
 
@@ -34,8 +34,8 @@ courseRouter.get("/courses", async (req, res) => {
       .map((word) => word.replace(/\s/g, "\\s*"))
       .join(" ");
 
-    const queryFullName = `coursename.ilike.${keywords}`;
-    const queryKeywords = `coursename.ilike.%${regexKeywords}%`;
+    const queryFullName = `course_name.ilike.${keywords}`;
+    const queryKeywords = `course_name.ilike.%${regexKeywords}%`;
 
     const { data, error } = await supabase
       .from("courses")
@@ -43,9 +43,6 @@ courseRouter.get("/courses", async (req, res) => {
       .or(`${queryFullName},${queryKeywords}`)
       .order("course_id", { ascending: true });
 
-    if (error) {
-      throw error;
-    }
 
     return res.json({
       data: data,

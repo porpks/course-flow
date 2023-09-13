@@ -26,16 +26,17 @@ function OurCourse() {
     const getCourseByKeywords = async (keywords) => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/ourcourse/courses",
+          "http://localhost:4000/ourcourse/course",
           {
             params: { keywords },
           }
         );
+
         const data = response.data.data;
         setDataCourse(data);
-        setLoading(false);
       } catch (error) {
-        message: error;
+        // message: error;
+        console.log(error);
       }
     };
     getCourseByKeywords(searchKey);
@@ -70,23 +71,21 @@ function OurCourse() {
       <div className="content-Section">
         <div className="card-container">
           {dataCourse.map((item) => (
-            <a
-              onClick={() =>
-                navigate(`/ourcourse/coursedetail/${item.course_id}`)
-              }
-              href="#homepage"
-              className="no-underline"
-            >
-              <CourseItem
-                key={item.course_id}
-                count={item.course_id}
-                coverimg={item.cover_img}
-                coursename={item.course_name}
-                coursedetail={item.course_detail}
-                coursesummary={item.course_summary}
-                totallearningtime={item.total_time}
-              />
-            </a>
+            <CourseItem
+              key={item.course_id}
+              count={item.course_id}
+              coverimg={item.cover_img}
+              coursename={item.course_name}
+              coursedetail={item.course_detail}
+              coursesummary={item.course_summary}
+              totallearningtime={item.total_time}
+              // link = {`/ourcourse/coursedetail/${item.course_id}`}
+              onClick={() => {
+                navigate(`/ourcourse/coursedetail/${item.course_id}`);
+                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+              }}
+              // href="#homepage"
+            />
           ))}
         </div>
       </div>
