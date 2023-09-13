@@ -28,7 +28,7 @@ function CourseDetail() {
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
-        `http://localhost:4000/coursedetail/${param.id}` // You might want to include courseID in the URL
+        `http://localhost:4000/coursedetail/${param.id}`
       );
       const data = dataDetailCourse.data.data;
       // console.log(data);
@@ -44,6 +44,7 @@ function CourseDetail() {
     getDetailCourse();
   }, []);
 
+  // console.log(`dataDetail: ${dataDetail[0]}`);
   if (dataCourse.length === 0) {
     return (
       <div className="flex justify-center items-center absolute top-[150px] w-[100%] h-[100vh] text-slate-100">
@@ -105,10 +106,10 @@ function CourseDetail() {
 
               <div className="CourseDetail_description flex flex-col gap-[24px]">
                 <div className="courseDetail_title ">
-                  <p className="H2">{dataDetail.course_name}</p>
+                  <p className="H2">{dataCourse.course_name}</p>
                 </div>
                 <div className="courseDetail_body">
-                  <p className="Body2">{dataDetail.course_detail}</p>
+                  <p className="Body2">{dataCourse.course_detail}</p>
                 </div>
               </div>
               <div className="lesson_sample">
