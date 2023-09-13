@@ -10,6 +10,7 @@ const multerUpload = multer({});
 const avatarUpload = multerUpload.fields([{ name: "avatar", maxCount: 1 }]);
 // , validateTokenMiddleware
 profileRouter.get("/:userId", async (req, res) => {
+  const userId = req.params.userId
   try {
     if (!userId || typeof userId !== "string") {
       return res.status(400).json({
