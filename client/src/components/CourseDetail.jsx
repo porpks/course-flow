@@ -26,7 +26,7 @@ function CourseDetail() {
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
-        `http://localhost:4000/coursedetail`
+        `http://localhost:4000/coursedetail/${param.id}`
       );
       setDataCourse(dataDetailCourse.data.data);
       // console.log(dataDetailCourse.data.data);
@@ -35,7 +35,7 @@ function CourseDetail() {
       console.log(error);
     }
   }
-  // console.log(dataCourse);
+  console.log(dataCourse);
   useEffect(() => {
     getDetailCourse();
   }, []);
@@ -53,7 +53,7 @@ function CourseDetail() {
 
   const param = useParams();
   const courseID = Number(param.id) - 1;
-
+  console.log(param);
 
   // console.log(`dataDetail: ${dataDetail[0]}`);
   if (dataCourse.length === 0) {
@@ -74,8 +74,7 @@ function CourseDetail() {
               onClick={() => {
                 navigate("/ourcourse");
               }}
-              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
-            >
+              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer">
               <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
               <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
             </a>
@@ -96,8 +95,7 @@ function CourseDetail() {
                       width="104"
                       height="104"
                       viewBox="0 0 104 104"
-                      fill="none"
-                    >
+                      fill="none">
                       <rect
                         width="104"
                         height="104"
@@ -121,10 +119,10 @@ function CourseDetail() {
 
               <div className="CourseDetail_description flex flex-col gap-[24px]">
                 <div className="courseDetail_title ">
-                  <p className="H2">{dataCourse[0].course_name}</p>
+                  <p className="H2">{dataCourse.course_name}</p>
                 </div>
                 <div className="courseDetail_body">
-                  <p className="Body2">{dataCourse[0].course_detail}</p>
+                  <p className="Body2">{dataCourse.course_detail}</p>
                 </div>
               </div>
               <div className="lesson_sample">
@@ -165,6 +163,7 @@ function CourseDetail() {
                     description="Do you sure to add Service Design Essentials to your desire Course?"
                     yesDes="Yes, add this to my desire course"
                     noDes="No, I don’t"
+                    noOnClcik={closeDesire}
                   />
                 ) : null}
                 {subscribeToggle ? (
@@ -175,9 +174,12 @@ function CourseDetail() {
                     description="Do you sure to subscribe Service Design Essentials Course?"
                     yesDes="Yes, I want to subscribe"
                     noDes="No, I don’t"
+                    noOnClcik={closeSubscribe}
                   />
                 ) : null}
-                <button onClick={openSubscribe} className="Primary w-[100%]">
+                <button
+                  onClick={openSubscribe}
+                  className="Primary w-[100%] border-none">
                   Subscribe This Course
                 </button>
               </div>
