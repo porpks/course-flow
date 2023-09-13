@@ -45,9 +45,7 @@ function CourseDetail() {
       console.log(error);
     }
   }
-  
-
-
+  // console.log(dataCourse);
   useEffect(() => {
     getDetailCourse();
   }, []);
@@ -151,25 +149,25 @@ function CourseDetail() {
               </div>
             </div>
 
-            <div className="Subscribe_box Shadow1">
-              <div>
-                <p className="Body3 text-[--orange500]">Course</p>
-              </div>
-              <div className="course-Subscribe flex flex-col gap-[8px]">
-                <p className="course-title H3">Service Design Essentials</p>
-                <p className="course-description Body2 text-[--gray700]">
-                  Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.
-                </p>
-              </div>
-              <div className="course-price  H3 text-[--gray700] flex flex-row justify-center items-center">
-                <p className="mr-[1rem]">THB</p>
-                <p>3,559.00</p>
-              </div>
-              <div className="btn-grp">
-                <button onClick={openDesire} className="Secondary w-[100%]">
-                  Get in Desire Course
-                </button>
-
+          <div className="Subscribe_box Shadow1">
+            <div>
+              <p className="Body3 text-[--orange500]">Course</p>
+            </div>
+            <div className="course-Subscribe flex flex-col gap-[8px]">
+              <p className="course-title H3">Service Design Essentials</p>
+              <p className="course-description Body2 text-[--gray700]">
+                Lorem ipsum dolor sit amet, conse ctetur adipiscing elit.
+              </p>
+            </div>
+            <div className="course-price  H3 text-[--gray700] flex flex-row justify-center items-center">
+              <p className="mr-[1rem]">THB</p>
+              <p>3,559.00</p>
+            </div>
+            <div className="btn-grp">
+              <button onClick={openDesire} className="Secondary w-[100%]">
+                Get in Desire Course
+              </button>
+      
               {desireToggle ? (
                 <Mymodal
                   open={desireToggle}
@@ -179,7 +177,9 @@ function CourseDetail() {
                   yesDes="Yes, add this to my desire course"
                   noDes="No, I don’t"
                 />
-              ) : null}
+              ) : (
+                null
+              )}
               {subscribeToggle ? (
                 <Mymodal
                   open={subscribeToggle}
@@ -189,7 +189,9 @@ function CourseDetail() {
                   yesDes="Yes, I want to subscribe"
                   noDes="No, I don’t"
                 />
-              ) : null}
+              ) : (
+                null
+              )}
               <button onClick={openSubscribe} className="Primary w-[100%]">
                 Subscribe This Course
               </button>
