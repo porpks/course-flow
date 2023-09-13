@@ -25,7 +25,7 @@ desireRouter.get("/:userId", async (req, res) => {
   }
 });
 
-desireRouter.post("/add", async (req, res) => {
+desireRouter.post("/", async (req, res) => {
   try {
     const desireData = {
       user_id: req.body.user_id,
@@ -39,6 +39,23 @@ desireRouter.post("/add", async (req, res) => {
     }
 
     res.json({ message: "desire course has been add" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+desireRouter.delete("/", async (req, res) => {
+  try {
+    const { error } = await supabase
+      .from("desire_courses")
+      .delete()
+      .eq("user_id", req.body.user_id)
+      .eq("course_id", req.body.course_id);
+    if (error) {
+      throw error;
+    }
+
+    res.json({ message: "desire course has been delete" });
   } catch (error) {
     console.log(error);
   }
