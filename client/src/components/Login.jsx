@@ -5,47 +5,62 @@ import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
-  const { setUserID, setIsLoggedIn, setUsername } = useAuth();
+  const { userID, setUserID, setIsLoggedIn, setUsername, login } = useAuth();
+
   const [loginData, setLoginData] = useState({
     email: null,
     password: null,
   });
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!loginData.email || !loginData.password) {
       alert("nodata");
     } else {
       try {
-        const result = await axios.post(
-          "http://localhost:4000/auth/login",
-          loginData
-        );
-
-        const token = result.data.token;
-        localStorage.setItem("token", token);
-        if (result.data.error) {
-          return alert(result.data.error.message);
-        }
-        setUserID(result.data.data[0].user_id);
-        setIsLoggedIn(true);
-
-        try {
-          const response = await axios.get(
-            `http://localhost:4000/profile/${result.data.data[0].user_id}`
-          );
-          console.log(response);
-          setUsername(response.data.data);
-        } catch (error) {
-          alert(error.message);
-        }
-
-        navigate("/ourcourse");
+        // Call the login function from the AuthContext with the login data.
+        await login(loginData);
       } catch (error) {
         alert(error);
       }
     }
   };
+
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   if (!loginData.email || !loginData.password) {
+  //     alert("nodata");
+  //   } else {
+  //     try {
+  //       const result = await axios.post(
+  //         "http://localhost:4000/auth/login",
+  //         loginData
+  //       );
+
+  //       const token = result.data.token;
+  //       localStorage.setItem("token", token);
+  //       localStorage.setItem("userID", result.data.data[0].user_id);
+  //       if (result.data.error) {
+  //         return alert(result.data.error.message);
+  //       }
+  //       setUserID(result.data.data[0].user_id);
+  //       setIsLoggedIn(true);
+
+  //       try {
+  //         const response = await axios.get(
+  //           `http://localhost:4000/profile/${result.data.data[0].user_id}`
+  //         );
+  //         console.log(response);
+  //         setUsername(response.data.data);
+  //       } catch (error) {
+  //         alert(error.message);
+  //       }
+
+  //       navigate("/ourcourse");
+  //     } catch (error) {
+  //       alert(error);
+  //     }
+  //   }
+  // };
 
   return (
     <div className="flex justify-center min-h-[100vh] relative overflow-hidden">

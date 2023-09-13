@@ -15,7 +15,7 @@ import { Routes, Route } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import LearningPage from "../pages/LearningPage";
 import { useParams } from "react-router-dom";
-
+import AdminLogin from "./adminComponent/Adminlogin";
 function AuthenticatedApp() {
   const { userID } = useAuth();
 
@@ -38,13 +38,17 @@ function AuthenticatedApp() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path={`/profile/:id`} element={<ProtectedProfileRoute />} />
-        <Route path="/ourcourse/coursedetail/:id" element={<CourseDetailPage />} />
+        <Route
+          path="/ourcourse/coursedetail/:id"
+          element={<CourseDetailPage />}
+        />
         <Route path="/mycourse" element={<MyCoursePage />} />
         <Route path="/desire/:userId" element={<DesireCoursePage />} />
         <Route path="/assignment" element={<AssignmentPage />} />
         <Route path="/learning" element={<LearningPage />} />
-
-        <Route path="*" element={null} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="*" element={null} />{" "}
+        <Route path="/admin" element={<AdminLogin />} />
       </Routes>
     </>
   );

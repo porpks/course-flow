@@ -19,11 +19,12 @@ function MyCourse() {
   const [inprogress, setInprogress] = useState(false);
   const [complete, setComplete] = useState(false);
   const [userName, setUserName] = useState("");
-  const { userID } = useAuth();
+  // const { userID } = useAuth();
   // const [userID, setUserID] = useState(172); //122,172,130
   const [inProgressCount, setInProgressCount] = useState(0);
   const [completeCount, setCompleteCount] = useState(0);
   const [avatar, SetAvatar] = useState(0);
+  const userID = localStorage.getItem("userID");
 
   function handleAllCourse() {
     setAllCourse(true);
@@ -44,10 +45,6 @@ function MyCourse() {
     return;
   }
 
-  useEffect(() => {
-    getDataCourse();
-  }, [userID]);
-
   const getDataCourse = async () => {
     try {
       const result = await axios.get(
@@ -56,31 +53,35 @@ function MyCourse() {
       const newDataCourse = result.data.data;
       setDataCourse(newDataCourse);
 
-      if (newDataCourse.length > 0) {
-        const username = newDataCourse[0].users.full_name;
-        const avatar = newDataCourse[0].users.image_url;
-        setUserName(username);
-        SetAvatar(avatar);
-        let inProgressCount = 0;
-        let completeCount = 0;
-        newDataCourse.forEach((course) => {
-          if (course.course_status === false) {
-            // Course is in progress
-            inProgressCount++;
-          } else {
-            // Course is complete
-            completeCount++;
-          }
-        });
-        setInProgressCount(inProgressCount);
-        setCompleteCount(completeCount);
-      } else {
-        setUserName("No User Data Available");
-      }
+      try {
+        if (newDataCourse.length > 0) {
+          const username = newDataCourse[0].users.full_name;
+          const avatar = newDataCourse[0].users.image_url;
+          setUserName(username);
+          SetAvatar(avatar);
+          let inProgressCount = 0;
+          let completeCount = 0;
+          newDataCourse.forEach((course) => {
+            if (course.course_status === false) {
+              inProgressCount++;
+            } else {
+              completeCount++;
+            }
+          });
+          setInProgressCount(inProgressCount);
+          setCompleteCount(completeCount);
+        } else {
+          setUserName("No User Data Available");
+        }
+      } catch (error) {}
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
+  useEffect(() => {
+    getDataCourse();
+  }, [userID]);
 
   function AllCourse() {
     return (
@@ -101,42 +102,47 @@ function MyCourse() {
   }
 
   function Inprogress() {
-    const inProgressCourses = dataCourse.filter((item) => !item.coursestatus);
-    return (
-      <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]">
-        {inProgressCourses.map((item) => (
-          <CourseCard
-            key={item.courses.course_id}
-            count={item.courses.course_id}
-            coverimg={item.courses.cover_img}
-            coursename={item.courses.course_name}
-            coursedetail={item.courses.course_detail}
-            coursesummary={item.courses.course_summary}
-            totallearningtime={item.courses.total_time}
-          />
-        ))}
-      </div>
-    );
+    if (dataCourse.length > 0) {
+      const inProgressCourses = dataCourse.filter((item) => !item.coursestatus);
+      return (
+        <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]">
+          {inProgressCourses.map((item) => (
+            <CourseCard
+              key={item.courses.course_id}
+              count={item.courses.course_id}
+              coverimg={item.courses.cover_img}
+              coursename={item.courses.course_name}
+              coursedetail={item.courses.course_detail}
+              coursesummary={item.courses.course_summary}
+              totallearningtime={item.courses.total_time}
+            />
+          ))}
+        </div>
+      );
+    }
   }
   function Complete() {
-    const completeCourses = dataCourse.filter((item) => item.coursestatus);
+    if (dataCourse.length > 0) {
+      const completeCourses = dataCourse.filter((item) => item.coursestatus);
 
-    return (
-      <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]  w-[740px]">
-        {completeCourses.map((item) => (
-          <CourseCard
-            key={item.courses.course_id}
-            count={item.courses.course_id}
-            coverimg={item.courses.cover_img}
-            coursename={item.courses.course_name}
-            coursedetail={item.courses.course_detail}
-            coursesummary={item.courses.course_summary}
-            totallearningtime={item.courses.total_time}
-          />
-        ))}
-      </div>
-    );
+      return (
+        <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]  w-[740px]">
+          {completeCourses.map((item) => (
+            <CourseCard
+              key={item.courses.course_id}
+              count={item.courses.course_id}
+              coverimg={item.courses.cover_img}
+              coursename={item.courses.course_name}
+              coursedetail={item.courses.course_detail}
+              coursesummary={item.courses.course_summary}
+              totallearningtime={item.courses.total_time}
+            />
+          ))}
+        </div>
+      );
+    }
   }
+
   return (
     <div className="w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative ">
       <div className=" absolute right-0 top-[216px]">
