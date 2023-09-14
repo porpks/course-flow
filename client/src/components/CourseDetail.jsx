@@ -44,8 +44,6 @@ function CourseDetail() {
     getDetailCourse();
   }, []);
 
- 
-
   if (dataCourse.length === 0) {
     return (
       <div className="flex justify-center items-center absolute top-[150px] w-[100%] h-[100vh] text-slate-100">
@@ -67,8 +65,7 @@ function CourseDetail() {
               onClick={() => {
                 navigate("/ourcourse");
               }}
-              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
-            >
+              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer">
               <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
               <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
             </a>
@@ -89,8 +86,7 @@ function CourseDetail() {
                       width="104"
                       height="104"
                       viewBox="0 0 104 104"
-                      fill="none"
-                    >
+                      fill="none">
                       <rect
                         width="104"
                         height="104"
@@ -157,6 +153,7 @@ function CourseDetail() {
                     description="Do you sure to add Service Design Essentials to your desire Course?"
                     yesDes="Yes, add this to my desire course"
                     noDes="No, I don’t"
+                    noOnClcik={closeDesire}
                   />
                 ) : null}
                 {subscribeToggle ? (
@@ -167,12 +164,12 @@ function CourseDetail() {
                     description="Do you sure to subscribe Service Design Essentials Course?"
                     yesDes="Yes, I want to subscribe"
                     noDes="No, I don’t"
+                    noOnClcik={closeSubscribe}
                   />
                 ) : null}
                 <button
                   onClick={openSubscribe}
-                  className="Primary w-[100%] border-none"
-                >
+                  className="Primary w-[100%] border-none">
                   Subscribe This Course
                 </button>
               </div>
