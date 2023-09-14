@@ -11,83 +11,6 @@ import { useAuth } from "../contexts/AuthContext.jsx";
 import axios from "axios";
 import AssignmentBox from "./AssignmentBox";
 
-let statusArray = []
-
-function SublessonIcon({
-  userID,
-  sublessonID,
-}) {
-  const [subStatus, setSubStatus] = useState("");
-
-  const getStatus = async () => {
-    try {
-      if (sublessonID && userID) {
-        const result = await axios.get("http://localhost:4000/learn/status/", {
-          params: { userID, sublessonID },
-        });
-        setSubStatus(result.data.data);
-        statusArray.push(result.data.data)
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getStatus();
-  }, []);
-
-  if (subStatus === "complete") {
-    return (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        width='20'
-        height='20'
-        viewBox='0 0 20 20'
-        fill='none'>
-        <path
-          fillRule='evenodd'
-          clipRule='evenodd'
-          d='M1.875 10C1.875 5.5125 5.5125 1.875 10 1.875C14.4875 1.875 18.125 5.5125 18.125 10C18.125 14.4875 14.4875 18.125 10 18.125C5.5125 18.125 1.875 14.4875 1.875 10ZM13.0083 8.48833C13.0583 8.42171 13.0945 8.34576 13.1147 8.26496C13.135 8.18415 13.1388 8.10012 13.1261 8.0178C13.1134 7.93547 13.0844 7.85652 13.0407 7.78558C12.9971 7.71464 12.9396 7.65315 12.8719 7.60471C12.8041 7.55627 12.7273 7.52187 12.6461 7.50352C12.5648 7.48518 12.4807 7.48326 12.3987 7.49789C12.3167 7.51251 12.2385 7.54338 12.1686 7.58868C12.0987 7.63398 12.0385 7.69279 11.9917 7.76167L9.295 11.5367L7.94167 10.1833C7.82319 10.0729 7.66648 10.0128 7.50456 10.0157C7.34265 10.0185 7.18816 10.0841 7.07365 10.1986C6.95914 10.3132 6.89354 10.4676 6.89069 10.6296C6.88783 10.7915 6.94793 10.9482 7.05833 11.0667L8.93333 12.9417C8.99749 13.0058 9.07483 13.0552 9.15999 13.0864C9.24515 13.1176 9.33608 13.1299 9.42647 13.1224C9.51686 13.115 9.60455 13.088 9.68344 13.0432C9.76233 12.9985 9.83054 12.9371 9.88333 12.8633L13.0083 8.48833Z'
-          fill='#2FAC8E'
-        />
-      </svg>
-    );
-  } else if (subStatus === "inprogress") {
-    return (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        width='20'
-        height='20'
-        viewBox='0 0 20 20'
-        fill='none'>
-        <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
-        <mask id='path-2-inside-1_140_7809' fill='white'>
-          <path d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z' />
-        </mask>
-        <path
-          d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z'
-          fill='#2FAC8E'
-          stroke='#2FAC8E'
-          strokeWidth='3'
-          mask='url(#path-2-inside-1_140_7809)'
-        />
-      </svg>
-    );
-  } else {
-    return (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        width='20'
-        height='20'
-        viewBox='0 0 20 20'
-        fill='none'>
-        <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
-      </svg>
-    );
-  }
-}
-
 function Learning() {
   const playerRef = useRef(null);
   const boxRef = useRef(null);
@@ -113,7 +36,8 @@ function Learning() {
     lessons: [],
   });
   const [videoThumbnail, setVideoThumbnail] = useState("");
-  const [percentComplete, setPercentComplete] = useState(0);
+  const [subStatus, setSubStatus] = useState({});
+  const [percentComplete, setPercentComplete] = useState(0)
 
   const getDataCourse = async () => {
     let course_id = Math.round(Math.random() * 20);
@@ -128,6 +52,17 @@ function Learning() {
       const data = result.data.data;
       setCourseData(data);
       setVideoThumbnail(data.cover_img);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getStatus = async () => {
+    try {
+      const result = await axios.get("http://localhost:4000/learn/status/", {
+        params: { userID: 172, courseID: 20 },
+      });
+      setSubStatus(result.data.data);
+      setPercentComplete(Number(result.data.percentComplete))
     } catch (error) {
       console.log(error);
     }
@@ -162,7 +97,7 @@ function Learning() {
   };
 
   const handlePause = (pauseTime) => {
-    // console.log(pauseTime);
+    console.log(pauseTime);
     //**set pause time and update database
   };
   const handleEnd = () => {
@@ -171,18 +106,14 @@ function Learning() {
 
   useEffect(() => {
     getDataCourse();
+    getStatus();
     setVideoHead(localStorage.getItem("sublessonName"));
     setVideoKey(localStorage.getItem("sublessonID"));
     setIsShowVdo(localStorage.getItem("isShowVdo"));
     setIsShowAsm(localStorage.getItem("isShowAsm"));
     setPauseTime(localStorage.getItem("pauseTime"));
-    // playerRef.current.seekTo(pauseTime, "seconds")
   }, []);
 
-  // setPercent((statusArray.filter(arr => arr === "complete").length / statusArray.length * 100).toFixed(2))
-  let percent = ((statusArray.filter(arr => arr === "complete").length / statusArray.length * 100).toFixed(2))
-  let barClass = `w-[${percent}%] h-full Linear1 rounded-full`
-  // console.log(percent);
   return (
     <>
       <div className='flex justify-center pt-[100px] px-[160px]'>
@@ -195,9 +126,9 @@ function Learning() {
             </h1>
           </div>
           <div className='mb-6'>
-            <h1 className='Body2 text-[--gray700] mb-2'>{percent}% Complete</h1>
+            <h1 className='Body2 text-[--gray700] mb-2'>{percentComplete}% Complete</h1>
             <div className='w-full h-[10px] bg-[--gray300] rounded-full'>
-              <div className={barClass}></div>
+              <div className="progressbar h-full Linear1 rounded-full"></div>
             </div>
           </div>
           <form>
@@ -236,10 +167,45 @@ function Learning() {
                               )
                             }>
                             <div className='mr-4 h-[20px]'>
-                              <SublessonIcon
-                                userID={userId}
-                                sublessonID={sublesson.sublesson_id}
-                              />
+                              {subStatus[sublesson.sublesson_id] === "complete" ? <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                width='20'
+                                height='20'
+                                viewBox='0 0 20 20'
+                                fill='none'>
+                                <path
+                                  fillRule='evenodd'
+                                  clipRule='evenodd'
+                                  d='M1.875 10C1.875 5.5125 5.5125 1.875 10 1.875C14.4875 1.875 18.125 5.5125 18.125 10C18.125 14.4875 14.4875 18.125 10 18.125C5.5125 18.125 1.875 14.4875 1.875 10ZM13.0083 8.48833C13.0583 8.42171 13.0945 8.34576 13.1147 8.26496C13.135 8.18415 13.1388 8.10012 13.1261 8.0178C13.1134 7.93547 13.0844 7.85652 13.0407 7.78558C12.9971 7.71464 12.9396 7.65315 12.8719 7.60471C12.8041 7.55627 12.7273 7.52187 12.6461 7.50352C12.5648 7.48518 12.4807 7.48326 12.3987 7.49789C12.3167 7.51251 12.2385 7.54338 12.1686 7.58868C12.0987 7.63398 12.0385 7.69279 11.9917 7.76167L9.295 11.5367L7.94167 10.1833C7.82319 10.0729 7.66648 10.0128 7.50456 10.0157C7.34265 10.0185 7.18816 10.0841 7.07365 10.1986C6.95914 10.3132 6.89354 10.4676 6.89069 10.6296C6.88783 10.7915 6.94793 10.9482 7.05833 11.0667L8.93333 12.9417C8.99749 13.0058 9.07483 13.0552 9.15999 13.0864C9.24515 13.1176 9.33608 13.1299 9.42647 13.1224C9.51686 13.115 9.60455 13.088 9.68344 13.0432C9.76233 12.9985 9.83054 12.9371 9.88333 12.8633L13.0083 8.48833Z'
+                                  fill='#2FAC8E'
+                                />
+                              </svg>
+                                : subStatus[sublesson.sublesson_id] === "inprogress" ? <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='20'
+                                  height='20'
+                                  viewBox='0 0 20 20'
+                                  fill='none'>
+                                  <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
+                                  <mask id='path-2-inside-1_140_7809' fill='white'>
+                                    <path d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z' />
+                                  </mask>
+                                  <path
+                                    d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z'
+                                    fill='#2FAC8E'
+                                    stroke='#2FAC8E'
+                                    strokeWidth='3'
+                                    mask='url(#path-2-inside-1_140_7809)'
+                                  />
+                                </svg>
+                                  : <svg
+                                    xmlns='http://www.w3.org/2000/svg'
+                                    width='20'
+                                    height='20'
+                                    viewBox='0 0 20 20'
+                                    fill='none'>
+                                    <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
+                                  </svg>}
                             </div>
                             <h1 className='Body3 text-[--gray700]'>
                               {sublesson.sublesson_name}
@@ -333,7 +299,7 @@ function Learning() {
             // </div>
             null}
         </div>
-      </div>
+      </div >
       <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>
         {sublessonIdArray.findIndex((element) => element === videoKey) > 0 ? (
           <button
@@ -355,6 +321,7 @@ function Learning() {
           <div></div>
         )}
       </div>
+      <style>{`.progressbar {width: ${percentComplete}%;}`}</style>
     </>
   );
 }
