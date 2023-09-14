@@ -11,14 +11,11 @@ import { useAuth } from "../contexts/AuthContext.jsx";
 import axios from "axios";
 import AssignmentBox from "./AssignmentBox";
 
+let statusArray = []
+
 function SublessonIcon({
   userID,
   sublessonID,
-  //   totalLesson,
-  //   setTotalLesson,
-  //   totalCompleted,
-  //   setTotaCompleted,
-  //   setPercentCompleted,
 }) {
   const [subStatus, setSubStatus] = useState("");
 
@@ -29,7 +26,7 @@ function SublessonIcon({
           params: { userID, sublessonID },
         });
         setSubStatus(result.data.data);
-        // setTotalLesson(totalLesson + 1)
+        statusArray.push(result.data.data)
       }
     } catch (error) {
       console.log(error);
@@ -41,8 +38,6 @@ function SublessonIcon({
   }, []);
 
   if (subStatus === "complete") {
-    // setTotaCompleted(totalCompleted + 1)
-    // setPercentCompleted(totalCompleted / totalLesson * 100)
     return (
       <svg
         xmlns='http://www.w3.org/2000/svg'
@@ -99,7 +94,7 @@ function Learning() {
   let sublessonIdArray = [];
 
   const {
-    userID,
+    userId,
     isShowAsm,
     setIsShowAsm,
     isShowVdo,
@@ -117,10 +112,8 @@ function Learning() {
     course_detail: "",
     lessons: [],
   });
-  //   const [totalLesson, setTotalLesson] = useState(0);
-  //   const [totalCompleted, setTotaCompleted] = useState(0);
-  //   const [percentCompleted, setPercentCompleted] = useState(0);
   const [videoThumbnail, setVideoThumbnail] = useState("");
+  const [percentComplete, setPercentComplete] = useState(0);
 
   const getDataCourse = async () => {
     let course_id = Math.round(Math.random() * 20);
@@ -144,14 +137,14 @@ function Learning() {
     if (action === "next") {
       setVideoKey(
         sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
+        sublessonIdArray.findIndex((element) => element === videoKey) + 1
         ]
       );
       boxRef.current.scrollIntoView({ behavior: "smooth" });
     } else if (action === "prev") {
       setVideoKey(
         sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) - 1
+        sublessonIdArray.findIndex((element) => element === videoKey) - 1
         ]
       );
       boxRef.current.scrollIntoView({ behavior: "smooth" });
@@ -169,7 +162,7 @@ function Learning() {
   };
 
   const handlePause = (pauseTime) => {
-    console.log(pauseTime);
+    // console.log(pauseTime);
     //**set pause time and update database
   };
   const handleEnd = () => {
@@ -183,8 +176,13 @@ function Learning() {
     setIsShowVdo(localStorage.getItem("isShowVdo"));
     setIsShowAsm(localStorage.getItem("isShowAsm"));
     setPauseTime(localStorage.getItem("pauseTime"));
+    // playerRef.current.seekTo(pauseTime, "seconds")
   }, []);
 
+  // setPercent((statusArray.filter(arr => arr === "complete").length / statusArray.length * 100).toFixed(2))
+  let percent = ((statusArray.filter(arr => arr === "complete").length / statusArray.length * 100).toFixed(2))
+  let barClass = `w-[${percent}%] h-full Linear1 rounded-full`
+  // console.log(percent);
   return (
     <>
       <div className='flex justify-center pt-[100px] px-[160px]'>
@@ -197,9 +195,9 @@ function Learning() {
             </h1>
           </div>
           <div className='mb-6'>
-            <h1 className='Body2 text-[--gray700] mb-2'>{100}% Complete</h1>
+            <h1 className='Body2 text-[--gray700] mb-2'>{percent}% Complete</h1>
             <div className='w-full h-[10px] bg-[--gray300] rounded-full'>
-              <div className={`w-[12%] h-full Linear1 rounded-full`}></div>
+              <div className={barClass}></div>
             </div>
           </div>
           <form>
@@ -225,15 +223,12 @@ function Learning() {
                   <AccordionDetails>
                     <div className=''>
                       {lesson.sublessons.map((sublesson, index) => {
-                        {
-                          /* setTotalLesson(totalLesson + 1) */
-                        }
                         sublessonIdArray.push(sublesson.sublesson_id);
                         return (
                           <label
                             key={index}
                             id={sublesson.sublesson_id}
-                            className='flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500]'
+                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${sublesson.sublesson_id === videoKey ? "bg-[--gray400]" : ""}`}
                             onClick={() =>
                               handleShowVideo(
                                 sublesson.sublesson_name,
@@ -242,11 +237,8 @@ function Learning() {
                             }>
                             <div className='mr-4 h-[20px]'>
                               <SublessonIcon
-                                userID={userID}
+                                userID={userId}
                                 sublessonID={sublesson.sublesson_id}
-                                // totalLesson={totalLesson} setTotalLesson={setTotalLesson}
-                                // totalCompleted={totalCompleted} setTotaCompleted={setTotaCompleted}
-                                // setPercentCompleted={setPercentCompleted}
                               />
                             </div>
                             <h1 className='Body3 text-[--gray700]'>
@@ -304,12 +296,14 @@ function Learning() {
                         </svg>
                       </div>
                     }
-                    start={33}
-                    // progressInterval={progressTime}
-                    onPlay={() => {
-                      playerRef.current.seekTo(pauseTime, "seconds");
-                    }}
                     playing={true}
+                    onStart={() => {
+                      playerRef.current.seekTo(pauseTime, "seconds")
+                    }}
+                    // onSeek={(e) => {
+                    //   setPauseTime(e.target.currentTime)
+                    //   playerRef.current.seekTo(e.target.currentTime, "seconds");
+                    // }}
                     onPause={(e) => handlePause(e.target.currentTime)}
                     onEnded={handleEnd}
                   />
@@ -320,24 +314,24 @@ function Learning() {
           {isShowAsm ? (
             <AssignmentBox />
           ) : // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
-          //   <div className='flex justify-between'>
-          //     <h1 className='Body1 mb-6'>Assigment</h1>
-          //     <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
-          //       status
-          //     </div>
-          //   </div>
-          //   <h1 className='Body2 mb-1'>Question ?</h1>
-          //   <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
-          //     <h1 className='Body2 text-[--gray600]'>Answer...</h1>
-          //   </div>
-          //   <div className='flex justify-between items-center'>
-          //     <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
-          //       Send Assignment
-          //     </button>
-          //     <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
-          //   </div>
-          // </div>
-          null}
+            //   <div className='flex justify-between'>
+            //     <h1 className='Body1 mb-6'>Assigment</h1>
+            //     <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
+            //       status
+            //     </div>
+            //   </div>
+            //   <h1 className='Body2 mb-1'>Question ?</h1>
+            //   <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
+            //     <h1 className='Body2 text-[--gray600]'>Answer...</h1>
+            //   </div>
+            //   <div className='flex justify-between items-center'>
+            //     <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
+            //       Send Assignment
+            //     </button>
+            //     <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
+            //   </div>
+            // </div>
+            null}
         </div>
       </div>
       <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>
@@ -351,7 +345,7 @@ function Learning() {
           <div></div>
         )}
         {sublessonIdArray.findIndex((element) => element === videoKey) <
-        sublessonIdArray.length - 1 ? (
+          sublessonIdArray.length - 1 ? (
           <button
             className='Primary border-none cursor-pointer'
             onClick={() => handleLesson("next")}>

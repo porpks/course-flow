@@ -18,7 +18,10 @@ function CourseDetail() {
   const [desireData, setDesireData] = useState([]);
   const isDesireExist = desireData.length > 0;
 
-  const [isDesireRequestPending, setIsDesireRequestPending] = useState(false);
+  const [subscribeData, setSubscribeData] = useState([]);
+  const isSubscribe = subscribeData.length > 0;
+
+  const [isRequestPending, setIsRequestPending] = useState(false);
 
   const [desireToggle, setDesireToggle] = useState(false);
   const openDesire = () => setDesireToggle(true);
@@ -29,8 +32,8 @@ function CourseDetail() {
   const closeSubscribe = () => setSubscribeToggle(false);
 
   const [dataCourse, setDataCourse] = useState([]);
-  const { userId } = useAuth();
   const param = useParams();
+  const { userId } = useAuth();
 
   async function getDetailCourse() {
     try {
@@ -38,19 +41,19 @@ function CourseDetail() {
         `http://localhost:4000/coursedetail/${param.id}`
       );
       setDataCourse(dataDetailCourse.data.data);
-      if (dataDetailCourse.data.data.course_id) {
-        fetchDesire(dataDetailCourse.data.data.course_id);
-      }
+      // if (dataDetailCourse.data.data.course_id) {
+      //   fetchDesire(dataDetailCourse.data.data.course_id);
+      // }
     } catch (error) {
       console.log(error);
     }
   }
   const dataDetail = dataCourse;
 
-  const fetchDesire = async (courseID) => {
+  const checkDesire = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:4000/desire/?userId=${userId}&courseId=${courseID}`
+        `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
       );
       setDesireData(result.data.data);
     } catch (error) {
@@ -58,12 +61,23 @@ function CourseDetail() {
     }
   };
 
+  const checkSubscribe = async () => {
+    try {
+      const result = await axios.get(
+        `http://localhost:4000/mycourse/?user_id=${userId}&course_id=${param.id}`
+      );
+      setSubscribeData(result.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const desireAddHandle = async () => {
-    if (isDesireRequestPending) {
+    if (isRequestPending) {
       return;
     }
 
-    setIsDesireRequestPending(true);
+    setIsRequestPending(true);
 
     const desireBody = {
       user_id: userId,
@@ -76,16 +90,16 @@ function CourseDetail() {
     } catch (error) {
       console.log(error);
     } finally {
-      setIsDesireRequestPending(false);
+      setIsRequestPending(false);
     }
   };
 
   const desireRemoveHandle = async () => {
-    if (isDesireRequestPending) {
+    if (isRequestPending) {
       return;
     }
 
-    setIsDesireRequestPending(true);
+    setIsRequestPending(true);
     try {
       await axios.delete(
         `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
@@ -94,8 +108,36 @@ function CourseDetail() {
     } catch (error) {
       console.log(error);
     } finally {
-      setIsDesireRequestPending(false);
+      setIsRequestPending(false);
     }
+  };
+
+  const subscribeHandle = async () => {
+    if (isRequestPending) {
+      return;
+    }
+
+    setIsRequestPending(true);
+
+    const subscribe = {
+      user_id: userId,
+      course_id: param.id,
+    };
+    try {
+      await axios.post(`http://localhost:4000/mycourse/`, subscribe);
+      await axios.delete(
+        `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
+      );
+      navigate("/mycourse");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsRequestPending(false);
+    }
+  };
+
+  const startLearningHandle = async () => {
+    navigate(`/learning/${param.id}`);
   };
 
   const noAuthHandle = () => {
@@ -104,6 +146,10 @@ function CourseDetail() {
 
   useEffect(() => {
     getDetailCourse();
+    if (localStorage.getItem("isLoggedIn")) {
+      checkDesire();
+      checkSubscribe();
+    }
   }, []);
 
   if (dataCourse.length === 0) {
@@ -203,13 +249,15 @@ function CourseDetail() {
                 <p>{coursePrice}</p>
               </div>
               <div className="btn-grp">
-                <button
-                  onClick={userId ? openDesire : noAuthHandle}
-                  className="Secondary w-[100%]">
-                  {isDesireExist
-                    ? "Remove from Desire Course"
-                    : "Get in Desire Course"}
-                </button>
+                {isSubscribe ? null : (
+                  <button
+                    onClick={userId ? openDesire : noAuthHandle}
+                    className={`Secondary w-[100%] hidden`}>
+                    {isDesireExist
+                      ? "Remove from Desire Course"
+                      : "Get in Desire Course"}
+                  </button>
+                )}
 
                 {desireToggle ? (
                   <Mymodal
@@ -239,13 +287,25 @@ function CourseDetail() {
                     description="Do you sure to subscribe Service Design Essentials Course?"
                     yesDes="Yes, I want to subscribe"
                     noDes="No, I don’t"
+                    yesOnClick={subscribeHandle}
+                    // yesOnClick={startLearningHandle}
                     noOnClick={closeSubscribe}
                   />
                 ) : null}
                 <button
-                  onClick={userId ? openSubscribe : noAuthHandle}
+                  onClick={() => {
+                    if (userId) {
+                      if (isSubscribe) {
+                        startLearningHandle();
+                      } else {
+                        openSubscribe();
+                      }
+                    } else {
+                      noAuthHandle();
+                    }
+                  }}
                   className="Primary w-[100%] border-none">
-                  Subscribe This Course
+                  {isSubscribe ? "Start Learning" : "Subscribe This Course"}
                 </button>
               </div>
             </div>
