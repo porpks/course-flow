@@ -11,6 +11,7 @@ import CircularIndeterminate from "../assets/loadingProgress";
 // import ExampleComponent from "../assets/test/ParamTest";
 import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { useAuth } from "../contexts/AuthContext";
 
 function CourseDetail() {
   const navigate = useNavigate();
@@ -35,14 +36,56 @@ function CourseDetail() {
         `http://localhost:4000/coursedetail/${param.id}` // You might want to include courseID in the URL
       );
       const data = dataDetailCourse.data.data;
-      // console.log(data);
       setDataCourse(data);
     } catch (error) {
-      // console.error(error);
+      console.log(error);
     }
   }
-
   const dataDetail = dataCourse;
+
+  const fetchDesire = async () => {
+    // const desireBody = {
+    //   user_id: userID,
+    //   course_id: dataCourse.course_id,
+    // };
+    const desireBody = {
+      user_id: 175,
+      course_id: 20,
+    };
+
+    try {
+      const result = await axios.post(
+        `http://localhost:4000/desire/check`,
+        desireBody
+      );
+      const data = result.data.data;
+      setIsDesireExist(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const desireHandle = async () => {
+    const desireBody = {
+      user_id: userID,
+      course_id: dataCourse.course_id,
+    };
+    try {
+      await axios.post(`http://localhost:4000/desire`, desireBody);
+      alert("you desire course has been add");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const noAuthHandle = () => {
+    navigate("/login");
+  };
+
+  async function fetchData() {
+    await getDetailCourse();
+    await fetchDesire();
+  }
 
   useEffect(() => {
     fetchData();
@@ -159,7 +202,9 @@ function CourseDetail() {
                     description="Do you sure to add Service Design Essentials to your desire Course?"
                     yesDes="Yes, add this to my desire course"
                     noDes="No, I don’t"
-                    noOnClcik={closeDesire}
+                    yesOnClick={desireHandle}
+                    noAuthHandle
+                    noOnClick={closeDesire}
                   />
                 ) : null}
                 {subscribeToggle ? (
@@ -170,11 +215,11 @@ function CourseDetail() {
                     description="Do you sure to subscribe Service Design Essentials Course?"
                     yesDes="Yes, I want to subscribe"
                     noDes="No, I don’t"
-                    noOnClcik={closeSubscribe}
+                    noOnClick={closeSubscribe}
                   />
                 ) : null}
                 <button
-                  onClick={openSubscribe}
+                  onClick={userID ? openSubscribe : noAuthHandle}
                   className="Primary w-[100%] border-none">
                   Subscribe This Course
                 </button>
