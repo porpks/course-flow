@@ -5,15 +5,16 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function DesireCoursePage() {
-  // const { userId } = useAuth();
-  const params = useParams();
-  const userId = params.userId;
+  const { userID } = useAuth();
+  const navigate = useNavigate();
+
   const [desireData, setDesireData] = useState([]);
   const getDataDesireCourse = async () => {
     try {
-      const result = await axios.get(`http://localhost:4000/desire/${userId}`);
+      const result = await axios.get(`http://localhost:4000/desire/${userID}`);
       const newDataCourse = result.data;
       setDesireData(newDataCourse);
     } catch (error) {
@@ -86,14 +87,23 @@ function DesireCoursePage() {
           <h2 className="H2 pt-[100px] pb-[72px]">Desire Course</h2>
           <div className="grid grid-cols-3 gap-x-[24px] gap-y-[40px] mb-[200px]">
             {desireData.map((item, index) => (
-              <CourseItem
-                key={index}
-                coverimg={item.courses.cover_img}
-                coursename={item.courses.course_name}
-                coursedetail={item.courses.course_detail}
-                coursesummary={item.courses.lessons.length}
-                totallearningtime={item.courses.total_time}
-              />
+              <a
+                onClick={() =>
+                  navigate(
+                    `/ourcourse/coursedetail/${Number(item.course_id) - 1}`
+                  )
+                }
+                href="#homepage"
+                className="no-underline">
+                <CourseItem
+                  key={index}
+                  coverimg={item.courses.cover_img}
+                  coursename={item.courses.course_name}
+                  coursedetail={item.courses.course_detail}
+                  coursesummary={item.courses.lessons.length}
+                  totallearningtime={item.courses.total_time}
+                />
+              </a>
             ))}
           </div>
         </div>
