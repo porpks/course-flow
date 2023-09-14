@@ -25,15 +25,18 @@ desireRouter.get("/:userId", async (req, res) => {
   }
 });
 
-desireRouter.post("/check", async (req, res) => {
+desireRouter.get("/", async (req, res) => {
   try {
+    const userId = req.query.userId;
+    const courseId = req.query.courseId;
+
     const data = await supabase
       .from("desire_courses")
       .select("*")
-      .eq("user_id", req.body.user_id)
-      .eq("course_id", req.body.course_id);
+      .eq("user_id", userId)
+      .eq("course_id", courseId);
 
-    res.json({ data: data });
+    res.json(data);
   } catch (error) {
     console.error("Error fetching user course data:", error.message);
     res.status(500).json({ error });
