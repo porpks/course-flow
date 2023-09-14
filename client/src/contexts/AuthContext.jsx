@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const AuthContext = React.createContext();
@@ -37,6 +37,12 @@ function AuthProvider(props) {
         localStorage.removeItem("username");
         localStorage.removeItem("userimage");
         localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("sublessonName");
+        localStorage.removeItem("sublessonID");
+        localStorage.removeItem("isShowVdo");
+        localStorage.removeItem("isShowAsm");
+        localStorage.removeItem("pauseTime");
+        localStorage.removeItem("course_id");
         setIsLoggedIn(false);
         setUserID("");
       } else {
@@ -106,7 +112,7 @@ function AuthProvider(props) {
     }
     return "";
   }
-  // console.log(userID);
+
   return (
     <AuthContext.Provider
       value={{
@@ -138,8 +144,7 @@ function AuthProvider(props) {
         setPauseTime,
         login,
         userId,
-      }}
-    >
+      }}>
       {props.children}
     </AuthContext.Provider>
   );

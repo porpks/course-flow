@@ -178,6 +178,11 @@ function Learning() {
 
   useEffect(() => {
     getDataCourse();
+    setVideoHead(localStorage.getItem("sublessonName"));
+    setVideoKey(localStorage.getItem("sublessonID"));
+    setIsShowVdo(localStorage.getItem("isShowVdo"));
+    setIsShowAsm(localStorage.getItem("isShowAsm"));
+    setPauseTime(localStorage.getItem("pauseTime"));
   }, []);
 
   return (
