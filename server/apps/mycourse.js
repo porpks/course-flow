@@ -28,6 +28,8 @@ MyCourseRouter.post("/", async (req, res) => {
       course_id: req.body.course_id,
       course_status: false,
     };
+
+    const { data, error } = await supabase.from().select().eq().eq();
   } catch (error) {
     console.log(`Message error :${error}`);
   }
