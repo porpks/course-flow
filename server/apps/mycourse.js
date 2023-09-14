@@ -21,4 +21,16 @@ MyCourseRouter.get("/:userID", async (req, res) => {
   }
 });
 
+MyCourseRouter.post("/", async (req, res) => {
+  try {
+    const subCourse = {
+      user_id: req.body.user_id,
+      course_id: req.body.course_id,
+      course_status: false,
+    };
+  } catch (error) {
+    console.log(`Message error :${error}`);
+  }
+});
+
 export default MyCourseRouter;
