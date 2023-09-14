@@ -11,9 +11,15 @@ import CircularIndeterminate from "../assets/loadingProgress";
 // import ExampleComponent from "../assets/test/ParamTest";
 import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { useAuth } from "../contexts/AuthContext";
 
 function CourseDetail() {
   const navigate = useNavigate();
+  const [desireData, setDesireData] = useState([]);
+  const isDesireExist = desireData.length > 0;
+
+  const [isDesireRequestPending, setIsDesireRequestPending] = useState(false);
+
   const [desireToggle, setDesireToggle] = useState(false);
   const openDesire = () => setDesireToggle(true);
   const closeDesire = () => setDesireToggle(false);
@@ -23,28 +29,82 @@ function CourseDetail() {
   const closeSubscribe = () => setSubscribeToggle(false);
 
   const [dataCourse, setDataCourse] = useState([]);
-  const courseId = useParams();
-  // console.log(param);
+  const { userId } = useAuth();
+  const param = useParams();
+
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
-        `http://localhost:4000/coursedetail/${courseId.id}` 
+        `http://localhost:4000/coursedetail/${param.id}`
       );
-      const data = dataDetailCourse.data.data;
-      // console.log(data);
-      setDataCourse(data);
+      setDataCourse(dataDetailCourse.data.data);
+      if (dataDetailCourse.data.data.course_id) {
+        fetchDesire(dataDetailCourse.data.data.course_id);
+      }
     } catch (error) {
-      // console.error(error);
+      console.log(error);
     }
   }
-
   const dataDetail = dataCourse;
+
+  const fetchDesire = async (courseID) => {
+    try {
+      const result = await axios.get(
+        `http://localhost:4000/desire/?userId=${userId}&courseId=${courseID}`
+      );
+      setDesireData(result.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const desireAddHandle = async () => {
+    if (isDesireRequestPending) {
+      return;
+    }
+
+    setIsDesireRequestPending(true);
+
+    const desireBody = {
+      user_id: userId,
+      course_id: dataCourse.course_id,
+    };
+
+    try {
+      await axios.post(`http://localhost:4000/desire`, desireBody);
+      navigate("/desire");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsDesireRequestPending(false);
+    }
+  };
+
+  const desireRemoveHandle = async () => {
+    if (isDesireRequestPending) {
+      return;
+    }
+
+    setIsDesireRequestPending(true);
+    try {
+      await axios.delete(
+        `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
+      );
+      navigate("/desire");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsDesireRequestPending(false);
+    }
+  };
+
+  const noAuthHandle = () => {
+    navigate("/login");
+  };
 
   useEffect(() => {
     getDetailCourse();
   }, []);
-
- 
 
   if (dataCourse.length === 0) {
     return (
@@ -67,8 +127,7 @@ function CourseDetail() {
               onClick={() => {
                 navigate("/ourcourse");
               }}
-              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
-            >
+              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer">
               <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
               <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
             </a>
@@ -89,8 +148,7 @@ function CourseDetail() {
                       width="104"
                       height="104"
                       viewBox="0 0 104 104"
-                      fill="none"
-                    >
+                      fill="none">
                       <rect
                         width="104"
                         height="104"
@@ -109,10 +167,10 @@ function CourseDetail() {
 
               <div className="CourseDetail_description flex flex-col gap-[24px]">
                 <div className="courseDetail_title ">
-                  <p className="H2">{dataDetail.course_name}</p>
+                  <p className="H2">{dataCourse.course_name}</p>
                 </div>
                 <div className="courseDetail_body">
-                  <p className="Body2">{dataDetail.course_detail}</p>
+                  <p className="Body2">{dataCourse.course_detail}</p>
                 </div>
               </div>
               <div className="lesson_sample">
@@ -145,8 +203,12 @@ function CourseDetail() {
                 <p>{coursePrice}</p>
               </div>
               <div className="btn-grp">
-                <button onClick={openDesire} className="Secondary w-[100%]">
-                  Get in Desire Course
+                <button
+                  onClick={userId ? openDesire : noAuthHandle}
+                  className="Secondary w-[100%]">
+                  {isDesireExist
+                    ? "Remove from Desire Course"
+                    : "Get in Desire Course"}
                 </button>
 
                 {desireToggle ? (
@@ -154,9 +216,19 @@ function CourseDetail() {
                     open={desireToggle}
                     onClose={closeDesire}
                     closeButton={closeDesire}
-                    description="Do you sure to add Service Design Essentials to your desire Course?"
-                    yesDes="Yes, add this to my desire course"
+                    description={`Do you sure to ${
+                      isDesireExist ? "add" : "remove"
+                    } ${dataCourse.course_name} to your desire Course?`}
+                    yesDes={
+                      isDesireExist
+                        ? "Remove from Desire Course"
+                        : "Add in Desire Course"
+                    }
                     noDes="No, I don’t"
+                    yesOnClick={
+                      isDesireExist ? desireRemoveHandle : desireAddHandle
+                    }
+                    noOnClick={closeDesire}
                   />
                 ) : null}
                 {subscribeToggle ? (
@@ -167,12 +239,12 @@ function CourseDetail() {
                     description="Do you sure to subscribe Service Design Essentials Course?"
                     yesDes="Yes, I want to subscribe"
                     noDes="No, I don’t"
+                    noOnClick={closeSubscribe}
                   />
                 ) : null}
                 <button
-                  onClick={openSubscribe}
-                  className="Primary w-[100%] border-none"
-                >
+                  onClick={userId ? openSubscribe : noAuthHandle}
+                  className="Primary w-[100%] border-none">
                   Subscribe This Course
                 </button>
               </div>

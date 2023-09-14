@@ -2,15 +2,17 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import CourseItem from "../components/CourseItem";
 import { useEffect, useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 function DesireCoursePage() {
-  // const { userId } = useAuth();
-  const params = useParams();
-  const userId = params.userId;
+  const { userId } = useAuth();
+  const navigate = useNavigate();
+
   const [desireData, setDesireData] = useState([]);
+
   const getDataDesireCourse = async () => {
     try {
       const result = await axios.get(`http://localhost:4000/desire/${userId}`);
@@ -93,6 +95,10 @@ function DesireCoursePage() {
                 coursedetail={item.courses.course_detail}
                 coursesummary={item.courses.lessons.length}
                 totallearningtime={item.courses.total_time}
+                onClick={() => {
+                  navigate(`/ourcourse/coursedetail/${item.course_id}`);
+                  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                }}
               />
             ))}
           </div>
