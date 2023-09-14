@@ -90,7 +90,7 @@ function AuthProvider(props) {
       alert(error);
     }
   };
-
+  console.log(userID);
   return (
     <AuthContext.Provider
       value={{
@@ -121,7 +121,8 @@ function AuthProvider(props) {
         pauseTime,
         setPauseTime,
         login,
-      }}>
+      }}
+    >
       {props.children}
     </AuthContext.Provider>
   );
