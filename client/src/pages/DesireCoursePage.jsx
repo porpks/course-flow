@@ -2,13 +2,12 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import CourseItem from "../components/CourseItem";
 import { useEffect, useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function DesireCoursePage() {
-  const { userID } = useAuth();
+  const userID = localStorage.getItem("userID");
   const navigate = useNavigate();
 
   const [desireData, setDesireData] = useState([]);

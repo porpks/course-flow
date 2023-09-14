@@ -11,7 +11,6 @@ import CircularIndeterminate from "../assets/loadingProgress";
 // import ExampleComponent from "../assets/test/ParamTest";
 import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { useAuth } from "../contexts/AuthContext";
 
 function CourseDetail() {
   const navigate = useNavigate();
@@ -26,7 +25,7 @@ function CourseDetail() {
   const closeSubscribe = () => setSubscribeToggle(false);
 
   const [dataCourse, setDataCourse] = useState([]);
-  const { userID } = useAuth();
+  const userID = localStorage.getItem("userID");
   const param = useParams();
 
   async function getDetailCourse() {
@@ -71,7 +70,7 @@ function CourseDetail() {
     };
     try {
       await axios.post(`http://localhost:4000/desire`, desireBody);
-      alert("you desire course has been add");
+      navigate("/desire");
     } catch (error) {
       console.log(error);
     }
