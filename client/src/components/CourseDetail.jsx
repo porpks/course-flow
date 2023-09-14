@@ -23,12 +23,12 @@ function CourseDetail() {
   const closeSubscribe = () => setSubscribeToggle(false);
 
   const [dataCourse, setDataCourse] = useState([]);
-  const param = useParams();
-  // console.log(param);
+  const courseId = useParams();
+  console.log(param);
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
-        `http://localhost:4000/coursedetail/${param.id}` // You might want to include courseID in the URL
+        `http://localhost:4000/coursedetail/${courseId.id}` 
       );
       const data = dataDetailCourse.data.data;
       // console.log(data);
