@@ -24,7 +24,7 @@ function CourseDetail() {
 
   const [dataCourse, setDataCourse] = useState([]);
   const courseId = useParams();
-  console.log(param);
+  // console.log(param);
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
