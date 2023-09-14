@@ -43,7 +43,6 @@ desireRouter.post("/check", async (req, res) => {
 desireRouter.post("/", async (req, res) => {
   try {
     const { user_id, course_id } = req.body;
-
     const existingDesire = await supabase
       .from("desire_courses")
       .select("*")
