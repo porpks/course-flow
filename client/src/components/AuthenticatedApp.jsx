@@ -17,15 +17,17 @@ import LearningPage from "../pages/LearningPage";
 import { useParams } from "react-router-dom";
 import AdminLogin from "./adminComponent/Adminlogin";
 function AuthenticatedApp() {
-  const { userID } = useAuth();
+  const { userId, logout } = useAuth();
 
   const ProtectedProfileRoute = () => {
     const params = useParams();
-    const userId = Number(params.id);
-    if (userID == userId) {
+    const userID = Number(params.id);
+    if (userId == userID) {
       return <Profile />;
     } else {
-      localStorage.removeItem("token");
+      // localStorage.removeItem("token");
+      // setIsLoggedIn(false);
+      logout();
       return <LoginPage />;
     }
   };

@@ -18,9 +18,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 function Navbar() {
-  const { isLoggedIn, logout, setIsLoggedIn, setUserID, username } = useAuth();
+  const { isLoggedIn, logout, setIsLoggedIn, setUserID, username, userId } =
+    useAuth();
   const navigate = useNavigate();
-  const userID = localStorage.getItem("userID");
+  // const userID = localStorage.getItem("userID");
   const userName = localStorage.getItem("username");
   const userImage = localStorage.getItem("userimage");
   const storedIsLoggedIn = localStorage.getItem("isLoggedIn");
@@ -93,7 +94,7 @@ function Navbar() {
         >
           <MenuItem
             onClick={() => {
-              navigate(`/profile/${userID}`);
+              navigate(`/profile/${userId}`);
             }}
             className=" space-x-4 "
             style={{ width: "216px" }}
