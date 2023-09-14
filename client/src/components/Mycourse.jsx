@@ -31,6 +31,8 @@ function MyCourse() {
     setCookie,
     getCookie,
     videoHead,
+    videoUrl,
+    setvideoUrl,
   } = useAuth();
   const [inProgressCount, setInProgressCount] = useState(0);
   const [completeCount, setCompleteCount] = useState(0);
@@ -90,6 +92,7 @@ function MyCourse() {
       console.error("Error fetching data:", error);
     }
   };
+
   const getDataCourse2 = async () => {
     try {
       localStorage.removeItem("sublessonName");
@@ -97,6 +100,7 @@ function MyCourse() {
       localStorage.removeItem("isShowVdo");
       localStorage.removeItem("isShowAsm");
       localStorage.removeItem("pauseTime");
+      localStorage.removeItem("videoUrl");
       const result = await axios.get("http://localhost:4000/learn/videotime", {
         params: {
           userID: userId,
@@ -111,14 +115,35 @@ function MyCourse() {
           localStorage.setItem("sublessonName", sublessonName);
           setVideoKey(sublessonID);
           localStorage.setItem("sublessonID", sublessonID);
+          localStorage.setItem("videoKey", sublessonID);
           setIsShowVdo(true);
           localStorage.setItem("isShowVdo", true);
           setIsShowAsm(true);
           localStorage.setItem("isShowAsm", true);
-          setPauseTime(data[0].sublesson_video_timestop);
-          localStorage.setItem("pauseTime", data[0].sublesson_video_timestop);
+          setPauseTime(
+            data[0].sublesson_video_timestop === null
+              ? 0
+              : data[0].sublesson_video_timestop
+          );
+          localStorage.setItem(
+            "pauseTime",
+            data[0].sublesson_video_timestop === null
+              ? 0
+              : data[0].sublesson_video_timestop
+          );
+          setvideoUrl(data[0].sublesson_video);
+          localStorage.setItem("videoUrl", data[0].sublesson_video);
+          localStorage.setItem("nonepause", false);
         };
         handleShowVideo(data[0].sublesson_name, data[0].sublesson_id);
+      } else {
+        setIsShowVdo(true);
+        localStorage.setItem("isShowVdo", true);
+        setIsShowAsm(false);
+        localStorage.setItem("isShowAsm", false);
+        setPauseTime(0);
+        localStorage.setItem("pauseTime", 0);
+        localStorage.setItem("nonepause", true);
       }
     } catch (error) {
       console.log(error);

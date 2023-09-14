@@ -18,6 +18,9 @@ function AuthProvider(props) {
   const [videoHead, setVideoHead] = useState("");
   const [videoKey, setVideoKey] = useState(null);
   const [pauseTime, setPauseTime] = useState(0);
+  const [videoUrl, setvideoUrl] = useState(
+    "https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/1%20Minute%20Sample%20Video.mp4?t=2023-09-08T15%3A26%3A51.001Z"
+  );
   const userId = getCookie("userID");
 
   const navigate = useNavigate();
@@ -43,6 +46,7 @@ function AuthProvider(props) {
         localStorage.removeItem("isShowAsm");
         localStorage.removeItem("pauseTime");
         localStorage.removeItem("course_id");
+        localStorage.clear();
         setIsLoggedIn(false);
         setUserID("");
       } else {
@@ -144,6 +148,8 @@ function AuthProvider(props) {
         setPauseTime,
         login,
         userId,
+        videoUrl,
+        setvideoUrl,
       }}>
       {props.children}
     </AuthContext.Provider>

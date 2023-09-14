@@ -16,7 +16,7 @@ learnRouter.get("/", async (req, res) => {
     try {
         const { data: courseData, error: courseError } = await supabase
             .from('courses')
-            .select('course_name, course_detail, cover_img, lessons(lesson_id, lesson_name, sublessons(sublesson_id, sublesson_name))')
+            .select('course_name, course_detail, cover_img, lessons(lesson_id, lesson_name, sublessons(sublesson_id, sublesson_name,sublesson_video))')
             .eq('course_id', courseID)
             .single();
 
@@ -86,6 +86,7 @@ learnRouter.get('/videotime', async (req, res) => {
             dataItem.sublesson_id = dataItem.sublessons.sublesson_id;
             dataItem.sublesson_name = dataItem.sublessons.sublesson_name
             dataItem.course_id = dataItem.sublessons.lessons.course_id
+            dataItem.sublesson_video = dataItem.sublessons.sublesson_video
             delete dataItem.sublessons;
         }
 
