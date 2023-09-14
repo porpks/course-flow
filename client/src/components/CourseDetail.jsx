@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 function CourseDetail() {
   const navigate = useNavigate();
   const [isDesireExist, setIsDesireExist] = useState([]);
+  const [isDesireRequestPending, setIsDesireRequestPending] = useState(false);
 
   const [desireToggle, setDesireToggle] = useState(false);
   const openDesire = () => setDesireToggle(true);
@@ -33,46 +34,48 @@ function CourseDetail() {
       const dataDetailCourse = await axios.get(
         `http://localhost:4000/coursedetail/${param.id}`
       );
-      const data = dataDetailCourse.data.data;
-      setDataCourse(data);
+      setDataCourse(dataDetailCourse.data.data);
+      if (dataDetailCourse.data.data.course_id) {
+        fetchDesire(dataDetailCourse.data.data.course_id);
+      }
     } catch (error) {
       console.log(error);
     }
   }
   const dataDetail = dataCourse;
 
-  const fetchDesire = async () => {
-    // const desireBody = {
-    //   user_id: userID,
-    //   course_id: dataCourse.course_id,
-    // };
-    const desireBody = {
-      user_id: 175,
-      course_id: 20,
-    };
-
+  const fetchDesire = async (courseID) => {
     try {
-      const result = await axios.post(
-        `http://localhost:4000/desire/check`,
-        desireBody
+      const result = await axios.get(
+        `http://localhost:4000/desire/?userId=${localStorage.getItem(
+          "userID"
+        )}&courseId=${courseID}`
       );
-      const data = result.data.data;
-      setIsDesireExist(data);
+      setIsDesireExist(result.data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
   const desireHandle = async () => {
+    if (isDesireRequestPending) {
+      return;
+    }
+
+    setIsDesireRequestPending(true);
+
     const desireBody = {
       user_id: userID,
       course_id: dataCourse.course_id,
     };
+
     try {
       await axios.post(`http://localhost:4000/desire`, desireBody);
       navigate("/desire");
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsDesireRequestPending(false);
     }
   };
 
@@ -80,18 +83,13 @@ function CourseDetail() {
     navigate("/login");
   };
 
-  async function fetchData() {
-    await getDetailCourse();
-    await fetchDesire();
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   console.log(isDesireExist);
   console.log(userID);
   console.log(dataCourse.course_id);
+
+  useEffect(() => {
+    getDetailCourse();
+  }, []);
 
   if (dataCourse.length === 0) {
     return (
