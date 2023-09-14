@@ -18,6 +18,7 @@ function AuthProvider(props) {
   const [videoHead, setVideoHead] = useState("");
   const [videoKey, setVideoKey] = useState(null);
   const [pauseTime, setPauseTime] = useState(0);
+  const userId = getCookie("userID");
 
   const navigate = useNavigate();
 
@@ -46,6 +47,13 @@ function AuthProvider(props) {
     }
   };
 
+  function setCookie(name, value, days) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000); // Calculate expiration time
+    const cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+    document.cookie = cookie;
+  }
+
   const login = async (userData) => {
     try {
       const result = await axios.post(
@@ -58,6 +66,7 @@ function AuthProvider(props) {
       localStorage.setItem("userID", result.data.data[0].user_id);
       setIsLoggedIn(true);
       localStorage.setItem("isLoggedIn", true);
+      setCookie("userID", result.data.data[0].user_id, 1);
       // const response = await axios.get(
       //   `http://localhost:4000/profile/${userID}`
       // );
@@ -77,20 +86,27 @@ function AuthProvider(props) {
         }
       }, 500);
 
-      // const response = await axios.get(
-      //   `http://localhost:4000/profile/${result.data.data[0].user_id}`
-      // );
-      // setUsername(response.data.data);
-
-      // localStorage.setItem("username", response.data.data.full_name);
-      // localStorage.setItem("userimage", response.data.data.image_url);
-      // console.log(username);
       navigate("/ourcourse");
     } catch (error) {
       alert(error);
     }
   };
-  console.log(userID);
+
+  function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+  // console.log(userID);
   return (
     <AuthContext.Provider
       value={{
@@ -121,6 +137,7 @@ function AuthProvider(props) {
         pauseTime,
         setPauseTime,
         login,
+        userId,
       }}
     >
       {props.children}
