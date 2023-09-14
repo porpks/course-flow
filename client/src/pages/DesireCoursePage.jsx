@@ -5,16 +5,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 function DesireCoursePage() {
-  const userID = localStorage.getItem("userID");
+  const { userId } = useAuth();
   const navigate = useNavigate();
 
   const [desireData, setDesireData] = useState([]);
 
   const getDataDesireCourse = async () => {
     try {
-      const result = await axios.get(`http://localhost:4000/desire/${userID}`);
+      const result = await axios.get(`http://localhost:4000/desire/${userId}`);
       const newDataCourse = result.data;
       setDesireData(newDataCourse);
     } catch (error) {

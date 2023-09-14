@@ -72,11 +72,14 @@ desireRouter.post("/", async (req, res) => {
 
 desireRouter.delete("/", async (req, res) => {
   try {
+    const userId = req.query.userId;
+    const courseId = req.query.courseId;
+
     const { error } = await supabase
       .from("desire_courses")
       .delete()
-      .eq("user_id", req.body.user_id)
-      .eq("course_id", req.body.course_id);
+      .eq("user_id", userId)
+      .eq("course_id", courseId);
     if (error) {
       throw error;
     }
