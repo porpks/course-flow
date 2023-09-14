@@ -29,7 +29,6 @@ function MyCourse() {
     userId,
     userID,
   } = useAuth();
-
   const [inProgressCount, setInProgressCount] = useState(0);
   const [completeCount, setCompleteCount] = useState(0);
   const [avatar, setAvatar] = useState(null);

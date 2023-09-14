@@ -10,7 +10,7 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 
 function UpdateProfile() {
-  const { userID, setUserID, setUsername } = useAuth();
+  const { setUserID, setUsername, userId } = useAuth();
   const params = useParams();
 
   const [image, setImage] = useState("");
@@ -41,12 +41,18 @@ function UpdateProfile() {
     setAvatar({});
     setAvatarUrl("");
     setImage("");
-    await axios.put(`http://localhost:4000/profile/delete/${userID}`);
+    await axios.put(`http://localhost:4000/profile/delete/${userId}`);
   };
 
+  const initialValues = {
+    full_name: "",
+    date_of_birth: null,
+    edu_background: "",
+    email: "",
+  };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getData = async () => {
-    const result = await axios.get(`http://localhost:4000/profile/${userID}`);
+    const result = await axios.get(`http://localhost:4000/profile/${userId}`);
 
     const initialValues = {
       full_name: result.data.data.full_name,
@@ -58,17 +64,10 @@ function UpdateProfile() {
     formik.setValues(initialValues);
   };
 
-  const initialValues = {
-    full_name: "",
-    date_of_birth: null,
-    edu_background: "",
-    email: "",
-  };
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getDataImage = async () => {
     const imageUrl = await axios.get(
-      `http://localhost:4000/profile/image/${userID}`
+      `http://localhost:4000/profile/image/${userId}`
     );
     setImage(imageUrl.data);
   };
@@ -82,19 +81,23 @@ function UpdateProfile() {
       avatar: avatar,
     };
 
-    await axios.put(`http://localhost:4000/profile/${userID}`, newUserData, {
+    await axios.put(`http://localhost:4000/profile/${userId}`, newUserData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
     try {
       const response = await axios.get(
-        `http://localhost:4000/profile/${userID}`
+        `http://localhost:4000/profile/${userId}`
       );
       setUsername(response.data.data);
+      localStorage.removeItem("username");
+      localStorage.removeItem("userimage");
+      localStorage.setItem("username", response.data.data.full_name);
+      localStorage.setItem("userimage", response.data.data.image_url);
     } catch (error) {
       alert(error.message);
     }
-    const useid = userID;
+    const useid = userId;
     setUserID(params.id ? params.id : useid);
 
     navigate("/ourcourse");
@@ -155,7 +158,7 @@ function UpdateProfile() {
   useEffect(() => {
     getData();
     getDataImage();
-  }, [image, params, userID]);
+  }, []);
 
   return (
     <div className="relative flex justify-center w-[100%]">
