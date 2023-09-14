@@ -17,7 +17,6 @@ function UnauthenticatedApp() {
         <Route path="/ourcourse" element={<OurCoursePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={null} />{" "}
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="*" element={null} />
         <Route
