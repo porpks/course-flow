@@ -25,22 +25,46 @@ desireRouter.get("/:userId", async (req, res) => {
   }
 });
 
+desireRouter.post("/check", async (req, res) => {
+  try {
+    const data = await supabase
+      .from("desire_courses")
+      .select("*")
+      .eq("user_id", req.body.user_id)
+      .eq("course_id", req.body.course_id);
+
+    res.json({ data: data });
+  } catch (error) {
+    console.error("Error fetching user course data:", error.message);
+    res.status(500).json({ error });
+  }
+});
+
 desireRouter.post("/", async (req, res) => {
   try {
-    const desireData = {
-      user_id: req.body.user_id,
-      course_id: req.body.course_id,
-    };
+    const { user_id, course_id } = req.body;
 
+    const existingDesire = await supabase
+      .from("desire_courses")
+      .select("*")
+      .eq("user_id", user_id)
+      .eq("course_id", course_id);
+
+    if (existingDesire.data.length > 0) {
+      return res.json({ error: "Desire course already exists." });
+    }
+
+    const desireData = { user_id, course_id };
     const { error } = await supabase.from("desire_courses").insert(desireData);
 
     if (error) {
       throw error;
     }
 
-    res.json({ message: "desire course has been add" });
+    res.json({ message: "Desire course has been added." });
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
