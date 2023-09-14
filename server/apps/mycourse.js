@@ -69,6 +69,4 @@ MyCourseRouter.get("/", async (req, res) => {
   }
 });
 
-
-
 export default MyCourseRouter;
