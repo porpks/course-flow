@@ -113,15 +113,15 @@ function AssignmentPage() {
   console.log(answers);
   return (
     <>
-      <div className='flex flex-col items-center relative '>
-        <Navbar />
-        <div className='h-[2050px] bg-white  w-[1440px] flex flex-col items-center'>
+      <Navbar />
+      <div className='flex flex-col items-center  '>
+        <div className='top-5 h-[2050px] bg-white  w-[1440px] flex flex-col items-center relative'>
           <svg
             width='1418'
             height='190'
             viewBox='0 0 1418 190'
             fill='none'
-            className='absolute z-0'
+            className='absolute '
             xmlns='http://www.w3.org/2000/svg'>
             <circle cx='64.5' cy='5.5' r='4' stroke='#2F5FAC' strokeWidth='3' />
             <circle cx='1381' cy='153' r='37' fill='#C6DCFF' />
