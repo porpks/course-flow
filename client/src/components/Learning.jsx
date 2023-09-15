@@ -489,7 +489,7 @@ function Learning() {
             ) : null}
           </div>
           {isShowAsm || localStorage.getItem("isShowAsm") ? (
-            <AssignmentBox />
+            null
           ) : // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
           //   <div className='flex justify-between'>
           //     <h1 className='Body1 mb-6'>Assigment</h1>
