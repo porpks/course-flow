@@ -207,29 +207,7 @@ function Learning() {
 
   useEffect(() => {
 
-    // Check if "nonepause" is in localStorage
-    if (localStorage.getItem("nonepause")) {
-      // Your code to set initial video state
-      setVideoHead(sublessonNameObject[sublessonIdArray[0]]);
-      localStorage.setItem(
-        "sublessonName",
-        sublessonNameObject[sublessonIdArray[0]]
-      );
-      setVideoKey(sublessonIdArray[0]);
-      localStorage.setItem("sublessonID", sublessonIdArray[0]);
-      localStorage.setItem("videoKey", sublessonIdArray[0]);
-      setIsShowVdo(true);
-      localStorage.setItem("isShowVdo", true);
-      setPauseTime(0);
-      localStorage.setItem("pauseTime", 0);
-      setvideoUrl(sublessonVideoObject[sublessonIdArray[0]]);
-      localStorage.setItem(
-        "videoUrl",
-        sublessonVideoObject[sublessonIdArray[0]]
-      );
 
-      localStorage.removeItem("nonepause");
-    }
     async function fetchData() {
       try {
         const result = await axios.get("http://localhost:4000/learn/", {
@@ -265,12 +243,36 @@ function Learning() {
     }
 
     fetchData();
-
-
     getStatus();
 
   }, []);
 
+  if (sublessonIdArray.length !== 0) {
+    // Check if "nonepause" is in localStorage
+    if (localStorage.getItem("nonepause") === true) {
+      // Your code to set initial video state
+      setVideoHead(sublessonNameObject[sublessonIdArray[0]]);
+      localStorage.setItem(
+        "sublessonName",
+        sublessonNameObject[sublessonIdArray[0]]
+      );
+      setVideoKey(sublessonIdArray[0]);
+      localStorage.setItem("sublessonID", sublessonIdArray[0]);
+      localStorage.setItem("videoKey", sublessonIdArray[0]);
+      setIsShowVdo(true);
+      localStorage.setItem("isShowVdo", true);
+      setPauseTime(0);
+      localStorage.setItem("pauseTime", 0);
+      setvideoUrl(sublessonVideoObject[sublessonIdArray[0]]);
+      localStorage.setItem(
+        "videoUrl",
+        sublessonVideoObject[sublessonIdArray[0]]
+      );
+
+      localStorage.removeItem("nonepause");
+    }
+  }
+  console.log(subStatus);
   return (
     <>
       <div className='flex justify-center pt-[100px] px-[160px]'>
@@ -425,12 +427,13 @@ function Learning() {
                     playing={true}
                     onStart={() => {
                       playerRef.current.seekTo(pauseTime, "seconds")
+                      //update status to "inprogress"
                     }}
-                    // onSeek={(e) => {
-                    //   setPauseTime(e.target.currentTime)
-                    //   playerRef.current.seekTo(e.target.currentTime, "seconds");
+                    // onPlay={() => {
+                    //   playerRef.current.seekTo(pauseTime, "seconds")
                     // }}
-                    onPause={(e) => handlePause(e.target.currentTime)}
+                    // onPlay={() => {}}
+                    onPause={(e) => handlePause(e.target.currentTime)} //send pause-time to database
                     onEnded={handleEnd}
                   />
                 </div>

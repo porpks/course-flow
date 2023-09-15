@@ -35,7 +35,7 @@ learnRouter.get("/", async (req, res) => {
     } catch (err) {
         return res.status(400).json({ 'Error:': err.message });
     }
-})
+});
 
 learnRouter.get('/status', async (req, res) => {
     const userID = Number(req.query.userID);
@@ -76,7 +76,9 @@ learnRouter.get('/status', async (req, res) => {
         return res.status(404).json({ message: 'No data found for the specified criteria.' });
     }
 
-})
+});
+
+learnRouter.put('/status', async (req, res) => { });
 
 learnRouter.get('/videotime', async (req, res) => {
     const courseID = Number(req.query.courseID);
@@ -111,5 +113,7 @@ learnRouter.get('/videotime', async (req, res) => {
         // Handle errors here
     }
 });
+
+learnRouter.put('/videotime', async (req, res) => { });
 
 export default learnRouter;
