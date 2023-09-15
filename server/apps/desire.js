@@ -25,20 +25,66 @@ desireRouter.get("/:userId", async (req, res) => {
   }
 });
 
-desireRouter.post("/add", async (req, res) => {
+desireRouter.get("/", async (req, res) => {
   try {
-    const desireData = {
-      user_id: req.body.user_id,
-      course_id: req.body.course_id,
-    };
+    const userId = req.query.userId;
+    const courseId = req.query.courseId;
 
+    const data = await supabase
+      .from("desire_courses")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("course_id", courseId);
+
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching user course data:", error.message);
+    res.status(500).json({ error });
+  }
+});
+
+desireRouter.post("/", async (req, res) => {
+  try {
+    const { user_id, course_id } = req.body;
+    const existingDesire = await supabase
+      .from("desire_courses")
+      .select("*")
+      .eq("user_id", user_id)
+      .eq("course_id", course_id);
+
+    if (existingDesire.data.length > 0) {
+      return res.json({ error: "Desire course already exists." });
+    }
+
+    const desireData = { user_id, course_id };
     const { error } = await supabase.from("desire_courses").insert(desireData);
 
     if (error) {
       throw error;
     }
 
-    res.json({ message: "desire course has been add" });
+    res.json({ message: "Desire course has been added." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+desireRouter.delete("/", async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    const courseId = req.query.courseId;
+
+    const { error } = await supabase
+      .from("desire_courses")
+      .delete()
+      .eq("user_id", userId)
+      .eq("course_id", courseId);
+    if (error) {
+      throw error;
+    }
+
+    res.json({ message: "desire course has been delete" });
   } catch (error) {
     console.log(error);
   }

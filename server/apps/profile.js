@@ -134,7 +134,7 @@ profileRouter.put(
             .from("users")
             .update({
               full_name: req.body.full_name,
-              dateofbirth: req.body.dateofbirth,
+              date_of_birth: req.body.date_of_birth,
               edu_background: req.body.edu_background,
               email: req.body.email,
               image_url: imgUrl,
