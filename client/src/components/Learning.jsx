@@ -14,8 +14,11 @@ import AssignmentBox from "./AssignmentBox";
 function Learning() {
   const playerRef = useRef(null);
   const boxRef = useRef(null);
-  let sublessonIdArray = [];
 
+  const [sublessonIdArray, setSublessonIdArray] = useState([]);
+  const [sublessonNameObject, setSublessonNameObject] = useState({});
+  const [sublessonVideoObject, setSublessonVideoObject] = useState({});
+  const [loading, setLoading] = useState(true);
   const {
     userId,
     isShowAsm,
@@ -28,6 +31,8 @@ function Learning() {
     setVideoKey,
     pauseTime,
     setPauseTime,
+    videoUrl,
+    setvideoUrl,
   } = useAuth();
 
   const [courseData, setCourseData] = useState({
@@ -39,23 +44,8 @@ function Learning() {
   const [subStatus, setSubStatus] = useState({});
   const [percentComplete, setPercentComplete] = useState(0)
 
-  const getDataCourse = async () => {
-    let course_id = Math.round(Math.random() * 20);
-    if (course_id === 13) {
-      course_id = course_id + 1;
-    }
+ 
 
-    try {
-      const result = await axios.get("http://localhost:4000/learn/", {
-        params: { userID: 172, courseID: 20 },
-      });
-      const data = result.data.data;
-      setCourseData(data);
-      setVideoThumbnail(data.cover_img);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const getStatus = async () => {
     try {
       const result = await axios.get("http://localhost:4000/learn/status/", {
@@ -68,31 +58,142 @@ function Learning() {
     }
   };
 
+
   const handleLesson = (action) => {
+    if (loading) {
+      return;
+    }
+    console.log("handleLesson called with action:", action);
+    console.log("sublessonIdArray:", sublessonIdArray);
+    console.log("videoKey:", videoKey);
+    console.log("sublessonID", localStorage.getItem("sublessonID"));
     if (action === "next") {
-      setVideoKey(
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) + 1
-        ]
-      );
-      boxRef.current.scrollIntoView({ behavior: "smooth" });
+      setIsShowAsm(false);
+      localStorage.setItem("isShowAsm", false);
+      setIsShowVdo(false);
+      localStorage.setItem("isShowVdo", false);
+      setPauseTime(0);
+      localStorage.setItem("pauseTime", 0);
+      setTimeout(() => {
+        setVideoKey(
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) + 1
+          ]
+        );
+
+        localStorage.setItem(
+          "videoKey",
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) + 1
+          ]
+        );
+        localStorage.setItem(
+          "sublessonID",
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) + 1
+          ]
+        );
+
+        setVideoHead(
+          sublessonNameObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
+          ]
+        );
+
+        localStorage.setItem(
+          "videoHead",
+          sublessonNameObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
+          ]
+        );
+
+        setvideoUrl(
+          sublessonVideoObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
+          ]
+        );
+        localStorage.setItem(
+          "videoUrl",
+          sublessonVideoObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
+          ]
+        );
+        boxRef.current.scrollIntoView({ behavior: "smooth" });
+      }, 1000);
     } else if (action === "prev") {
       setVideoKey(
         sublessonIdArray[
+          sublessonIdArray.findIndex((element) => element === videoKey) - 1
+        ]
+      );
+
+      localStorage.setItem(
+        "videoKey",
+        sublessonIdArray[
         sublessonIdArray.findIndex((element) => element === videoKey) - 1
+        ]
+      );
+      localStorage.setItem(
+        "sublessonID",
+        sublessonIdArray[
+          sublessonIdArray.findIndex((element) => element === videoKey) - 1
+        ]
+      );
+
+      setVideoHead(
+        sublessonNameObject[
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) - 1
+          ]
+        ]
+      );
+
+      localStorage.setItem(
+        "videoHead",
+        sublessonNameObject[
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) - 1
+          ]
+        ]
+      );
+
+      setvideoUrl(
+        sublessonVideoObject[
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) - 1
+          ]
         ]
       );
       boxRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
+  console.log(sublessonIdArray);
 
   const handleShowVideo = (sublessonName, sublessonID) => {
     setIsShowAsm(false);
+    localStorage.setItem("isShowAsm", false);
     setIsShowVdo(false);
+    localStorage.setItem("isShowVdo", false);
     setTimeout(() => {
       setVideoHead(sublessonName);
+      localStorage.setItem("sublessonName", sublessonName);
       setVideoKey(sublessonID);
+      localStorage.setItem("sublessonID", sublessonID);
+      localStorage.setItem("videoKey", sublessonID);
+      setvideoUrl(sublessonVideoObject[sublessonID]);
+      localStorage.setItem("videoUrl", sublessonVideoObject[sublessonID]);
+      setPauseTime(0);
+      localStorage.setItem("pauseTime", 0);
       setIsShowVdo(true);
+      localStorage.setItem("isShowVdo", true);
     }, 500);
   };
 
@@ -105,13 +206,69 @@ function Learning() {
   };
 
   useEffect(() => {
-    getDataCourse();
+
+    // Check if "nonepause" is in localStorage
+    if (localStorage.getItem("nonepause")) {
+      // Your code to set initial video state
+      setVideoHead(sublessonNameObject[sublessonIdArray[0]]);
+      localStorage.setItem(
+        "sublessonName",
+        sublessonNameObject[sublessonIdArray[0]]
+      );
+      setVideoKey(sublessonIdArray[0]);
+      localStorage.setItem("sublessonID", sublessonIdArray[0]);
+      localStorage.setItem("videoKey", sublessonIdArray[0]);
+      setIsShowVdo(true);
+      localStorage.setItem("isShowVdo", true);
+      setPauseTime(0);
+      localStorage.setItem("pauseTime", 0);
+      setvideoUrl(sublessonVideoObject[sublessonIdArray[0]]);
+      localStorage.setItem(
+        "videoUrl",
+        sublessonVideoObject[sublessonIdArray[0]]
+      );
+
+      localStorage.removeItem("nonepause");
+    }
+    async function fetchData() {
+      try {
+        const result = await axios.get("http://localhost:4000/learn/", {
+          params: { userID: 172, courseID: 20 },
+        });
+
+        const data = result.data.data;
+        setCourseData(data);
+        setVideoThumbnail(data.cover_img);
+
+        const newSublessonIdArray = [];
+        const newSublessonNameObject = {};
+        const newSublessonVideoObject = {};
+
+        data.lessons.forEach((lesson) => {
+          lesson.sublessons.forEach((sublesson) => {
+            newSublessonIdArray.push(sublesson.sublesson_id);
+            newSublessonNameObject[sublesson.sublesson_id] =
+              sublesson.sublesson_name;
+            newSublessonVideoObject[sublesson.sublesson_id] =
+              sublesson.sublesson_video;
+          });
+        });
+
+        setSublessonIdArray(newSublessonIdArray);
+        setSublessonNameObject(newSublessonNameObject);
+        setSublessonVideoObject(newSublessonVideoObject);
+
+        setLoading(false); // Data has been loaded
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    fetchData();
+
+
     getStatus();
-    setVideoHead(localStorage.getItem("sublessonName"));
-    setVideoKey(localStorage.getItem("sublessonID"));
-    setIsShowVdo(localStorage.getItem("isShowVdo"));
-    setIsShowAsm(localStorage.getItem("isShowAsm"));
-    setPauseTime(localStorage.getItem("pauseTime"));
+
   }, []);
 
   return (
@@ -154,18 +311,23 @@ function Learning() {
                   <AccordionDetails>
                     <div className=''>
                       {lesson.sublessons.map((sublesson, index) => {
-                        sublessonIdArray.push(sublesson.sublesson_id);
+
+                        {
+                          /* setTotalLesson(totalLesson + 1) */
+                        }
+
                         return (
                           <label
                             key={index}
                             id={sublesson.sublesson_id}
+
                             className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${sublesson.sublesson_id === videoKey ? "bg-[--gray400]" : ""}`}
                             onClick={() =>
                               handleShowVideo(
                                 sublesson.sublesson_name,
                                 sublesson.sublesson_id
-                              )
-                            }>
+                              );
+                            }}>
                             <div className='mr-4 h-[20px]'>
                               {subStatus[sublesson.sublesson_id] === "complete" ? <svg
                                 xmlns='http://www.w3.org/2000/svg'
@@ -225,20 +387,24 @@ function Learning() {
         <div className='flex flex-col w-full' ref={boxRef}>
           <div className='mb-20'>
             <div className='h-[90px]'>
-              <h1 className='H2'>{videoHead}</h1>
+              <h1 className='H2'>
+                {videoHead || localStorage.getItem("sublessonName")}
+              </h1>
             </div>
-            {isShowVdo ? (
+            {isShowVdo || localStorage.getItem("isShowVdo") ? (
               <div className='w-full'>
-                <h1 className='H3'>VDO: {videoKey}</h1>
+                <h1 className='H3'>
+                  VDO: {localStorage.getItem("sublessonID") || videoKey}
+                </h1>
                 <div className='rounded-lg overflow-hidden '>
                   <ReactPlayer
                     ref={playerRef}
-                    url='https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/1%20Minute%20Sample%20Video.mp4?t=2023-09-08T15%3A26%3A51.001Z'
+                    url={videoUrl || localStorage.getItem("videoUrl")}
                     width='100%'
                     height='100%'
                     controls={true}
                     // light={true}
-                    light={videoThumbnail}
+                    // light={videoThumbnail}
                     playIcon={
                       <div
                         className={`flex justify-center items-center min-h-[32vw] w-full`}>
@@ -277,8 +443,8 @@ function Learning() {
               </div>
             ) : null}
           </div>
-          {isShowAsm ? (
-            <AssignmentBox />
+          {isShowAsm || localStorage.getItem("isShowAsm") ? (
+            null
           ) : // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
             //   <div className='flex justify-between'>
             //     <h1 className='Body1 mb-6'>Assigment</h1>
@@ -301,7 +467,9 @@ function Learning() {
         </div>
       </div >
       <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>
-        {sublessonIdArray.findIndex((element) => element === videoKey) > 0 ? (
+        {sublessonIdArray.findIndex(
+          (element) => element === localStorage.getItem("sublessonID")
+        ) > 0 ? (
           <button
             className='bg-white p-[20px] border-none text-[16px] text-[--blue500] font-bold cursor-pointer hover:text-[--blue300] duration-300'
             onClick={() => handleLesson("prev")}>
@@ -310,8 +478,10 @@ function Learning() {
         ) : (
           <div></div>
         )}
+
         {sublessonIdArray.findIndex((element) => element === videoKey) <
           sublessonIdArray.length - 1 ? (
+
           <button
             className='Primary border-none cursor-pointer'
             onClick={() => handleLesson("next")}>
