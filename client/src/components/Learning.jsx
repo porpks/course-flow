@@ -175,7 +175,6 @@ function Learning() {
       boxRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-  console.log(sublessonIdArray);
 
   const handleShowVideo = (sublessonName, sublessonID) => {
     setIsShowAsm(false);
@@ -195,6 +194,26 @@ function Learning() {
       setIsShowVdo(true);
       localStorage.setItem("isShowVdo", true);
     }, 500);
+  };
+
+  const handleStart = async () => {
+    playerRef.current.seekTo(pauseTime, "seconds")
+    console.log(userId);
+    console.log(videoKey);
+    try {
+      const result = await axios.put(`http://localhost:4000/learn/status?userID=${userId}&sublessonID=${videoKey}`);
+      console.log(result);
+      if (subStatus[videoKey] !== "complete") {
+        const newStatus = { ...subStatus, }
+        newStatus[videoKey] = "inprogress"
+        setSubStatus(newStatus)
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+    // console.log(userId)
+    // console.log(videoKey)
   };
 
   const handlePause = (pauseTime) => {
@@ -272,7 +291,7 @@ function Learning() {
       localStorage.removeItem("nonepause");
     }
   }
-  console.log(subStatus);
+
   return (
     <>
       <div className='flex justify-center pt-[100px] px-[160px]'>
@@ -302,7 +321,7 @@ function Learning() {
                     expandIcon={<LearnigDropdown />}
                     aria-controls='panel1a-content'
                     id='panel1a-header'>
-                    <Typography>
+                    <Typography component="div">
                       <div className='flex'>
                         <h1 className='Body2 mr-6 text-[--gray700]'>{seq}</h1>
                         <h1 className='Body2'>{lesson.lesson_name}</h1>
@@ -325,50 +344,36 @@ function Learning() {
                                 sublesson.sublesson_id
                               )}>
                             <div className='mr-4 h-[20px]'>
-                              {subStatus[sublesson.sublesson_id] === "complete" ? <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                width='20'
-                                height='20'
-                                viewBox='0 0 20 20'
-                                fill='none'>
-                                <path
-                                  fillRule='evenodd'
-                                  clipRule='evenodd'
-                                  d='M1.875 10C1.875 5.5125 5.5125 1.875 10 1.875C14.4875 1.875 18.125 5.5125 18.125 10C18.125 14.4875 14.4875 18.125 10 18.125C5.5125 18.125 1.875 14.4875 1.875 10ZM13.0083 8.48833C13.0583 8.42171 13.0945 8.34576 13.1147 8.26496C13.135 8.18415 13.1388 8.10012 13.1261 8.0178C13.1134 7.93547 13.0844 7.85652 13.0407 7.78558C12.9971 7.71464 12.9396 7.65315 12.8719 7.60471C12.8041 7.55627 12.7273 7.52187 12.6461 7.50352C12.5648 7.48518 12.4807 7.48326 12.3987 7.49789C12.3167 7.51251 12.2385 7.54338 12.1686 7.58868C12.0987 7.63398 12.0385 7.69279 11.9917 7.76167L9.295 11.5367L7.94167 10.1833C7.82319 10.0729 7.66648 10.0128 7.50456 10.0157C7.34265 10.0185 7.18816 10.0841 7.07365 10.1986C6.95914 10.3132 6.89354 10.4676 6.89069 10.6296C6.88783 10.7915 6.94793 10.9482 7.05833 11.0667L8.93333 12.9417C8.99749 13.0058 9.07483 13.0552 9.15999 13.0864C9.24515 13.1176 9.33608 13.1299 9.42647 13.1224C9.51686 13.115 9.60455 13.088 9.68344 13.0432C9.76233 12.9985 9.83054 12.9371 9.88333 12.8633L13.0083 8.48833Z'
-                                  fill='#2FAC8E'
-                                />
-                              </svg>
-                                : subStatus[sublesson.sublesson_id] === "inprogress" ? <svg
-                                  xmlns='http://www.w3.org/2000/svg'
-                                  width='20'
-                                  height='20'
-                                  viewBox='0 0 20 20'
-                                  fill='none'>
-                                  <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
-                                  <mask id='path-2-inside-1_140_7809' fill='white'>
-                                    <path d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z' />
-                                  </mask>
+                              {subStatus[sublesson.sublesson_id] === "complete" ?
+                                <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
                                   <path
-                                    d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z'
+                                    fillRule='evenodd'
+                                    clipRule='evenodd'
+                                    d='M1.875 10C1.875 5.5125 5.5125 1.875 10 1.875C14.4875 1.875 18.125 5.5125 18.125 10C18.125 14.4875 14.4875 18.125 10 18.125C5.5125 18.125 1.875 14.4875 1.875 10ZM13.0083 8.48833C13.0583 8.42171 13.0945 8.34576 13.1147 8.26496C13.135 8.18415 13.1388 8.10012 13.1261 8.0178C13.1134 7.93547 13.0844 7.85652 13.0407 7.78558C12.9971 7.71464 12.9396 7.65315 12.8719 7.60471C12.8041 7.55627 12.7273 7.52187 12.6461 7.50352C12.5648 7.48518 12.4807 7.48326 12.3987 7.49789C12.3167 7.51251 12.2385 7.54338 12.1686 7.58868C12.0987 7.63398 12.0385 7.69279 11.9917 7.76167L9.295 11.5367L7.94167 10.1833C7.82319 10.0729 7.66648 10.0128 7.50456 10.0157C7.34265 10.0185 7.18816 10.0841 7.07365 10.1986C6.95914 10.3132 6.89354 10.4676 6.89069 10.6296C6.88783 10.7915 6.94793 10.9482 7.05833 11.0667L8.93333 12.9417C8.99749 13.0058 9.07483 13.0552 9.15999 13.0864C9.24515 13.1176 9.33608 13.1299 9.42647 13.1224C9.51686 13.115 9.60455 13.088 9.68344 13.0432C9.76233 12.9985 9.83054 12.9371 9.88333 12.8633L13.0083 8.48833Z'
                                     fill='#2FAC8E'
-                                    stroke='#2FAC8E'
-                                    strokeWidth='3'
-                                    mask='url(#path-2-inside-1_140_7809)'
                                   />
                                 </svg>
-                                  : <svg
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    width='20'
-                                    height='20'
-                                    viewBox='0 0 20 20'
-                                    fill='none'>
+                                : subStatus[sublesson.sublesson_id] === "inprogress" ?
+                                  <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
+                                    <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
+                                    <mask
+                                      fill='white'>
+                                      <path d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z' />
+                                    </mask>
+                                    <path
+                                      d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z'
+                                      fill='#2FAC8E'
+                                      stroke='#2FAC8E'
+                                      strokeWidth='0'
+                                    />
+                                  </svg>
+                                  : <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
                                     <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
                                   </svg>}
                             </div>
                             <h1 className='Body3 text-[--gray700]'>
                               {sublesson.sublesson_name}
                             </h1>
-                            {/* <input type='radio' htmlFor={sublesson.sublesson_id} name='lesson' className=' checked:bg-red-500' /> */}
                           </label>
                         );
                       })}
@@ -378,7 +383,7 @@ function Learning() {
               );
             })}
           </form>
-        </div>
+        </div >
 
         <div className='flex flex-col w-full' ref={boxRef}>
           <div className='mb-20'>
@@ -425,10 +430,7 @@ function Learning() {
                       </div>
                     }
                     playing={true}
-                    onStart={() => {
-                      playerRef.current.seekTo(pauseTime, "seconds")
-                      //update status to "inprogress"
-                    }}
+                    onStart={() => { handleStart() }}
                     // onPlay={() => {
                     //   playerRef.current.seekTo(pauseTime, "seconds")
                     // }}
