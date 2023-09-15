@@ -42,9 +42,7 @@ function Learning() {
   });
   const [videoThumbnail, setVideoThumbnail] = useState("");
   const [subStatus, setSubStatus] = useState({});
-  const [percentComplete, setPercentComplete] = useState(0)
-
-
+  const [percentComplete, setPercentComplete] = useState(0);
 
   const getStatus = async () => {
     try {
@@ -52,127 +50,144 @@ function Learning() {
         params: { userID: 172, courseID: 20 },
       });
       setSubStatus(result.data.data);
-      setPercentComplete(Number(result.data.percentComplete))
+      setPercentComplete(Number(result.data.percentComplete));
     } catch (error) {
       console.log(error);
     }
   };
 
-
   const handleLesson = (action) => {
     if (loading) {
       return;
     }
-    console.log("handleLesson called with action:", action);
-    console.log("sublessonIdArray:", sublessonIdArray);
-    console.log("videoKey:", videoKey);
-    console.log("sublessonID", localStorage.getItem("sublessonID"));
     if (action === "next") {
       setIsShowAsm(false);
       localStorage.setItem("isShowAsm", false);
       setIsShowVdo(false);
       localStorage.setItem("isShowVdo", false);
-      setPauseTime(0);
-      localStorage.setItem("pauseTime", 0);
+      setvideoUrl(null);
+      localStorage.setItem("videoUrl", null);
+      fetchPauseTime();
+      console.log(pauseTime);
       setTimeout(() => {
         setVideoKey(
           sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            sublessonIdArray.findIndex((element) => element === videoKey) + 1
           ]
         );
 
         localStorage.setItem(
           "videoKey",
           sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            sublessonIdArray.findIndex((element) => element === videoKey) + 1
           ]
         );
         localStorage.setItem(
           "sublessonID",
           sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            sublessonIdArray.findIndex((element) => element === videoKey) + 1
           ]
         );
 
         setVideoHead(
           sublessonNameObject[
-          sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
           ]
         );
 
         localStorage.setItem(
           "videoHead",
           sublessonNameObject[
-          sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
           ]
         );
 
         setvideoUrl(
           sublessonVideoObject[
-          sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
           ]
         );
         localStorage.setItem(
           "videoUrl",
           sublessonVideoObject[
-          sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
           ]
         );
         boxRef.current.scrollIntoView({ behavior: "smooth" });
       }, 1000);
     } else if (action === "prev") {
-      setVideoKey(
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-      );
+      setIsShowAsm(false);
+      localStorage.setItem("isShowAsm", false);
+      setIsShowVdo(false);
+      localStorage.setItem("isShowVdo", false);
+      setvideoUrl(null);
+      localStorage.setItem("videoUrl", null);
+      fetchPauseTime();
+      console.log(pauseTime);
+      setTimeout(() => {
+        setvideoUrl(null);
+        localStorage.setItem("videoUrl", null);
+        setVideoKey(
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) - 1
+          ]
+        );
 
-      localStorage.setItem(
-        "videoKey",
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-      );
-      localStorage.setItem(
-        "sublessonID",
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-      );
+        localStorage.setItem(
+          "videoKey",
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) - 1
+          ]
+        );
+        localStorage.setItem(
+          "sublessonID",
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) - 1
+          ]
+        );
 
-      setVideoHead(
-        sublessonNameObject[
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-        ]
-      );
+        setVideoHead(
+          sublessonNameObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) - 1
+            ]
+          ]
+        );
 
-      localStorage.setItem(
-        "videoHead",
-        sublessonNameObject[
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-        ]
-      );
+        localStorage.setItem(
+          "videoHead",
+          sublessonNameObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) - 1
+            ]
+          ]
+        );
 
-      setvideoUrl(
-        sublessonVideoObject[
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-        ]
-      );
-      boxRef.current.scrollIntoView({ behavior: "smooth" });
+        setvideoUrl(
+          sublessonVideoObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) - 1
+            ]
+          ]
+        );
+        localStorage.setItem(
+          "videoUrl",
+          sublessonVideoObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) - 1
+            ]
+          ]
+        );
+        boxRef.current.scrollIntoView({ behavior: "smooth" });
+      }, 1000);
     }
   };
 
@@ -181,6 +196,8 @@ function Learning() {
     localStorage.setItem("isShowAsm", false);
     setIsShowVdo(false);
     localStorage.setItem("isShowVdo", false);
+    setvideoUrl(null);
+    localStorage.setItem("videoUrl", null);
     setTimeout(() => {
       setVideoHead(sublessonName);
       localStorage.setItem("sublessonName", sublessonName);
@@ -189,17 +206,17 @@ function Learning() {
       localStorage.setItem("videoKey", sublessonID);
       setvideoUrl(sublessonVideoObject[sublessonID]);
       localStorage.setItem("videoUrl", sublessonVideoObject[sublessonID]);
-      setPauseTime(0);
+      fetchPauseTime();
+      console.log(pauseTime);
       localStorage.setItem("pauseTime", 0);
       setIsShowVdo(true);
       localStorage.setItem("isShowVdo", true);
     }, 500);
   };
 
+
   const handleStart = async () => {
     playerRef.current.seekTo(pauseTime, "seconds")
-    console.log(userId);
-    console.log(videoKey);
     try {
       const result = await axios.put(`http://localhost:4000/learn/status?userID=${userId}&sublessonID=${videoKey}`);
       console.log(result);
@@ -212,21 +229,38 @@ function Learning() {
     } catch (error) {
       console.log(error)
     }
-    // console.log(userId)
-    // console.log(videoKey)
   };
 
-  const handlePause = (pauseTime) => {
-    console.log(pauseTime);
+
+  const handlePause = async (pauseTime) => {
+    const response = await axios.put("http://localhost:4000/learn/videotime", {
+      sublesson_video_timestop: pauseTime,
+      sublesson_id: localStorage.getItem("sublessonID"),
+      user_Id: localStorage.getItem("userID"),
+    });
+
     //**set pause time and update database
   };
+
+  const fetchPauseTime = async () => {
+    const result = await axios.get(
+      `http://localhost:4000/learn/videotimebyid?sublessonid=${localStorage.getItem(
+        "sublessonID"
+      )}`
+    );
+
+    if (result.data.data[0].sublesson_video_timestop !== null) {
+      setPauseTime(result.data.data[0].sublesson_video_timestop);
+    } else if (result.data.data[0].sublesson_video_timestop === null) {
+      setPauseTime(0);
+    }
+  };
+
   const handleEnd = () => {
     setIsShowAsm(true);
   };
 
   useEffect(() => {
-
-
     async function fetchData() {
       try {
         const result = await axios.get("http://localhost:4000/learn/", {
@@ -263,7 +297,6 @@ function Learning() {
 
     fetchData();
     getStatus();
-
   }, []);
 
   if (sublessonIdArray.length !== 0) {
@@ -304,9 +337,11 @@ function Learning() {
             </h1>
           </div>
           <div className='mb-6'>
-            <h1 className='Body2 text-[--gray700] mb-2'>{percentComplete}% Complete</h1>
+            <h1 className='Body2 text-[--gray700] mb-2'>
+              {percentComplete}% Complete
+            </h1>
             <div className='w-full h-[10px] bg-[--gray300] rounded-full'>
-              <div className="progressbar h-full Linear1 rounded-full"></div>
+              <div className='progressbar h-full Linear1 rounded-full'></div>
             </div>
           </div>
           <form>
@@ -332,20 +367,25 @@ function Learning() {
                   <AccordionDetails>
                     <div className=''>
                       {lesson.sublessons.map((sublesson, index) => {
-
                         return (
                           <label
                             key={index}
                             id={sublesson.sublesson_id}
-                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${sublesson.sublesson_id === videoKey ? "bg-[--gray400]" : ""}`}
+                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${
+                              sublesson.sublesson_id === videoKey
+                                ? "bg-[--gray400]"
+                                : ""
+                            }`}
                             onClick={() =>
                               handleShowVideo(
                                 sublesson.sublesson_name,
                                 sublesson.sublesson_id
-                              )}>
+                              )
+                            }>
                             <div className='mr-4 h-[20px]'>
                               {subStatus[sublesson.sublesson_id] === "complete" ?
                                 <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
+
                                   <path
                                     fillRule='evenodd'
                                     clipRule='evenodd'
@@ -431,6 +471,7 @@ function Learning() {
                     }
                     playing={true}
                     onStart={() => { handleStart() }}
+
                     // onPlay={() => {
                     //   playerRef.current.seekTo(pauseTime, "seconds")
                     // }}
@@ -442,52 +483,50 @@ function Learning() {
               </div>
             ) : null}
           </div>
-          {isShowAsm || localStorage.getItem("isShowAsm") ? (
-            null
-          ) : // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
-            //   <div className='flex justify-between'>
-            //     <h1 className='Body1 mb-6'>Assigment</h1>
-            //     <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
-            //       status
-            //     </div>
-            //   </div>
-            //   <h1 className='Body2 mb-1'>Question ?</h1>
-            //   <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
-            //     <h1 className='Body2 text-[--gray600]'>Answer...</h1>
-            //   </div>
-            //   <div className='flex justify-between items-center'>
-            //     <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
-            //       Send Assignment
-            //     </button>
-            //     <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
-            //   </div>
-            // </div>
-            null}
+          {isShowAsm || localStorage.getItem("isShowAsm")
+            ? null
+            : // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
+              //   <div className='flex justify-between'>
+              //     <h1 className='Body1 mb-6'>Assigment</h1>
+              //     <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
+              //       status
+              //     </div>
+              //   </div>
+              //   <h1 className='Body2 mb-1'>Question ?</h1>
+              //   <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
+              //     <h1 className='Body2 text-[--gray600]'>Answer...</h1>
+              //   </div>
+              //   <div className='flex justify-between items-center'>
+              //     <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
+              //       Send Assignment
+              //     </button>
+              //     <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
+              //   </div>
+              // </div>
+              null}
         </div>
-      </div >
+      </div>
       <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>
-        {sublessonIdArray.findIndex(
-          (element) => element === videoKey) > 0 ?
-          (
-            <button
-              className='bg-white p-[20px] border-none text-[16px] text-[--blue500] font-bold cursor-pointer hover:text-[--blue300] duration-300'
-              onClick={() => handleLesson("prev")}>
-              Previous Lesson
-            </button>
-          ) : (
-            <div></div>
-          )}
+        {sublessonIdArray.findIndex((element) => element === videoKey) > 0 ? (
+          <button
+            className='bg-white p-[20px] border-none text-[16px] text-[--blue500] font-bold cursor-pointer hover:text-[--blue300] duration-300'
+            onClick={() => handleLesson("prev")}>
+            Previous Lesson
+          </button>
+        ) : (
+          <div></div>
+        )}
 
-        {sublessonIdArray.findIndex((element) => element === videoKey) < sublessonIdArray.length - 1 ?
-          (
-            <button
-              className='Primary border-none cursor-pointer'
-              onClick={() => handleLesson("next")}>
-              Next Lesson
-            </button>
-          ) : (
-            <div></div>
-          )}
+        {sublessonIdArray.findIndex((element) => element === videoKey) <
+        sublessonIdArray.length - 1 ? (
+          <button
+            className='Primary border-none cursor-pointer'
+            onClick={() => handleLesson("next")}>
+            Next Lesson
+          </button>
+        ) : (
+          <div></div>
+        )}
       </div>
       <style>{`.progressbar {width: ${percentComplete}%;}`}</style>
     </>

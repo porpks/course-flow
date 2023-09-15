@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, response } from "express";
 import supabase from "../utils/db.js";
 
 const learnRouter = Router();
@@ -134,7 +134,7 @@ learnRouter.get('/videotime', async (req, res) => {
         const { data: interval, error: courseError } = await supabase
             .from('user_sublessons')
             .select('sublesson_status,sublesson_video_timestop,sublessons(*,lessons(*))')
-
+           
 
         for (const dataItem of interval) {
             dataItem.sublesson_id = dataItem.sublessons.sublesson_id;
@@ -151,10 +151,42 @@ learnRouter.get('/videotime', async (req, res) => {
 
         res.json({ data: filteredInterval });
     } catch (e) {
-        // Handle errors here
+        res.json({ error: e});
     }
 });
 
-learnRouter.put('/videotime', async (req, res) => { });
+learnRouter.put('/videotime', async (req, res) => { 
+    const body = req.body;
+    
+const { data, error } = await supabase
+  .from('user_sublessons')
+  .update({ sublesson_video_timestop: `${body.sublesson_video_timestop}` })
+  .eq('user_id', `${body.user_Id}`)
+  .eq('sublesson_id', `${body.sublesson_id}`)
+  .select()
+    if(error)
+    {
+        res.json({error})
+    }
+    res.json(data);
+});
 
+learnRouter.get('/videotimebyid', async (req, res) => {
+    const sublesson_id = Number(req.query.sublessonid);
+
+    
+
+    try {
+        const { data: interval, error: courseError } = await supabase
+            .from('user_sublessons')
+            .select('sublesson_video_timestop')
+            .eq("sublesson_id",sublesson_id)
+
+
+       
+        res.json({ data: interval });
+    } catch (e) {
+   res.json({ error: e});
+    }
+});
 export default learnRouter;

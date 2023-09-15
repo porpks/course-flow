@@ -16,7 +16,7 @@ function AssignmentPage() {
     const getAssignmentData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/assignment/${localStorage.getItem("UserID")}`
+          `http://localhost:4000/assignment/${localStorage.getItem("userID")}`
         );
         setData(response.data.data);
 

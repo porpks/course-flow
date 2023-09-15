@@ -101,6 +101,10 @@ function MyCourse() {
       localStorage.removeItem("isShowAsm");
       localStorage.removeItem("pauseTime");
       localStorage.removeItem("videoUrl");
+      localStorage.removeItem("pauseTime");
+      localStorage.removeItem("nonepause");
+      localStorage.removeItem("videoKey");
+
       const result = await axios.get("http://localhost:4000/learn/videotime", {
         params: {
           userID: userId,
@@ -152,6 +156,16 @@ function MyCourse() {
   useEffect(() => {
     getDataCourse2();
     getDataCourse();
+    localStorage.removeItem("sublessonName");
+    localStorage.removeItem("sublessonID");
+    localStorage.removeItem("isShowVdo");
+    localStorage.removeItem("isShowAsm");
+    localStorage.removeItem("pauseTime");
+    localStorage.removeItem("videoUrl");
+    localStorage.removeItem("pauseTime");
+    localStorage.removeItem("nonepause");
+    localStorage.removeItem("videoKey");
+    localStorage.removeItem("videoHead");
   }, [userId, checkOnClick]);
 
   function AllCourse() {
