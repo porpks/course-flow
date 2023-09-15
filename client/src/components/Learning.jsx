@@ -42,9 +42,7 @@ function Learning() {
   });
   const [videoThumbnail, setVideoThumbnail] = useState("");
   const [subStatus, setSubStatus] = useState({});
-  const [percentComplete, setPercentComplete] = useState(0)
-
-
+  const [percentComplete, setPercentComplete] = useState(0);
 
   const getStatus = async () => {
     try {
@@ -52,136 +50,154 @@ function Learning() {
         params: { userID: 172, courseID: 20 },
       });
       setSubStatus(result.data.data);
-      setPercentComplete(Number(result.data.percentComplete))
+      setPercentComplete(Number(result.data.percentComplete));
     } catch (error) {
       console.log(error);
     }
   };
 
-
   const handleLesson = (action) => {
     if (loading) {
       return;
     }
-    console.log("handleLesson called with action:", action);
-    console.log("sublessonIdArray:", sublessonIdArray);
-    console.log("videoKey:", videoKey);
-    console.log("sublessonID", localStorage.getItem("sublessonID"));
     if (action === "next") {
       setIsShowAsm(false);
       localStorage.setItem("isShowAsm", false);
       setIsShowVdo(false);
       localStorage.setItem("isShowVdo", false);
-      setPauseTime(0);
-      localStorage.setItem("pauseTime", 0);
+      setvideoUrl(null);
+      localStorage.setItem("videoUrl", null);
+      fetchPauseTime();
+      console.log(pauseTime);
       setTimeout(() => {
         setVideoKey(
           sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            sublessonIdArray.findIndex((element) => element === videoKey) + 1
           ]
         );
 
         localStorage.setItem(
           "videoKey",
           sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            sublessonIdArray.findIndex((element) => element === videoKey) + 1
           ]
         );
         localStorage.setItem(
           "sublessonID",
           sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            sublessonIdArray.findIndex((element) => element === videoKey) + 1
           ]
         );
 
         setVideoHead(
           sublessonNameObject[
-          sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
           ]
         );
 
         localStorage.setItem(
           "videoHead",
           sublessonNameObject[
-          sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
           ]
         );
 
         setvideoUrl(
           sublessonVideoObject[
-          sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
           ]
         );
         localStorage.setItem(
           "videoUrl",
           sublessonVideoObject[
-          sublessonIdArray[
-          sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) + 1
+            ]
           ]
         );
         boxRef.current.scrollIntoView({ behavior: "smooth" });
       }, 1000);
     } else if (action === "prev") {
-      setVideoKey(
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-      );
+      setIsShowAsm(false);
+      localStorage.setItem("isShowAsm", false);
+      setIsShowVdo(false);
+      localStorage.setItem("isShowVdo", false);
+      setvideoUrl(null);
+      localStorage.setItem("videoUrl", null);
+      fetchPauseTime();
+      console.log(pauseTime);
+      setTimeout(() => {
+        setvideoUrl(null);
+        localStorage.setItem("videoUrl", null);
+        setVideoKey(
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) - 1
+          ]
+        );
 
-      localStorage.setItem(
-        "videoKey",
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-      );
-      localStorage.setItem(
-        "sublessonID",
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-      );
+        localStorage.setItem(
+          "videoKey",
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) - 1
+          ]
+        );
+        localStorage.setItem(
+          "sublessonID",
+          sublessonIdArray[
+            sublessonIdArray.findIndex((element) => element === videoKey) - 1
+          ]
+        );
 
-      setVideoHead(
-        sublessonNameObject[
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-        ]
-      );
+        setVideoHead(
+          sublessonNameObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) - 1
+            ]
+          ]
+        );
 
-      localStorage.setItem(
-        "videoHead",
-        sublessonNameObject[
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-        ]
-      );
+        localStorage.setItem(
+          "videoHead",
+          sublessonNameObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) - 1
+            ]
+          ]
+        );
 
-      setvideoUrl(
-        sublessonVideoObject[
-        sublessonIdArray[
-        sublessonIdArray.findIndex((element) => element === videoKey) - 1
-        ]
-        ]
-      );
-      boxRef.current.scrollIntoView({ behavior: "smooth" });
+        setvideoUrl(
+          sublessonVideoObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) - 1
+            ]
+          ]
+        );
+        localStorage.setItem(
+          "videoUrl",
+          sublessonVideoObject[
+            sublessonIdArray[
+              sublessonIdArray.findIndex((element) => element === videoKey) - 1
+            ]
+          ]
+        );
+        boxRef.current.scrollIntoView({ behavior: "smooth" });
+      }, 1000);
     }
   };
-  console.log(sublessonIdArray);
 
   const handleShowVideo = (sublessonName, sublessonID) => {
     setIsShowAsm(false);
     localStorage.setItem("isShowAsm", false);
     setIsShowVdo(false);
     localStorage.setItem("isShowVdo", false);
+    setvideoUrl(null);
+    localStorage.setItem("videoUrl", null);
     setTimeout(() => {
       setVideoHead(sublessonName);
       localStorage.setItem("sublessonName", sublessonName);
@@ -190,24 +206,43 @@ function Learning() {
       localStorage.setItem("videoKey", sublessonID);
       setvideoUrl(sublessonVideoObject[sublessonID]);
       localStorage.setItem("videoUrl", sublessonVideoObject[sublessonID]);
-      setPauseTime(0);
+      fetchPauseTime();
+      console.log(pauseTime);
       localStorage.setItem("pauseTime", 0);
       setIsShowVdo(true);
       localStorage.setItem("isShowVdo", true);
     }, 500);
   };
 
-  const handlePause = (pauseTime) => {
-    console.log(pauseTime);
+  const handlePause = async (pauseTime) => {
+    const response = await axios.put("http://localhost:4000/learn/videotime", {
+      sublesson_video_timestop: pauseTime,
+      sublesson_id: localStorage.getItem("sublessonID"),
+      user_Id: localStorage.getItem("userID"),
+    });
+
     //**set pause time and update database
   };
+
+  const fetchPauseTime = async () => {
+    const result = await axios.get(
+      `http://localhost:4000/learn/videotimebyid?sublessonid=${localStorage.getItem(
+        "sublessonID"
+      )}`
+    );
+
+    if (result.data.data[0].sublesson_video_timestop !== null) {
+      setPauseTime(result.data.data[0].sublesson_video_timestop);
+    } else if (result.data.data[0].sublesson_video_timestop === null) {
+      setPauseTime(0);
+    }
+  };
+
   const handleEnd = () => {
     setIsShowAsm(true);
   };
 
   useEffect(() => {
-
-
     async function fetchData() {
       try {
         const result = await axios.get("http://localhost:4000/learn/", {
@@ -244,7 +279,6 @@ function Learning() {
 
     fetchData();
     getStatus();
-
   }, []);
 
   if (sublessonIdArray.length !== 0) {
@@ -272,7 +306,7 @@ function Learning() {
       localStorage.removeItem("nonepause");
     }
   }
-  console.log(subStatus);
+
   return (
     <>
       <div className='flex justify-center pt-[100px] px-[160px]'>
@@ -285,9 +319,11 @@ function Learning() {
             </h1>
           </div>
           <div className='mb-6'>
-            <h1 className='Body2 text-[--gray700] mb-2'>{percentComplete}% Complete</h1>
+            <h1 className='Body2 text-[--gray700] mb-2'>
+              {percentComplete}% Complete
+            </h1>
             <div className='w-full h-[10px] bg-[--gray300] rounded-full'>
-              <div className="progressbar h-full Linear1 rounded-full"></div>
+              <div className='progressbar h-full Linear1 rounded-full'></div>
             </div>
           </div>
           <form>
@@ -313,39 +349,55 @@ function Learning() {
                   <AccordionDetails>
                     <div className=''>
                       {lesson.sublessons.map((sublesson, index) => {
-
                         return (
                           <label
                             key={index}
                             id={sublesson.sublesson_id}
-                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${sublesson.sublesson_id === videoKey ? "bg-[--gray400]" : ""}`}
+                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${
+                              sublesson.sublesson_id === videoKey
+                                ? "bg-[--gray400]"
+                                : ""
+                            }`}
                             onClick={() =>
                               handleShowVideo(
                                 sublesson.sublesson_name,
                                 sublesson.sublesson_id
-                              )}>
+                              )
+                            }>
                             <div className='mr-4 h-[20px]'>
-                              {subStatus[sublesson.sublesson_id] === "complete" ? <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                width='20'
-                                height='20'
-                                viewBox='0 0 20 20'
-                                fill='none'>
-                                <path
-                                  fillRule='evenodd'
-                                  clipRule='evenodd'
-                                  d='M1.875 10C1.875 5.5125 5.5125 1.875 10 1.875C14.4875 1.875 18.125 5.5125 18.125 10C18.125 14.4875 14.4875 18.125 10 18.125C5.5125 18.125 1.875 14.4875 1.875 10ZM13.0083 8.48833C13.0583 8.42171 13.0945 8.34576 13.1147 8.26496C13.135 8.18415 13.1388 8.10012 13.1261 8.0178C13.1134 7.93547 13.0844 7.85652 13.0407 7.78558C12.9971 7.71464 12.9396 7.65315 12.8719 7.60471C12.8041 7.55627 12.7273 7.52187 12.6461 7.50352C12.5648 7.48518 12.4807 7.48326 12.3987 7.49789C12.3167 7.51251 12.2385 7.54338 12.1686 7.58868C12.0987 7.63398 12.0385 7.69279 11.9917 7.76167L9.295 11.5367L7.94167 10.1833C7.82319 10.0729 7.66648 10.0128 7.50456 10.0157C7.34265 10.0185 7.18816 10.0841 7.07365 10.1986C6.95914 10.3132 6.89354 10.4676 6.89069 10.6296C6.88783 10.7915 6.94793 10.9482 7.05833 11.0667L8.93333 12.9417C8.99749 13.0058 9.07483 13.0552 9.15999 13.0864C9.24515 13.1176 9.33608 13.1299 9.42647 13.1224C9.51686 13.115 9.60455 13.088 9.68344 13.0432C9.76233 12.9985 9.83054 12.9371 9.88333 12.8633L13.0083 8.48833Z'
-                                  fill='#2FAC8E'
-                                />
-                              </svg>
-                                : subStatus[sublesson.sublesson_id] === "inprogress" ? <svg
+                              {subStatus[sublesson.sublesson_id] ===
+                              "complete" ? (
+                                <svg
                                   xmlns='http://www.w3.org/2000/svg'
                                   width='20'
                                   height='20'
                                   viewBox='0 0 20 20'
                                   fill='none'>
-                                  <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
-                                  <mask id='path-2-inside-1_140_7809' fill='white'>
+                                  <path
+                                    fillRule='evenodd'
+                                    clipRule='evenodd'
+                                    d='M1.875 10C1.875 5.5125 5.5125 1.875 10 1.875C14.4875 1.875 18.125 5.5125 18.125 10C18.125 14.4875 14.4875 18.125 10 18.125C5.5125 18.125 1.875 14.4875 1.875 10ZM13.0083 8.48833C13.0583 8.42171 13.0945 8.34576 13.1147 8.26496C13.135 8.18415 13.1388 8.10012 13.1261 8.0178C13.1134 7.93547 13.0844 7.85652 13.0407 7.78558C12.9971 7.71464 12.9396 7.65315 12.8719 7.60471C12.8041 7.55627 12.7273 7.52187 12.6461 7.50352C12.5648 7.48518 12.4807 7.48326 12.3987 7.49789C12.3167 7.51251 12.2385 7.54338 12.1686 7.58868C12.0987 7.63398 12.0385 7.69279 11.9917 7.76167L9.295 11.5367L7.94167 10.1833C7.82319 10.0729 7.66648 10.0128 7.50456 10.0157C7.34265 10.0185 7.18816 10.0841 7.07365 10.1986C6.95914 10.3132 6.89354 10.4676 6.89069 10.6296C6.88783 10.7915 6.94793 10.9482 7.05833 11.0667L8.93333 12.9417C8.99749 13.0058 9.07483 13.0552 9.15999 13.0864C9.24515 13.1176 9.33608 13.1299 9.42647 13.1224C9.51686 13.115 9.60455 13.088 9.68344 13.0432C9.76233 12.9985 9.83054 12.9371 9.88333 12.8633L13.0083 8.48833Z'
+                                    fill='#2FAC8E'
+                                  />
+                                </svg>
+                              ) : subStatus[sublesson.sublesson_id] ===
+                                "inprogress" ? (
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='20'
+                                  height='20'
+                                  viewBox='0 0 20 20'
+                                  fill='none'>
+                                  <circle
+                                    cx='10'
+                                    cy='10'
+                                    r='7.25'
+                                    stroke='#2FAC8E'
+                                    strokeWidth='1.5'
+                                  />
+                                  <mask
+                                    id='path-2-inside-1_140_7809'
+                                    fill='white'>
                                     <path d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z' />
                                   </mask>
                                   <path
@@ -356,14 +408,22 @@ function Learning() {
                                     mask='url(#path-2-inside-1_140_7809)'
                                   />
                                 </svg>
-                                  : <svg
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    width='20'
-                                    height='20'
-                                    viewBox='0 0 20 20'
-                                    fill='none'>
-                                    <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
-                                  </svg>}
+                              ) : (
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='20'
+                                  height='20'
+                                  viewBox='0 0 20 20'
+                                  fill='none'>
+                                  <circle
+                                    cx='10'
+                                    cy='10'
+                                    r='7.25'
+                                    stroke='#2FAC8E'
+                                    strokeWidth='1.5'
+                                  />
+                                </svg>
+                              )}
                             </div>
                             <h1 className='Body3 text-[--gray700]'>
                               {sublesson.sublesson_name}
@@ -426,7 +486,7 @@ function Learning() {
                     }
                     playing={true}
                     onStart={() => {
-                      playerRef.current.seekTo(pauseTime, "seconds")
+                      playerRef.current.seekTo(pauseTime, "seconds");
                       //update status to "inprogress"
                     }}
                     // onPlay={() => {
@@ -440,52 +500,50 @@ function Learning() {
               </div>
             ) : null}
           </div>
-          {isShowAsm || localStorage.getItem("isShowAsm") ? (
-            null
-          ) : // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
-            //   <div className='flex justify-between'>
-            //     <h1 className='Body1 mb-6'>Assigment</h1>
-            //     <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
-            //       status
-            //     </div>
-            //   </div>
-            //   <h1 className='Body2 mb-1'>Question ?</h1>
-            //   <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
-            //     <h1 className='Body2 text-[--gray600]'>Answer...</h1>
-            //   </div>
-            //   <div className='flex justify-between items-center'>
-            //     <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
-            //       Send Assignment
-            //     </button>
-            //     <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
-            //   </div>
-            // </div>
-            null}
+          {isShowAsm || localStorage.getItem("isShowAsm")
+            ? null
+            : // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
+              //   <div className='flex justify-between'>
+              //     <h1 className='Body1 mb-6'>Assigment</h1>
+              //     <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
+              //       status
+              //     </div>
+              //   </div>
+              //   <h1 className='Body2 mb-1'>Question ?</h1>
+              //   <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
+              //     <h1 className='Body2 text-[--gray600]'>Answer...</h1>
+              //   </div>
+              //   <div className='flex justify-between items-center'>
+              //     <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
+              //       Send Assignment
+              //     </button>
+              //     <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
+              //   </div>
+              // </div>
+              null}
         </div>
-      </div >
+      </div>
       <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>
-        {sublessonIdArray.findIndex(
-          (element) => element === videoKey) > 0 ?
-          (
-            <button
-              className='bg-white p-[20px] border-none text-[16px] text-[--blue500] font-bold cursor-pointer hover:text-[--blue300] duration-300'
-              onClick={() => handleLesson("prev")}>
-              Previous Lesson
-            </button>
-          ) : (
-            <div></div>
-          )}
+        {sublessonIdArray.findIndex((element) => element === videoKey) > 0 ? (
+          <button
+            className='bg-white p-[20px] border-none text-[16px] text-[--blue500] font-bold cursor-pointer hover:text-[--blue300] duration-300'
+            onClick={() => handleLesson("prev")}>
+            Previous Lesson
+          </button>
+        ) : (
+          <div></div>
+        )}
 
-        {sublessonIdArray.findIndex((element) => element === videoKey) < sublessonIdArray.length - 1 ?
-          (
-            <button
-              className='Primary border-none cursor-pointer'
-              onClick={() => handleLesson("next")}>
-              Next Lesson
-            </button>
-          ) : (
-            <div></div>
-          )}
+        {sublessonIdArray.findIndex((element) => element === videoKey) <
+        sublessonIdArray.length - 1 ? (
+          <button
+            className='Primary border-none cursor-pointer'
+            onClick={() => handleLesson("next")}>
+            Next Lesson
+          </button>
+        ) : (
+          <div></div>
+        )}
       </div>
       <style>{`.progressbar {width: ${percentComplete}%;}`}</style>
     </>
