@@ -78,7 +78,48 @@ learnRouter.get('/status', async (req, res) => {
 
 });
 
-learnRouter.put('/status', async (req, res) => { });
+learnRouter.put('/status', async (req, res) => {
+    const userID = Number(req.query.userID);
+    const sublessonID = Number(req.query.sublessonID);
+
+    try {
+        const { data, error } = await supabase
+            .from('user_sublessons')
+            .select('sublesson_status')
+            .eq('user_id', userID)
+            .eq('sublesson_id', sublessonID)
+            .single()
+        if (error) {
+            return res.status(404).json({ 'message': error });
+        }
+
+        if (data.sublesson_status !== "complete") {
+            try {
+                const { data, error } = await supabase
+                    .from("user_sublessons")
+                    .update({
+                        sublesson_status: "inprogress",
+                    })
+                    .eq("user_id", userID)
+                    .eq("sublesson_id", sublessonID)
+                if (error) {
+                    return res.status(404).json({ 'message': error });
+                }
+            } catch (err) {
+                return res.status(400).json({ 'Error:': err.message });
+            }
+
+            return res.json({ 'message': `sublesson status ID:${sublessonID} has been updated` });
+        }
+        else {
+            return res.json({ 'message': `can not! update sublesson status ID:${sublessonID}` });
+        }
+
+    } catch (err) {
+        return res.status(400).json({ 'Error:': err.message });
+    }
+
+});
 
 learnRouter.get('/videotime', async (req, res) => {
     const courseID = Number(req.query.courseID);
