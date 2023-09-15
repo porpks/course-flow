@@ -10,8 +10,9 @@ assignmentRouter.get("/:userID", async (req, res) => {
     .from("assignments")
     .select(
       "*,sublessons(sublesson_id,sublesson_name,lessons(lesson_id,lesson_name,courses(course_name,user_courses(*))))"
-    );
-
+    )
+    .eq("sublessons.lessons.courses.user_courses.user_id", `${userId}`);
+    
     const flatData = data;
 
     function calculateDueDateStatus(assignmentduedate) {
@@ -54,7 +55,7 @@ assignmentRouter.get("/:userID", async (req, res) => {
                 .update({ "assignment_status": 'Overdue' })
                 .eq('assignment_id', dataItem.assignment_id)
                 .select();
-            console.log(update);
+           
         }
     }
 
