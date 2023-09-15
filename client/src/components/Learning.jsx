@@ -9,7 +9,7 @@ import LearnigDropdown from "../assets/LearnigDropdown";
 import "./Learning.css";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import axios from "axios";
-import AssignmentBox from "./AssignmentBox";
+import AssignmentBox from "./AssignmentBox.jsx";
 
 function Learning() {
   const playerRef = useRef(null);
@@ -62,6 +62,7 @@ function Learning() {
     }
     if (action === "next") {
       setIsShowAsm(false);
+      console.log(isShowAsm);
       localStorage.setItem("isShowAsm", false);
       setIsShowVdo(false);
       localStorage.setItem("isShowVdo", false);
@@ -121,6 +122,7 @@ function Learning() {
             ]
           ]
         );
+        setIsShowAsm(false);
         boxRef.current.scrollIntoView({ behavior: "smooth" });
       }, 1000);
     } else if (action === "prev") {
@@ -186,6 +188,7 @@ function Learning() {
             ]
           ]
         );
+        setIsShowAsm(false);
         boxRef.current.scrollIntoView({ behavior: "smooth" });
       }, 1000);
     }
@@ -214,26 +217,25 @@ function Learning() {
     }, 500);
   };
 
-
   const handleStart = async () => {
-    playerRef.current.seekTo(pauseTime, "seconds")
+    playerRef.current.seekTo(pauseTime, "seconds");
     try {
-      const result = await axios.put(`http://localhost:4000/learn/status?userID=${userId}&sublessonID=${videoKey}`);
+      const result = await axios.put(
+        `http://localhost:4000/learn/status?userID=${userId}&sublessonID=${videoKey}`
+      );
       console.log(result);
       if (subStatus[videoKey] !== "complete") {
-        const newStatus = { ...subStatus, }
-        newStatus[videoKey] = "inprogress"
-        setSubStatus(newStatus)
+        const newStatus = { ...subStatus };
+        newStatus[videoKey] = "inprogress";
+        setSubStatus(newStatus);
       }
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
-
   const handlePause = async (pauseTime) => {
-    const response = await axios.put("http://localhost:4000/learn/videotime", {
+    await axios.put("http://localhost:4000/learn/videotime", {
       sublesson_video_timestop: pauseTime,
       sublesson_id: localStorage.getItem("sublessonID"),
       user_Id: localStorage.getItem("userID"),
@@ -356,7 +358,7 @@ function Learning() {
                     expandIcon={<LearnigDropdown />}
                     aria-controls='panel1a-content'
                     id='panel1a-header'>
-                    <Typography component="div">
+                    <Typography component='div'>
                       <div className='flex'>
                         <h1 className='Body2 mr-6 text-[--gray700]'>{seq}</h1>
                         <h1 className='Body2'>{lesson.lesson_name}</h1>
@@ -383,9 +385,14 @@ function Learning() {
                               )
                             }>
                             <div className='mr-4 h-[20px]'>
-                              {subStatus[sublesson.sublesson_id] === "complete" ?
-                                <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
-
+                              {subStatus[sublesson.sublesson_id] ===
+                              "complete" ? (
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='20'
+                                  height='20'
+                                  viewBox='0 0 20 20'
+                                  fill='none'>
                                   <path
                                     fillRule='evenodd'
                                     clipRule='evenodd'
@@ -393,23 +400,47 @@ function Learning() {
                                     fill='#2FAC8E'
                                   />
                                 </svg>
-                                : subStatus[sublesson.sublesson_id] === "inprogress" ?
-                                  <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
-                                    <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
-                                    <mask
-                                      fill='white'>
-                                      <path d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z' />
-                                    </mask>
-                                    <path
-                                      d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z'
-                                      fill='#2FAC8E'
-                                      stroke='#2FAC8E'
-                                      strokeWidth='0'
-                                    />
-                                  </svg>
-                                  : <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
-                                    <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
-                                  </svg>}
+                              ) : subStatus[sublesson.sublesson_id] ===
+                                "inprogress" ? (
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='20'
+                                  height='20'
+                                  viewBox='0 0 20 20'
+                                  fill='none'>
+                                  <circle
+                                    cx='10'
+                                    cy='10'
+                                    r='7.25'
+                                    stroke='#2FAC8E'
+                                    strokeWidth='1.5'
+                                  />
+                                  <mask fill='white'>
+                                    <path d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z' />
+                                  </mask>
+                                  <path
+                                    d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z'
+                                    fill='#2FAC8E'
+                                    stroke='#2FAC8E'
+                                    strokeWidth='0'
+                                  />
+                                </svg>
+                              ) : (
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='20'
+                                  height='20'
+                                  viewBox='0 0 20 20'
+                                  fill='none'>
+                                  <circle
+                                    cx='10'
+                                    cy='10'
+                                    r='7.25'
+                                    stroke='#2FAC8E'
+                                    strokeWidth='1.5'
+                                  />
+                                </svg>
+                              )}
                             </div>
                             <h1 className='Body3 text-[--gray700]'>
                               {sublesson.sublesson_name}
@@ -423,7 +454,7 @@ function Learning() {
               );
             })}
           </form>
-        </div >
+        </div>
 
         <div className='flex flex-col w-full' ref={boxRef}>
           <div className='mb-20'>
@@ -470,8 +501,9 @@ function Learning() {
                       </div>
                     }
                     playing={true}
-                    onStart={() => { handleStart() }}
-
+                    onStart={() => {
+                      handleStart();
+                    }}
                     // onPlay={() => {
                     //   playerRef.current.seekTo(pauseTime, "seconds")
                     // }}
@@ -483,27 +515,31 @@ function Learning() {
               </div>
             ) : null}
           </div>
-          {isShowAsm || localStorage.getItem("isShowAsm")
-            ? null
-            : // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
-              //   <div className='flex justify-between'>
-              //     <h1 className='Body1 mb-6'>Assigment</h1>
-              //     <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
-              //       status
-              //     </div>
-              //   </div>
-              //   <h1 className='Body2 mb-1'>Question ?</h1>
-              //   <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
-              //     <h1 className='Body2 text-[--gray600]'>Answer...</h1>
-              //   </div>
-              //   <div className='flex justify-between items-center'>
-              //     <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
-              //       Send Assignment
-              //     </button>
-              //     <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
-              //   </div>
-              // </div>
-              null}
+          {
+            isShowAsm ? (
+              <AssignmentBox
+                sublessonID={localStorage.getItem("sublessonID") || videoKey}
+              />
+            ) : null
+            // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
+            //   <div className='flex justify-between'>
+            //     <h1 className='Body1 mb-6'>Assigment</h1>
+            //     <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
+            //       status
+            //     </div>
+            //   </div>
+            //   <h1 className='Body2 mb-1'>Question ?</h1>
+            //   <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
+            //     <h1 className='Body2 text-[--gray600]'>Answer...</h1>
+            //   </div>
+            //   <div className='flex justify-between items-center'>
+            //     <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
+            //       Send Assignment
+            //     </button>
+            //     <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
+            //   </div>
+            // </div>
+          }
         </div>
       </div>
       <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>

@@ -20,18 +20,12 @@ function MyCourse() {
   const [userName, setUserName] = useState("");
   const [checkOnClick, setCheckOnClick] = useState(false);
   const {
-    setCourseId,
-    courseId,
     setIsShowVdo,
     setIsShowAsm,
     setVideoHead,
     setVideoKey,
     setPauseTime,
     userId,
-    setCookie,
-    getCookie,
-    videoHead,
-    videoUrl,
     setvideoUrl,
   } = useAuth();
   const [inProgressCount, setInProgressCount] = useState(0);
@@ -122,8 +116,8 @@ function MyCourse() {
           localStorage.setItem("videoKey", sublessonID);
           setIsShowVdo(true);
           localStorage.setItem("isShowVdo", true);
-          setIsShowAsm(true);
-          localStorage.setItem("isShowAsm", true);
+          setIsShowAsm(false);
+          localStorage.setItem("isShowAsm", false);
           setPauseTime(
             data[0].sublesson_video_timestop === null
               ? 0
