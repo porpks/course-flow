@@ -123,8 +123,8 @@ learnRouter.put('/status', async (req, res) => {
 
 learnRouter.get('/videotime', async (req, res) => {
     const courseID = Number(req.query.courseID);
-
-    if (!courseID) {
+    const userID = Number(req.query.userID);
+    if (!courseID || !userID) {
         return res.status(400).json({
             message: "Invalid query"
         });
@@ -134,8 +134,10 @@ learnRouter.get('/videotime', async (req, res) => {
         const { data: interval, error: courseError } = await supabase
             .from('user_sublessons')
             .select('sublesson_status,sublesson_video_timestop,sublessons(*,lessons(*))')
-           
-
+            .eq("user_id",userID)
+        if(interval === null) {
+            res.json({message:"there is no sublesson in userId"})
+        }
         for (const dataItem of interval) {
             dataItem.sublesson_id = dataItem.sublessons.sublesson_id;
             dataItem.sublesson_name = dataItem.sublessons.sublesson_name

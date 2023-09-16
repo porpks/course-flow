@@ -144,11 +144,10 @@ function MyCourse() {
         localStorage.setItem("nonepause", true);
       }
     } catch (error) {
-      console.log(error);
+      console.log("there is no sublesson in this code");
     }
   };
   useEffect(() => {
-    getDataCourse2();
     getDataCourse();
     localStorage.removeItem("sublessonName");
     localStorage.removeItem("sublessonID");

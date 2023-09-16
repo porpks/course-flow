@@ -14,7 +14,7 @@ import AssignmentBox from "./AssignmentBox.jsx";
 function Learning() {
   const playerRef = useRef(null);
   const boxRef = useRef(null);
-
+  const [isLoading, setIsLoading] = useState(true);
   const [sublessonIdArray, setSublessonIdArray] = useState([]);
   const [sublessonNameObject, setSublessonNameObject] = useState({});
   const [sublessonVideoObject, setSublessonVideoObject] = useState({});
@@ -47,7 +47,10 @@ function Learning() {
   const getStatus = async () => {
     try {
       const result = await axios.get("http://localhost:4000/learn/status/", {
-        params: { userID: 172, courseID: 20 },
+        params: {
+          userID: localStorage.getItem("userID"),
+          courseID: localStorage.getItem("course_id"),
+        },
       });
       setSubStatus(result.data.data);
       setPercentComplete(Number(result.data.percentComplete));
@@ -56,168 +59,83 @@ function Learning() {
     }
   };
 
-  const handleLesson = (action) => {
+  const updateIsShowAsm = (value) => {
+    setIsShowAsm(value);
+    localStorage.setItem("isShowAsm", value);
+  };
+
+  const handleLesson = async (action) => {
     if (loading) {
       return;
     }
-    if (action === "next") {
-      setIsShowAsm(false);
-      console.log(isShowAsm);
-      localStorage.setItem("isShowAsm", false);
-      setIsShowVdo(false);
-      localStorage.setItem("isShowVdo", false);
-      setvideoUrl(null);
-      localStorage.setItem("videoUrl", null);
-      fetchPauseTime();
-      console.log(pauseTime);
-      setTimeout(() => {
-        setVideoKey(
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
-        );
 
-        localStorage.setItem(
-          "videoKey",
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
-        );
-        localStorage.setItem(
-          "sublessonID",
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
-        );
+    if (action === "next" || action === "prev") {
+      updateIsShowAsm(false);
 
-        setVideoHead(
-          sublessonNameObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) + 1
-            ]
-          ]
-        );
-
-        localStorage.setItem(
-          "videoHead",
-          sublessonNameObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) + 1
-            ]
-          ]
-        );
-
-        setvideoUrl(
-          sublessonVideoObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) + 1
-            ]
-          ]
-        );
-        localStorage.setItem(
-          "videoUrl",
-          sublessonVideoObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) + 1
-            ]
-          ]
-        );
-        setIsShowAsm(false);
-        boxRef.current.scrollIntoView({ behavior: "smooth" });
-      }, 1000);
-    } else if (action === "prev") {
-      setIsShowAsm(false);
-      localStorage.setItem("isShowAsm", false);
-      setIsShowVdo(false);
-      localStorage.setItem("isShowVdo", false);
-      setvideoUrl(null);
-      localStorage.setItem("videoUrl", null);
-      fetchPauseTime();
-      console.log(pauseTime);
-      setTimeout(() => {
-        setvideoUrl(null);
-        localStorage.setItem("videoUrl", null);
-        setVideoKey(
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) - 1
-          ]
-        );
-
-        localStorage.setItem(
-          "videoKey",
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) - 1
-          ]
-        );
-        localStorage.setItem(
-          "sublessonID",
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) - 1
-          ]
-        );
-
-        setVideoHead(
-          sublessonNameObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) - 1
-            ]
-          ]
-        );
-
-        localStorage.setItem(
-          "videoHead",
-          sublessonNameObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) - 1
-            ]
-          ]
-        );
-
-        setvideoUrl(
-          sublessonVideoObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) - 1
-            ]
-          ]
-        );
-        localStorage.setItem(
-          "videoUrl",
-          sublessonVideoObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) - 1
-            ]
-          ]
-        );
-        setIsShowAsm(false);
-        boxRef.current.scrollIntoView({ behavior: "smooth" });
-      }, 1000);
+      await handleVideoNavigation(action);
     }
   };
 
-  const handleShowVideo = (sublessonName, sublessonID) => {
-    setIsShowAsm(false);
-    localStorage.setItem("isShowAsm", false);
-    setIsShowVdo(false);
-    localStorage.setItem("isShowVdo", false);
-    setvideoUrl(null);
-    localStorage.setItem("videoUrl", null);
-    setTimeout(() => {
-      setVideoHead(sublessonName);
-      localStorage.setItem("sublessonName", sublessonName);
-      setVideoKey(sublessonID);
-      localStorage.setItem("sublessonID", sublessonID);
-      localStorage.setItem("videoKey", sublessonID);
-      setvideoUrl(sublessonVideoObject[sublessonID]);
-      localStorage.setItem("videoUrl", sublessonVideoObject[sublessonID]);
+  const handleVideoNavigation = async (action) => {
+    try {
+      const newVideoKey =
+        action === "next"
+          ? sublessonIdArray[sublessonIdArray.indexOf(videoKey) + 1]
+          : sublessonIdArray[sublessonIdArray.indexOf(videoKey) - 1];
+
+      if (newVideoKey) {
+        const newVideoHead = sublessonNameObject[newVideoKey];
+        const newVideoUrl = sublessonVideoObject[newVideoKey];
+
+        setVideoKey(newVideoKey);
+        setVideoHead(newVideoHead);
+        setvideoUrl(newVideoUrl);
+
+        localStorage.setItem("videoKey", newVideoKey);
+        localStorage.setItem("videoHead", newVideoHead);
+        localStorage.setItem("videoUrl", newVideoUrl);
+        localStorage.setItem("isShowAsm", false);
+      }
+    } catch (error) {
+      console.error("Error navigating video:", error);
+    }
+  };
+
+  const handleShowVideo = async (sublessonName, sublessonID) => {
+    try {
+      updateVideoDisplay(sublessonName, sublessonID);
       fetchPauseTime();
       console.log(pauseTime);
       localStorage.setItem("pauseTime", 0);
       setIsShowVdo(true);
       localStorage.setItem("isShowVdo", true);
-    }, 500);
+    } catch (error) {
+      console.error("Error showing video:", error);
+    }
+  };
+
+  const updateVideoDisplay = (sublessonName, sublessonID) => {
+    const newVideoHead = sublessonName;
+    const newVideoUrl = sublessonVideoObject[sublessonID];
+
+    setVideoHead(newVideoHead);
+    setVideoKey(sublessonID);
+    setvideoUrl(newVideoUrl);
+
+    localStorage.setItem("sublessonName", newVideoHead);
+    localStorage.setItem("sublessonID", sublessonID);
+    localStorage.setItem("videoKey", sublessonID);
+    localStorage.setItem("videoUrl", newVideoUrl);
+
+    updateIsShowAsm(false);
+    setIsShowVdo(false);
+    localStorage.setItem("isShowVdo", false);
+    setvideoUrl(null);
+    localStorage.setItem("videoUrl", null);
   };
 
   const handleStart = async () => {
+    setIsShowAsm(false);
     playerRef.current.seekTo(pauseTime, "seconds");
     try {
       const result = await axios.put(
@@ -237,7 +155,7 @@ function Learning() {
   const handlePause = async (pauseTime) => {
     await axios.put("http://localhost:4000/learn/videotime", {
       sublesson_video_timestop: pauseTime,
-      sublesson_id: localStorage.getItem("sublessonID"),
+      sublesson_id: localStorage.getItem("videoKey"),
       user_Id: localStorage.getItem("userID"),
     });
 
@@ -266,7 +184,10 @@ function Learning() {
     async function fetchData() {
       try {
         const result = await axios.get("http://localhost:4000/learn/", {
-          params: { userID: 172, courseID: 20 },
+          params: {
+            userID: localStorage.getItem("userID"),
+            courseID: localStorage.getItem("course_id"),
+          },
         });
 
         const data = result.data.data;
@@ -292,6 +213,7 @@ function Learning() {
         setSublessonVideoObject(newSublessonVideoObject);
 
         setLoading(false); // Data has been loaded
+        setIsLoading(false); // Data fetching is complete
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -301,10 +223,17 @@ function Learning() {
     getStatus();
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className='flex justify-center items-center h-screen'>
+        <h1>Loading...</h1>{" "}
+        {/* You can replace this with a spinner or more detailed loading message */}
+      </div>
+    );
+  }
+
   if (sublessonIdArray.length !== 0) {
-    // Check if "nonepause" is in localStorage
-    if (localStorage.getItem("nonepause") === true) {
-      // Your code to set initial video state
+    if (localStorage.getItem("nonepause")) {
       setVideoHead(sublessonNameObject[sublessonIdArray[0]]);
       localStorage.setItem(
         "sublessonName",
@@ -466,7 +395,7 @@ function Learning() {
             {isShowVdo || localStorage.getItem("isShowVdo") ? (
               <div className='w-full'>
                 <h1 className='H3'>
-                  VDO: {localStorage.getItem("sublessonID") || videoKey}
+                  VDO: {localStorage.getItem("videoKey") || videoKey}
                 </h1>
                 <div className='rounded-lg overflow-hidden '>
                   <ReactPlayer
@@ -518,7 +447,7 @@ function Learning() {
           {
             isShowAsm ? (
               <AssignmentBox
-                sublessonID={localStorage.getItem("sublessonID") || videoKey}
+                sublessonID={localStorage.getItem("videoKey") || videoKey}
               />
             ) : null
             // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>

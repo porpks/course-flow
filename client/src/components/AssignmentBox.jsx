@@ -158,7 +158,7 @@ const AssignmentBox = (props) => {
       console.log(error.message);
     }
   };
-
+  console.log(assignmentsToDisplay);
   return (
     <>
       <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex'>
@@ -206,7 +206,7 @@ const AssignmentBox = (props) => {
                     <div className='InputStyle grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex'>
                       <div className='Label self-stretch justify-start items-start gap-1 inline-flex'>
                         <div className='Email grow shrink basis-0 Body2'>
-                          {assignment.sublesson_name}
+                          {assignment.assignment_question}
                         </div>
                       </div>
                       <div

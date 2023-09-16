@@ -94,6 +94,7 @@ assignmentRouter.get("/:userID", async (req, res) => {
         dataItem.lesson_name = dataItem.assignments.sublessons.lessons.lesson_name;
         dataItem.course_name = dataItem.assignments.sublessons.lessons.courses.course_name;
         dataItem.assignment_duedate = calculateDueDateStatus(dataItem.assignment_duedate);
+        dataItem.assignment_question = dataItem.assignments.assignment_question
         dataItem.userId = dataItem.user_id;
         dataItem.assignment_status = "Pending"
         delete dataItem.assignments;
