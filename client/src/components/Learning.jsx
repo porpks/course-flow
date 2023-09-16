@@ -9,12 +9,12 @@ import LearnigDropdown from "../assets/LearnigDropdown";
 import "./Learning.css";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import axios from "axios";
-import AssignmentBox from "./AssignmentBox";
+import AssignmentBox from "./AssignmentBox.jsx";
 
 function Learning() {
   const playerRef = useRef(null);
   const boxRef = useRef(null);
-
+  const [isLoading, setIsLoading] = useState(true);
   const [sublessonIdArray, setSublessonIdArray] = useState([]);
   const [sublessonNameObject, setSublessonNameObject] = useState({});
   const [sublessonVideoObject, setSublessonVideoObject] = useState({});
@@ -47,7 +47,10 @@ function Learning() {
   const getStatus = async () => {
     try {
       const result = await axios.get("http://localhost:4000/learn/status/", {
-        params: { userID: 172, courseID: 20 },
+        params: {
+          userID: localStorage.getItem("userID"),
+          courseID: localStorage.getItem("course_id"),
+        },
       });
       setSubStatus(result.data.data);
       setPercentComplete(Number(result.data.percentComplete));
@@ -56,186 +59,103 @@ function Learning() {
     }
   };
 
-  const handleLesson = (action) => {
+  const updateIsShowAsm = (value) => {
+    setIsShowAsm(value);
+    localStorage.setItem("isShowAsm", value);
+  };
+
+  const handleLesson = async (action) => {
     if (loading) {
       return;
     }
-    if (action === "next") {
-      setIsShowAsm(false);
-      localStorage.setItem("isShowAsm", false);
-      setIsShowVdo(false);
-      localStorage.setItem("isShowVdo", false);
-      setvideoUrl(null);
-      localStorage.setItem("videoUrl", null);
-      fetchPauseTime();
-      console.log(pauseTime);
-      setTimeout(() => {
-        setVideoKey(
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
-        );
 
-        localStorage.setItem(
-          "videoKey",
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
-        );
-        localStorage.setItem(
-          "sublessonID",
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) + 1
-          ]
-        );
+    if (action === "next" || action === "prev") {
+      updateIsShowAsm(false);
 
-        setVideoHead(
-          sublessonNameObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) + 1
-            ]
-          ]
-        );
-
-        localStorage.setItem(
-          "videoHead",
-          sublessonNameObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) + 1
-            ]
-          ]
-        );
-
-        setvideoUrl(
-          sublessonVideoObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) + 1
-            ]
-          ]
-        );
-        localStorage.setItem(
-          "videoUrl",
-          sublessonVideoObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) + 1
-            ]
-          ]
-        );
-        boxRef.current.scrollIntoView({ behavior: "smooth" });
-      }, 1000);
-    } else if (action === "prev") {
-      setIsShowAsm(false);
-      localStorage.setItem("isShowAsm", false);
-      setIsShowVdo(false);
-      localStorage.setItem("isShowVdo", false);
-      setvideoUrl(null);
-      localStorage.setItem("videoUrl", null);
-      fetchPauseTime();
-      console.log(pauseTime);
-      setTimeout(() => {
-        setvideoUrl(null);
-        localStorage.setItem("videoUrl", null);
-        setVideoKey(
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) - 1
-          ]
-        );
-
-        localStorage.setItem(
-          "videoKey",
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) - 1
-          ]
-        );
-        localStorage.setItem(
-          "sublessonID",
-          sublessonIdArray[
-            sublessonIdArray.findIndex((element) => element === videoKey) - 1
-          ]
-        );
-
-        setVideoHead(
-          sublessonNameObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) - 1
-            ]
-          ]
-        );
-
-        localStorage.setItem(
-          "videoHead",
-          sublessonNameObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) - 1
-            ]
-          ]
-        );
-
-        setvideoUrl(
-          sublessonVideoObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) - 1
-            ]
-          ]
-        );
-        localStorage.setItem(
-          "videoUrl",
-          sublessonVideoObject[
-            sublessonIdArray[
-              sublessonIdArray.findIndex((element) => element === videoKey) - 1
-            ]
-          ]
-        );
-        boxRef.current.scrollIntoView({ behavior: "smooth" });
-      }, 1000);
+      await handleVideoNavigation(action);
     }
   };
 
-  const handleShowVideo = (sublessonName, sublessonID) => {
-    setIsShowAsm(false);
-    localStorage.setItem("isShowAsm", false);
-    setIsShowVdo(false);
-    localStorage.setItem("isShowVdo", false);
-    setvideoUrl(null);
-    localStorage.setItem("videoUrl", null);
-    setTimeout(() => {
-      setVideoHead(sublessonName);
-      localStorage.setItem("sublessonName", sublessonName);
-      setVideoKey(sublessonID);
-      localStorage.setItem("sublessonID", sublessonID);
-      localStorage.setItem("videoKey", sublessonID);
-      setvideoUrl(sublessonVideoObject[sublessonID]);
-      localStorage.setItem("videoUrl", sublessonVideoObject[sublessonID]);
+  const handleVideoNavigation = async (action) => {
+    try {
+      const newVideoKey =
+        action === "next"
+          ? sublessonIdArray[sublessonIdArray.indexOf(videoKey) + 1]
+          : sublessonIdArray[sublessonIdArray.indexOf(videoKey) - 1];
+
+      if (newVideoKey) {
+        const newVideoHead = sublessonNameObject[newVideoKey];
+        const newVideoUrl = sublessonVideoObject[newVideoKey];
+
+        setVideoKey(newVideoKey);
+        setVideoHead(newVideoHead);
+        setvideoUrl(newVideoUrl);
+
+        localStorage.setItem("videoKey", newVideoKey);
+        localStorage.setItem("videoHead", newVideoHead);
+        localStorage.setItem("videoUrl", newVideoUrl);
+        localStorage.setItem("isShowAsm", false);
+      }
+    } catch (error) {
+      console.error("Error navigating video:", error);
+    }
+  };
+
+  const handleShowVideo = async (sublessonName, sublessonID) => {
+    try {
+      updateVideoDisplay(sublessonName, sublessonID);
       fetchPauseTime();
       console.log(pauseTime);
       localStorage.setItem("pauseTime", 0);
       setIsShowVdo(true);
       localStorage.setItem("isShowVdo", true);
-    }, 500);
-  };
-
-
-  const handleStart = async () => {
-    playerRef.current.seekTo(pauseTime, "seconds")
-    try {
-      const result = await axios.put(`http://localhost:4000/learn/status?userID=${userId}&sublessonID=${videoKey}`);
-      console.log(result);
-      if (subStatus[videoKey] !== "complete") {
-        const newStatus = { ...subStatus, }
-        newStatus[videoKey] = "inprogress"
-        setSubStatus(newStatus)
-      }
-
     } catch (error) {
-      console.log(error)
+      console.error("Error showing video:", error);
     }
   };
 
+  const updateVideoDisplay = (sublessonName, sublessonID) => {
+    const newVideoHead = sublessonName;
+    const newVideoUrl = sublessonVideoObject[sublessonID];
+
+    setVideoHead(newVideoHead);
+    setVideoKey(sublessonID);
+    setvideoUrl(newVideoUrl);
+
+    localStorage.setItem("sublessonName", newVideoHead);
+    localStorage.setItem("sublessonID", sublessonID);
+    localStorage.setItem("videoKey", sublessonID);
+    localStorage.setItem("videoUrl", newVideoUrl);
+
+    updateIsShowAsm(false);
+    setIsShowVdo(false);
+    localStorage.setItem("isShowVdo", false);
+    setvideoUrl(null);
+    localStorage.setItem("videoUrl", null);
+  };
+
+  const handleStart = async () => {
+    setIsShowAsm(false);
+    playerRef.current.seekTo(pauseTime, "seconds");
+    try {
+      const result = await axios.put(
+        `http://localhost:4000/learn/status?userID=${userId}&sublessonID=${videoKey}`
+      );
+      console.log(result);
+      if (subStatus[videoKey] !== "complete") {
+        const newStatus = { ...subStatus };
+        newStatus[videoKey] = "inprogress";
+        setSubStatus(newStatus);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handlePause = async (pauseTime) => {
-    const response = await axios.put("http://localhost:4000/learn/videotime", {
+    await axios.put("http://localhost:4000/learn/videotime", {
       sublesson_video_timestop: pauseTime,
-      sublesson_id: localStorage.getItem("sublessonID"),
+      sublesson_id: localStorage.getItem("videoKey"),
       user_Id: localStorage.getItem("userID"),
     });
 
@@ -264,7 +184,10 @@ function Learning() {
     async function fetchData() {
       try {
         const result = await axios.get("http://localhost:4000/learn/", {
-          params: { userID: 172, courseID: 20 },
+          params: {
+            userID: localStorage.getItem("userID"),
+            courseID: localStorage.getItem("course_id"),
+          },
         });
 
         const data = result.data.data;
@@ -290,6 +213,7 @@ function Learning() {
         setSublessonVideoObject(newSublessonVideoObject);
 
         setLoading(false); // Data has been loaded
+        setIsLoading(false); // Data fetching is complete
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -299,10 +223,17 @@ function Learning() {
     getStatus();
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className='flex justify-center items-center h-screen'>
+        <h1>Loading...</h1>{" "}
+        {/* You can replace this with a spinner or more detailed loading message */}
+      </div>
+    );
+  }
+
   if (sublessonIdArray.length !== 0) {
-    // Check if "nonepause" is in localStorage
-    if (localStorage.getItem("nonepause") === true) {
-      // Your code to set initial video state
+    if (localStorage.getItem("nonepause")) {
       setVideoHead(sublessonNameObject[sublessonIdArray[0]]);
       localStorage.setItem(
         "sublessonName",
@@ -356,7 +287,7 @@ function Learning() {
                     expandIcon={<LearnigDropdown />}
                     aria-controls='panel1a-content'
                     id='panel1a-header'>
-                    <Typography component="div">
+                    <Typography component='div'>
                       <div className='flex'>
                         <h1 className='Body2 mr-6 text-[--gray700]'>{seq}</h1>
                         <h1 className='Body2'>{lesson.lesson_name}</h1>
@@ -383,9 +314,14 @@ function Learning() {
                               )
                             }>
                             <div className='mr-4 h-[20px]'>
-                              {subStatus[sublesson.sublesson_id] === "complete" ?
-                                <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
-
+                              {subStatus[sublesson.sublesson_id] ===
+                              "complete" ? (
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='20'
+                                  height='20'
+                                  viewBox='0 0 20 20'
+                                  fill='none'>
                                   <path
                                     fillRule='evenodd'
                                     clipRule='evenodd'
@@ -393,23 +329,47 @@ function Learning() {
                                     fill='#2FAC8E'
                                   />
                                 </svg>
-                                : subStatus[sublesson.sublesson_id] === "inprogress" ?
-                                  <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
-                                    <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
-                                    <mask
-                                      fill='white'>
-                                      <path d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z' />
-                                    </mask>
-                                    <path
-                                      d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z'
-                                      fill='#2FAC8E'
-                                      stroke='#2FAC8E'
-                                      strokeWidth='0'
-                                    />
-                                  </svg>
-                                  : <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
-                                    <circle cx='10' cy='10' r='7.25' stroke='#2FAC8E' strokeWidth='1.5' />
-                                  </svg>}
+                              ) : subStatus[sublesson.sublesson_id] ===
+                                "inprogress" ? (
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='20'
+                                  height='20'
+                                  viewBox='0 0 20 20'
+                                  fill='none'>
+                                  <circle
+                                    cx='10'
+                                    cy='10'
+                                    r='7.25'
+                                    stroke='#2FAC8E'
+                                    strokeWidth='1.5'
+                                  />
+                                  <mask fill='white'>
+                                    <path d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z' />
+                                  </mask>
+                                  <path
+                                    d='M10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18L10 10L10 2Z'
+                                    fill='#2FAC8E'
+                                    stroke='#2FAC8E'
+                                    strokeWidth='0'
+                                  />
+                                </svg>
+                              ) : (
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='20'
+                                  height='20'
+                                  viewBox='0 0 20 20'
+                                  fill='none'>
+                                  <circle
+                                    cx='10'
+                                    cy='10'
+                                    r='7.25'
+                                    stroke='#2FAC8E'
+                                    strokeWidth='1.5'
+                                  />
+                                </svg>
+                              )}
                             </div>
                             <h1 className='Body3 text-[--gray700]'>
                               {sublesson.sublesson_name}
@@ -423,7 +383,7 @@ function Learning() {
               );
             })}
           </form>
-        </div >
+        </div>
 
         <div className='flex flex-col w-full' ref={boxRef}>
           <div className='mb-20'>
@@ -435,7 +395,7 @@ function Learning() {
             {isShowVdo || localStorage.getItem("isShowVdo") ? (
               <div className='w-full'>
                 <h1 className='H3'>
-                  VDO: {localStorage.getItem("sublessonID") || videoKey}
+                  VDO: {localStorage.getItem("videoKey") || videoKey}
                 </h1>
                 <div className='rounded-lg overflow-hidden '>
                   <ReactPlayer
@@ -470,8 +430,9 @@ function Learning() {
                       </div>
                     }
                     playing={true}
-                    onStart={() => { handleStart() }}
-
+                    onStart={() => {
+                      handleStart();
+                    }}
                     // onPlay={() => {
                     //   playerRef.current.seekTo(pauseTime, "seconds")
                     // }}
@@ -483,27 +444,31 @@ function Learning() {
               </div>
             ) : null}
           </div>
-          {isShowAsm || localStorage.getItem("isShowAsm")
-            ? null
-            : // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
-              //   <div className='flex justify-between'>
-              //     <h1 className='Body1 mb-6'>Assigment</h1>
-              //     <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
-              //       status
-              //     </div>
-              //   </div>
-              //   <h1 className='Body2 mb-1'>Question ?</h1>
-              //   <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
-              //     <h1 className='Body2 text-[--gray600]'>Answer...</h1>
-              //   </div>
-              //   <div className='flex justify-between items-center'>
-              //     <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
-              //       Send Assignment
-              //     </button>
-              //     <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
-              //   </div>
-              // </div>
-              null}
+          {
+            isShowAsm ? (
+              <AssignmentBox
+                sublessonID={localStorage.getItem("videoKey") || videoKey}
+              />
+            ) : null
+            // <div className='mb-20 bg-[--blue100] h-[300px] p-6 rounded-lg'>
+            //   <div className='flex justify-between'>
+            //     <h1 className='Body1 mb-6'>Assigment</h1>
+            //     <div className='Body2 h-fit px-2 py-1 rounded text-[#0A7B60] bg-[#DDF9EF]'>
+            //       status
+            //     </div>
+            //   </div>
+            //   <h1 className='Body2 mb-1'>Question ?</h1>
+            //   <div className='bg-white w-full h-[100px] mb-6 p-3 rounded-lg'>
+            //     <h1 className='Body2 text-[--gray600]'>Answer...</h1>
+            //   </div>
+            //   <div className='flex justify-between items-center'>
+            //     <button className='text-white border-none bg-[--blue500] px-8 py-[18px] rounded-xl'>
+            //       Send Assignment
+            //     </button>
+            //     <h1 className='Body2 text-[--gray700]'>Assign within 2 days</h1>
+            //   </div>
+            // </div>
+          }
         </div>
       </div>
       <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>

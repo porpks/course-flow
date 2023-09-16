@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import axios from "axios";
 
 import "./Assignment.css";
-const AssignmentBox = () => {
+const AssignmentBox = (props) => {
   // const mockAssignment = [
   //   {
   //     assignment_id: 1,
@@ -79,15 +79,19 @@ const AssignmentBox = () => {
   const [data, setData] = useState();
   const [answers, setAnswers] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-
+  // eslint-disable-next-line react/prop-types
+  const sublessonID = props.sublessonID || "";
   useEffect(() => {
     const getAssignmentData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/assignment/${localStorage.getItem("userID")}`
+          `http://localhost:4000/assignment/${localStorage.getItem(
+            "userID"
+          )}?sublessonid=${sublessonID}`
         );
+        console.log(sublessonID);
         setData(response.data.data);
-
+        console.log(response.data.data);
         const initialAnswers = response.data.data.map((assignment) => ({
           assignment_id: assignment.assignment_id,
           assignment_answer: assignment.assignment_answer || "",
@@ -100,7 +104,7 @@ const AssignmentBox = () => {
     };
 
     getAssignmentData();
-  }, []);
+  }, [sublessonID]);
   const pageSize = 1;
 
   const totalPages = Math.ceil((data || []).length / pageSize);
@@ -127,7 +131,7 @@ const AssignmentBox = () => {
     setAnswers(updatedAnswers);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (assignment_id) => {
     try {
       const assignmentAnswers = answers.map((answer) => ({
         assignment_id: answer.assignment_id,
@@ -136,7 +140,9 @@ const AssignmentBox = () => {
       }));
 
       const response = await axios.put(
-        `http://localhost:4000/assignment/${localStorage.getItem("UserID")}`,
+        `http://localhost:4000/assignment/${localStorage.getItem(
+          "UserID"
+        )}?assignmentid=${assignment_id}`,
         assignmentAnswers
       );
 
@@ -152,7 +158,7 @@ const AssignmentBox = () => {
       console.log(error.message);
     }
   };
-
+  console.log(assignmentsToDisplay);
   return (
     <>
       <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex'>
@@ -247,7 +253,7 @@ const AssignmentBox = () => {
                     {assignment.assignment_status !== "Pending" ? null : (
                       <div
                         className='Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex '
-                        onClick={handleSubmit}>
+                        onClick={() => handleSubmit(assignment.assignment_id)}>
                         <div className=' text-center text-white text-base font-bold leading-normal'>
                           Send Assignment
                         </div>

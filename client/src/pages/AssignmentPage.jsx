@@ -3,10 +3,8 @@ import Footer from "../components/Footer";
 import "../components/Assignment.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "../contexts/AuthContext";
 
 function AssignmentPage() {
-  const { setUserID } = useAuth();
   const [data, setData] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
@@ -83,8 +81,7 @@ function AssignmentPage() {
     setAnswers(updatedAnswers);
   };
 
-  const handleSubmit = async () => {
-    setUserID(170);
+  const handleSubmit = async (assignment_id) => {
     try {
       const assignmentAnswers = answers.map((answer) => ({
         assignment_id: answer.assignment_id,
@@ -93,13 +90,15 @@ function AssignmentPage() {
       }));
 
       const response = await axios.put(
-        `http://localhost:4000/assignment/${localStorage.getItem("UserID")}`,
+        `http://localhost:4000/assignment/${localStorage.getItem(
+          "UserID"
+        )}?assignmentid=${assignment_id}`,
         assignmentAnswers
       );
-
+      console.log(response);
       if (response.status === 200) {
         const updatedDataResponse = await axios.get(
-          `http://localhost:4000/assignment/${localStorage.getItem("UserID")}`
+          `http://localhost:4000/assignment/${localStorage.getItem("userID")}`
         );
 
         setData(updatedDataResponse.data.data);
@@ -310,7 +309,9 @@ function AssignmentPage() {
                             <>
                               <div
                                 className=' cursor-pointer Primary mb-[20px] self-stretch px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 inline-flex'
-                                onClick={handleSubmit}>
+                                onClick={() =>
+                                  handleSubmit(assignment.assignment_id)
+                                }>
                                 <div className='text-center text-white text-base font-bold leading-normal'>
                                   Submit
                                 </div>
