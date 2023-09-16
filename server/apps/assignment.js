@@ -170,7 +170,7 @@ assignmentRouter.put('/:userID', async (req, res) => {
         .select()    
 
         
-        console.log(data2)
+        
         res.json({ data2 });
     }
     } catch (err) {

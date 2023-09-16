@@ -46,7 +46,7 @@ MyCourseRouter.post("/", async (req, res) => {
 
     res.json({ message: `course ${course_id} has been added.` });
   } catch (error) {
-    console.log(`Message error :${error}`);
+    
     res.status(500).json({ error: "An error occurred." });
   }
 });

@@ -32,7 +32,7 @@ function MyCourse() {
   const [completeCount, setCompleteCount] = useState(0);
   const [avatar, setAvatar] = useState(null);
 
-  console.log(userId);
+ 
   function handleAllCourse() {
     setAllCourse(true);
     setInprogress(false);
@@ -106,7 +106,7 @@ function MyCourse() {
         },
       });
       const data = result.data.data;
-      console.log(data);
+   
       if (data.length > 0) {
         const handleShowVideo = (sublessonName, sublessonID) => {
           setVideoHead(sublessonName);

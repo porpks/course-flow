@@ -46,7 +46,7 @@ function OurCourse() {
     setSearchKey(event.target.value);
   };
   /////////////////////////////////////////////////
-  // console.log(`dataCourse:${dataCourse[0].course_id}`);
+  
   if (dataCourse.length === 0) {
     return (
       <div className="flex justify-center items-center absolute top-[150px] w-[100%] h-[100vh] text-slate-100">

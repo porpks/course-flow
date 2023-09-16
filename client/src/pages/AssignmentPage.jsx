@@ -95,7 +95,7 @@ function AssignmentPage() {
         )}?assignmentid=${assignment_id}`,
         assignmentAnswers
       );
-      console.log(response);
+
       if (response.status === 200) {
         const updatedDataResponse = await axios.get(
           `http://localhost:4000/assignment/${localStorage.getItem("userID")}`
@@ -109,7 +109,6 @@ function AssignmentPage() {
     }
   };
 
-  console.log(answers);
   return (
     <>
       <Navbar />

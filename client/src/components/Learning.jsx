@@ -105,7 +105,7 @@ function Learning() {
     try {
       updateVideoDisplay(sublessonName, sublessonID);
       fetchPauseTime();
-      console.log(pauseTime);
+      
       localStorage.setItem("pauseTime", 0);
       setIsShowVdo(true);
       localStorage.setItem("isShowVdo", true);

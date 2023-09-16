@@ -64,7 +64,7 @@ authRouter.post("/login", async (req, res) => {
           .eq("email", loginData.email);
 
         const userId = data;
-        // console.log(userId);
+        s
 
         if (error) {
           return res.status(500).json({ error: "Supabase query failed" });
