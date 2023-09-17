@@ -159,10 +159,11 @@ learnRouter.get('/videotime', async (req, res) => {
 
 learnRouter.put('/videotime', async (req, res) => { 
     const body = req.body;
-    
+    const date = new Date.now();
 const { data, error } = await supabase
   .from('user_sublessons')
   .update({ sublesson_video_timestop: `${body.sublesson_video_timestop}` })
+//   .update({timestop_updated , date})
   .eq('user_id', `${body.user_Id}`)
   .eq('sublesson_id', `${body.sublesson_id}`)
   .select()
@@ -175,9 +176,6 @@ const { data, error } = await supabase
 
 learnRouter.get('/videotimebyid', async (req, res) => {
     const sublesson_id = Number(req.query.sublessonid);
-
-    
-
     try {
         const { data: interval, error: courseError } = await supabase
             .from('user_sublessons')
