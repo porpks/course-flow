@@ -22,7 +22,7 @@ profileRouter.get("/:userId", async (req, res) => {
       .from("users")
       .select("*")
       .eq("user_id", userId);
-    res.json({error});
+    console.log(error);
     if (error && userId !== null) {
       return res.status(500).json({
         message: "An error occurred while fetching data.",
@@ -31,7 +31,7 @@ profileRouter.get("/:userId", async (req, res) => {
     }
 
     if (!data || data.length === 0) {
-      
+      console.log(data);
       return res.status(404).json({
         message: "User not found.",
       });
@@ -59,7 +59,7 @@ profileRouter.get(
         .from("users")
         .select("image_url")
         .eq("user_id", userId);
-      
+      console.log(data);
       if (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error" });
@@ -119,7 +119,7 @@ profileRouter.put(
         if (error) {
           console.error(error);
         } else {
-          res.json({"File uploaded successfully": data});
+          console.log("File uploaded successfully:", data);
         }
 
         const path = data.path;
@@ -142,10 +142,10 @@ profileRouter.put(
             })
             .eq("user_id", userId);
           if (error) {
-            res.json({error});
+            console.log(error);
           }
         } catch (error) {
-          res.json({error});
+          console.error(error);
         }
       } else {
         const now2 = new Date(); // Get the current date and time
@@ -153,7 +153,13 @@ profileRouter.put(
           now2.toISOString().replace(/T/, " ").replace(/\..+/, "") +
           ".682314+00";
 
-       
+        //   console.log({name: req.body.full_name,
+        //   date:req.body.dateofbirth,
+        //   edu:req.body.edu_background,
+        //   email:req.body.email,
+        //   imgUrl:imgUrl,
+        //   updated_at: formattedDate,
+        // })
 
         try {
           const { data, error } = await supabase
@@ -168,14 +174,14 @@ profileRouter.put(
             .eq("user_id", userId);
 
           if (error) {
-            res.json({error});
+            console.log(error);
           }
         } catch (error) {
-          res.json({error});
+          console.error(error);
         }
       }
     } catch (error) {
-      res.json({error});
+      console.log(error);
     }
 
     return res.json({
@@ -195,7 +201,7 @@ profileRouter.put("/delete/:userId", async (req, res) => {
       .eq("user_id", userId);
 
     if (error) {
-      
+      console.log(error);
       res.status(500).json({ error: "Failed to update image_url" });
     } else {
       res.status(200).json({ message: "Image URL removed" });

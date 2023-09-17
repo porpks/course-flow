@@ -133,46 +133,65 @@ learnRouter.get('/videotime', async (req, res) => {
     try {
         const { data: interval, error: courseError } = await supabase
             .from('user_sublessons')
-            .select('sublesson_status,sublesson_video_timestop,sublessons(*,lessons(*))')
-            .eq("user_id",userID)
-        if(interval === null) {
-            res.json({message:"there is no sublesson in userId"})
-        }
-        for (const dataItem of interval) {
-            dataItem.sublesson_id = dataItem.sublessons.sublesson_id;
-            dataItem.sublesson_name = dataItem.sublessons.sublesson_name
-            dataItem.course_id = dataItem.sublessons.lessons.course_id
-            dataItem.sublesson_video = dataItem.sublessons.sublesson_video
-            delete dataItem.sublessons;
-        }
+            .select('sublesson_status,sublesson_video_timestop,timestop_updated,sublessons(*,lessons(*))')
+            .eq("user_id", userID);
 
-        // Filter the interval array
+        if (!interval || interval.length === 0) {
+            return res.json({ message: "There are no sublessons for the given user ID" });
+        }
+        
+        interval.sort((a, b) => new Date(b.timestop_updated) - new Date(a.timestop_updated));
+        
+        
         const filteredInterval = interval.filter(dataItem => {
-            return (dataItem.sublesson_status === "inprogress" && dataItem.sublesson_video_timestop !== null) && (dataItem.course_id === courseID)
+            return (dataItem.sublesson_video_timestop !== null) 
         });
+       
+        if (filteredInterval.length === 0) {
+            return res.json({ message: "No sublessons match the criteria" });
+        }
 
-        res.json({ data: filteredInterval });
+        const latestSublesson = filteredInterval[0];
+
+        latestSublesson.sublesson_id = latestSublesson.sublessons.sublesson_id;
+        latestSublesson.sublesson_name = latestSublesson.sublessons.sublesson_name
+        latestSublesson.course_id = latestSublesson.sublessons.lessons.course_id
+        latestSublesson.sublesson_video = latestSublesson.sublessons.sublesson_video
+        delete latestSublesson.sublessons;
+
+        res.json({ data: latestSublesson });
     } catch (e) {
-        res.json({ error: e});
+        res.json({ error: e });
     }
 });
 
-learnRouter.put('/videotime', async (req, res) => { 
-    const body = req.body;
-    const date = new Date.now();
-const { data, error } = await supabase
-  .from('user_sublessons')
-  .update({ sublesson_video_timestop: `${body.sublesson_video_timestop}` })
-//   .update({timestop_updated , date})
-  .eq('user_id', `${body.user_Id}`)
-  .eq('sublesson_id', `${body.sublesson_id}`)
-  .select()
-    if(error)
-    {
-        res.json({error})
+
+learnRouter.put('/videotime', async (req, res) => {
+    try {
+      const body = req.body;
+      const currentDate = new Date(); // Use 'new Date()' to get the current date and time
+  
+      const { data, error } = await supabase
+        .from('user_sublessons')
+        .update({
+          sublesson_video_timestop: body.sublesson_video_timestop,
+          timestop_updated: currentDate, // Set the 'timestop_updated' column to the current date and time
+        })
+        .eq('user_id', body.user_Id)
+        .eq('sublesson_id', body.sublesson_id)
+        .select();
+  
+      if (error) {
+        res.status(500).json({ error: 'An error occurred while updating the record.' });
+      } else {
+        res.status(200).json(data);
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
     }
-    res.json(data);
-});
+  });
+  
 
 learnRouter.get('/videotimebyid', async (req, res) => {
     const sublesson_id = Number(req.query.sublessonid);

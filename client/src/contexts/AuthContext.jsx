@@ -86,11 +86,10 @@ function AuthProvider(props) {
             `http://localhost:4000/profile/${result.data.data[0].user_id}`
           );
           setUsername(response.data.data);
-         
+          console.log(response.data.data);
           localStorage.setItem("username", response.data.data.full_name);
           localStorage.setItem("userimage", response.data.data.image_url);
           localStorage.setItem("isLoggedIn", true);
-         
         } catch (error) {
           console.error(error);
         }
