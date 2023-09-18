@@ -242,3 +242,19 @@
 .Nunito {
   font-family: "Nunito", sans-serif;
 }
+
+.Ghost {
+  display: flex;
+  padding: 4px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-style: none;
+  border-radius: 16px;
+  color: var(--gray-500, #c8ccdb);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%; /* 24px */
+}
