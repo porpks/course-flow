@@ -15,7 +15,13 @@ import { Routes, Route } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import LearningPage from "../pages/LearningPage";
 import { useParams } from "react-router-dom";
-import AdminPage from "../pages/AdminPage";
+import AdminPage from "../pages/AdminPage/AdminPage";
+import AddLessonPage from "../pages/AdminPage/AddLessonPage";
+import CourseListPage from "../pages/AdminPage/CourseListPage";
+import AddCoursePage from "../pages/AdminPage/AddCoursePage";
+import EditCoursePage from "../pages/AdminPage/EditCoursePage";
+import EditLessonPage from "../pages/AdminPage/EditLessonPage";
+
 function AuthenticatedApp() {
   const { userId, logout } = useAuth();
 
@@ -49,6 +55,23 @@ function AuthenticatedApp() {
         <Route path="/assignment" element={<AssignmentPage />} />
         <Route path="/learning/:courseId" element={<LearningPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin/courselist" element={<CourseListPage />} />
+        <Route path="/admin/addcourse" element={<AddCoursePage />} />
+        <Route
+          path="/admin/editcourse/:courseId"
+          element={<EditCoursePage />}
+        />
+        <Route
+          path="/admin/editcourse/:courseId/addlesson"
+          element={<AddLessonPage />}
+        />
+        <Route
+          path="/admin/editcourse/:courseId/editlesson/:lessonId"
+          element={<EditLessonPage />}
+        />
+        {/* <Route path="/admin/assingmentlist" element={< />} />
+        <Route path="/admin/addassingment" element={< />} />
+        <Route path="/admin/editassingment/:sublessonId" element={< />} /> */}
         <Route path="*" element={null} />{" "}
       </Routes>
     </>
