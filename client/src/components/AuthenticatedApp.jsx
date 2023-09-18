@@ -21,6 +21,7 @@ import CourseListPage from "../pages/AdminPage/CourseListPage";
 import AddCoursePage from "../pages/AdminPage/AddCoursePage";
 import EditCoursePage from "../pages/AdminPage/EditCoursePage";
 import EditLessonPage from "../pages/AdminPage/EditLessonPage";
+import AssignmentAdminnListPage from "../pages/AssignmentAdminnListPage";
 
 function AuthenticatedApp() {
   const { userId, logout } = useAuth();
@@ -68,6 +69,10 @@ function AuthenticatedApp() {
         <Route
           path="/admin/editcourse/:courseId/editlesson/:lessonId"
           element={<EditLessonPage />}
+        />
+        <Route
+          path="/admin/assingmentlist"
+          element={<AssignmentAdminnListPage />}
         />
         {/* <Route path="/admin/assingmentlist" element={< />} />
         <Route path="/admin/addassingment" element={< />} />
