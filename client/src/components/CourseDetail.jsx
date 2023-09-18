@@ -251,7 +251,7 @@ function CourseDetail() {
                             </div>
                           </Typography>
                         </AccordionSummary>
-                        <AccordionDetails  className="test">
+                        <AccordionDetails  className="accordionDetails">
                           <div className="subLesson Body2 text-[--gray700] ">
                             <ul>
                               {lesson.sublessons.map((sublessonItem, index) => (
