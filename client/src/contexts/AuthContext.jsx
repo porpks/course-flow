@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const AuthContext = React.createContext();
+import secureLocalStorage from "react-secure-storage";
 
 function AuthProvider(props) {
   const [state, setState] = useState("eiei");
@@ -21,13 +22,13 @@ function AuthProvider(props) {
   const [videoUrl, setvideoUrl] = useState(
     "https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/1%20Minute%20Sample%20Video.mp4?t=2023-09-08T15%3A26%3A51.001Z"
   );
-  const userId = getCookie("userID");
-
+  // const userId = getCookie("userID");
+  const userId = secureLocalStorage.getItem("userID");
   const navigate = useNavigate();
 
   const logout = async () => {
     try {
-      if (!localStorage.getItem("userID")) {
+      if (!secureLocalStorage.getItem("userID")) {
         console.error("Cannot log out: User ID is not available.");
         return;
       }
@@ -73,7 +74,7 @@ function AuthProvider(props) {
       const token = result.data.token;
       setUserID(result.data.data[0].user_id);
       localStorage.setItem("token", token);
-      localStorage.setItem("userID", result.data.data[0].user_id);
+      secureLocalStorage.setItem("userID", result.data.data[0].user_id);
       setIsLoggedIn(true);
       localStorage.setItem("isLoggedIn", true);
       setCookie("userID", result.data.data[0].user_id, 1);
@@ -86,7 +87,6 @@ function AuthProvider(props) {
             `http://localhost:4000/profile/${result.data.data[0].user_id}`
           );
           setUsername(response.data.data);
-          console.log(response.data.data);
           localStorage.setItem("username", response.data.data.full_name);
           localStorage.setItem("userimage", response.data.data.image_url);
           localStorage.setItem("isLoggedIn", true);
@@ -149,7 +149,8 @@ function AuthProvider(props) {
         userId,
         videoUrl,
         setvideoUrl,
-      }}>
+      }}
+    >
       {props.children}
     </AuthContext.Provider>
   );
