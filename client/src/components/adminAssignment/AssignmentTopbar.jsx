@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
+import { useNavigate } from "react-router-dom";
 function AssignmentTopbar({ setSearchQuery }) {
+  const navigate = useNavigate();
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value); // Update searchQuery state
   };
@@ -26,11 +28,15 @@ function AssignmentTopbar({ setSearchQuery }) {
             </svg>
             <input
               placeholder='Search...'
-              className=" Search grow shrink basis-0 placeholder:text-slate-400 text-base font-normal font-['Inter'] leading-normal border-none outline-none"
-              onChange={handleSearchChange} // Handle search input change
-            ></input>
+              className="Search grow shrink basis-0 placeholder:text-slate-400 text-base font-normal font-['Inter'] leading-normal border-none outline-none"
+              onChange={handleSearchChange}
+            />
           </div>
-          <div className='Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex'>
+          <div
+            className='Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex'
+            onClick={() => {
+              navigate("/admin/addassingment");
+            }}>
             <div className=" text-center text-white text-base font-bold font-['Inter'] leading-normal">
               + Add Assignment
             </div>

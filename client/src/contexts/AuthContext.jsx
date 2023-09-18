@@ -22,18 +22,22 @@ function AuthProvider(props) {
   const [videoUrl, setvideoUrl] = useState(
     "https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/1%20Minute%20Sample%20Video.mp4?t=2023-09-08T15%3A26%3A51.001Z"
   );
+  const [deleteAssignment, setDeleteAssignment] = useState({
+    state: false,
+    assignment_id: null,
+  });
   // const userId = getCookie("userID");
   const userId = secureLocalStorage.getItem("userID");
   const navigate = useNavigate();
 
   const logout = async () => {
     try {
-      if (!secureLocalStorage.getItem("userID")) {
+      if (!userId) {
         console.error("Cannot log out: User ID is not available.");
         return;
       }
       const response = await axios.get(
-        `http://localhost:4000/auth/logout/${userID}`
+        `http://localhost:4000/auth/logout/${userId}`
       );
       if (response.status === 200) {
         localStorage.removeItem("token");
@@ -149,8 +153,9 @@ function AuthProvider(props) {
         userId,
         videoUrl,
         setvideoUrl,
-      }}
-    >
+        deleteAssignment,
+        setDeleteAssignment,
+      }}>
       {props.children}
     </AuthContext.Provider>
   );
