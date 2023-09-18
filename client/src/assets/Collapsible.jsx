@@ -11,20 +11,20 @@ const Collapsible = (props) => {
   const subLessonTotal = props.content;
 
   return (
-    <div className='collapsible'>
-      <div className='collapsible-btn'>
-        <p className='H3 text-[--gray700]'>{props.number}</p>
-        <button className='collapsible-title H3' onClick={toggleCollapsible}>
+    <div className="collapsible">
+      <div className="collapsible-btn">
+        <p className="H3 text-[--gray700]">{props.number}</p>
+        <button className="collapsible-title H3" onClick={toggleCollapsible}>
           {props.title}
         </button>
-        <img src='../../public/image/arrowDropDown.svg' alt='' />
+        <img src="../../public/image/arrowDropDown.svg" alt="" />
       </div>
       <div
-        className={`collapsible-content ${isOpen ? "show" : ""}`} //เช็คเงื่อนให้เพื่อกำหนดชื่อ class
+        className={`collapsible-content ${isOpen ? "show" : ""} `} //เช็คเงื่อนให้เพื่อกำหนดชื่อ class
       >
-        <div className='py-[24px] Body2 text-[--gray700]'>
+        <div className="py-[24px] Body2 text-[--gray700] ">
           {subLessonTotal.map((item, index) => (
-            <ul className='px-[40px]' key={uuidv4()}>
+            <ul className="px-[40px]" key={uuidv4()}>
               <li>{item.sublesson_name}</li>
             </ul>
           ))}
