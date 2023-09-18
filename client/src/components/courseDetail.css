@@ -47,3 +47,26 @@
   gap: 16px;
   border-top: 1px solid var(--gray400);
 }
+.accordion {
+  /* margin: 0; */
+  background-color: aqua;
+  border-bottom: 1px solid var(--gray400);
+}
+.typography {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 0;
+}
+.subLesson {
+  padding: 24px 0 24px 40px;
+}
+
+.test {
+  border-top: 1px solid var(--gray400);
+}
+
+.accordionSummary {
+  margin: 0 !important;
+}
