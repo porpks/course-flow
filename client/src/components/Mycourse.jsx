@@ -14,6 +14,8 @@ import Cross5 from "../assets/myCourseAssets/Cross5";
 
 function MyCourse() {
   const [dataCourse, setDataCourse] = useState([]);
+  const [courseID, setCourseID] = useState(null)
+  // const [status, setStatus] = useState(null)
   const [allCourse, setAllCourse] = useState(true);
   const [inprogress, setInprogress] = useState(false);
   const [complete, setComplete] = useState(false);
@@ -161,13 +163,14 @@ function MyCourse() {
             key={item.courses.course_id}
             onClick={() => {
               setCheckOnClick((q) => !q);
+              setCourseID(item.courses.course_id)
               localStorage.removeItem("course_id");
               localStorage.setItem("course_id", item.courses.course_id);
               getDataCourse2();
             }}>
             <Link
               key={item.courses.course_id}
-              to={`/learning/${localStorage.getItem("course_id")}`} // Define the route you want to navigate to
+              to={`/learning/${item.courses.course_id}`} // Define the route you want to navigate to
             >
               <CourseCard
                 key={item.courses.course_id}
@@ -197,6 +200,7 @@ function MyCourse() {
               to={`/learning/${item.courses.course_id}`}
               onClick={() => {
                 setCheckOnClick((q) => !q);
+                setCourseID(item.courses.course_id)
                 localStorage.removeItem("course_id");
                 localStorage.setItem("course_id", item.courses.course_id);
                 getDataCourse2();
@@ -226,6 +230,7 @@ function MyCourse() {
               key={item.courses.course_id}
               onClick={() => {
                 setCheckOnClick((q) => !q);
+                setCourseID(item.courses.course_id)
                 localStorage.removeItem("course_id");
                 localStorage.setItem("course_id", item.courses.course_id);
                 getDataCourse2();
