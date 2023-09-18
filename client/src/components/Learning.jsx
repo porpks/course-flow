@@ -445,6 +445,7 @@ function Learning() {
                 sublessonID={localStorage.getItem("videoKey") || videoKey}
                 subStatus={subStatus}
                 setSubStatus={setSubStatus}
+                setPercentComplete={setPercentComplete}
               />
             ) : null}
         </div>

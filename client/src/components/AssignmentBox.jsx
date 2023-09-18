@@ -89,6 +89,14 @@ const AssignmentBox = (props) => {
       newStatus[sublessonID] = "complete";
       props.setSubStatus(newStatus);
 
+      const result = await axios.get("http://localhost:4000/learn/status/", {
+        params: {
+          userID: userId,
+          courseID: localStorage.getItem("course_id"),
+        },
+      });
+      props.setPercentComplete(Number(result.data.percentComplete));
+
     } catch (error) {
       console.log(error.message);
     }
