@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
@@ -26,6 +27,7 @@ const AssignmentBox = (props) => {
           assignment_status: assignment.assignment_status,
         }));
         setAnswers(initialAnswers);
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -79,11 +81,26 @@ const AssignmentBox = (props) => {
 
         setData(updatedDataResponse.data.data);
       }
+
+      await axios.put(
+        `http://localhost:4000/learn/complete?userID=${userId}&sublessonID=${sublessonID}`
+      );
+      const newStatus = { ...props.subStatus };
+      newStatus[sublessonID] = "complete";
+      props.setSubStatus(newStatus);
+
+      const result = await axios.get("http://localhost:4000/learn/status/", {
+        params: {
+          userID: userId,
+          courseID: localStorage.getItem("course_id"),
+        },
+      });
+      props.setPercentComplete(Number(result.data.percentComplete));
+
     } catch (error) {
       console.log(error.message);
     }
   };
-
   return (
     <>
       <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex'>
@@ -91,7 +108,7 @@ const AssignmentBox = (props) => {
           assignmentsToDisplay.map((assignment, index) => {
             return (
               <>
-                <div key={index} className='w-[100%]'>
+                <div key={"A" + index} className='w-[100%]'>
                   <div className='Frame427320997 self-stretch flex items-start justify-between'>
                     <div className='Assignment grow shrink basis-0 h-8 text-black text-xl font-normal leading-loose'>
                       Assignment
@@ -194,7 +211,7 @@ const AssignmentBox = (props) => {
       <div className='pagination self-start'>
         {Array.from({ length: totalPages }).map((_, index) => (
           <button
-            key={index}
+            key={"00" + index}
             onClick={() => handlePageChange(index + 1)}
             className={`pagination-item ${currentPage === index + 1 ? "active" : ""
               }`}>

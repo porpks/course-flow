@@ -12,6 +12,11 @@ import CircularIndeterminate from "../assets/loadingProgress";
 import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../contexts/AuthContext";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function CourseDetail() {
   const navigate = useNavigate();
@@ -164,6 +169,8 @@ function CourseDetail() {
     minimumFractionDigits: 2,
   });
   const lessonTotal = dataDetail.lessons;
+  // const subLessonsTotal = lessonTotal;
+
   return (
     <>
       <section className="flex justify-center items-center border-2 border-sky-500">
@@ -173,7 +180,8 @@ function CourseDetail() {
               onClick={() => {
                 navigate("/ourcourse");
               }}
-              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer">
+              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
+            >
               <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
               <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
             </a>
@@ -194,7 +202,8 @@ function CourseDetail() {
                       width="104"
                       height="104"
                       viewBox="0 0 104 104"
-                      fill="none">
+                      fill="none"
+                    >
                       <rect
                         width="104"
                         height="104"
@@ -213,22 +222,48 @@ function CourseDetail() {
 
               <div className="CourseDetail_description flex flex-col gap-[24px]">
                 <div className="courseDetail_title ">
-                  <p className="H2">{dataCourse.course_name}</p>
+                  <div className="H2">{dataCourse.course_name}</div>
                 </div>
                 <div className="courseDetail_body">
-                  <p className="Body2">{dataCourse.course_detail}</p>
+                  <div className="Body2">{dataCourse.course_detail}</div>
                 </div>
               </div>
               <div className="lesson_sample">
-                <p className="H2 text-[--black] mb-[24px]">Module Samples</p>
-                <div className="collapsible-contents H3">
-                  {lessonTotal.map((item, index) => (
-                    <Collapsible
-                      key={uuidv4()}
-                      number={index < 10 ? "0" + (index + 1) : index + 1}
-                      title={item.lesson_name}
-                      content={item.sublessons}
-                    />
+                <div className="H2 text-[--black] mb-[24px]">
+                  Module Samples
+                </div>
+                <div className="collapsible-contents H3 ">
+                  {lessonTotal.map((lesson, index) => (
+                    <div key={uuidv4()}>
+                      <Accordion className="accordion">
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1a-content"
+                          id="panel1a-header"
+                         className="accordionSummary"
+                        >
+                          <Typography className="typography">
+                            <div className="H3 text-[--gray700]">
+                              {index < 10 ? "0" + (index + 1) : index + 1}
+                            </div>
+                            <div className="H3 text-[--black]">
+                              {lesson.lesson_name}
+                            </div>
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails  className="accordionDetails">
+                          <div className="subLesson Body2 text-[--gray700] ">
+                            <ul>
+                              {lesson.sublessons.map((sublessonItem, index) => (
+                                <li key={uuidv4()}>
+                                  {sublessonItem.sublesson_name}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </AccordionDetails>
+                      </Accordion>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -236,23 +271,24 @@ function CourseDetail() {
 
             <div className="Subscribe_box Shadow1">
               <div>
-                <p className="Body3 text-[--orange500]">Course</p>
+                <div className="Body3 text-[--orange500]">Course</div>
               </div>
               <div className="course-Subscribe flex flex-col gap-[8px]">
-                <p className="course-title H3">{dataDetail.course_name}</p>
-                <p className="course-description Body2 text-[--gray700]">
+                <div className="course-title H3">{dataDetail.course_name}</div>
+                <div className="course-description Body2 text-[--gray700]">
                   {dataDetail.course_detail.slice(0, 65)}
-                </p>
+                </div>
               </div>
               <div className="course-price  H3 text-[--gray700] flex flex-row justify-center items-center">
-                <p className="mr-[1rem]">THB</p>
-                <p>{coursePrice}</p>
+                <div className="mr-[1rem]">THB</div>
+                <div>{coursePrice}</div>
               </div>
               <div className="btn-grp">
                 {isSubscribe ? null : (
                   <button
                     onClick={userId ? openDesire : noAuthHandle}
-                    className={`Secondary w-[100%] hidden`}>
+                    className={`Secondary w-[100%] hidden`}
+                  >
                     {isDesireExist
                       ? "Remove from Desire Course"
                       : "Get in Desire Course"}
@@ -304,7 +340,8 @@ function CourseDetail() {
                       noAuthHandle();
                     }
                   }}
-                  className="Primary w-[100%] border-none">
+                  className="Primary w-[100%] border-none"
+                >
                   {isSubscribe ? "Start Learning" : "Subscribe This Course"}
                 </button>
               </div>

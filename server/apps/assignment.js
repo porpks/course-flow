@@ -51,8 +51,6 @@ assignmentRouter.get("/", async (req, res) => {
             .map((word) => word.replace(/\s/g, "\\s*"))
             .join(" ");
 
-        console.log(search);
-
         query.or(
             `assignment_question.ilike.%${search}%`,
             `sublessons.lessons.courses.course_name.ilike.%${search}%`,
@@ -63,7 +61,6 @@ assignmentRouter.get("/", async (req, res) => {
     }
     try {
         const { data, error } = await query;
-        console.log(data)
         if (error) {
             console.log(data, "data");
             res.status(500).json({ error });
@@ -226,6 +223,12 @@ assignmentRouter.put('/:userID', async (req, res) => {
                 .eq('assignment_id', body2[0].assignment_id)
                 .select()
 
+            // const { data: data3, error: err3 } = await supabase
+            //     .from('user_assignments')
+            //     .select('user_id, assignments(assignment_id,sublessons(sublesson_id, user_sublessons(user_id,sublesson_status)))')
+            //     .update({ 'assignments.sublessons.user_sublessons:sublesson_status': "complete" })
+            //     .eq('assignment_id', assignmentid)
+            //     .eq('user_id', userId)
 
 
             res.json({ data2 });
@@ -234,6 +237,7 @@ assignmentRouter.put('/:userID', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
 
 assignmentRouter.delete('/:assignment_id',async function (req, res) {
     const assignment_id = req.params.assignment_id;
@@ -251,4 +255,23 @@ assignmentRouter.delete('/:assignment_id',async function (req, res) {
     }
     
 })
+
+
+assignmentRouter.get('/test/:userID', async (req, res) => {
+    const userId = req.params.userID;
+    const assignmentid = req.query.assignmentid
+
+
+
+
+
+    if (err3) {
+        return res.json({ message: err3 })
+    }
+    else {
+        return res.json({ message: data3 })
+    }
+})
+
+
 export default assignmentRouter;

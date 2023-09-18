@@ -78,7 +78,7 @@ learnRouter.get('/status', async (req, res) => {
 
 });
 
-learnRouter.put('/status', async (req, res) => {
+learnRouter.put('/start', async (req, res) => {
     const userID = Number(req.query.userID);
     const sublessonID = Number(req.query.sublessonID);
 
@@ -121,6 +121,31 @@ learnRouter.put('/status', async (req, res) => {
 
 });
 
+learnRouter.put('/complete', async (req, res) => {
+    const userID = Number(req.query.userID);
+    const sublessonID = Number(req.query.sublessonID);
+
+    try {
+        const { data, error } = await supabase
+            .from("user_sublessons")
+            .update({
+                sublesson_status: "complete",
+            })
+            .eq("user_id", userID)
+            .eq("sublesson_id", sublessonID)
+
+        if (error) {
+            return res.status(404).json({ 'message': error });
+        }
+
+        return res.json({ 'message': `sublesson status ID:${sublessonID} has been updated` });
+
+    } catch (err) {
+        return res.status(400).json({ 'Error:': err.message });
+    }
+
+});
+
 learnRouter.get('/videotime', async (req, res) => {
     const courseID = Number(req.query.courseID);
     const userID = Number(req.query.userID);
@@ -139,14 +164,14 @@ learnRouter.get('/videotime', async (req, res) => {
         if (!interval || interval.length === 0) {
             return res.json({ message: "There are no sublessons for the given user ID" });
         }
-        
+
         interval.sort((a, b) => new Date(b.timestop_updated) - new Date(a.timestop_updated));
-        
-        
+
+
         const filteredInterval = interval.filter(dataItem => {
-            return (dataItem.sublesson_video_timestop !== null) 
+            return (dataItem.sublesson_video_timestop !== null)
         });
-       
+
         if (filteredInterval.length === 0) {
             return res.json({ message: "No sublessons match the criteria" });
         }
@@ -168,30 +193,30 @@ learnRouter.get('/videotime', async (req, res) => {
 
 learnRouter.put('/videotime', async (req, res) => {
     try {
-      const body = req.body;
-      const currentDate = new Date(); // Use 'new Date()' to get the current date and time
-  
-      const { data, error } = await supabase
-        .from('user_sublessons')
-        .update({
-          sublesson_video_timestop: body.sublesson_video_timestop,
-          timestop_updated: currentDate, // Set the 'timestop_updated' column to the current date and time
-        })
-        .eq('user_id', body.user_Id)
-        .eq('sublesson_id', body.sublesson_id)
-        .select();
-  
-      if (error) {
-        res.status(500).json({ error: 'An error occurred while updating the record.' });
-      } else {
-        res.status(200).json(data);
-      }
+        const body = req.body;
+        const currentDate = new Date(); // Use 'new Date()' to get the current date and time
+
+        const { data, error } = await supabase
+            .from('user_sublessons')
+            .update({
+                sublesson_video_timestop: body.sublesson_video_timestop,
+                timestop_updated: currentDate, // Set the 'timestop_updated' column to the current date and time
+            })
+            .eq('user_id', body.user_Id)
+            .eq('sublesson_id', body.sublesson_id)
+            .select();
+
+        if (error) {
+            res.status(500).json({ error: 'An error occurred while updating the record.' });
+        } else {
+            res.status(200).json(data);
+        }
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Server error' });
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
     }
-  });
-  
+});
+
 
 learnRouter.get('/videotimebyid', async (req, res) => {
     const sublesson_id = Number(req.query.sublessonid);
@@ -199,13 +224,13 @@ learnRouter.get('/videotimebyid', async (req, res) => {
         const { data: interval, error: courseError } = await supabase
             .from('user_sublessons')
             .select('sublesson_video_timestop')
-            .eq("sublesson_id",sublesson_id)
+            .eq("sublesson_id", sublesson_id)
 
 
-       
+
         res.json({ data: interval });
     } catch (e) {
-   res.json({ error: e});
+        res.json({ error: e });
     }
 });
 export default learnRouter;
