@@ -1,33 +1,47 @@
 import React, { useState } from "react";
 import CourseFlowIcon from "../../assets/CourseFlowIcon";
+import axios from "axios";
+import Login from "../Login";
+import { useNavigate } from "react-router-dom";
 
 function AdminLogin() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [adminId, setAdminId] = useState(null);
+  const [login, isLoggedIn] = useState(false);
+  const [loginData, setLoginData] = useState({
+    email: null,
+    password: null,
+  });
 
-  const handleInputChange = (e) => {
-    if (e.target.name === "username") {
-      setUsername(e.target.value);
-    } else if (e.target.name === "password") {
-      setPassword(e.target.value);
+  const handleLogin = async (loginData) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/authadmin/login",
+        loginData
+      );
+      if (response.data.success) {
+        // console.log("Login successful");
+      }
+      const admin_id = response.data.data[0].user_id;
+      setAdminId(admin_id);
+      localStorage.setItem("adminID", admin_id);
+
+      console.log(response.data.data[0]);
+    } catch (error) {
+      // console.error("Error during login:", error.message);
     }
   };
 
-  const handleLogin = () => {
-    // Perform login authentication here
-    if (username === "admin" && password === "password") {
-      // Successful login
-      console.log("Login successful");
-      // Do something after successful login, such as redirecting to a dashboard page
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!loginData.email || !loginData.password) {
+      alert("nodata");
     } else {
-      // Invalid credentials
-      console.log("Invalid username or password");
-      // Display an error message to the user or perform any other error handling
+      handleLogin(loginData);
     }
   };
-
   return (
-    <div>
+    <form className="flex flex-col" onSubmit={(e) => handleSubmit(e)}>
       <div className="Linear2 w-[100vw]  flex flex-col justify-center items-center">
         <div className=" bg-white w-[568px] h-[568px] mt-[150px] mb-[306px] flex flex-col items-center justify-center p-[60px]">
           <div className="flex flex-col justify-center items-center mb-[46px]">
@@ -37,26 +51,28 @@ function AdminLogin() {
             </h1>
           </div>
           <div className="mb-[40px]">
-            <p
-              className="Body2 pb-[4px]"
-              name="username"
-              value={username}
-              onChange={handleInputChange}
-            >
+            <p className="Body2 pb-[4px]" name="username">
               Username
             </p>
-            <input type="text" className="Input w-[446px] h-[48px] " />
+            <input
+              type="text"
+              className="Input w-[446px] h-[48px]"
+              onChange={(e) =>
+                setLoginData({ ...loginData, email: e.target.value })
+              }
+            />
           </div>
           <div className="mb-[40px]">
-            <p
-              className="Body2 pb-[4px]"
-              name="password"
-              value={password}
-              onChange={handleInputChange}
-            >
+            <p className="Body2 pb-[4px]" name="password">
               Password
             </p>
-            <input type="text" className="Input w-[446px] h-[48px]" />
+            <input
+              type="password"
+              className="Input w-[446px] h-[48px]"
+              onChange={(e) =>
+                setLoginData({ ...loginData, password: e.target.value })
+              }
+            />
           </div>
           <button
             className="Primary w-[446px] border-none"
@@ -66,7 +82,7 @@ function AdminLogin() {
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 
