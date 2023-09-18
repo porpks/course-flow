@@ -48,6 +48,7 @@ courseRouter.get("/course", async (req, res) => {
       data: data,
     });
   } catch (error) {
+    console.log(error)
     return res.status(500).json({
       message: "An error occurred while fetching data from Supabase",
       error: error.message,

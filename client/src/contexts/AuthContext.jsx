@@ -90,7 +90,6 @@ function AuthProvider(props) {
           localStorage.setItem("username", response.data.data.full_name);
           localStorage.setItem("userimage", response.data.data.image_url);
           localStorage.setItem("isLoggedIn", true);
-          console.log(username);
         } catch (error) {
           console.error(error);
         }

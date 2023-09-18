@@ -89,9 +89,9 @@ const AssignmentBox = (props) => {
             "userID"
           )}?sublessonid=${sublessonID}`
         );
-        console.log(sublessonID);
+
         setData(response.data.data);
-        console.log(response.data.data);
+
         const initialAnswers = response.data.data.map((assignment) => ({
           assignment_id: assignment.assignment_id,
           assignment_answer: assignment.assignment_answer || "",
@@ -154,11 +154,10 @@ const AssignmentBox = (props) => {
         setData(updatedDataResponse.data.data);
       }
     } catch (error) {
-      console.log(error);
       console.log(error.message);
     }
   };
-  console.log(assignmentsToDisplay);
+
   return (
     <>
       <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex'>

@@ -32,7 +32,6 @@ function MyCourse() {
   const [completeCount, setCompleteCount] = useState(0);
   const [avatar, setAvatar] = useState(null);
 
-  console.log(userId);
   function handleAllCourse() {
     setAllCourse(true);
     setInprogress(false);
@@ -107,7 +106,8 @@ function MyCourse() {
       });
       const data = result.data.data;
       console.log(data);
-      if (data.length > 0) {
+      console.log(Object.keys(data).length > 0);
+      if (Object.keys(data).length > 0) {
         const handleShowVideo = (sublessonName, sublessonID) => {
           setVideoHead(sublessonName);
           localStorage.setItem("sublessonName", sublessonName);
@@ -118,22 +118,14 @@ function MyCourse() {
           localStorage.setItem("isShowVdo", true);
           setIsShowAsm(false);
           localStorage.setItem("isShowAsm", false);
-          setPauseTime(
-            data[0].sublesson_video_timestop === null
-              ? 0
-              : data[0].sublesson_video_timestop
-          );
-          localStorage.setItem(
-            "pauseTime",
-            data[0].sublesson_video_timestop === null
-              ? 0
-              : data[0].sublesson_video_timestop
-          );
-          setvideoUrl(data[0].sublesson_video);
-          localStorage.setItem("videoUrl", data[0].sublesson_video);
+          setPauseTime(data.sublesson_video_timestop);
+          localStorage.setItem(data.sublesson_video_timestop);
+          setvideoUrl(data.sublesson_video);
+          localStorage.setItem("videoUrl", data.sublesson_video);
           localStorage.setItem("nonepause", false);
+          console.log(data.sublesson_video_timestop);
         };
-        handleShowVideo(data[0].sublesson_name, data[0].sublesson_id);
+        handleShowVideo(data.sublesson_name, data.sublesson_id);
       } else {
         setIsShowVdo(true);
         localStorage.setItem("isShowVdo", true);

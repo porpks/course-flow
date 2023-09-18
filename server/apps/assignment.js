@@ -29,6 +29,61 @@ function calculateDueDateStatus(assignmentduedate) {
 
 const assignmentRouter = Router();
 
+assignmentRouter.get("/", async(req, res)=>{
+   
+    let { page, perPage, search } = req.query; 
+
+    
+    let query = supabase
+      .from("assignments")
+      .select(
+        "*,sublessons(lesson_id,sublesson_name,lessons(*,courses(course_name)))"
+      )
+      .range((page - 1) * perPage, page * perPage - 1);
+
+       
+     
+ 
+    if (search) {
+      search = search
+      .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      .split(/\s+/) // Split on whitespace
+      .map((word) => word.replace(/\s/g, "\\s*"))
+      .join(" ");
+
+      console.log(search);
+
+      query .or(
+        `assignment_question.ilike.%${search}%`,
+        `sublessons.lessons.courses.course_name.ilike.%${search}%`,
+        `sublessons.lessons.lesson_name.ilike.%${search}%`,
+        `sublessons.sublesson_name.ilike.%${search}%`
+      );
+      
+      }
+    try {
+      const { data, error } = await query;
+        console.log(data)
+      if (error) {
+        console.log(data,"data");
+        res.status(500).json({ error});
+      } else {
+        const flatData = data;
+        flatData.forEach((dataItem) => {
+          dataItem.sublesson_name = dataItem.sublessons.sublesson_name;
+          dataItem.lesson_name = dataItem.sublessons.lessons.lesson_name;
+          dataItem.course_name = dataItem.sublessons.lessons.courses.course_name;
+          delete dataItem.sublessons;
+        });
+        res.json({ flatData });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+
+
 assignmentRouter.get("/:userID", async (req, res) => {
     const userId = req.params.userID;
     const Sublessonid = req.query.sublessonid
@@ -170,7 +225,7 @@ assignmentRouter.put('/:userID', async (req, res) => {
         .select()    
 
         
-        console.log(data2)
+        
         res.json({ data2 });
     }
     } catch (err) {

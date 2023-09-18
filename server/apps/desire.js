@@ -86,7 +86,7 @@ desireRouter.delete("/", async (req, res) => {
 
     res.json({ message: "desire course has been delete" });
   } catch (error) {
-    console.log(error);
+    res.json({error});
   }
 });
 
