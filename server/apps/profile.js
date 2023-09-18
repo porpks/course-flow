@@ -22,7 +22,6 @@ profileRouter.get("/:userId", async (req, res) => {
       .from("users")
       .select("*")
       .eq("user_id", userId);
-    console.log(error);
     if (error && userId !== null) {
       return res.status(500).json({
         message: "An error occurred while fetching data.",
@@ -31,7 +30,6 @@ profileRouter.get("/:userId", async (req, res) => {
     }
 
     if (!data || data.length === 0) {
-      console.log(data);
       return res.status(404).json({
         message: "User not found.",
       });
@@ -59,7 +57,6 @@ profileRouter.get(
         .from("users")
         .select("image_url")
         .eq("user_id", userId);
-      console.log(data);
       if (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error" });

@@ -51,8 +51,6 @@ assignmentRouter.get("/", async (req, res) => {
             .map((word) => word.replace(/\s/g, "\\s*"))
             .join(" ");
 
-        console.log(search);
-
         query.or(
             `assignment_question.ilike.%${search}%`,
             `sublessons.lessons.courses.course_name.ilike.%${search}%`,
@@ -63,7 +61,6 @@ assignmentRouter.get("/", async (req, res) => {
     }
     try {
         const { data, error } = await query;
-        console.log(data)
         if (error) {
             console.log(data, "data");
             res.status(500).json({ error });
