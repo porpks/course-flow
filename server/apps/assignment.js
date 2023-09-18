@@ -235,5 +235,20 @@ assignmentRouter.put('/:userID', async (req, res) => {
     }
 });
 
-
+assignmentRouter.delete('/:assignment_id',async function (req, res) {
+    const assignment_id = req.params.assignment_id;
+    try {  
+    const { error } = await supabase
+    .from('assignments')
+    .delete()
+    .eq('assignment_id', assignment_id)
+        if(error ){
+            return res.json({ error: error});
+        }
+        return res.json({message: "delete sublessons id:"+sublessonId+" "+"successfully"});
+    } catch (error) {
+        res.json({ error: error});
+    }
+    
+})
 export default assignmentRouter;

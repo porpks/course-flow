@@ -183,11 +183,13 @@
 }
 
 .Secondary:hover {
+  border-color: var(--orange-100, #fbaa1c);
   color: var(--orange-100, #fbaa1c);
   transition: color 0.3s ease-out;
 }
 
 .Secondary:active {
+  border-color: var(--orange-500, #f47e20);
   color: var(--orange-500, #f47e20);
   transition: color 0.3s ease-out;
 }

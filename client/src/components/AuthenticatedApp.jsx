@@ -21,6 +21,7 @@ import CourseListPage from "../pages/AdminPage/CourseListPage";
 import AddCoursePage from "../pages/AdminPage/AddCoursePage";
 import EditCoursePage from "../pages/AdminPage/EditCoursePage";
 import EditLessonPage from "../pages/AdminPage/EditLessonPage";
+import AssignmentAdminListPage from "../pages/AdminPage/AssignmentAdminListPage.jsx";
 
 function AuthenticatedApp() {
   const { userId, logout } = useAuth();
@@ -41,38 +42,41 @@ function AuthenticatedApp() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/ourcourse" element={<OurCoursePage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path='/' element={<HomePage />} />
+        <Route path='/ourcourse' element={<OurCoursePage />} />
+        <Route path='/register' element={<RegisterPage />} />
+        <Route path='/login' element={<LoginPage />} />
         <Route path={`/profile/:id`} element={<ProtectedProfileRoute />} />
         <Route
-          path="/ourcourse/coursedetail/:id"
+          path='/ourcourse/coursedetail/:id'
           element={<CourseDetailPage />}
         />
-        <Route path="/mycourse" element={<MyCoursePage />} />
-        <Route path="/desire" element={<DesireCoursePage />} />
-        <Route path="/assignment" element={<AssignmentPage />} />
-        <Route path="/learning/:courseId" element={<LearningPage />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/admin/courselist" element={<CourseListPage />} />
-        <Route path="/admin/addcourse" element={<AddCoursePage />} />
+        <Route path='/mycourse' element={<MyCoursePage />} />
+        <Route path='/desire' element={<DesireCoursePage />} />
+        <Route path='/assignment' element={<AssignmentPage />} />
+        <Route path='/learning/:courseId' element={<LearningPage />} />
+        <Route path='/admin' element={<AdminPage />} />
+        <Route path='/admin/courselist' element={<CourseListPage />} />
+        <Route path='/admin/addcourse' element={<AddCoursePage />} />
         <Route
-          path="/admin/editcourse/:courseId"
+          path='/admin/editcourse/:courseId'
           element={<EditCoursePage />}
         />
         <Route
-          path="/admin/editcourse/:courseId/addlesson"
+          path='/admin/editcourse/:courseId/addlesson'
           element={<AddLessonPage />}
         />
         <Route
-          path="/admin/editcourse/:courseId/editlesson/:lessonId"
+          path='/admin/editcourse/:courseId/editlesson/:lessonId'
           element={<EditLessonPage />}
         />
-        {/* <Route path="/admin/assingmentlist" element={< />} />
-        <Route path="/admin/addassingment" element={< />} />
+        <Route
+          path='/admin/assingmentlist'
+          element={<AssignmentAdminListPage />}
+        />
+        {/* <Route path="/admin/addassingment" element={< />} />
         <Route path="/admin/editassingment/:sublessonId" element={< />} /> */}
-        <Route path="*" element={null} />{" "}
+        <Route path='*' element={null} />{" "}
       </Routes>
     </>
   );
