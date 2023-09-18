@@ -89,10 +89,12 @@ function Learning() {
 
         setVideoKey(newVideoKey);
         setVideoHead(newVideoHead);
+        setvideoUrl(null);
         setvideoUrl(newVideoUrl);
 
         localStorage.setItem("videoKey", newVideoKey);
         localStorage.setItem("videoHead", newVideoHead);
+        localStorage.setItem("videoUrl", null);
         localStorage.setItem("videoUrl", newVideoUrl);
         localStorage.setItem("isShowAsm", false);
       }
@@ -105,7 +107,7 @@ function Learning() {
     try {
       updateVideoDisplay(sublessonName, sublessonID);
       fetchPauseTime();
-      
+
       localStorage.setItem("pauseTime", 0);
       setIsShowVdo(true);
       localStorage.setItem("isShowVdo", true);
@@ -120,18 +122,18 @@ function Learning() {
 
     setVideoHead(newVideoHead);
     setVideoKey(sublessonID);
+    setvideoUrl(null);
     setvideoUrl(newVideoUrl);
 
     localStorage.setItem("sublessonName", newVideoHead);
     localStorage.setItem("sublessonID", sublessonID);
     localStorage.setItem("videoKey", sublessonID);
+    localStorage.setItem("videoUrl", null);
     localStorage.setItem("videoUrl", newVideoUrl);
 
     updateIsShowAsm(false);
     setIsShowVdo(false);
     localStorage.setItem("isShowVdo", false);
-    setvideoUrl(null);
-    localStorage.setItem("videoUrl", null);
   };
 
   const handleStart = async () => {
