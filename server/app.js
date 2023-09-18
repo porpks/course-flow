@@ -8,18 +8,35 @@ import desireRouter from "./apps/desire.js";
 import MyCourseRouter from "./apps/mycourse.js";
 import assignmentRouter from "./apps/assignment.js";
 import learnRouter from "./apps/learn.js";
-
-// import { client } from "./utils/db.js";
-// import dotenv from "dotenv";
+import session from "express-session";
+import cookieSession from "cookie-session";
 import { validateTokenMiddleware } from "./middlewares/protect.js";
+import cookieParser from "cookie-parser";
 
 async function init() {
-  //   dotenv.config();
   const app = express();
   const port = 4000;
-  //   await client.connect();
+
   app.use(cors());
   app.use(bodyParser.json());
+  app.use(cookieParser());
+  // app.set("trust proxy", 1); // trust first proxy
+  // app.use(
+  //   session({
+  //     secret: "keyboard cat",
+  //     resave: false,
+  //     saveUninitialized: true,
+  //     cookie: { secure: true },
+  //   })
+  // );
+  app.use(session({ secret: "keyboard cat", cookie: { maxAge: 60000 } }));
+  // app.use(
+  //   cookieSession({
+  //     name: "session",
+  //     keys: ["mySecretKey"],
+  //     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  //   })
+  // );
 
   app.use("/auth", authRouter);
   app.use("/profile", profileRouter);
@@ -29,6 +46,13 @@ async function init() {
   app.use("/mycourse", MyCourseRouter);
   app.use("/assignment", assignmentRouter);
   app.use("/learn", learnRouter);
+  app.get("/", function (req, res) {
+    // Cookies that have not been signed
+    console.log("Cookies: ", req.cookies);
+
+    // Cookies that have been signed
+    console.log("Signed Cookies: ", req.signedCookies);
+  });
 
   //   app.use("/posts", postRouter);
 

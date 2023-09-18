@@ -41,6 +41,9 @@
 .Linear1 {
   background: linear-gradient(114deg, #95beff 0%, #0040e5 100%);
 }
+.Linear2 {
+  background: linear-gradient(207deg, #5697ff 0%, #2558dd 100%);
+}
 
 .H1 {
   font-family: "Inter", sans-serif;
@@ -203,4 +206,39 @@
 /* Hover state, scale up a bit */
 .hover-scale:hover {
   transform: scale(1.05); /* Adjust the scale factor as needed */
+}
+
+.Input {
+  display: flex;
+  padding: 12px 16px 12px 12px;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 1px solid var(--gray-400, #d6d9e4);
+  background: var(--utility-white, #fff);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+}
+
+.Input:focus {
+  outline: none !important;
+  display: flex;
+  padding: 12px 16px 12px 12px;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 1px solid var(--orange-500, #f47e20);
+  background: var(--utility-white, #fff);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+}
+
+.Nunito {
+  font-family: "Nunito", sans-serif;
 }
