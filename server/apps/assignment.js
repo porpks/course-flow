@@ -226,6 +226,12 @@ assignmentRouter.put('/:userID', async (req, res) => {
                 .eq('assignment_id', body2[0].assignment_id)
                 .select()
 
+            // const { data: data3, error: err3 } = await supabase
+            //     .from('user_assignments')
+            //     .select('user_id, assignments(assignment_id,sublessons(sublesson_id, user_sublessons(user_id,sublesson_status)))')
+            //     .update({ 'assignments.sublessons.user_sublessons:sublesson_status': "complete" })
+            //     .eq('assignment_id', assignmentid)
+            //     .eq('user_id', userId)
 
 
             res.json({ data2 });
@@ -235,5 +241,21 @@ assignmentRouter.put('/:userID', async (req, res) => {
     }
 });
 
+
+assignmentRouter.get('/test/:userID', async (req, res) => {
+    const userId = req.params.userID;
+    const assignmentid = req.query.assignmentid
+
+
+
+
+
+    if (err3) {
+        return res.json({ message: err3 })
+    }
+    else {
+        return res.json({ message: data3 })
+    }
+})
 
 export default assignmentRouter;
