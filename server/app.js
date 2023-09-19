@@ -7,6 +7,8 @@ import courseRouter from "./apps/course.js";
 import desireRouter from "./apps/desire.js";
 import MyCourseRouter from "./apps/mycourse.js";
 import assignmentRouter from "./apps/assignment.js";
+import authAdminRouter from "./apps/authadmin.js";
+
 import learnRouter from "./apps/learn.js";
 import session from "express-session";
 import cookieSession from "cookie-session";
@@ -39,6 +41,7 @@ async function init() {
   // );
 
   app.use("/auth", authRouter);
+  app.use("/authadmin", authAdminRouter);
   app.use("/profile", profileRouter);
   app.use("/ourcourse", courseRouter);
   app.use("/coursedetail", courseRouter);

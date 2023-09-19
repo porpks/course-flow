@@ -1,5 +1,6 @@
 import React from "react";
 import "./CourseCard.css";
+import { Link } from "react-router-dom";
 
 function CourseCard(props) {
   return (
@@ -18,7 +19,15 @@ function CourseCard(props) {
             {props.coursedetail}
           </p>
           <br />
-          <p>Course Detail</p>
+          <Link
+            className="no-underline"
+            to={`/ourcourse/coursedetail/${props.courseid}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+            }}
+          >
+            Course Detail
+          </Link>
         </div>
       </div>
       <div className="footerCard">
