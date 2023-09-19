@@ -150,7 +150,9 @@ assignmentRouter.get("/:userID", async (req, res) => {
             dataItem.assignment_duedate = calculateDueDateStatus(dataItem.assignment_duedate);
             dataItem.assignment_question = dataItem.assignments.assignment_question
             dataItem.userId = dataItem.user_id;
+            if(!dataItem.assignment_status){
             dataItem.assignment_status = "Pending"
+            }
             delete dataItem.assignments;
             delete dataItem.user_id;
             delete dataItem.user_assignment_id
