@@ -19,7 +19,7 @@ import { Button } from "@mui/base/Button";
 
 function MyCourse() {
   const [dataCourse, setDataCourse] = useState([]);
-  const [courseID, setCourseID] = useState(null)
+  const [courseID, setCourseID] = useState(null);
   // const [status, setStatus] = useState(null)
   const [allCourse, setAllCourse] = useState(true);
   const [inprogress, setInprogress] = useState(false);
@@ -168,10 +168,11 @@ function MyCourse() {
             key={item.courses.course_id}
             onClick={() => {
               setCheckOnClick((q) => !q);
-              setCourseID(item.courses.course_id)
+              setCourseID(item.courses.course_id);
               localStorage.removeItem("course_id");
               localStorage.setItem("course_id", item.courses.course_id);
               getDataCourse2();
+              window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
             }}
           >
             <Link
@@ -209,10 +210,11 @@ function MyCourse() {
               to={`/learning/${item.courses.course_id}`}
               onClick={() => {
                 setCheckOnClick((q) => !q);
-                setCourseID(item.courses.course_id)
+                setCourseID(item.courses.course_id);
                 localStorage.removeItem("course_id");
                 localStorage.setItem("course_id", item.courses.course_id);
                 getDataCourse2();
+                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
               }} // Define the route you want to navigate to
             >
               <CourseCard
@@ -241,10 +243,11 @@ function MyCourse() {
               key={item.courses.course_id}
               onClick={() => {
                 setCheckOnClick((q) => !q);
-                setCourseID(item.courses.course_id)
+                setCourseID(item.courses.course_id);
                 localStorage.removeItem("course_id");
                 localStorage.setItem("course_id", item.courses.course_id);
                 getDataCourse2();
+                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
               }}
               to={`/learning/${item.courses.course_id}`} // Define the route you want to navigate to
             >

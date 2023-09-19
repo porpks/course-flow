@@ -40,6 +40,7 @@ function AdminLogin() {
       handleLogin(loginData);
     }
   };
+
   return (
     <form className="flex flex-col" onSubmit={(e) => handleSubmit(e)}>
       <div className="Linear2 w-[100vw]  flex flex-col justify-center items-center">
