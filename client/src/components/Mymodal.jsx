@@ -1,7 +1,5 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
 function Mymodal(props) {
@@ -38,7 +36,7 @@ function Mymodal(props) {
           <div className="bg-gray-200 w-[100%] h-[1px]"></div>
           <div className="p-[24px] Body2">
             <div className="text-[#646D89]">{props.description}</div>
-            <div className="flex gap-[16px] mt-[24px]">
+            <div className="flex justify-center gap-[16px] mt-[24px]">
               <button className="Secondary" onClick={props.noOnClick}>
                 {props.noDes}
               </button>
