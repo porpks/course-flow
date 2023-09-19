@@ -43,12 +43,11 @@ courseRouter.get("/course", async (req, res) => {
       .or(`${queryFullName},${queryKeywords}`)
       .order("course_id", { ascending: true });
 
-
     return res.json({
       data: data,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
       message: "An error occurred while fetching data from Supabase",
       error: error.message,
@@ -75,5 +74,48 @@ courseRouter.get("/:courseId", async (req, res) => {
     message: error;
   }
 });
+
+courseRouter.get("/editcourse/:courseId", async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+    const { data, error } = await supabase
+      .from("courses")
+      .select("*,lessons(*,sublessons(sublesson_name,sublesson_id))")
+      .eq("course_id", courseId);
+
+    if (error) {
+      throw error;
+    }
+
+    return res.json({
+      data: data[0],
+    });
+  } catch (error) {
+    message: error;
+  }
+});
+
+// courseRouter.get(
+//   "/editcourse/:courseId/addlesson/:lessonsId",
+//   async (req, res) => {
+//     try {
+//       const courseId = req.params.courseId;
+//       const { data, error } = await supabase
+//         .from("courses")
+//         .select("*,lessons(*,sublessons(sublesson_name,sublesson_id))")
+//         .eq("course_id", courseId);
+
+//       if (error) {
+//         throw error;
+//       }
+
+//       return res.json({
+//         data: data[0],
+//       });
+//     } catch (error) {
+//       message: error;
+//     }
+//   }
+// );
 
 export default courseRouter;
