@@ -183,11 +183,13 @@
 }
 
 .Secondary:hover {
+  border-color: var(--orange-100, #fbaa1c);
   color: var(--orange-100, #fbaa1c);
   transition: color 0.3s ease-out;
 }
 
 .Secondary:active {
+  border-color: var(--orange-500, #f47e20);
   color: var(--orange-500, #f47e20);
   transition: color 0.3s ease-out;
 }
@@ -257,4 +259,22 @@
   font-style: normal;
   font-weight: 700;
   line-height: 150%; /* 24px */
+}
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+  display: none;
+}
+.css-e0m66g-MuiFormControl-root-MuiTextField-root .MuiInputBase-root {
+  border: 2px solid #cbd5e0 !important;
+}
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input:focus {
+  border: 2px solid #f47e20;
+  position: absolute;
+  left: -2px;
+  width: 432px;
+  height: 13px;
+  border-radius: 8px;
+}
+.css-1laqsz7-MuiInputAdornment-root {
+  position: absolute;
+  right: 10px;
 }

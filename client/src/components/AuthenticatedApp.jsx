@@ -21,7 +21,7 @@ import CourseListPage from "../pages/AdminPage/CourseListPage";
 import AddCoursePage from "../pages/AdminPage/AddCoursePage";
 import EditCoursePage from "../pages/AdminPage/EditCoursePage";
 import EditLessonPage from "../pages/AdminPage/EditLessonPage";
-import AssignmentAdminnListPage from "../pages/AssignmentAdminnListPage";
+import AssignmentAdminListPage from "../pages/AdminPage/AssignmentAdminListPage.jsx";
 
 function AuthenticatedApp() {
   const { userId, logout } = useAuth();
@@ -72,10 +72,9 @@ function AuthenticatedApp() {
         />
         <Route
           path="/admin/assingmentlist"
-          element={<AssignmentAdminnListPage />}
+          element={<AssignmentAdminListPage />}
         />
-        {/* <Route path="/admin/assingmentlist" element={< />} />
-        <Route path="/admin/addassingment" element={< />} />
+        {/* <Route path="/admin/addassingment" element={< />} />
         <Route path="/admin/editassingment/:sublessonId" element={< />} /> */}
         <Route path="*" element={null} />{" "}
       </Routes>

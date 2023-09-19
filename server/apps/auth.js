@@ -43,7 +43,7 @@ authRouter.post("/login", async (req, res) => {
     email: req.body.email,
     password: req.body.password,
   };
-  
+
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email: loginData.email,
@@ -53,7 +53,7 @@ authRouter.post("/login", async (req, res) => {
     if (error) {
       return res.json({ error: error });
     }
-  
+
     if (data) {
       const token = data.session.access_token;
 
@@ -64,7 +64,6 @@ authRouter.post("/login", async (req, res) => {
           .eq("email", loginData.email);
 
         const userId = data;
-        // console.log(userId);
 
         if (error) {
           return res.status(500).json({ error: "Supabase query failed" });

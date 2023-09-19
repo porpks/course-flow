@@ -1,81 +1,12 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useAuth } from "../contexts/AuthContext.jsx";
 
 import "./Assignment.css";
 const AssignmentBox = (props) => {
-  // const mockAssignment = [
-  //   {
-  //     assignment_id: 1,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Pending",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: 2,
-  //     assignmentanswer: null,
-  //   },
-  //   {
-  //     assignment_id: 2,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Submitted",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: "test Answer",
-  //   },
-  //   {
-  //     assignment_id: 3,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Pending",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: null,
-  //   },
-  //   {
-  //     assignment_id: 4,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Pending",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: null,
-  //   },
-  //   {
-  //     assignment_id: 5,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Pending",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: null,
-  //   },
-  //   {
-  //     assignment_id: 6,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Pending",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: null,
-  //   },
-  //   {
-  //     assignment_id: 7,
-  //     coursename: "Service Design Essentials",
-  //     lessonname: "introduction",
-  //     sublessonname: "4 Levels of Service Design in an Organization",
-  //     assignmentstatus: "Pending",
-  //     assignmentquestion: "What are the 4 elements of service design?",
-  //     assignmentduedate: "2",
-  //     assignmentanswer: null,
-  //   },
-  // ];
+  const { userId } = useAuth()
   const [data, setData] = useState();
   const [answers, setAnswers] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -85,9 +16,7 @@ const AssignmentBox = (props) => {
     const getAssignmentData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/assignment/${localStorage.getItem(
-            "userID"
-          )}?sublessonid=${sublessonID}`
+          `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
         );
 
         setData(response.data.data);
@@ -98,6 +27,7 @@ const AssignmentBox = (props) => {
           assignment_status: assignment.assignment_status,
         }));
         setAnswers(initialAnswers);
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -140,24 +70,37 @@ const AssignmentBox = (props) => {
       }));
 
       const response = await axios.put(
-        `http://localhost:4000/assignment/${localStorage.getItem(
-          "UserID"
-        )}?assignmentid=${assignment_id}`,
+        `http://localhost:4000/assignment/${userId}?assignmentid=${assignment_id}`,
         assignmentAnswers
       );
 
       if (response.status === 200) {
         const updatedDataResponse = await axios.get(
-          `http://localhost:4000/assignment/${localStorage.getItem("UserID")}`
+          `http://localhost:4000/assignment/${userId}`
         );
 
         setData(updatedDataResponse.data.data);
       }
+
+      await axios.put(
+        `http://localhost:4000/learn/complete?userID=${userId}&sublessonID=${sublessonID}`
+      );
+      const newStatus = { ...props.subStatus };
+      newStatus[sublessonID] = "complete";
+      props.setSubStatus(newStatus);
+
+      const result = await axios.get("http://localhost:4000/learn/status/", {
+        params: {
+          userID: userId,
+          courseID: localStorage.getItem("course_id"),
+        },
+      });
+      props.setPercentComplete(Number(result.data.percentComplete));
+
     } catch (error) {
       console.log(error.message);
     }
   };
-
   return (
     <>
       <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex'>
@@ -165,35 +108,33 @@ const AssignmentBox = (props) => {
           assignmentsToDisplay.map((assignment, index) => {
             return (
               <>
-                <div key={index} className='w-[100%]'>
+                <div key={"A" + index} className='w-[100%]'>
                   <div className='Frame427320997 self-stretch flex items-start justify-between'>
                     <div className='Assignment grow shrink basis-0 h-8 text-black text-xl font-normal leading-loose'>
                       Assignment
                     </div>
                     <div
-                      className={`StatusHomework px-2 py-1 ${
-                        assignment.assignment_status === "Pending"
-                          ? "bg-[#FFFBDA]"
-                          : assignment.assignment_status === "Submitted late"
+                      className={`StatusHomework px-2 py-1 ${assignment.assignment_status === "Pending"
+                        ? "bg-[#FFFBDA]"
+                        : assignment.assignment_status === "Submitted late"
                           ? "bg-[#EAF0FF]"
                           : assignment.assignment_status === "Submitted"
-                          ? "bg-[#DCF8EE]"
-                          : assignment.assignment_status === "Overdue"
-                          ? "bg-[#FAE7F4]"
-                          : null
-                      } rounded justify-start items-start gap-2 inline-flex `}>
+                            ? "bg-[#DCF8EE]"
+                            : assignment.assignment_status === "Overdue"
+                              ? "bg-[#FAE7F4]"
+                              : null
+                        } rounded justify-start items-start gap-2 inline-flex `}>
                       <div
-                        className={`${
-                          assignment.assignment_status === "Pending"
-                            ? " text-[#996400]"
-                            : assignment.assignment_status === "Submitted late"
+                        className={`${assignment.assignment_status === "Pending"
+                          ? " text-[#996400]"
+                          : assignment.assignment_status === "Submitted late"
                             ? "text-[#3456CF]"
                             : assignment.assignment_status === "Submitted"
-                            ? "text-[#0A7B60]"
-                            : assignment.assignment_status === "Overdue"
-                            ? "text-[#9B2FAC]"
-                            : null
-                        } text-base font-medium leading-normal`}>
+                              ? "text-[#0A7B60]"
+                              : assignment.assignment_status === "Overdue"
+                                ? "text-[#9B2FAC]"
+                                : null
+                          } text-base font-medium leading-normal`}>
                         {assignment.assignment_status}
                       </div>
                     </div>
@@ -209,26 +150,23 @@ const AssignmentBox = (props) => {
                         </div>
                       </div>
                       <div
-                        className={`InputField self-stretch  pl-3 pr-4 py-3 rounded-lg border border-solid${
-                          assignment.assignment_status === "Submitted" ||
+                        className={`InputField self-stretch  pl-3 pr-4 py-3 rounded-lg border border-solid${assignment.assignment_status === "Submitted" ||
                           assignment.assignment_status === "Submitted late"
+                          ? "bg-none "
+                          : " bg-white"
+                          } border-gray-300 justify-start items-start gap-2 inline-flex`}>
+                        <div
+                          className={`ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex ${assignment.assignment_status === "Submitted" ||
+                            assignment.assignment_status === "Submitted late"
                             ? "bg-none "
                             : " bg-white"
-                        } border-gray-300 justify-start items-start gap-2 inline-flex`}>
-                        <div
-                          className={`ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex ${
-                            assignment.assignment_status === "Submitted" ||
-                            assignment.assignment_status === "Submitted late"
-                              ? "bg-none "
-                              : " bg-white"
-                          }`}>
+                            }`}>
                           <textarea
-                            className={`${
-                              assignment.assignment_status === "Submitted" ||
+                            className={`${assignment.assignment_status === "Submitted" ||
                               assignment.assignment_status === "Submitted late"
-                                ? "bg-slate-200 text-slate-500 "
-                                : "bg-white  text-slate-400"
-                            }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
+                              ? "bg-slate-200 text-slate-500 "
+                              : "bg-white  text-slate-400"
+                              }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
                             placeholder='Answer...'
                             value={
                               answers.find(
@@ -273,11 +211,10 @@ const AssignmentBox = (props) => {
       <div className='pagination self-start'>
         {Array.from({ length: totalPages }).map((_, index) => (
           <button
-            key={index}
+            key={"00" + index}
             onClick={() => handlePageChange(index + 1)}
-            className={`pagination-item ${
-              currentPage === index + 1 ? "active" : ""
-            }`}>
+            className={`pagination-item ${currentPage === index + 1 ? "active" : ""
+              }`}>
             {index + 1}
           </button>
         ))}

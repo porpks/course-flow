@@ -3,8 +3,10 @@ import Footer from "../components/Footer";
 import "../components/Assignment.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useAuth } from "../contexts/AuthContext";
 
 function AssignmentPage() {
+  const { userId } = useAuth();
   const [data, setData] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,7 +16,7 @@ function AssignmentPage() {
     const getAssignmentData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/assignment/${localStorage.getItem("userID")}`
+          `http://localhost:4000/assignment/${userId}`
         );
         setData(response.data.data);
 
@@ -90,15 +92,13 @@ function AssignmentPage() {
       }));
 
       const response = await axios.put(
-        `http://localhost:4000/assignment/${localStorage.getItem(
-          "UserID"
-        )}?assignmentid=${assignment_id}`,
+        `http://localhost:4000/assignment/${userId}?assignmentid=${assignment_id}`,
         assignmentAnswers
       );
 
       if (response.status === 200) {
         const updatedDataResponse = await axios.get(
-          `http://localhost:4000/assignment/${localStorage.getItem("userID")}`
+          `http://localhost:4000/assignment/${userId}`
         );
 
         setData(updatedDataResponse.data.data);
@@ -188,7 +188,7 @@ function AssignmentPage() {
             </div>
           </div>
           <div className='Frame427321008 w-[1120px]  flex-col justify-start items-start gap-6 inline-flex mt-[40px]  '>
-            {data &&
+            {data ? (
               assignmentsToDisplay.map((assignment) => {
                 return (
                   <div
@@ -326,7 +326,12 @@ function AssignmentPage() {
                     </div>
                   </div>
                 );
-              })}
+              })
+            ) : (
+              <>
+                <div>There is no Assignment.</div>
+              </>
+            )}
           </div>
           <div className='pagination '>
             {Array.from({ length: totalPages }).map((_, index) => (
