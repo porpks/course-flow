@@ -5,16 +5,33 @@ const courseRouter = Router();
 
 courseRouter.get("/", async (req, res) => {
   try {
-    const { data, error } = await supabase
+    let limit = req.query.limit;
+    let desc = req.query.desc;
+    let course = req.query.course;
+
+    // สร้าง query ด้วยคำสั่ง SQL เพื่อค้นหาตามชื่อคอร์ส (course_name)
+    const query = supabase
       .from("courses")
       .select("*,lessons(*,sublessons(*))")
-      .order("course_id", { ascending: true });
+      .order("course_id", { ascending: desc });
+
+    // เพิ่มเงื่อนไขการค้นหาตามชื่อคอร์สเมื่อมีค่า query parameter `course`
+    if (course) {
+      query.ilike("course_name", `%${course}%`);
+    }
+
+    // จำกัดจำนวนผลลัพธ์ด้วย limit
+    query.limit(limit);
+
+    const { data, error } = await query;
 
     return res.json({
       data,
     });
   } catch (error) {
-    message: `Get course error message ${error}`;
+    return res
+      .status(500)
+      .json({ message: `Get course error message ${error.message}` });
   }
 });
 
@@ -43,12 +60,11 @@ courseRouter.get("/course", async (req, res) => {
       .or(`${queryFullName},${queryKeywords}`)
       .order("course_id", { ascending: true });
 
-
     return res.json({
       data: data,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
       message: "An error occurred while fetching data from Supabase",
       error: error.message,
