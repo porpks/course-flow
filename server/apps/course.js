@@ -10,6 +10,12 @@ courseRouter.get("/", async (req, res) => {
     let course = req.query.course;
 
     const query = supabase
+    let limit = req.query.limit;
+    let desc = req.query.desc;
+    let course = req.query.course;
+
+    // สร้าง query ด้วยคำสั่ง SQL เพื่อค้นหาตามชื่อคอร์ส (course_name)
+    const query = supabase
       .from("courses")
       .select("*,lessons(*,sublessons(*))")
       .order("course_id", { ascending: desc });
@@ -18,6 +24,17 @@ courseRouter.get("/", async (req, res) => {
       query.ilike("course_name", `%${course}%`);
     }
 
+    query.limit(limit);
+
+    const { data, error } = await query;
+      .order("course_id", { ascending: desc });
+
+    // เพิ่มเงื่อนไขการค้นหาตามชื่อคอร์สเมื่อมีค่า query parameter `course`
+    if (course) {
+      query.ilike("course_name", `%${course}%`);
+    }
+
+    // จำกัดจำนวนผลลัพธ์ด้วย limit
     query.limit(limit);
 
     const { data, error } = await query;
