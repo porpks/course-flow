@@ -36,7 +36,7 @@ function Courselist() {
       <div className="flex justify-center h-[932px] bg-[#F6F7FC]">
         <div>
           <div className="rounded-t-lg mt-[48px] w-[1120px] h-[41px] grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] bg-[--gray300] text-slate-600 text-sm">
-            <div className="w-[48px]  flex items-center px-[16] py-[10px]"></div>
+            <div className="w-[48px]  flex items-center px-[16px] py-[10px]"></div>
             <div className="w-[96px]  flex items-center px-[16px] py-[10px]">
               Image
             </div>
@@ -47,7 +47,7 @@ function Courselist() {
               Lesson
             </div>
             <div className="w-[105px]  flex items-center px-[16px] py-[10px]">
-              Price{" "}
+              Price
             </div>
             <div className="w-[191px]  flex items-center px-[16px] py-[10px]">
               Created date
@@ -59,8 +59,8 @@ function Courselist() {
               Action
             </div>
           </div>
-          <div className="text-center w-[1120px] h-[88px] grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] bg-white Body2">
-            <div className="w-[48px]  flex items-center px-[16px] py-[32px]">
+          <div className="w-[1120px] h-[88px] grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] bg-white Body2">
+            <div className="w-[48px] flex items-center px-[16px] py-[32px]">
               1
             </div>
             <div className="w-[96px]  flex items-center px-[16px] py-[10px]">
