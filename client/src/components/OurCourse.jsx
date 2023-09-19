@@ -1,6 +1,5 @@
 import CourseItem from "./CourseItem";
 import "./ourCourse.css";
-// import { courseData } from "../assets/courseData.jsx";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +8,7 @@ function OurCourse() {
   const navigate = useNavigate();
   const [dataCourse, setDataCourse] = useState([]);
   const [searchKey, setSearchKey] = useState(""); //searchKeyword
+  const [currentPage, setCurrentPage] = useState(1);
 
   async function getDataCourse() {
     try {
@@ -46,7 +46,16 @@ function OurCourse() {
     setSearchKey(event.target.value);
   };
   /////////////////////////////////////////////////
-  
+  const pageSize = 9;
+  const totalPages = Math.ceil(dataCourse.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = currentPage * pageSize;
+  const cardCourseToDisplay = dataCourse.slice(startIndex, endIndex);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+  /////////////////////////////////////////////////
   if (dataCourse.length === 0) {
     return (
       <div className="flex justify-center items-center absolute top-[150px] w-[100%] h-[100vh] text-slate-100">
@@ -56,6 +65,7 @@ function OurCourse() {
   }
   return (
     <div className="canvas-ourCourse">
+      {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
       <div className="topSection">
         <h2 className="H2">Our Courses</h2>
         <div className="input-container">
@@ -70,7 +80,7 @@ function OurCourse() {
       </div>
       <div className="content-Section">
         <div className="card-container">
-          {dataCourse.map((item) => (
+          {cardCourseToDisplay.map((item) => (
             <CourseItem
               key={item.course_id}
               count={item.course_id}
@@ -79,13 +89,23 @@ function OurCourse() {
               coursedetail={item.course_detail}
               coursesummary={item.course_summary}
               totallearningtime={item.total_time}
-              // link = {`/ourcourse/coursedetail/${item.course_id}`}
               onClick={() => {
                 navigate(`/ourcourse/coursedetail/${item.course_id}`);
-                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
               }}
-              // href="#homepage"
             />
+          ))}
+        </div>
+        <div className="pagination-card">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handlePageChange(index + 1)}
+              className={`paginationOurCourse-item ${
+                currentPage === index + 1 ? "active" : ""
+              }`}
+            >
+              {index + 1}
+            </button>
           ))}
         </div>
       </div>
