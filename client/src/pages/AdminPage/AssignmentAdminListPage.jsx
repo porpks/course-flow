@@ -3,6 +3,8 @@ import AssignmentTopbar from "../../components/adminAssignment/AssignmentTopbar.
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext.jsx";
 import ModalAssignmentDelete from "../../components/adminAssignment/modalAssignmentDelete.jsx";
+import Sidebar from "../../components/Sidebar.jsx";
+
 function AssignmentAdminListPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const { deleteAssignment, setDeleteAssignment } = useAuth();
@@ -12,8 +14,13 @@ function AssignmentAdminListPage() {
         <ModalAssignmentDelete />
       ) : (
         <>
-          <AssignmentTopbar setSearchQuery={setSearchQuery} />
-          <AssignmentListAdmin searchQuery={searchQuery} />
+          <div className="flex">
+            <Sidebar isAssignmentPage={true} />
+            <div>
+              <AssignmentTopbar setSearchQuery={setSearchQuery} />
+              <AssignmentListAdmin searchQuery={searchQuery} />
+            </div>
+          </div>
         </>
       )}
     </>
