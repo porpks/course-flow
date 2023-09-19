@@ -4,7 +4,7 @@ import Navbar from "../../components/addLessonComponent/Navbar";
 function AddLessonPage() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <AddLesson />
     </>
   );

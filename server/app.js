@@ -49,6 +49,8 @@ async function init() {
   app.use("/mycourse", MyCourseRouter);
   app.use("/assignment", assignmentRouter);
   app.use("/learn", learnRouter);
+  app.use("/admin", courseRouter);
+
   app.get("/", function (req, res) {
     // Cookies that have not been signed
     console.log("Cookies: ", req.cookies);
