@@ -18,7 +18,6 @@ const AssignmentBox = (props) => {
         const response = await axios.get(
           `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
         );
-
         setData(response.data.data);
 
         const initialAnswers = response.data.data.map((assignment) => ({
@@ -27,6 +26,26 @@ const AssignmentBox = (props) => {
           assignment_status: assignment.assignment_status,
         }));
         setAnswers(initialAnswers);
+
+        if (response.data.data.length === 0) {
+          await axios.post(
+            `http://localhost:4000/assignment/`,
+            {
+              user_id: userId,
+              sublesson_id: sublessonID,
+            });
+
+          const result = await axios.get(
+            `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
+          );
+          setData(result.data.data);
+          const initialAnswers = result.data.data.map((assignment) => ({
+            assignment_id: assignment.assignment_id,
+            assignment_answer: assignment.assignment_answer || "",
+            assignment_status: assignment.assignment_status,
+          }));
+          setAnswers(initialAnswers);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -95,11 +114,19 @@ const AssignmentBox = (props) => {
         },
       });
       props.setPercentComplete(Number(result.data.percentComplete));
+
+      if (Number(result.data.percentComplete) === 100) {
+        const statusCompleteBody = {
+          user_id: userId,
+          course_id: localStorage.getItem("course_id"),
+        }
+        await axios.post("http://localhost:4000/learn/status/", statusCompleteBody)
+      }
     } catch (error) {
       console.log(error.message);
     }
   };
-  console.log(assignmentsToDisplay);
+
   return (
     <>
       <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex'>
@@ -113,29 +140,27 @@ const AssignmentBox = (props) => {
                       Assignment
                     </div>
                     <div
-                      className={`StatusHomework px-2 py-1 ${
-                        assignment.assignment_status === "Pending"
-                          ? "bg-[#FFFBDA]"
-                          : assignment.assignment_status === "Submitted late"
+                      className={`StatusHomework px-2 py-1 ${assignment.assignment_status === "Pending"
+                        ? "bg-[#FFFBDA]"
+                        : assignment.assignment_status === "Submitted late"
                           ? "bg-[#EAF0FF]"
                           : assignment.assignment_status === "Submitted"
-                          ? "bg-[#DCF8EE]"
-                          : assignment.assignment_status === "Overdue"
-                          ? "bg-[#FAE7F4]"
-                          : null
-                      } rounded justify-start items-start gap-2 inline-flex `}>
+                            ? "bg-[#DCF8EE]"
+                            : assignment.assignment_status === "Overdue"
+                              ? "bg-[#FAE7F4]"
+                              : null
+                        } rounded justify-start items-start gap-2 inline-flex `}>
                       <div
-                        className={`${
-                          assignment.assignment_status === "Pending"
-                            ? " text-[#996400]"
-                            : assignment.assignment_status === "Submitted late"
+                        className={`${assignment.assignment_status === "Pending"
+                          ? " text-[#996400]"
+                          : assignment.assignment_status === "Submitted late"
                             ? "text-[#3456CF]"
                             : assignment.assignment_status === "Submitted"
-                            ? "text-[#0A7B60]"
-                            : assignment.assignment_status === "Overdue"
-                            ? "text-[#9B2FAC]"
-                            : null
-                        } text-base font-medium leading-normal`}>
+                              ? "text-[#0A7B60]"
+                              : assignment.assignment_status === "Overdue"
+                                ? "text-[#9B2FAC]"
+                                : null
+                          } text-base font-medium leading-normal`}>
                         {assignment.assignment_status}
                       </div>
                     </div>
@@ -151,26 +176,23 @@ const AssignmentBox = (props) => {
                         </div>
                       </div>
                       <div
-                        className={`InputField self-stretch  pl-3 pr-4 py-3 rounded-lg border border-solid${
-                          assignment.assignment_status === "Submitted" ||
+                        className={`InputField self-stretch  pl-3 pr-4 py-3 rounded-lg border border-solid${assignment.assignment_status === "Submitted" ||
                           assignment.assignment_status === "Submitted late"
+                          ? "bg-none "
+                          : " bg-white"
+                          } border-gray-300 justify-start items-start gap-2 inline-flex`}>
+                        <div
+                          className={`ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex ${assignment.assignment_status === "Submitted" ||
+                            assignment.assignment_status === "Submitted late"
                             ? "bg-none "
                             : " bg-white"
-                        } border-gray-300 justify-start items-start gap-2 inline-flex`}>
-                        <div
-                          className={`ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex ${
-                            assignment.assignment_status === "Submitted" ||
-                            assignment.assignment_status === "Submitted late"
-                              ? "bg-none "
-                              : " bg-white"
-                          }`}>
+                            }`}>
                           <textarea
-                            className={`${
-                              assignment.assignment_status === "Submitted" ||
+                            className={`${assignment.assignment_status === "Submitted" ||
                               assignment.assignment_status === "Submitted late"
-                                ? "bg-slate-200 text-slate-500 "
-                                : "bg-white  text-slate-400"
-                            }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
+                              ? "bg-slate-200 text-slate-500 "
+                              : "bg-white  text-slate-400"
+                              }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
                             placeholder='Answer...'
                             value={
                               answers.find(
@@ -222,9 +244,8 @@ const AssignmentBox = (props) => {
           <button
             key={"00" + index}
             onClick={() => handlePageChange(index + 1)}
-            className={`pagination-item ${
-              currentPage === index + 1 ? "active" : ""
-            }`}>
+            className={`pagination-item ${currentPage === index + 1 ? "active" : ""
+              }`}>
             {index + 1}
           </button>
         ))}

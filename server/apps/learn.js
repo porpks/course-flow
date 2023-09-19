@@ -78,6 +78,19 @@ learnRouter.get('/status', async (req, res) => {
 
 });
 
+learnRouter.post('/status', async (req, res) => {
+    const { user_id, course_id } = req.body
+
+    const { error } = await supabase
+        .from('user_courses')
+        .update({ 'course_status': true })
+        .eq('user_id', user_id)
+        .eq('course_id', course_id)
+
+    return res.json({ 'message': `Status course ID:${course_id} has been completed` });
+
+})
+
 learnRouter.put('/start', async (req, res) => {
     const userID = Number(req.query.userID);
     const sublessonID = Number(req.query.sublessonID);
