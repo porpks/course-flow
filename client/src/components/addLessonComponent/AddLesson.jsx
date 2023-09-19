@@ -7,25 +7,14 @@ import { useParams } from "react-router-dom";
 function AddLesson() {
   const { courseid } = useParams();
   const [dataCourse, setDataCourse] = useState([]);
-
   const [subLessonList, setSubLessonList] = useState([
-    // Initialize your sub-lesson list with some data
-    // { lessonId: 1, subLessonName: "Sub-lesson 1" },
-    // { lessonId: 2, subLessonName: "Sub-lesson 2" },
-    // { lessonId: 3, subLessonName: "Sub-lesson 3" },
-    // { lessonId: 4, subLessonName: "Sub-lesson 4" },
-    // { lessonId: 5, subLessonName: "Sub-lesson 5" },
+    { lessonId: 1, subLessonName: "" },
   ]);
-  const id = courseid;
-
-  const subLessonData = subLessonList;
-
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
         `http://localhost:4000/admin/editcourse/${courseid}`
       );
-      // setDataCourse(dataDetailCourse.data.data);
       setDataCourse({
         course_id: dataDetailCourse.data.data.course_id,
         course_name: dataDetailCourse.data.data.course_name,
@@ -41,7 +30,7 @@ function AddLesson() {
   console.log(dataCourse);
   useEffect(() => {
     getDetailCourse();
-  }, []);
+  }, [courseid]);
 
   const addSubLesson = () => {
     const newLessonId = subLessonList.length + 1;
@@ -50,12 +39,33 @@ function AddLesson() {
   };
 
   const deleteSubLesson = (lessonIdToDelete) => {
+    if (subLessonList.length === 1) {
+      alert("You can't delete the last sub-lesson.");
+      return;
+    }
     const updatedSubLessonList = subLessonList.filter(
       (subLesson) => subLesson.lessonId !== lessonIdToDelete
     );
     setSubLessonList(updatedSubLessonList);
   };
+
+  const handleSublesson = (lessonId, subLessonName) => {
+    const updatedSubLessonList = subLessonList.map((subLesson) =>
+      subLesson.lessonId === lessonId
+        ? { ...subLesson, subLessonName }
+        : subLesson
+    );
+    setSubLessonList(updatedSubLessonList);
+  };
+
   const SubLessonComponent = ({ subLesson, onDelete }) => {
+    const [subLessonName, setSubLessonName] = useState(subLesson.subLessonName);
+
+    const handleSubLessonNameChange = (e) => {
+      setSubLessonName(e.target.value);
+      // handleSublesson(subLesson.lessonId, e.target.value);
+    };
+
     return (
       <div>
         <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
@@ -79,17 +89,27 @@ function AddLesson() {
               type="text"
               name="sub-lesson-name"
               className="Body2 Input w-[530px] h-[48px] mb-10 p"
-              value={subLesson.subLessonName}
-              onChange={(e) => {
-                const updatedSubLesson = {
-                  ...subLesson,
-                  subLessonName: e.target.value,
-                };
-              }}
+              value={subLessonName}
+              onChange={handleSubLessonNameChange}
             />
             <p className="Body2 pb-1">Video*</p>
             <button className="w-[160px] h-[160px] flex flex-col justify-center items-center #F1F2F6 border-none hover:cursor-pointer">
-              {/* Render your video upload button here */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="24"
+                viewBox="0 0 25 24"
+                fill="none"
+              >
+                <path
+                  d="M12.5 4.5V19.5M20 12H5"
+                  stroke="#5483D0"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <p className="Body3 text-[#5483D0] pt-2">Upload Video</p>
             </button>
           </div>
         </div>
