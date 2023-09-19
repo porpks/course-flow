@@ -1,7 +1,34 @@
 import { Router } from "express";
 import supabase from "../utils/db.js";
+import { log, trace } from "console";
 
 const MyCourseRouter = Router();
+
+MyCourseRouter.get("/test", async (req, res) => {
+  const user_id = req.query.user_id;
+  const course_id = req.query.course_id;
+
+  const sublessonID = []
+  const { data: lessonData, error: lessonError } = await supabase
+    .from('lessons')
+    .select('course_id, sublessons(sublesson_id)')
+    .eq('course_id', course_id)
+
+  if (lessonError) {
+    return res.status(404).json({ lessonError })
+  }
+  lessonData.map((lesson) => {
+    lesson.sublessons.map((item) => {
+
+      const newItem = { user_id: Number(user_id), ...item }
+      sublessonID.push(newItem)
+    })
+  })
+
+  return res.json({ sublessonID });
+
+
+});
 
 MyCourseRouter.get("/:userID", async (req, res) => {
   const { userID } = req.params;
@@ -44,9 +71,31 @@ MyCourseRouter.post("/", async (req, res) => {
       throw error;
     }
 
+    const sublessonID = []
+    const { data: lessonData, error: lessonError } = await supabase
+      .from('lessons')
+      .select('course_id, sublessons(sublesson_id)')
+      .eq('course_id', course_id)
+
+    if (lessonError) {
+      return res.status(404).json({ lessonError })
+    }
+    lessonData.map((lesson) => {
+      lesson.sublessons.map((item) => {
+        const newItem = { user_id: Number(user_id), ...item }
+        sublessonID.push(newItem)
+      })
+    })
+    const { error: sublessonError } = await supabase.from("user_sublessons").insert(sublessonID);
+
+    if (sublessonError) {
+      throw sublessonError;
+    }
+
+
     res.json({ message: `course ${course_id} has been added.` });
   } catch (error) {
-    
+
     res.status(500).json({ error: "An error occurred." });
   }
 });
