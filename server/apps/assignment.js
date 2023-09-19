@@ -80,6 +80,34 @@ assignmentRouter.get("/", async (req, res) => {
     }
 });
 
+assignmentRouter.post('/', async (req, res) => {
+    const user_id = Number(req.body.user_id)
+    const sublesson_id = Number(req.body.sublesson_id)
+
+    const { data: asmData, error: asmError } = await supabase
+        .from('assignments')
+        .select('assignment_id')
+        .eq('sublesson_id', sublesson_id)
+        .single()
+
+    if (asmError) {
+        throw asmError
+    }
+
+    const currentDate = new Date();
+    const duedate = new Date(currentDate);
+    duedate.setDate(currentDate.getDate() + 3);
+    // console.log(duedate);
+
+    const data = { user_id, assignment_id: asmData.assignment_id, assignment_duedate: duedate }
+
+    const { error } = await supabase.from('user_assignments').insert(data)
+    if (error) {
+        throw error
+    }
+
+    return res.json({ message: `assignment has been added.` });
+})
 
 assignmentRouter.get("/:userID", async (req, res) => {
     const userId = req.params.userID;
@@ -150,8 +178,8 @@ assignmentRouter.get("/:userID", async (req, res) => {
             dataItem.assignment_duedate = calculateDueDateStatus(dataItem.assignment_duedate);
             dataItem.assignment_question = dataItem.assignments.assignment_question
             dataItem.userId = dataItem.user_id;
-            if(!dataItem.assignment_status){
-            dataItem.assignment_status = "Pending"
+            if (!dataItem.assignment_status) {
+                dataItem.assignment_status = "Pending"
             }
             delete dataItem.assignments;
             delete dataItem.user_id;
@@ -225,14 +253,6 @@ assignmentRouter.put('/:userID', async (req, res) => {
                 .eq('assignment_id', body2[0].assignment_id)
                 .select()
 
-            // const { data: data3, error: err3 } = await supabase
-            //     .from('user_assignments')
-            //     .select('user_id, assignments(assignment_id,sublessons(sublesson_id, user_sublessons(user_id,sublesson_status)))')
-            //     .update({ 'assignments.sublessons.user_sublessons:sublesson_status': "complete" })
-            //     .eq('assignment_id', assignmentid)
-            //     .eq('user_id', userId)
-
-
             res.json({ data2 });
         }
     } catch (err) {
@@ -241,38 +261,21 @@ assignmentRouter.put('/:userID', async (req, res) => {
 });
 
 
-assignmentRouter.delete('/:assignment_id',async function (req, res) {
+assignmentRouter.delete('/:assignment_id', async function (req, res) {
     const assignment_id = req.params.assignment_id;
-    try {  
-    const { error } = await supabase
-    .from('assignments')
-    .delete()
-    .eq('assignment_id', assignment_id)
-        if(error ){
-            return res.json({ error: error});
+    try {
+        const { error } = await supabase
+            .from('assignments')
+            .delete()
+            .eq('assignment_id', assignment_id)
+        if (error) {
+            return res.json({ error: error });
         }
-        return res.json({message: "delete sublessons id:"+sublessonId+" "+"successfully"});
+        return res.json({ message: "delete sublessons id:" + sublessonId + " " + "successfully" });
     } catch (error) {
-        res.json({ error: error});
+        res.json({ error: error });
     }
-    
-})
 
-
-assignmentRouter.get('/test/:userID', async (req, res) => {
-    const userId = req.params.userID;
-    const assignmentid = req.query.assignmentid
-
-
-
-
-
-    if (err3) {
-        return res.json({ message: err3 })
-    }
-    else {
-        return res.json({ message: data3 })
-    }
 })
 
 
