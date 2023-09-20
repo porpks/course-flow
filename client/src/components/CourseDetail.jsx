@@ -238,8 +238,9 @@ function CourseDetail() {
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1a-content"
                           id="panel1a-header"
-                          className="accordionSummary">
-                          <div className="typography">
+                         className="accordionSummary"
+                        >
+                          <Typography className="typography">
                             <div className="H3 text-[--gray700]">
                               {index < 10 ? "0" + (index + 1) : index + 1}
                             </div>
