@@ -7,6 +7,9 @@ import { useParams } from "react-router-dom";
 function AddLesson() {
   const { courseid } = useParams();
   const [dataCourse, setDataCourse] = useState([]);
+  const [updatedSubLessonName, setUpdatedSubLessonName] = useState(""); // State to store updated subLessonName
+  const [updatedLessonId, setUpdatedLessonId] = useState(""); // State to store the lessonId to be updated
+
   const [subLessonList, setSubLessonList] = useState([
     { lessonId: 1, subLessonName: "" },
   ]);
@@ -28,9 +31,22 @@ function AddLesson() {
     }
   }
   console.log(dataCourse);
+
   useEffect(() => {
     getDetailCourse();
-  }, [courseid]);
+    if (updatedSubLessonName && updatedLessonId) {
+      const updatedSubLessonList = subLessonList.map((subLesson) =>
+        subLesson.lessonId === updatedLessonId
+          ? { ...subLesson, subLessonName: updatedSubLessonName }
+          : subLesson
+      );
+      setSubLessonList(updatedSubLessonList);
+
+      // Reset the states after updating
+      setUpdatedSubLessonName("");
+      setUpdatedLessonId("");
+    }
+  }, [updatedSubLessonName, updatedLessonId, subLessonList]);
 
   const addSubLesson = () => {
     const newLessonId = subLessonList.length + 1;
@@ -63,7 +79,7 @@ function AddLesson() {
 
     const handleSubLessonNameChange = (e) => {
       setSubLessonName(e.target.value);
-      // handleSublesson(subLesson.lessonId, e.target.value);
+      handleSublesson(subLesson.lessonId, e.target.value);
     };
 
     return (

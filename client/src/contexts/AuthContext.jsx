@@ -26,13 +26,13 @@ function AuthProvider(props) {
     state: false,
     assignment_id: null,
   });
-  // const userId = getCookie("userID");
+  const userIdFromCookie = getCookie("cookieUserID");
   const userId = secureLocalStorage.getItem("userID");
   const navigate = useNavigate();
 
   const logout = async () => {
     try {
-      if (!userId) {
+      if (!userIdFromCookie || !userId) {
         console.error("Cannot log out: User ID is not available.");
         return;
       }
@@ -81,7 +81,7 @@ function AuthProvider(props) {
       secureLocalStorage.setItem("userID", result.data.data[0].user_id);
       setIsLoggedIn(true);
       localStorage.setItem("isLoggedIn", true);
-      setCookie("userID", result.data.data[0].user_id, 1);
+      setCookie("cookieUserID", result.data.data[0].user_id, 1);
       // const response = await axios.get(
       //   `http://localhost:4000/profile/${userID}`
       // );
@@ -155,7 +155,8 @@ function AuthProvider(props) {
         setvideoUrl,
         deleteAssignment,
         setDeleteAssignment,
-      }}>
+      }}
+    >
       {props.children}
     </AuthContext.Provider>
   );
