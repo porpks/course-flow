@@ -11,7 +11,7 @@ const AssignmentBox = (props) => {
   const [answers, setAnswers] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   // eslint-disable-next-line react/prop-types
-  const sublessonID = props.sublessonID;
+  const sublessonID = props.sublessonID || null
   useEffect(() => {
     const getAssignmentData = async () => {
       try {
@@ -26,6 +26,9 @@ const AssignmentBox = (props) => {
           assignment_status: assignment.assignment_status,
         }));
         setAnswers(initialAnswers);
+
+        console.log(new Date().getTime());
+        console.log(response.data.data);
 
         if (response.data.data.length === 0) {
           await axios.post(
@@ -52,7 +55,7 @@ const AssignmentBox = (props) => {
     };
 
     getAssignmentData();
-  }, [sublessonID]);
+  }, []);
   const pageSize = 1;
 
   const totalPages = Math.ceil((data || []).length / pageSize);

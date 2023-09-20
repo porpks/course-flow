@@ -180,6 +180,11 @@ assignmentRouter.get("/:userID", async (req, res) => {
             dataItem.userId = dataItem.user_id;
             if (!dataItem.assignment_status) {
                 dataItem.assignment_status = "Pending"
+
+                const { data, error } = await supabase
+                    .from('user_assignments')
+                    .update({ assignment_status: 'Pending' })
+                    .eq('assignment_id', dataItem.assignment_id)
             }
             delete dataItem.assignments;
             delete dataItem.user_id;
@@ -195,10 +200,7 @@ assignmentRouter.get("/:userID", async (req, res) => {
             }
 
 
-            const { data, error } = await supabase
-                .from('user_assignments')
-                .update({ assignment_status: 'Pending' })
-                .eq('assignment_id', dataItem.assignment_id)
+
 
 
 
@@ -245,12 +247,14 @@ assignmentRouter.put('/:userID', async (req, res) => {
                 .from('user_assignments')
                 .update({ "assignment_answer": `${body2[0].assignment_answer}` })
                 .eq('assignment_id', body2[0].assignment_id)
+                .eq('user_id', userId)
                 .select()
 
             const { data: data2, error: err2 } = await supabase
                 .from('user_assignments')
-                .update({ "assignment_status": `${body2[0].assignment_status}` })
+                .update([{ "assignment_answer": `${body2[0].assignment_answer}`, "assignment_status": `${body2[0].assignment_status}` }])
                 .eq('assignment_id', body2[0].assignment_id)
+                .eq('user_id', userId)
                 .select()
 
             res.json({ data2 });
