@@ -94,16 +94,26 @@ assignmentRouter.post('/', async (req, res) => {
         throw asmError
     }
 
-    const currentDate = new Date();
-    const duedate = new Date(currentDate);
-    duedate.setDate(currentDate.getDate() + 3);
-    // console.log(duedate);
+    const { data: checkData, error: checkError } = await supabase
+        .from('user_assignments')
+        .select()
+        .eq('user_id', user_id)
+        .eq('assignment_id', asmData.assignment_id)
+    if (checkError) {
+        throw asmError
+    }
+    if (checkData.length === 0) {
+        const currentDate = new Date();
+        const duedate = new Date(currentDate);
+        duedate.setDate(currentDate.getDate() + 3);
+        // console.log(duedate);
 
-    const data = { user_id, assignment_id: asmData.assignment_id, assignment_duedate: duedate }
+        const data = { user_id, assignment_id: asmData.assignment_id, assignment_duedate: duedate }
 
-    const { error } = await supabase.from('user_assignments').insert(data)
-    if (error) {
-        throw error
+        const { error } = await supabase.from('user_assignments').insert(data)
+        if (error) {
+            throw error
+        }
     }
 
     return res.json({ message: `assignment has been added.` });
