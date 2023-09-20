@@ -1,19 +1,34 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Mymodal from "../Mymodal";
 
 function Courselist() {
   const [courseData, setCourseData] = useState([]);
   const [searchBox, setSearchBox] = useState("");
-  // const [deleteToggle, setDeleteToggle] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [start, setStart] = useState(1);
+  const [end, setEnd] = useState(8);
+  const [page, setPage] = useState(1);
+
+  const [deleteToggle, setDeleteToggle] = useState(false);
+  const openDelete = () => setDeleteToggle(true);
+  const closeDelete = () => setDeleteToggle(false);
 
   const navigate = useNavigate();
 
   const courseFetching = async () => {
-    const result = await axios.get(
-      `http://localhost:4000/ourcourse?limit=8&course=${searchBox}&desc`
-    );
-    setCourseData(result.data.data);
+    try {
+      setIsLoading(true);
+      const result = await axios.get(
+        `http://localhost:4000/ourcourse?course=${searchBox}&start=${start}&end=${end}&desc&`
+      );
+      setCourseData(result.data.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   function formatDateTime(isoDateTime) {
@@ -40,12 +55,40 @@ function Courselist() {
     return formattedDateTime;
   }
 
+  const changeUpperPage = () => {
+    let newStart = start + 8;
+    let newEnd = end * 2;
+    let newPage = page + 1;
+    setStart(newStart);
+    setEnd(newEnd);
+    setPage(newPage);
+  };
+
+  const changeLowerPage = () => {
+    let newStart = start - 8;
+    let newEnd = end / 2;
+    let newPage = page - 1;
+    setStart(newStart);
+    setEnd(newEnd);
+    setPage(newPage);
+  };
+
   useEffect(() => {
     courseFetching();
-  }, [searchBox]);
+  }, [searchBox, page]);
 
   return (
     <div className="w-[1200px]">
+      {deleteToggle ? (
+        <Mymodal
+          open={openDelete}
+          onClose={closeDelete}
+          closeButton={closeDelete}
+          description="Do you sure to delete this course?"
+          yesDes="No, I don’t"
+          noDes="Yes, I want to delete this course"
+        />
+      ) : null}
       <div className="TopBar w-[1200px] h-[92px] px-10 py-4 bg-white border-solid border-b border-t-0 border-l-0 border-r-0 border-gray-300 justify-start items-center gap-4 flex">
         <div className="Assignment grow shrink basis-0 text-slate-800 text-2xl font-medium font-['Inter'] leading-loose">
           Course
@@ -68,7 +111,13 @@ function Courselist() {
             <input
               placeholder="Search..."
               className=" Search grow shrink basis-0 placeholder:text-slate-400 text-base font-normal font-['Inter'] leading-normal border-none outline-none"
-              onChange={(e) => setSearchBox(e.target.value)}></input>
+              onChange={(e) => {
+                setSearchBox(e.target.value);
+                setStart(1);
+                setEnd(8);
+                setPage(1);
+              }}
+            />
           </div>
           <button
             onClick={() => navigate("/admin/addcourse")}
@@ -80,6 +129,7 @@ function Courselist() {
         </div>
       </div>
       <div className="flex justify-center h-[932px] bg-[#F6F7FC]">
+        {isLoading && <div>Loading...</div>}
         <div>
           <div className="rounded-t-lg mt-[48px] w-[1120px] h-[41px] grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] bg-[--gray300] text-slate-600 text-sm">
             <div className="w-[48px]  flex items-center px-[16px] py-[10px]"></div>
@@ -106,7 +156,9 @@ function Courselist() {
             </div>
           </div>
           {courseData.map((item) => (
-            <div className="w-[1120px] h-[88px] grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] bg-white Body2">
+            <div
+              key={item.course_id}
+              className="w-[1120px] h-[88px] grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] bg-white Body2">
               <div className="w-[48px] flex items-center px-[16px] py-[32px]">
                 {item.course_id}
               </div>
@@ -136,7 +188,9 @@ function Courselist() {
                 {formatDateTime(item.updated_date)}
               </div>
               <div className="w-[120px]  flex items-center justify-center gap-[17px] ">
-                <button className="cursor-pointer bg-white border-none">
+                <button
+                  className="cursor-pointer bg-white border-none"
+                  onClick={() => setDeleteToggle(true)}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -144,8 +198,8 @@ function Courselist() {
                     viewBox="0 0 24 24"
                     fill="none">
                     <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
                       d="M16.5 4.47801V4.70501C17.799 4.8238 19.0927 4.9946 20.378 5.21701C20.4751 5.23382 20.5678 5.26958 20.6511 5.32225C20.7343 5.37491 20.8063 5.44346 20.8631 5.52397C20.9198 5.60448 20.9601 5.69537 20.9817 5.79146C21.0033 5.88755 21.0058 5.98696 20.989 6.08401C20.9722 6.18106 20.9364 6.27384 20.8838 6.35707C20.8311 6.4403 20.7626 6.51233 20.682 6.56907C20.6015 6.62581 20.5106 6.66613 20.4146 6.68774C20.3185 6.70935 20.2191 6.71182 20.122 6.69501L19.913 6.66001L18.908 19.73C18.8501 20.4836 18.5098 21.1875 17.9553 21.7011C17.4008 22.2146 16.6728 22.5 15.917 22.5H8.08401C7.3282 22.5 6.60026 22.2146 6.04573 21.7011C5.4912 21.1875 5.15095 20.4836 5.09301 19.73L4.08701 6.66001L3.87801 6.69501C3.78096 6.71182 3.68155 6.70935 3.58546 6.68774C3.48937 6.66613 3.39847 6.62581 3.31796 6.56907C3.15537 6.45449 3.04495 6.28 3.01101 6.08401C2.97706 5.88801 3.02236 5.68656 3.13694 5.52397C3.25153 5.36137 3.42601 5.25096 3.62201 5.21701C4.90727 4.99433 6.20099 4.82353 7.50001 4.70501V4.47801C7.50001 2.91401 8.71301 1.57801 10.316 1.52701C11.4387 1.49108 12.5623 1.49108 13.685 1.52701C15.288 1.57801 16.5 2.91401 16.5 4.47801ZM10.364 3.02601C11.4547 2.99113 12.5463 2.99113 13.637 3.02601C14.39 3.05001 15 3.68401 15 4.47801V4.59101C13.0018 4.46966 10.9982 4.46966 9.00001 4.59101V4.47801C9.00001 3.68401 9.60901 3.05001 10.364 3.02601ZM10.009 8.97101C10.0052 8.87252 9.98203 8.77574 9.94082 8.6862C9.89961 8.59667 9.84117 8.51612 9.76883 8.44917C9.69649 8.38222 9.61168 8.33017 9.51923 8.296C9.42678 8.26183 9.3285 8.2462 9.23001 8.25001C9.13152 8.25382 9.03474 8.27699 8.9452 8.3182C8.85567 8.35941 8.77512 8.41785 8.70817 8.49019C8.64122 8.56252 8.58917 8.64734 8.555 8.73979C8.52083 8.83224 8.5052 8.93052 8.50901 9.02901L8.85601 18.029C8.8637 18.2278 8.95004 18.4154 9.09604 18.5505C9.16833 18.6174 9.25309 18.6694 9.34548 18.7036C9.43787 18.7377 9.53608 18.7533 9.63451 18.7495C9.73293 18.7457 9.82964 18.7225 9.91912 18.6814C10.0086 18.6402 10.0891 18.5818 10.156 18.5095C10.2229 18.4372 10.2749 18.3524 10.3091 18.26C10.3432 18.1676 10.3588 18.0694 10.355 17.971L10.009 8.97101ZM15.489 9.02901C15.4963 8.92863 15.4834 8.82779 15.4509 8.73252C15.4185 8.63725 15.3672 8.54948 15.3001 8.47445C15.233 8.39942 15.1515 8.33866 15.0604 8.2958C14.9694 8.25293 14.8706 8.22883 14.77 8.22494C14.6694 8.22104 14.5691 8.23743 14.475 8.27313C14.3809 8.30883 14.2949 8.3631 14.2222 8.43272C14.1496 8.50234 14.0916 8.58587 14.0519 8.67835C14.0122 8.77083 13.9915 8.87036 13.991 8.97101L13.644 17.971C13.6363 18.1699 13.708 18.3637 13.8432 18.5098C13.9784 18.6559 14.1661 18.7423 14.365 18.75C14.5639 18.7577 14.7577 18.6861 14.9038 18.5508C15.0499 18.4156 15.1363 18.2279 15.144 18.029L15.489 9.02901Z"
                       fill="#8DADE0"
                     />
@@ -171,6 +225,47 @@ function Courselist() {
               </div>
             </div>
           ))}
+
+          <div className="flex justify-center items-center space-x-4 mt-6 self-center">
+            <button
+              className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center
+              cursor-pointer	}`}
+              onClick={page > 1 ? changeLowerPage : undefined}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 inline-block mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+              Previous
+            </button>
+            <span className="text-gray-600 text-lg">Page {page}</span>
+            <button
+              className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center cursor-pointer`}
+              onClick={courseData.length < 8 ? undefined : changeUpperPage}>
+              Next
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 inline-block ml-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>

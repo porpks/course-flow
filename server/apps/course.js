@@ -5,9 +5,10 @@ const courseRouter = Router();
 
 courseRouter.get("/", async (req, res) => {
   try {
-    let limit = req.query.limit;
+    let start = req.query.start - 1;
     let desc = req.query.desc;
     let course = req.query.course;
+    let end = req.query.end - 1;
 
     const query = supabase
       .from("courses")
@@ -17,8 +18,7 @@ courseRouter.get("/", async (req, res) => {
     if (course) {
       query.ilike("course_name", `%${course}%`);
     }
-
-    query.limit(limit);
+    query.range(start, end);
 
     const { data, error } = await query;
 
