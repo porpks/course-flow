@@ -76,9 +76,12 @@ function MyCourse() {
         let completeCount = 0;
 
         newDataCourse.forEach((course) => {
-          if (course.course_status === false) {
+          if (course.course_status === false || course.course_status === null) {
             inProgressCount++;
-          } else {
+          } else if (
+            course.course_status === true &&
+            course.course_status !== null
+          ) {
             completeCount++;
           }
         });
@@ -269,41 +272,40 @@ function MyCourse() {
 
   return (
     <div className="w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative ">
-      <div className="w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative ">
-        <div className=" absolute right-0 top-[216px]">
-          <Ellipse5 className="top-1/2 absolute" style={{ top: "50%" }} />
-        </div>
-        <div className=" absolute right-[126.22px] top-[126px]">
-          <Polygon3 />
-        </div>
-        <div className=" absolute left-[280px] top-[232px]">
-          <Cross5 />
-        </div>
-        <div className=" absolute left-[43px] top-[159px]">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="27"
-            height="27"
-            viewBox="0 0 27 27"
-            fill="none"
-          >
-            <circle cx="13.1741" cy="13.1741" r="13.1741" fill="#C6DCFF" />
-          </svg>
-        </div>
-        <div className=" absolute left-[102px] top-[100px]">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="11"
-            height="11"
-            viewBox="0 0 11 11"
-            fill="none"
-          >
-            <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" strokeWidth="3" />
-          </svg>
-        </div>
-        <div className="flex flex-col items-center justify-center ">
-          <h2 className="H2">My Course</h2>
-          {/* <div className="flex flex-row mt-[60px]">
+      <div className=" absolute right-0 top-[216px]">
+        <Ellipse5 className="top-1/2 absolute" style={{ top: "50%" }} />
+      </div>
+      <div className=" absolute right-[126.22px] top-[126px]">
+        <Polygon3 />
+      </div>
+      <div className=" absolute left-[280px] top-[232px]">
+        <Cross5 />
+      </div>
+      <div className=" absolute left-[43px] top-[159px]">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="27"
+          height="27"
+          viewBox="0 0 27 27"
+          fill="none"
+        >
+          <circle cx="13.1741" cy="13.1741" r="13.1741" fill="#C6DCFF" />
+        </svg>
+      </div>
+      <div className=" absolute left-[102px] top-[100px]">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="11"
+          height="11"
+          viewBox="0 0 11 11"
+          fill="none"
+        >
+          <circle cx="5.5" cy="5.5" r="4" stroke="#2F5FAC" strokeWidth="3" />
+        </svg>
+      </div>
+      <div className="flex flex-col items-center justify-center ">
+        <h2 className="H2">My Course</h2>
+        {/* <div className="flex flex-row mt-[60px]">
             <Stack direction="row" spacing={2} className="">
               <Paper>
                 <MenuList className="flex fle-row ">
@@ -320,49 +322,48 @@ function MyCourse() {
               </Paper>
             </Stack>
           </div> */}
-          <div className="justify-start items-start gap-4 inline-flex mt-[60px]">
-            <div
-              onClick={() => handleAllCourse("All")}
-              className={`box-content cursor-pointer Component1 p-2 flex items-start gap-2 border-solid border-white border-b-2 hover:border-b-2 hover:border-solid hover:border-black border-t-0 border-r-0 border-l-0  m-0`}
-            >
-              <div className="Body2">All Course</div>
+        <div className="justify-start items-start gap-4 inline-flex mt-[60px]">
+          <div
+            onClick={() => handleAllCourse("All")}
+            className={`box-content cursor-pointer Component1 p-2 flex items-start gap-2 border-solid border-white border-b-2 hover:border-b-2 hover:border-solid hover:border-black border-t-0 border-r-0 border-l-0  m-0`}
+          >
+            <div className="Body2">All Course</div>
+          </div>
+          <div
+            onClick={() => handleInprogress("All")}
+            className={`box-content cursor-pointer Component1 p-2 flex items-start gap-2 border-solid border-white border-b-2 hover:border-b-2 hover:border-solid hover:border-black border-t-0 border-r-0 border-l-0  m-0`}
+          >
+            <div className="Body2">Inprogress</div>
+          </div>
+          <div
+            onClick={() => handleComplete("All")}
+            className={`box-content  cursor-pointer Component1 p-2 flex items-start gap-2 border-solid border-white border-b-2 hover:border-b-2 hover:border-solid hover:border-black border-t-0 border-r-0 border-l-0  m-0`}
+          >
+            <div className="Body2">Complete</div>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-row mt-[80px] ">
+        <div className="flex flex-col w-[357px] h-fit Shadow2 px-[24px] py-[32px] content-center items-center mr-[24px] rounded-lg  sticky top-0 ">
+          <div className="">
+            <Avatar alt="" src={avatar} sx={{ width: 120, height: 120 }} />
+            <h2 className="my-[24px]">{userName}</h2>
+          </div>
+          <div className="flex flex-row ">
+            <div className="flex flex-col justify-between p-[16px] w-[142.5px] h-[134px] bg-[--gray200] mx-[12px]">
+              <p className="Body2">Course Inprogress</p>
+              <p className="H3">{inProgressCount}</p>
             </div>
-            <div
-              onClick={() => handleInprogress("All")}
-              className={`box-content cursor-pointer Component1 p-2 flex items-start gap-2 border-solid border-white border-b-2 hover:border-b-2 hover:border-solid hover:border-black border-t-0 border-r-0 border-l-0  m-0`}
-            >
-              <div className="Body2">Inprogress</div>
-            </div>
-            <div
-              onClick={() => handleComplete("All")}
-              className={`box-content  cursor-pointer Component1 p-2 flex items-start gap-2 border-solid border-white border-b-2 hover:border-b-2 hover:border-solid hover:border-black border-t-0 border-r-0 border-l-0  m-0`}
-            >
-              <div className="Body2">Complete</div>
+            <div className="flex flex-col justify-between p-[16px] w-[142.5px] h-[134px] bg-[--gray200] mx-[12px]">
+              <p className="Body2">Course Complete</p>
+              <p className="H3">{completeCount}</p>
             </div>
           </div>
         </div>
-        <div className="flex flex-row mt-[80px] ">
-          <div className="flex flex-col w-[357px] h-fit Shadow2 px-[24px] py-[32px] content-center items-center mr-[24px] rounded-lg  sticky top-0 ">
-            <div className="">
-              <Avatar alt="" src={avatar} sx={{ width: 120, height: 120 }} />
-              <h2 className="my-[24px]">{userName}</h2>
-            </div>
-            <div className="flex flex-row ">
-              <div className="flex flex-col justify-between p-[16px] w-[142.5px] h-[134px] bg-[--gray200] mx-[12px]">
-                <p className="Body2">Course Inprogress</p>
-                <p className="H3">{inProgressCount}</p>
-              </div>
-              <div className="flex flex-col justify-between p-[16px] w-[142.5px] h-[134px] bg-[--gray200] mx-[12px]">
-                <p className="Body2">Course Complete</p>
-                <p className="H3">{completeCount}</p>
-              </div>
-            </div>
-          </div>
-          {allCourse && <AllCourse />}
-          {inprogress && <Inprogress />}
-          {complete && <Complete />}
-          {/* <div className="grid grid-cols-3 gap-x-[26px] gap-y-[40px]"></div> */}
-        </div>
+        {allCourse && <AllCourse />}
+        {inprogress && <Inprogress />}
+        {complete && <Complete />}
+        {/* <div className="grid grid-cols-3 gap-x-[26px] gap-y-[40px]"></div> */}
       </div>
     </div>
   );
