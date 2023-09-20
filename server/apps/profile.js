@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import supabase from "../utils/db.js";
 import { validateTokenMiddleware } from "../middlewares/protect.js";
+import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -111,9 +112,29 @@ profileRouter.put(
         const fileImage = new Blob([file.buffer], { type: file.mimetype });
         const fileName = file.originalname.replace(/ /g, "_");
 
+        // const { data: dd, error: ee } = await supabase.storage.from('test-avatar').remove(`profile/${userId}`)
+
+        const { data: objects, error: err } = await supabase.storage
+          .from('test-avatar')
+          .list(`profile/${userId}`);
+
+        if (err) {
+          console.error('Error listing objects:', err.message);
+        }
+
+        // Delete each object in the folder
+        for (const object of objects) {
+          const { error: errorRemove } = await supabase.storage
+            .from('test-avatar')
+            .remove(`profile/${userId}/${[object.name]}`)
+          if (errorRemove) {
+            console.error('Error remove objects:', errorRemove.message);
+          }
+        }
+
         const { data, error } = await supabase.storage
           .from("test-avatar")
-          .upload(`profile/${userId}`, fileImage);
+          .upload(`profile/${userId}/${uuidv4()}`, fileImage);
 
         if (error) {
           console.error(error);
