@@ -8,9 +8,5 @@ const supabase = createClient(
   process.env.VITE_SUPABASE_ANON_KEY
 );
 
-// async function getCountries() {
-//   const result = await supabase.from("countries").select();
-// }
-
 
 export default supabase;

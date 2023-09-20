@@ -1,8 +1,10 @@
 import { Router } from "express";
 import multer from "multer";
 import supabase from "../utils/db.js";
-import { v4 as uuidv4 } from "uuid";
 import { validateTokenMiddleware } from "../middlewares/protect.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const profileRouter = Router();
 
@@ -111,7 +113,7 @@ profileRouter.put(
 
         const { data, error } = await supabase.storage
           .from("test-avatar")
-          .upload(`profile/${uuidv4()}${fileName}`, fileImage);
+          .upload(`profile/${userId}`, fileImage);
 
         if (error) {
           console.error(error);
@@ -120,7 +122,7 @@ profileRouter.put(
         }
 
         const path = data.path;
-        const imgUrl = `https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/${path}`;
+        const imgUrl = `${process.env.VITE_SUPABASE_URL}/storage/v1/object/public/test-avatar/${path}`;
         const now1 = new Date(); // Get the current date and time
         const formattedDate1 =
           now1.toISOString().replace(/T/, " ").replace(/\..+/, "") +
@@ -149,14 +151,6 @@ profileRouter.put(
         const formattedDate2 =
           now2.toISOString().replace(/T/, " ").replace(/\..+/, "") +
           ".682314+00";
-
-        //   console.log({name: req.body.full_name,
-        //   date:req.body.dateofbirth,
-        //   edu:req.body.edu_background,
-        //   email:req.body.email,
-        //   imgUrl:imgUrl,
-        //   updated_at: formattedDate,
-        // })
 
         try {
           const { data, error } = await supabase
