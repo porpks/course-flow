@@ -21,10 +21,10 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 function CourseDetail() {
   const navigate = useNavigate();
   const [desireData, setDesireData] = useState([]);
-  const isDesireExist = desireData.length > 0;
+  const isDesireExist = desireData || [].length > 0;
 
   const [subscribeData, setSubscribeData] = useState([]);
-  const isSubscribe = subscribeData.length > 0;
+  const isSubscribe = subscribeData || [].length > 0;
 
   const [isRequestPending, setIsRequestPending] = useState(false);
 
@@ -240,18 +240,18 @@ function CourseDetail() {
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1a-content"
                           id="panel1a-header"
-                         className="accordionSummary"
+                          className="accordionSummary"
                         >
-                          <Typography className="typography">
+                          <div className="typography">
                             <div className="H3 text-[--gray700]">
                               {index < 10 ? "0" + (index + 1) : index + 1}
                             </div>
                             <div className="H3 text-[--black]">
                               {lesson.lesson_name}
                             </div>
-                          </Typography>
+                          </div>
                         </AccordionSummary>
-                        <AccordionDetails  className="accordionDetails">
+                        <AccordionDetails className="accordionDetails">
                           <div className="subLesson Body2 text-[--gray700] ">
                             <ul>
                               {lesson.sublessons.map((sublessonItem, index) => (
