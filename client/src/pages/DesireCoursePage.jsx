@@ -86,6 +86,13 @@ function DesireCoursePage() {
             </svg>
           </div>
           <h2 className="H2 pt-[100px] pb-[72px]">Desire Course</h2>
+          {desireData.length === 0 && (
+            <div className="text-center">
+              <p className="Body1 text-center text-[#646D89]">
+                You haven't added any desired courses yet
+              </p>
+            </div>
+          )}
           <div className="grid grid-cols-3 gap-x-[24px] gap-y-[40px] mb-[200px]">
             {desireData.map((item, index) => (
               <CourseItem
