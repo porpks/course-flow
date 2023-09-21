@@ -278,3 +278,12 @@
   position: absolute;
   right: 10px;
 }
+
+.Dropdown-control {
+  padding: 10px 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid #d6d9e4 !important;
+}
+.Dropdown-arrow {
+  top: 24px !important;
+}
