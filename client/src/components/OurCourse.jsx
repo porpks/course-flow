@@ -45,6 +45,7 @@ function OurCourse() {
   const handleSearch = (event) => {
     setSearchKey(event.target.value);
   };
+
   /////////////////////////////////////////////////
   const pageSize = 9;
   const totalPages = Math.ceil(dataCourse.length / pageSize);
@@ -63,6 +64,7 @@ function OurCourse() {
       </div>
     );
   }
+
   return (
     <div className="canvas-ourCourse">
       {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}

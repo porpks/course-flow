@@ -5,16 +5,32 @@ const courseRouter = Router();
 
 courseRouter.get("/", async (req, res) => {
   try {
-    const { data, error } = await supabase
+    let start = req.query.start - 1;
+    let desc = req.query.desc;
+    let course = req.query.course;
+    let end = req.query.end - 1;
+
+    const query = supabase
       .from("courses")
       .select("*,lessons(*,sublessons(*))")
-      .order("course_id", { ascending: true });
+      .order("course_id", { ascending: desc });
+
+    if (course) {
+      query.ilike("course_name", `%${course}%`);
+    }
+    if (start) {
+      query.range(start, end);
+    }
+
+    const { data, error } = await query;
 
     return res.json({
       data,
     });
   } catch (error) {
-    message: `Get course error message ${error}`;
+    return res
+      .status(500)
+      .json({ message: `Get course error message ${error.message}` });
   }
 });
 

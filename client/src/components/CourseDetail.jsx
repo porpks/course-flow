@@ -173,6 +173,7 @@ function CourseDetail() {
 
   return (
     <>
+    {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
       <section className="flex justify-center items-center border-2 border-sky-500">
         <div className="canvas_CourseDetail ">
           <div className="back-btn">
