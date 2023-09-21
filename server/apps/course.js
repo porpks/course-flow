@@ -18,7 +18,11 @@ courseRouter.get("/", async (req, res) => {
     if (course) {
       query.ilike("course_name", `%${course}%`);
     }
-    query.range(start, end);
+
+    if (start) {
+      query.range(start, end);
+    }
+
 
     const { data, error } = await query;
 

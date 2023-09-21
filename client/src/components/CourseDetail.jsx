@@ -17,6 +17,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+// import { useHistory } from "react-router-dom";
 
 function CourseDetail() {
   const navigate = useNavigate();
@@ -41,6 +42,17 @@ function CourseDetail() {
   const [dataCourse, setDataCourse] = useState([]);
   const param = useParams();
   const { userId } = useAuth();
+
+  // const history = useHistory();
+  // const handleGoBack = () => {
+  //   const previousPage = document.referrer;
+  //   if (previousPage) {
+  //     window.location.href = previousPage;
+  //   }
+  // };
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
   async function getDetailCourse() {
     try {
@@ -175,14 +187,16 @@ function CourseDetail() {
 
   return (
     <>
+      {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
       <section className="flex justify-center items-center border-2 border-sky-500">
         <div className="canvas_CourseDetail ">
           <div className="back-btn">
             <a
-              onClick={() => {
-                navigate("/ourcourse");
-              }}
-              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer">
+
+              onClick={handleGoBack}
+              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
+            >
+
               <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
               <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
             </a>
@@ -298,8 +312,9 @@ function CourseDetail() {
                     open={desireToggle}
                     onClose={closeDesire}
                     closeButton={closeDesire}
-                    description={`Do you sure to ${isDesireExist ? "add" : "remove"
-                      } ${dataCourse.course_name} to your desire Course?`}
+                    description={`Do you sure to ${
+                      isDesireExist ? "add" : "remove"
+                    } ${dataCourse.course_name} to your desire Course?`}
                     yesDes={
                       isDesireExist
                         ? "Remove from Desire Course"
