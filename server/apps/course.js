@@ -18,9 +18,11 @@ courseRouter.get("/", async (req, res) => {
     if (course) {
       query.ilike("course_name", `%${course}%`);
     }
+
     if (start) {
       query.range(start, end);
     }
+
 
     const { data, error } = await query;
 
@@ -90,48 +92,5 @@ courseRouter.get("/:courseId", async (req, res) => {
     message: error;
   }
 });
-
-courseRouter.get("/editcourse/:courseId", async (req, res) => {
-  try {
-    const courseId = req.params.courseId;
-    const { data, error } = await supabase
-      .from("courses")
-      .select("*,lessons(*,sublessons(sublesson_name,sublesson_id))")
-      .eq("course_id", courseId);
-
-    if (error) {
-      throw error;
-    }
-
-    return res.json({
-      data: data[0],
-    });
-  } catch (error) {
-    message: error;
-  }
-});
-
-// courseRouter.get(
-//   "/editcourse/:courseId/addlesson/:lessonsId",
-//   async (req, res) => {
-//     try {
-//       const courseId = req.params.courseId;
-//       const { data, error } = await supabase
-//         .from("courses")
-//         .select("*,lessons(*,sublessons(sublesson_name,sublesson_id))")
-//         .eq("course_id", courseId);
-
-//       if (error) {
-//         throw error;
-//       }
-
-//       return res.json({
-//         data: data[0],
-//       });
-//     } catch (error) {
-//       message: error;
-//     }
-//   }
-// );
 
 export default courseRouter;

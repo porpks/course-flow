@@ -172,23 +172,35 @@ learnRouter.get('/videotime', async (req, res) => {
         const { data: interval, error: courseError } = await supabase
             .from('user_sublessons')
             .select('sublesson_status,sublesson_video_timestop,timestop_updated,sublessons(*,lessons(*))')
-            .eq("user_id", userID);
-
+            .eq("user_id", userID)
+            .eq("sublessons.lessons.course_id", courseID);
+           
+                
         if (!interval || interval.length === 0) {
             return res.json({ message: "There are no sublessons for the given user ID" });
         }
 
-        interval.sort((a, b) => new Date(b.timestop_updated) - new Date(a.timestop_updated));
+            const filteredSublessons = interval.filter(item => {
+                // Check if the sublesson is related to the specified course_id
+                if (item.sublessons.lessons && item.sublessons.lessons.course_id === courseID) {
+                    return true; // Include this sublesson in the filtered array
+                } else {
+                    return false; // Exclude this sublesson from the filtered array
+                }
+            });
+       
+       
+        filteredSublessons.sort((a, b) => new Date(b.timestop_updated) - new Date(a.timestop_updated));
+        
 
-
-        const filteredInterval = interval.filter(dataItem => {
+        const filteredInterval = filteredSublessons.filter(dataItem => {
             return (dataItem.sublesson_video_timestop !== null)
         });
 
         if (filteredInterval.length === 0) {
             return res.json({ message: "No sublessons match the criteria" });
         }
-
+        
         const latestSublesson = filteredInterval[0];
 
         latestSublesson.sublesson_id = latestSublesson.sublessons.sublesson_id;
