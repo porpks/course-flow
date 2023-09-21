@@ -33,29 +33,17 @@ function AuthProvider(props) {
 
   const logout = async () => {
     try {
-      // if (!userIdFromCookie || !userId) {
-      //   console.error("Cannot log out: User ID is not available.");
-      //   return;
+      localStorage.clear();
+      setIsLoggedIn(false);
+      setUserID("");
+      // const response = await axios.get(`http://localhost:4000/auth/logout`);
+      // if (response.status === 200) {
+      //   localStorage.clear();
+      //   setIsLoggedIn(false);
+      //   setUserID("");
+      // } else {
+      //   console.error("Logout failed: Unexpected server response");
       // }
-      const response = await axios.get(`http://localhost:4000/auth/logout`);
-      if (response.status === 200) {
-        // localStorage.removeItem("token");
-        // localStorage.removeItem("userID");
-        // localStorage.removeItem("username");
-        // localStorage.removeItem("userimage");
-        // localStorage.removeItem("isLoggedIn");
-        // localStorage.removeItem("sublessonName");
-        // localStorage.removeItem("sublessonID");
-        // localStorage.removeItem("isShowVdo");
-        // localStorage.removeItem("isShowAsm");
-        // localStorage.removeItem("pauseTime");
-        // localStorage.removeItem("course_id");
-        localStorage.clear();
-        setIsLoggedIn(false);
-        setUserID("");
-      } else {
-        console.error("Logout failed: Unexpected server response");
-      }
     } catch (error) {
       alert(error.message);
     }
