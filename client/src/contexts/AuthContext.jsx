@@ -32,25 +32,23 @@ function AuthProvider(props) {
 
   const logout = async () => {
     try {
-      if (!userIdFromCookie || !userId) {
-        console.error("Cannot log out: User ID is not available.");
-        return;
-      }
-      const response = await axios.get(
-        `http://localhost:4000/auth/logout/${userId}`
-      );
+      // if (!userIdFromCookie || !userId) {
+      //   console.error("Cannot log out: User ID is not available.");
+      //   return;
+      // }
+      const response = await axios.get(`http://localhost:4000/auth/logout`);
       if (response.status === 200) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userID");
-        localStorage.removeItem("username");
-        localStorage.removeItem("userimage");
-        localStorage.removeItem("isLoggedIn");
-        localStorage.removeItem("sublessonName");
-        localStorage.removeItem("sublessonID");
-        localStorage.removeItem("isShowVdo");
-        localStorage.removeItem("isShowAsm");
-        localStorage.removeItem("pauseTime");
-        localStorage.removeItem("course_id");
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("userID");
+        // localStorage.removeItem("username");
+        // localStorage.removeItem("userimage");
+        // localStorage.removeItem("isLoggedIn");
+        // localStorage.removeItem("sublessonName");
+        // localStorage.removeItem("sublessonID");
+        // localStorage.removeItem("isShowVdo");
+        // localStorage.removeItem("isShowAsm");
+        // localStorage.removeItem("pauseTime");
+        // localStorage.removeItem("course_id");
         localStorage.clear();
         setIsLoggedIn(false);
         setUserID("");
@@ -59,49 +57,6 @@ function AuthProvider(props) {
       }
     } catch (error) {
       alert(error.message);
-    }
-  };
-
-  function setCookie(name, value, days) {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000); // Calculate expiration time
-    const cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
-    document.cookie = cookie;
-  }
-
-  const login = async (userData) => {
-    try {
-      const result = await axios.post(
-        "http://localhost:4000/auth/login",
-        userData
-      );
-      const token = result.data.token;
-      setUserID(result.data.data[0].user_id);
-      localStorage.setItem("token", token);
-      secureLocalStorage.setItem("userID", result.data.data[0].user_id);
-      setIsLoggedIn(true);
-      localStorage.setItem("isLoggedIn", true);
-      setCookie("cookieUserID", result.data.data[0].user_id, 1);
-      // const response = await axios.get(
-      //   `http://localhost:4000/profile/${userID}`
-      // );
-      setTimeout(async () => {
-        try {
-          const response = await axios.get(
-            `http://localhost:4000/profile/${result.data.data[0].user_id}`
-          );
-          setUsername(response.data.data);
-          localStorage.setItem("username", response.data.data.full_name);
-          localStorage.setItem("userimage", response.data.data.image_url);
-          localStorage.setItem("isLoggedIn", true);
-        } catch (error) {
-          console.error(error);
-        }
-      }, 500);
-
-      navigate("/ourcourse");
-    } catch (error) {
-      alert(error);
     }
   };
 
@@ -119,6 +74,51 @@ function AuthProvider(props) {
     }
     return "";
   }
+
+  function setCookie(name, value, days) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000); // Calculate expiration time
+    const cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+    document.cookie = cookie;
+  }
+
+  const login = async (userData) => {
+    try {
+      const result = await axios.post(
+        "http://localhost:4000/auth/login",
+        userData
+      );
+      const token = result.data.token;
+      // setUserID(result.data.data[0].user_id);
+      setCookie("cookieUserID", result.data.data[0].user_id, 1);
+      setCookie("token", token, 1);
+      localStorage.setItem("isLoggedIn", true);
+      secureLocalStorage.setItem("userID", result.data.data[0].user_id);
+      localStorage.setItem("token", token);
+      // setIsLoggedIn(true);
+      // const response = await axios.get(
+      //   `http://localhost:4000/profile/${userID}`
+      // );
+      setTimeout(async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:4000/profile/${result.data.data[0].user_id}`
+          );
+          const hasToken = !!localStorage.getItem("token");
+          setUsername(response.data.data);
+          localStorage.setItem("username", response.data.data.full_name);
+          localStorage.setItem("userimage", response.data.data.image_url);
+          localStorage.setItem("isLoggedIn", hasToken ? "true" : "false");
+        } catch (error) {
+          console.error(error);
+        }
+      }, 50);
+
+      navigate("/ourcourse");
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -155,6 +155,7 @@ function AuthProvider(props) {
         setvideoUrl,
         deleteAssignment,
         setDeleteAssignment,
+        userIdFromCookie,
       }}
     >
       {props.children}

@@ -9,7 +9,7 @@ MyCourseRouter.get("/:userID", async (req, res) => {
     const { data, error } = await supabase
       .from(`user_courses`)
       .select(
-        "*, courses(course_id, course_name, course_detail, cover_img, total_time, course_summary), users(user_id,full_name,image_url)"
+        "*, courses(course_id, course_name, course_detail, cover_img, total_time, course_summary)"
       )
       .eq("user_id", userID);
 
@@ -46,7 +46,6 @@ MyCourseRouter.post("/", async (req, res) => {
 
     res.json({ message: `course ${course_id} has been added.` });
   } catch (error) {
-    
     res.status(500).json({ error: "An error occurred." });
   }
 });
@@ -58,10 +57,10 @@ MyCourseRouter.get("/", async (req, res) => {
 
     const data = await supabase
       .from("user_courses")
-      .select("*")
+      .select("courses")
       .eq("user_id", user_id)
       .eq("course_id", course_id);
-
+    console.log(data);
     res.json(data);
   } catch (error) {
     console.error("Error fetching user course data:", error.message);
