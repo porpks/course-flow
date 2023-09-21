@@ -1,30 +1,48 @@
 import Avatar from "@mui/material/Avatar";
-// import MenuItem from "@mui/material/MenuItem";
-// import MenuList from "@mui/material/MenuList";
-// import Stack from "@mui/material/Stack";
-// import Paper from "@mui/material/Paper";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
-import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import CourseCard from "./myCourseComponent/CourseCard";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, json } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import Ellipse5 from "../assets/myCourseAssets/Ellipse5";
 import Polygon3 from "../assets/myCourseAssets/Polygon3";
 import Cross5 from "../assets/myCourseAssets/Cross5";
 import { Button } from "@mui/base/Button";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import "../components/myCourseComponent/CourseCard.css";
 
 function MyCourse() {
   const [dataCourse, setDataCourse] = useState([]);
+  // const [dataCourse, setDataCourse] = localStorage.getItem("dataCourse");
   const [courseID, setCourseID] = useState(null);
-  // const [status, setStatus] = useState(null)
   const [allCourse, setAllCourse] = useState(true);
   const [inprogress, setInprogress] = useState(false);
   const [complete, setComplete] = useState(false);
-  const [userName, setUserName] = useState("");
+  const userName = localStorage.getItem("username");
+  const avatar = localStorage.getItem("userimage");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
+  const [inProgressCount, setInProgressCount] = useState(0);
+  const [completeCount, setCompleteCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const inProgressCourses = dataCourse.filter((item) => !item.course_status);
+  const completeCourses = dataCourse.filter((item) => item.course_status);
+  const currentData = dataCourse.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPagesAllCourse = Math.ceil(dataCourse.length / itemsPerPage);
+  const totalPagesInprogress = Math.ceil(
+    inProgressCourses.length / itemsPerPage
+  );
+  const totalPagesComplete = Math.ceil(completeCourses.length / itemsPerPage);
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage);
+  };
+
   const [checkOnClick, setCheckOnClick] = useState(false);
   const {
     setIsShowVdo,
@@ -34,67 +52,79 @@ function MyCourse() {
     setPauseTime,
     userId,
     setvideoUrl,
+    userIdFromCookie,
   } = useAuth();
-  const [inProgressCount, setInProgressCount] = useState(0);
-  const [completeCount, setCompleteCount] = useState(0);
-  const [avatar, setAvatar] = useState(null);
 
-  function handleAllCourse() {
-    setAllCourse(true);
-    setInprogress(false);
-    setComplete(false);
-    return;
-  }
-  function handleInprogress() {
-    setAllCourse(false);
-    setInprogress(true);
-    setComplete(false);
-    return;
-  }
-  function handleComplete() {
-    setAllCourse(false);
-    setInprogress(false);
-    setComplete(true);
-    return;
-  }
+  useEffect(() => {
+    // try {
+    //   fetch(`http://localhost:4000/mycourse/${userIdFromCookie}`)
+    //     .then((response) => response.json())
+    //     .then((json) => {
+    //       console.log(json.data);
+    //       try {
+    //         setDataCourse(json.data);
+    //       } catch (error) {}
+    //     });
+    // } catch (error) {}
+    localStorage.removeItem("sublessonName");
+    localStorage.removeItem("sublessonID");
+    localStorage.removeItem("isShowVdo");
+    localStorage.removeItem("isShowAsm");
+    localStorage.removeItem("pauseTime");
+    localStorage.removeItem("videoUrl");
+    localStorage.removeItem("pauseTime");
+    localStorage.removeItem("nonepause");
+    localStorage.removeItem("videoKey");
+    localStorage.removeItem("videoHead");
+    getDataCourse();
+  }, [userId]);
 
   const getDataCourse = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:4000/mycourse/${userId}`
+        `http://localhost:4000/mycourse/${userIdFromCookie}`
       );
+
       const newDataCourse = result.data.data;
-      setDataCourse(newDataCourse);
 
       if (newDataCourse.length > 0) {
-        const username = newDataCourse[0].users.full_name;
-        const avatar = newDataCourse[0].users.image_url;
-        setUserName(username);
-        setAvatar(avatar);
-
-        let inProgressCount = 0;
-        let completeCount = 0;
-
-        newDataCourse.forEach((course) => {
-          if (course.course_status === false || course.course_status === null) {
-            inProgressCount++;
-          } else if (
-            course.course_status === true &&
-            course.course_status !== null
-          ) {
-            completeCount++;
-          }
-        });
-
-        setInProgressCount(inProgressCount);
-        setCompleteCount(completeCount);
-      } else {
-        setUserName("No User Data Available");
+        setDataCourse(newDataCourse);
       }
+      const counts = newDataCourse.reduce(
+        (accumulator, course) => {
+          if (course.course_status === false || course.course_status === null) {
+            accumulator.inProgressCount++;
+          } else if (course.course_status === true) {
+            accumulator.completeCount++;
+          }
+          return accumulator;
+        },
+        { inProgressCount: 0, completeCount: 0 }
+      );
+      setInProgressCount(counts.inProgressCount);
+      setCompleteCount(counts.completeCount);
+      // } else {
+      //   setUserName("No User Data Available");
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
+  function handleCourseFilter(filter) {
+    if (filter === "all") {
+      setAllCourse(true);
+      setInprogress(false);
+      setComplete(false);
+    } else if (filter === "inProgress") {
+      setAllCourse(false);
+      setInprogress(true);
+      setComplete(false);
+    } else if (filter === "complete") {
+      setAllCourse(false);
+      setInprogress(false);
+      setComplete(true);
+    }
+  }
 
   const getDataCourse2 = async () => {
     try {
@@ -114,7 +144,7 @@ function MyCourse() {
           courseID: localStorage.getItem("course_id"),
         },
       });
-      const data = result.data.data;
+      const data = await result.data.data;
       console.log(data);
       console.log(Object.keys(data).length > 0);
       if (Object.keys(data).length > 0) {
@@ -149,126 +179,61 @@ function MyCourse() {
       console.log("there is no sublesson in this code");
     }
   };
-  useEffect(() => {
-    getDataCourse();
-    localStorage.removeItem("sublessonName");
-    localStorage.removeItem("sublessonID");
-    localStorage.removeItem("isShowVdo");
-    localStorage.removeItem("isShowAsm");
-    localStorage.removeItem("pauseTime");
-    localStorage.removeItem("videoUrl");
-    localStorage.removeItem("pauseTime");
-    localStorage.removeItem("nonepause");
-    localStorage.removeItem("videoKey");
-    localStorage.removeItem("videoHead");
-  }, [userId, checkOnClick]);
 
-  function AllCourse() {
+  const CourseList = ({ dataCourse, status }) => {
+    const [coursesPerPage] = useState(4);
+    const indexOfLastItem = currentPage * coursesPerPage;
+    const indexOfFirstItem = indexOfLastItem - coursesPerPage;
+
+    const filteredCourses = dataCourse.filter((item) => {
+      if (status === "all") {
+        return true;
+      } else if (status === "inProgress") {
+        return !item.course_status;
+      } else if (status === "complete") {
+        return item.course_status;
+      }
+      return false;
+    });
+
+    const currentCourses = filteredCourses.slice(
+      indexOfFirstItem,
+      indexOfLastItem
+    );
+
+    const handleClick = (courseId) => {
+      setCheckOnClick((q) => !q);
+      setCourseID(courseId);
+      localStorage.removeItem("course_id");
+      localStorage.setItem("course_id", courseId);
+      getDataCourse2();
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    };
+
+    const courseCards = currentCourses.map((item) => (
+      <Link
+        className="no-underline"
+        key={item.courses.course_id}
+        to={`/learning/${item.courses.course_id}`}
+        onClick={() => handleClick(item.courses.course_id)}
+      >
+        <CourseCard
+          key={item.courses.course_id}
+          courseid={item.courses.course_id}
+          coverimg={item.courses.cover_img}
+          coursename={item.courses.course_name}
+          coursedetail={item.courses.course_detail}
+          coursesummary={item.courses.course_summary}
+          totallearningtime={item.courses.total_time}
+        />
+      </Link>
+    ));
     return (
       <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]">
-        {dataCourse.map((item) => (
-          <div
-            key={item.courses.course_id}
-            onClick={() => {
-              setCheckOnClick((q) => !q);
-              setCourseID(item.courses.course_id);
-              localStorage.removeItem("course_id");
-              localStorage.setItem("course_id", item.courses.course_id);
-              getDataCourse2();
-              window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-            }}
-          >
-            <Link
-              className="no-underline"
-              key={item.courses.course_id}
-              to={`/learning/${item.courses.course_id}`} // Define the route you want to navigate to
-            >
-              <CourseCard
-                key={item.courses.course_id}
-                courseid={item.courses.course_id}
-                coverimg={item.courses.cover_img}
-                coursename={item.courses.course_name}
-                coursedetail={item.courses.course_detail}
-                coursesummary={item.courses.course_summary}
-                totallearningtime={item.courses.total_time}
-              />
-            </Link>
-          </div>
-        ))}
+        {courseCards}
       </div>
     );
-  }
-
-  function Inprogress() {
-    if (dataCourse.length > 0) {
-      const inProgressCourses = dataCourse.filter(
-        (item) => !item.course_status
-      );
-      return (
-        <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]">
-          {inProgressCourses.map((item) => (
-            <Link
-              className="no-underline"
-              key={item.courses.course_id}
-              to={`/learning/${item.courses.course_id}`}
-              onClick={() => {
-                setCheckOnClick((q) => !q);
-                setCourseID(item.courses.course_id);
-                localStorage.removeItem("course_id");
-                localStorage.setItem("course_id", item.courses.course_id);
-                getDataCourse2();
-                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-              }} // Define the route you want to navigate to
-            >
-              <CourseCard
-                key={item.courses.course_id}
-                courseid={item.courses.course_id}
-                coverimg={item.courses.cover_img}
-                coursename={item.courses.course_name}
-                coursedetail={item.courses.course_detail}
-                coursesummary={item.courses.course_summary}
-                totallearningtime={item.courses.total_time}
-              />
-            </Link>
-          ))}
-        </div>
-      );
-    }
-  }
-  function Complete() {
-    if (dataCourse.length > 0) {
-      const completeCourses = dataCourse.filter((item) => item.course_status);
-      return (
-        <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px]  w-[740px]">
-          {completeCourses.map((item) => (
-            <Link
-              className="no-underline"
-              key={item.courses.course_id}
-              onClick={() => {
-                setCheckOnClick((q) => !q);
-                setCourseID(item.courses.course_id);
-                localStorage.removeItem("course_id");
-                localStorage.setItem("course_id", item.courses.course_id);
-                getDataCourse2();
-                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-              }}
-              to={`/learning/${item.courses.course_id}`} // Define the route you want to navigate to
-            >
-              <CourseCard
-                key={item.courses.course_id}
-                courseid={item.courses.course_id}
-                coverimg={item.courses.cover_img}
-                coursename={item.courses.course_name}
-                coursedetail={item.courses.course_detail}
-                coursesummary={item.courses.course_summary}
-                totallearningtime={item.courses.total_time}
-              />
-            </Link>
-          ))}
-        </div>
-      );
-    }
-  }
+  };
 
   return (
     <div className="w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative ">
@@ -305,38 +270,21 @@ function MyCourse() {
       </div>
       <div className="flex flex-col items-center justify-center ">
         <h2 className="H2">My Course</h2>
-        {/* <div className="flex flex-row mt-[60px]">
-            <Stack direction="row" spacing={2} className="">
-              <Paper>
-                <MenuList className="flex fle-row ">
-                  <MenuItem
-                    className="cursor-pointer "
-                    style={{}}
-                    onClick={handleAllCourse}
-                  >
-                    All Course
-                  </MenuItem>
-                  <MenuItem onClick={handleInprogress}>Inprogress</MenuItem>
-                  <MenuItem onClick={handleComplete}>Complete</MenuItem>
-                </MenuList>
-              </Paper>
-            </Stack>
-          </div> */}
         <div className="justify-start items-start gap-4 inline-flex mt-[60px]">
           <div
-            onClick={() => handleAllCourse("All")}
+            onClick={() => handleCourseFilter("all")}
             className={`box-content cursor-pointer Component1 p-2 flex items-start gap-2 border-solid border-white border-b-2 hover:border-b-2 hover:border-solid hover:border-black border-t-0 border-r-0 border-l-0  m-0`}
           >
             <div className="Body2">All Course</div>
           </div>
           <div
-            onClick={() => handleInprogress("All")}
+            onClick={() => handleCourseFilter("inProgress")}
             className={`box-content cursor-pointer Component1 p-2 flex items-start gap-2 border-solid border-white border-b-2 hover:border-b-2 hover:border-solid hover:border-black border-t-0 border-r-0 border-l-0  m-0`}
           >
             <div className="Body2">Inprogress</div>
           </div>
           <div
-            onClick={() => handleComplete("All")}
+            onClick={() => handleCourseFilter("complete")}
             className={`box-content  cursor-pointer Component1 p-2 flex items-start gap-2 border-solid border-white border-b-2 hover:border-b-2 hover:border-solid hover:border-black border-t-0 border-r-0 border-l-0  m-0`}
           >
             <div className="Body2">Complete</div>
@@ -359,11 +307,45 @@ function MyCourse() {
               <p className="H3">{completeCount}</p>
             </div>
           </div>
+          <div className="mt-16">
+            {allCourse && totalPagesAllCourse > 1 && (
+              <Pagination
+                count={totalPagesAllCourse}
+                onChange={(event, newPage) =>
+                  handlePageChange(event, newPage, "all")
+                }
+                page={currentPage}
+                size="large"
+              />
+            )}
+            {inprogress && totalPagesInprogress > 1 && (
+              <Pagination
+                count={totalPagesInprogress}
+                onChange={(event, newPage) =>
+                  handlePageChange(event, newPage, "inProgress")
+                }
+                page={currentPage}
+                size="large"
+              />
+            )}
+            {complete && totalPagesComplete > 1 && (
+              <Pagination
+                count={totalPagesComplete}
+                onChange={(event, newPage) =>
+                  handlePageChange(event, newPage, "complete")
+                }
+                page={currentPage}
+                size="large"
+              />
+            )}
+          </div>
         </div>
-        {allCourse && <AllCourse />}
-        {inprogress && <Inprogress />}
-        {complete && <Complete />}
-        {/* <div className="grid grid-cols-3 gap-x-[26px] gap-y-[40px]"></div> */}
+
+        {allCourse && <CourseList dataCourse={dataCourse} status="all" />}
+        {inprogress && (
+          <CourseList dataCourse={dataCourse} status="inProgress" />
+        )}
+        {complete && <CourseList dataCourse={dataCourse} status="complete" />}
       </div>
     </div>
   );
