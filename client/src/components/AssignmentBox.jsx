@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/AuthContext.jsx";
 
 import "./Assignment.css";
 const AssignmentBox = (props) => {
-  const { userId } = useAuth();
+  const { userId, renderAsm, setRenderAsm } = useAuth();
   const [data, setData] = useState();
   const [answers, setAnswers] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,45 +14,45 @@ const AssignmentBox = (props) => {
   const sublessonID = props.sublessonID || null
   useEffect(() => {
     const getAssignmentData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
-        );
-        setData(response.data.data);
-
-        const initialAnswers = response.data.data.map((assignment) => ({
-          assignment_id: assignment.assignment_id,
-          assignment_answer: assignment.assignment_answer || "",
-          assignment_status: assignment.assignment_status,
-        }));
-        setAnswers(initialAnswers);
-
-        console.log(new Date().getTime());
-        console.log(response.data.data);
-
-        if (response.data.data.length === 0) {
-          await axios.post(
-            `http://localhost:4000/assignment/`,
-            {
-              user_id: userId,
-              sublesson_id: sublessonID,
-            });
-
-          const result = await axios.get(
+      if (renderAsm) {
+        try {
+          const response = await axios.get(
             `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
           );
-          setData(result.data.data);
-          const initialAnswers = result.data.data.map((assignment) => ({
+          setData(response.data.data);
+
+          const initialAnswers = response.data.data.map((assignment) => ({
             assignment_id: assignment.assignment_id,
             assignment_answer: assignment.assignment_answer || "",
             assignment_status: assignment.assignment_status,
           }));
           setAnswers(initialAnswers);
+
+          if (response.data.data.length === 0) {
+            await axios.post(
+              `http://localhost:4000/assignment/`,
+              {
+                user_id: userId,
+                sublesson_id: sublessonID,
+              });
+
+            const result = await axios.get(
+              `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
+            );
+            setData(result.data.data);
+            const initialAnswers = result.data.data.map((assignment) => ({
+              assignment_id: assignment.assignment_id,
+              assignment_answer: assignment.assignment_answer || "",
+              assignment_status: assignment.assignment_status,
+            }));
+            setAnswers(initialAnswers);
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
       }
-    };
+      setRenderAsm(false)
+    }
 
     getAssignmentData();
   }, []);
@@ -130,6 +130,7 @@ const AssignmentBox = (props) => {
     }
   };
 
+  console.log("Render ass box", new Date().getTime());
   return (
     <>
       <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex'>
@@ -242,7 +243,7 @@ const AssignmentBox = (props) => {
           })}
       </div>
 
-      <div className='pagination self-start'>
+      {/* <div className='pagination self-start'>
         {Array.from({ length: totalPages }).map((_, index) => (
           <button
             key={"00" + index}
@@ -252,7 +253,7 @@ const AssignmentBox = (props) => {
             {index + 1}
           </button>
         ))}
-      </div>
+      </div> */}
     </>
   );
 };

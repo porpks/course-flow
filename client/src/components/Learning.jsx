@@ -23,6 +23,7 @@ function Learning() {
     userId,
     isShowAsm,
     setIsShowAsm,
+    setRenderAsm,
     isShowVdo,
     setIsShowVdo,
     videoHead,
@@ -180,6 +181,7 @@ function Learning() {
 
   const handleEnd = () => {
     updateIsShowAsm(true);
+    setRenderAsm(true)
   };
 
   useEffect(() => {
@@ -305,8 +307,8 @@ function Learning() {
                             key={index}
                             id={sublesson.sublesson_id}
                             className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${sublesson.sublesson_id === videoKey
-                                ? "bg-[--gray400]"
-                                : ""
+                              ? "bg-[--gray400]"
+                              : ""
                               }`}
                             onClick={() =>
                               handleShowVideo(
