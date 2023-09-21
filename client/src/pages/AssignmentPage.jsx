@@ -189,10 +189,10 @@ function AssignmentPage() {
           </div>
           <div className='Frame427321008 w-[1120px]  flex-col justify-start items-start gap-6 inline-flex mt-[40px]  '>
             {data ? (
-              assignmentsToDisplay.map((assignment) => {
+              assignmentsToDisplay.map((assignment, index) => {
                 return (
                   <div
-                    key={assignment.assignment_id}
+                    key={index}
                     className='relative Frame427321006 px-24 py-10 bg-slate-200 rounded-lg flex-col justify-start items-start gap-9 flex w-[100%]'>
                     <div className='Frame427321001 w-[100%] justify-start items-start gap-6 inline-flex'>
                       <div className='Frame427321000 grow shrink basis-0 flex-col justify-start items-start gap-3 inline-flex w-[100%]'>
