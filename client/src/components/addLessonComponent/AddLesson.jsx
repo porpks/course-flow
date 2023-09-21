@@ -9,7 +9,6 @@ function AddLesson() {
   const [dataCourse, setDataCourse] = useState([]);
   const [updatedSubLessonName, setUpdatedSubLessonName] = useState(""); // State to store updated subLessonName
   const [updatedLessonId, setUpdatedLessonId] = useState(""); // State to store the lessonId to be updated
-
   const [subLessonList, setSubLessonList] = useState([
     { lessonId: 1, subLessonName: "" },
   ]);

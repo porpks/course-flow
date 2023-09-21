@@ -57,7 +57,7 @@ function Navbar() {
   };
   useEffect(() => {
     const storedIsLoggedIn = localStorage.getItem("isLoggedIn");
-    if (storedIsLoggedIn) {
+    if (storedIsLoggedIn == "true") {
       setIsLoggedIn(true);
     }
   }, []);

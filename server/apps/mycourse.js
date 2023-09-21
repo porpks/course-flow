@@ -8,26 +8,23 @@ MyCourseRouter.get("/test", async (req, res) => {
   const user_id = req.query.user_id;
   const course_id = req.query.course_id;
 
-  const sublessonID = []
+  const sublessonID = [];
   const { data: lessonData, error: lessonError } = await supabase
-    .from('lessons')
-    .select('course_id, sublessons(sublesson_id)')
-    .eq('course_id', course_id)
+    .from("lessons")
+    .select("course_id, sublessons(sublesson_id)")
+    .eq("course_id", course_id);
 
   if (lessonError) {
-    return res.status(404).json({ lessonError })
+    return res.status(404).json({ lessonError });
   }
   lessonData.map((lesson) => {
     lesson.sublessons.map((item) => {
-
-      const newItem = { user_id: Number(user_id), ...item }
-      sublessonID.push(newItem)
-    })
-  })
+      const newItem = { user_id: Number(user_id), ...item };
+      sublessonID.push(newItem);
+    });
+  });
 
   return res.json({ sublessonID });
-
-
 });
 
 MyCourseRouter.get("/:userID", async (req, res) => {
@@ -36,7 +33,7 @@ MyCourseRouter.get("/:userID", async (req, res) => {
     const { data, error } = await supabase
       .from(`user_courses`)
       .select(
-        "*, courses(course_id, course_name, course_detail, cover_img, total_time, course_summary), users(user_id,full_name,image_url)"
+        "*, courses(course_id, course_name, course_detail, cover_img, total_time, course_summary)"
       )
       .eq("user_id", userID);
 
@@ -71,31 +68,31 @@ MyCourseRouter.post("/", async (req, res) => {
       throw error;
     }
 
-    const sublessonID = []
+    const sublessonID = [];
     const { data: lessonData, error: lessonError } = await supabase
-      .from('lessons')
-      .select('course_id, sublessons(sublesson_id)')
-      .eq('course_id', course_id)
+      .from("lessons")
+      .select("course_id, sublessons(sublesson_id)")
+      .eq("course_id", course_id);
 
     if (lessonError) {
-      return res.status(404).json({ lessonError })
+      return res.status(404).json({ lessonError });
     }
     lessonData.map((lesson) => {
       lesson.sublessons.map((item) => {
-        const newItem = { user_id: Number(user_id), ...item }
-        sublessonID.push(newItem)
-      })
-    })
-    const { error: sublessonError } = await supabase.from("user_sublessons").insert(sublessonID);
+        const newItem = { user_id: Number(user_id), ...item };
+        sublessonID.push(newItem);
+      });
+    });
+    const { error: sublessonError } = await supabase
+      .from("user_sublessons")
+      .insert(sublessonID);
 
     if (sublessonError) {
       throw sublessonError;
     }
 
-
     res.json({ message: `course ${course_id} has been added.` });
   } catch (error) {
-
     res.status(500).json({ error: "An error occurred." });
   }
 });
@@ -107,10 +104,10 @@ MyCourseRouter.get("/", async (req, res) => {
 
     const data = await supabase
       .from("user_courses")
-      .select("*")
+      .select("courses")
       .eq("user_id", user_id)
       .eq("course_id", course_id);
-
+    console.log(data);
     res.json(data);
   } catch (error) {
     console.error("Error fetching user course data:", error.message);

@@ -73,6 +73,7 @@ authRouter.post("/login", async (req, res) => {
           token,
           data: userId,
         });
+        console.log(res.json);
       } catch (error) {
         res.json({ error: error });
       }
@@ -82,12 +83,10 @@ authRouter.post("/login", async (req, res) => {
   }
 });
 
-authRouter.get("/logout/:userId", async (req, res) => {
+authRouter.get("/logout", async (req, res) => {
   await supabase.auth.signOut();
-  const userId = req.params.userId;
   return res.json({
     message: "logout",
-    data: userId,
   });
 });
 
