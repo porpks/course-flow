@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+
 function OurCourse() {
   const navigate = useNavigate();
   const [dataCourse, setDataCourse] = useState([]);
   const [searchKey, setSearchKey] = useState(""); //searchKeyword
   const [currentPage, setCurrentPage] = useState(1);
+
 
   async function getDataCourse() {
     try {
