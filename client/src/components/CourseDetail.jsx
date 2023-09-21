@@ -17,14 +17,17 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+// import { useHistory } from "react-router-dom";
 
 function CourseDetail() {
   const navigate = useNavigate();
   const [desireData, setDesireData] = useState([]);
-  const isDesireExist = desireData.length > 0 || [].length > 0;
+
+  const isDesireExist = desireData.length > 0;
 
   const [subscribeData, setSubscribeData] = useState([]);
-  const isSubscribe = subscribeData.length > 0 || [].length > 0;
+  const isSubscribe = subscribeData.length > 0;
+
 
   const [isRequestPending, setIsRequestPending] = useState(false);
 
@@ -39,6 +42,17 @@ function CourseDetail() {
   const [dataCourse, setDataCourse] = useState([]);
   const param = useParams();
   const { userId } = useAuth();
+
+  // const history = useHistory();
+  // const handleGoBack = () => {
+  //   const previousPage = document.referrer;
+  //   if (previousPage) {
+  //     window.location.href = previousPage;
+  //   }
+  // };
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
   async function getDetailCourse() {
     try {
@@ -173,15 +187,16 @@ function CourseDetail() {
 
   return (
     <>
+      {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
       <section className="flex justify-center items-center border-2 border-sky-500">
         <div className="canvas_CourseDetail ">
           <div className="back-btn">
             <a
-              onClick={() => {
-                navigate("/ourcourse");
-              }}
+
+              onClick={handleGoBack}
               className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
             >
+
               <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
               <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
             </a>
@@ -202,8 +217,7 @@ function CourseDetail() {
                       width="104"
                       height="104"
                       viewBox="0 0 104 104"
-                      fill="none"
-                    >
+                      fill="none">
                       <rect
                         width="104"
                         height="104"
@@ -240,8 +254,7 @@ function CourseDetail() {
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1a-content"
                           id="panel1a-header"
-                          className="accordionSummary"
-                        >
+                          className="accordionSummary">
                           <div className="typography">
                             <div className="H3 text-[--gray700]">
                               {index < 10 ? "0" + (index + 1) : index + 1}
@@ -287,8 +300,7 @@ function CourseDetail() {
                 {isSubscribe ? null : (
                   <button
                     onClick={userId ? openDesire : noAuthHandle}
-                    className={`Secondary w-[100%] hidden`}
-                  >
+                    className={`Secondary w-[100%] hidden`}>
                     {isDesireExist
                       ? "Remove from Desire Course"
                       : "Get in Desire Course"}
@@ -300,8 +312,9 @@ function CourseDetail() {
                     open={desireToggle}
                     onClose={closeDesire}
                     closeButton={closeDesire}
-                    description={`Do you sure to ${isDesireExist ? "add" : "remove"
-                      } ${dataCourse.course_name} to your desire Course?`}
+                    description={`Do you sure to ${
+                      isDesireExist ? "add" : "remove"
+                    } ${dataCourse.course_name} to your desire Course?`}
                     yesDes={
                       isDesireExist
                         ? "Remove from Desire Course"
@@ -339,8 +352,7 @@ function CourseDetail() {
                       noAuthHandle();
                     }
                   }}
-                  className="Primary w-[100%] border-none"
-                >
+                  className="Primary w-[100%] border-none">
                   {isSubscribe ? "Start Learning" : "Subscribe This Course"}
                 </button>
               </div>

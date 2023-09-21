@@ -12,17 +12,31 @@ function DesireCoursePage() {
   const navigate = useNavigate();
 
   const [desireData, setDesireData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsloading] = useState(false);
 
   const getDataDesireCourse = async () => {
     try {
+      setIsloading(true);
       const result = await axios.get(`http://localhost:4000/desire/${userId}`);
       const newDataCourse = result.data;
       setDesireData(newDataCourse);
+      setIsloading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
+  const pageSize = 9;
+  const totalPages = Math.ceil(desireData.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = currentPage * pageSize;
+  const cardCourseToDisplay = desireData.slice(startIndex, endIndex);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+  console.log(currentPage);
   useEffect(() => {
     getDataDesireCourse();
   }, []);
@@ -86,8 +100,21 @@ function DesireCoursePage() {
             </svg>
           </div>
           <h2 className="H2 pt-[100px] pb-[72px]">Desire Course</h2>
-          <div className="grid grid-cols-3 gap-x-[24px] gap-y-[40px] mb-[200px]">
-            {desireData.map((item, index) => (
+          {isLoading && (
+            <div className="text-center">
+              <p className="Body1 text-center text-[#646D89]">Loading.. </p>
+            </div>
+          )}
+          {!isLoading && desireData.length === 0 && (
+            <div className="text-center">
+              <p className="Body1 text-center text-[#646D89]">
+                You haven't added any desired courses yet
+              </p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-3 gap-x-[24px] gap-y-[40px] ">
+            {cardCourseToDisplay.map((item, index) => (
               <CourseItem
                 key={index}
                 coverimg={item.courses.cover_img}
@@ -100,6 +127,18 @@ function DesireCoursePage() {
                   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                 }}
               />
+            ))}
+          </div>
+          <div className="pagination-card mb-[200px]">
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handlePageChange(index + 1)}
+                className={`paginationOurCourse-item ${
+                  currentPage === index + 1 ? "active" : ""
+                }`}>
+                {index + 1}
+              </button>
             ))}
           </div>
         </div>
