@@ -70,12 +70,15 @@ function Learning() {
     if (loading) {
       return;
     }
-
+    setvideoUrl(null);
+    localStorage.setItem("videoUrl", null);
+    setIsLoading(true);
     if (action === "next" || action === "prev") {
       updateIsShowAsm(false);
 
       await handleVideoNavigation(action);
     }
+    setIsLoading(false);
   };
 
   const handleVideoNavigation = async (action) => {
@@ -104,12 +107,16 @@ function Learning() {
 
   const handleShowVideo = async (sublessonName, sublessonID) => {
     try {
+      setvideoUrl(null);
+      localStorage.setItem("videoUrl", null);
+      setIsLoading(true);
       updateVideoDisplay(sublessonName, sublessonID);
       fetchPauseTime();
 
       localStorage.setItem("pauseTime", 0);
       setIsShowVdo(true);
       localStorage.setItem("isShowVdo", true);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error showing video:", error);
     }
@@ -121,13 +128,13 @@ function Learning() {
 
     setVideoHead(newVideoHead);
     setVideoKey(sublessonID);
-    setvideoUrl(null);
+
     setvideoUrl(newVideoUrl);
 
     localStorage.setItem("sublessonName", newVideoHead);
     localStorage.setItem("sublessonID", sublessonID);
     localStorage.setItem("videoKey", sublessonID);
-    localStorage.setItem("videoUrl", null);
+
     localStorage.setItem("videoUrl", newVideoUrl);
 
     updateIsShowAsm(false);
