@@ -4,47 +4,6 @@ import { log, trace } from "console";
 
 const MyCourseRouter = Router();
 
-MyCourseRouter.get("/test", async (req, res) => {
-  const user_id = req.query.user_id;
-  const course_id = req.query.course_id;
-
-  const sublessonID = [];
-  const { data: lessonData, error: lessonError } = await supabase
-    .from("lessons")
-    .select("course_id, sublessons(sublesson_id)")
-    .eq("course_id", course_id);
-
-  if (lessonError) {
-    return res.status(404).json({ lessonError });
-  }
-  lessonData.map((lesson) => {
-    lesson.sublessons.map((item) => {
-      const newItem = { user_id: Number(user_id), ...item };
-      sublessonID.push(newItem);
-    });
-  });
-
-  return res.json({ sublessonID });
-});
-
-MyCourseRouter.get("/:userID", async (req, res) => {
-  const { userID } = req.params;
-  try {
-    const { data, error } = await supabase
-      .from(`user_courses`)
-      .select(
-        "*, courses(course_id, course_name, course_detail, cover_img, total_time, course_summary)"
-      )
-      .eq("user_id", userID);
-
-    return res.json({
-      data,
-    });
-  } catch (error) {
-    message: `Get course error message ${error}`;
-  }
-});
-
 MyCourseRouter.post("/", async (req, res) => {
   try {
     const { user_id, course_id } = req.body;
@@ -104,15 +63,33 @@ MyCourseRouter.get("/", async (req, res) => {
 
     const data = await supabase
       .from("user_courses")
-      .select("courses")
+      .select()
       .eq("user_id", user_id)
       .eq("course_id", course_id);
-    console.log(data);
     res.json(data);
   } catch (error) {
     console.error("Error fetching user course data:", error.message);
     res.status(500).json({ error });
   }
 });
+
+MyCourseRouter.get("/:userID", async (req, res) => {
+  const { userID } = req.params;
+  try {
+    const { data, error } = await supabase
+      .from(`user_courses`)
+      .select(
+        "*, courses(course_id, course_name, course_detail, cover_img, total_time, course_summary)"
+      )
+      .eq("user_id", userID);
+
+    return res.json({
+      data,
+    });
+  } catch (error) {
+    message: `Get course error message ${error}`;
+  }
+});
+
 
 export default MyCourseRouter;
