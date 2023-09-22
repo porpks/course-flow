@@ -86,7 +86,7 @@ assignmentRouter.post('/', async (req, res) => {
 
     const { data: asmData, error: asmError } = await supabase
         .from('assignments')
-        .select('assignment_id')
+        .select('assignment_id, duration')
         .eq('sublesson_id', sublesson_id)
         .single()
 
@@ -105,8 +105,7 @@ assignmentRouter.post('/', async (req, res) => {
     if (checkData.length === 0) {
         const currentDate = new Date();
         const duedate = new Date(currentDate);
-        duedate.setDate(currentDate.getDate() + 3);
-        // console.log(duedate);
+        duedate.setDate(currentDate.getDate() + asmData.duration);
 
         const data = { user_id, assignment_id: asmData.assignment_id, assignment_duedate: duedate }
 

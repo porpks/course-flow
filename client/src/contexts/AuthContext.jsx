@@ -16,7 +16,6 @@ function AuthProvider(props) {
   const [courseId, setCourseId] = useState(null);
   const [isShowVdo, setIsShowVdo] = useState(false);
   const [isShowAsm, setIsShowAsm] = useState(false);
-  const [renderAsm, setRenderAsm] = useState(false);
   const [videoHead, setVideoHead] = useState("");
   const [videoKey, setVideoKey] = useState(null);
   const [pauseTime, setPauseTime] = useState(0);
@@ -132,8 +131,6 @@ function AuthProvider(props) {
         setIsShowVdo,
         isShowAsm,
         setIsShowAsm,
-        renderAsm,
-        setRenderAsm,
         videoHead,
         setVideoHead,
         videoKey,
