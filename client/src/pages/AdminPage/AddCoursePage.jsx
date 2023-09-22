@@ -1,7 +1,12 @@
 import React from "react";
+import AdminAddCourse from "../../components/adminAddCourse/AdminAddCourse";
 
 function AddCoursePage() {
-  return <div>AddCoursePage</div>;
+  return (
+    <div>
+      <AdminAddCourse />
+    </div>
+  );
 }
 
 export default AddCoursePage;
