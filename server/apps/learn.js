@@ -41,7 +41,7 @@ learnRouter.get('/status', async (req, res) => {
     const userID = Number(req.query.userID);
     const courseID = Number(req.query.courseID);
 
-    if (!userID) {
+    if (!userID || !courseID) {
         return res.status(400).json({
             message: "Invalid query"
         })
@@ -52,30 +52,32 @@ learnRouter.get('/status', async (req, res) => {
         .select('sublesson_id,sublesson_status, sublessons(lesson_id, lessons(course_id))')
         .eq('user_id', userID)
 
-    const result = data.filter((item) => item.sublessons.lessons.course_id === courseID)
-    const newResult = {}
-    let count = 0
-    let complete = 0
-    result.map((item) => {
-        newResult[item.sublesson_id] = item.sublesson_status
-        count++
-        if (item.sublesson_status === "complete") {
-            complete++
-        }
-
-    })
-    let percentComplete = (complete / count * 100).toFixed(2)
-
     if (error) {
         return res.status(404).json({ 'message': error });
     }
 
-    if (data) {
+    if (data.length > 0) {
+        const result = data.filter((item) => item.sublessons.lessons.course_id === courseID)
+        const newResult = {}
+        let count = 0
+        let complete = 0
+        result.map((item) => {
+            newResult[item.sublesson_id] = item.sublesson_status
+            count++
+            if (item.sublesson_status === "complete") {
+                complete++
+            }
+        })
+        let percentComplete = (complete / count * 100).toFixed(2)
+
+        if (Object.keys(newResult).length === 0) {
+            return res.status(404).json({ message: 'No data found for the specified criteria.' });
+        }
+
         return res.json({ 'data': newResult, percentComplete });
-    } else {
-        return res.status(404).json({ message: 'No data found for the specified criteria.' });
     }
 
+    return res.status(404).json({ message: 'No data found for the specified criteria.' });
 });
 
 learnRouter.post('/status', async (req, res) => {
@@ -174,24 +176,24 @@ learnRouter.get('/videotime', async (req, res) => {
             .select('sublesson_status,sublesson_video_timestop,timestop_updated,sublessons(*,lessons(*))')
             .eq("user_id", userID)
             .eq("sublessons.lessons.course_id", courseID);
-           
-                
+
+
         if (!interval || interval.length === 0) {
             return res.json({ message: "There are no sublessons for the given user ID" });
         }
 
-            const filteredSublessons = interval.filter(item => {
-                // Check if the sublesson is related to the specified course_id
-                if (item.sublessons.lessons && item.sublessons.lessons.course_id === courseID) {
-                    return true; // Include this sublesson in the filtered array
-                } else {
-                    return false; // Exclude this sublesson from the filtered array
-                }
-            });
-       
-       
+        const filteredSublessons = interval.filter(item => {
+            // Check if the sublesson is related to the specified course_id
+            if (item.sublessons.lessons && item.sublessons.lessons.course_id === courseID) {
+                return true; // Include this sublesson in the filtered array
+            } else {
+                return false; // Exclude this sublesson from the filtered array
+            }
+        });
+
+
         filteredSublessons.sort((a, b) => new Date(b.timestop_updated) - new Date(a.timestop_updated));
-        
+
 
         const filteredInterval = filteredSublessons.filter(dataItem => {
             return (dataItem.sublesson_video_timestop !== null)
@@ -200,7 +202,7 @@ learnRouter.get('/videotime', async (req, res) => {
         if (filteredInterval.length === 0) {
             return res.json({ message: "No sublessons match the criteria" });
         }
-        
+
         const latestSublesson = filteredInterval[0];
 
         latestSublesson.sublesson_id = latestSublesson.sublessons.sublesson_id;
