@@ -195,6 +195,33 @@ assignmentRouter.get('/sublessonList/', async (req, res) => {
     }
 })
 
+assignmentRouter.get('/byId', async (req, res) => {
+    const assignment_id = Number(req.query.assignId)
+    try {
+        const { data, error } = await supabase
+            .from('assignments')
+            .select('assignment_id, assignment_question ,duration, sublessons(sublesson_name,lessons(lesson_name, courses(course_name)))')
+            .eq("assignment_id", assignment_id)
+            .single()
+
+        if (error) {
+            return res.status(404).json({ error })
+        }
+
+        const result = {
+            assignment_id: data.assignment_id,
+            question: data.assignment_question,
+            duration: data.duration,
+            course: data.sublessons.lessons.courses.course_name,
+            lesson: data.sublessons.lessons.lesson_name,
+            sublesson: data.sublessons.sublesson_name,
+        }
+        return res.json({ data: result })
+    } catch (err) {
+        return res.status(404).json({ err })
+    }
+})
+
 assignmentRouter.get("/:userID", async (req, res) => {
     const userId = req.params.userID;
     const Sublessonid = req.query.sublessonid
