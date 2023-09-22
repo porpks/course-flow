@@ -49,7 +49,6 @@ function AssignmentField(props) {
     const getAssingment = async () => {
         try {
             const result = await axios.get(`http://localhost:4000/assignment/byId?assignId=${assignId}`)
-            console.log(result.data.data);
             setCourse(result.data.data.course)
             setLesson(result.data.data.lesson)
             setSublesson(result.data.data.sublesson)
@@ -65,7 +64,6 @@ function AssignmentField(props) {
     }
 
     const handleCreate = () => {
-        // setCourse(event.target.value);
         if (courseId && lessonId && sublessonId && assignDetail && duration) {
             console.log(courseId, lessonId, sublessonId, assignDetail, Number(duration.split(" ")[0]));
         } else {
@@ -74,7 +72,7 @@ function AssignmentField(props) {
     }
     const handleEdit = () => {
         if (assignDetail && duration) {
-            console.log(assignId, assignDetail, Number(duration.split(" ")[0]));
+            console.log(Number(assignId), assignDetail, Number(duration.split(" ")[0]));
         } else {
             alert("Please input data")
         }
