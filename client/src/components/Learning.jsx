@@ -10,11 +10,12 @@ import "./Learning.css";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import axios from "axios";
 import AssignmentBox from "./AssignmentBox.jsx";
+import CircularIndeterminate from "../assets/loadingProgress";
 
 function Learning() {
+  const [isLoading, setIsLoading] = useState(true);
   const playerRef = useRef(null);
   const boxRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [sublessonIdArray, setSublessonIdArray] = useState([]);
   const [sublessonNameObject, setSublessonNameObject] = useState({});
   const [sublessonVideoObject, setSublessonVideoObject] = useState({});
@@ -90,12 +91,9 @@ function Learning() {
 
         setVideoKey(newVideoKey);
         setVideoHead(newVideoHead);
-        setvideoUrl(null);
         setvideoUrl(newVideoUrl);
-
         localStorage.setItem("videoKey", newVideoKey);
         localStorage.setItem("videoHead", newVideoHead);
-        localStorage.setItem("videoUrl", null);
         localStorage.setItem("videoUrl", newVideoUrl);
         localStorage.setItem("isShowAsm", false);
       }
@@ -181,11 +179,12 @@ function Learning() {
 
   const handleEnd = () => {
     updateIsShowAsm(true);
-    setRenderAsm(true)
+    setRenderAsm(true);
   };
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       try {
         const result = await axios.get("http://localhost:4000/learn/", {
           params: {
@@ -229,9 +228,9 @@ function Learning() {
 
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center h-screen'>
-        <h1>Loading...</h1>{" "}
-        {/* You can replace this with a spinner or more detailed loading message */}
+      <div className='flex justify-center items-center w-[100%] min-h-[100vh] text-black'>
+        <h1>Loading...</h1>
+        <CircularIndeterminate />
       </div>
     );
   }
@@ -306,10 +305,11 @@ function Learning() {
                           <label
                             key={index}
                             id={sublesson.sublesson_id}
-                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${sublesson.sublesson_id === videoKey
-                              ? "bg-[--gray400]"
-                              : ""
-                              }`}
+                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${
+                              sublesson.sublesson_id === videoKey
+                                ? "bg-[--gray400]"
+                                : ""
+                            }`}
                             onClick={() =>
                               handleShowVideo(
                                 sublesson.sublesson_name,
@@ -318,7 +318,7 @@ function Learning() {
                             }>
                             <div className='mr-4 h-[20px]'>
                               {subStatus[sublesson.sublesson_id] ===
-                                "complete" ? (
+                              "complete" ? (
                                 <svg
                                   xmlns='http://www.w3.org/2000/svg'
                                   width='20'
@@ -403,7 +403,7 @@ function Learning() {
                 <div className='rounded-lg overflow-hidden '>
                   <ReactPlayer
                     ref={playerRef}
-                    url={videoUrl || localStorage.getItem("videoUrl")}
+                    url={videoUrl}
                     width='100%'
                     height='100%'
                     controls={true}
@@ -464,10 +464,12 @@ function Learning() {
         )}
 
         {sublessonIdArray.findIndex((element) => element === videoKey) <
-          sublessonIdArray.length - 1 ? (
+        sublessonIdArray.length - 1 ? (
           <button
             className='Primary border-none cursor-pointer'
-            onClick={() => handleLesson("next")}>
+            onClick={() => {
+              handleLesson("next");
+            }}>
             Next Lesson
           </button>
         ) : (

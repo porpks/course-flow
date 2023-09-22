@@ -23,11 +23,10 @@ function CourseDetail() {
   const navigate = useNavigate();
   const [desireData, setDesireData] = useState([]);
 
-  const isDesireExist = desireData.length > 0;
+  const isDesireExist = Boolean(desireData?.length > 0);
 
   const [subscribeData, setSubscribeData] = useState([]);
-  const isSubscribe = subscribeData.length > 0;
-
+  const isSubscribe = subscribeData?.length > 0;
 
   const [isRequestPending, setIsRequestPending] = useState(false);
 
@@ -173,7 +172,7 @@ function CourseDetail() {
 
   if (dataCourse.length === 0) {
     return (
-      <div className="flex justify-center items-center absolute top-[150px] w-[100%] h-[100vh] text-slate-100">
+      <div className='flex justify-center items-center  w-[100%] min-h-[100vh] text-black'>
         <h1> Loading...</h1>
         <CircularIndeterminate />
       </div>
@@ -184,88 +183,85 @@ function CourseDetail() {
   });
   const lessonTotal = dataDetail.lessons;
   // const subLessonsTotal = lessonTotal;
-
+  console.log(isDesireExist);
   return (
     <>
       {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
-      <section className="flex justify-center items-center border-2 border-sky-500">
-        <div className="canvas_CourseDetail ">
-          <div className="back-btn">
+      <section className='flex justify-center items-center border-2 border-sky-500'>
+        <div className='canvas_CourseDetail '>
+          <div className='back-btn'>
             <a
-
               onClick={handleGoBack}
-              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
-            >
-
-              <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
-              <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
+              className='flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer'>
+              <img src='../../public/image/arrow_back.svg' alt='arrow_back' />
+              <p className='text-[--blue500] font-[700] text-[16px]'>Back</p>
             </a>
           </div>
-          <div className="flex gap-[30px]">
-            <div className="CourseDetail">
-              <div className="vdo-preview rounded-[8px] w-[739px] h-[460px] cursor-pointer ">
+          <div className='flex gap-[30px]'>
+            <div className='CourseDetail'>
+              <div className='vdo-preview rounded-[8px] w-[739px] h-[460px] cursor-pointer '>
                 <ReactPlayer
-                  url="https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/1%20Minute%20Sample%20Video.mp4?t=2023-09-08T15%3A26%3A51.001Z"
-                  width="100%"
-                  height="100%"
+                  url='https://yzcnxdhntdijwizusqmn.supabase.co/storage/v1/object/public/test-avatar/1%20Minute%20Sample%20Video.mp4?t=2023-09-08T15%3A26%3A51.001Z'
+                  width='100%'
+                  height='100%'
                   controls={true}
                   light={dataDetail.cover_img}
                   playIcon={
                     <svg
-                      className="min-h-[460px]"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="104"
-                      height="104"
-                      viewBox="0 0 104 104"
-                      fill="none">
+                      className='min-h-[460px]'
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='104'
+                      height='104'
+                      viewBox='0 0 104 104'
+                      fill='none'>
                       <rect
-                        width="104"
-                        height="104"
-                        rx="52"
-                        fill="#020202"
-                        fillOpacity="0.5"
+                        width='104'
+                        height='104'
+                        rx='52'
+                        fill='#020202'
+                        fillOpacity='0.5'
                       />
                       <path
-                        d="M77 52.5L40.25 73.7176L40.25 31.2824L77 52.5Z"
-                        fill="white"
+                        d='M77 52.5L40.25 73.7176L40.25 31.2824L77 52.5Z'
+                        fill='white'
                       />
                     </svg>
                   }
                 />
               </div>
 
-              <div className="CourseDetail_description flex flex-col gap-[24px]">
-                <div className="courseDetail_title ">
-                  <div className="H2">{dataCourse.course_name}</div>
+              <div className='CourseDetail_description flex flex-col gap-[24px]'>
+                <div className='courseDetail_title '>
+                  <div className='H2'>{dataCourse.course_name}</div>
                 </div>
-                <div className="courseDetail_body">
-                  <div className="Body2">{dataCourse.course_detail}</div>
+                <div className='courseDetail_body'>
+                  <div className='Body2'>{dataCourse.course_detail}</div>
                 </div>
               </div>
-              <div className="lesson_sample">
-                <div className="H2 text-[--black] mb-[24px]">
+              <div className='lesson_sample'>
+                <div className='H2 text-[--black] mb-[24px]'>
                   Module Samples
                 </div>
-                <div className="collapsible-contents H3 ">
+                <div className='collapsible-contents H3 '>
                   {lessonTotal.map((lesson, index) => (
                     <div key={uuidv4()}>
-                      <Accordion className="accordion">
+                      <Accordion className='accordion'>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
-                          aria-controls="panel1a-content"
-                          id="panel1a-header"
-                          className="accordionSummary">
-                          <div className="typography">
-                            <div className="H3 text-[--gray700]">
+                          aria-controls='panel1a-content'
+                          id='panel1a-header'
+                          className='accordionSummary'>
+                          <div className='typography'>
+                            <div className='H3 text-[--gray700]'>
                               {index < 10 ? "0" + (index + 1) : index + 1}
                             </div>
-                            <div className="H3 text-[--black]">
+                            <div className='H3 text-[--black]'>
                               {lesson.lesson_name}
                             </div>
                           </div>
                         </AccordionSummary>
-                        <AccordionDetails className="accordionDetails">
-                          <div className="subLesson Body2 text-[--gray700] ">
+                        <AccordionDetails className='accordionDetails'>
+                          <div className='subLesson Body2 text-[--gray700] '>
                             <ul>
                               {lesson.sublessons.map((sublessonItem, index) => (
                                 <li key={uuidv4()}>
@@ -282,21 +278,21 @@ function CourseDetail() {
               </div>
             </div>
 
-            <div className="Subscribe_box Shadow1">
+            <div className='Subscribe_box Shadow1'>
               <div>
-                <div className="Body3 text-[--orange500]">Course</div>
+                <div className='Body3 text-[--orange500]'>Course</div>
               </div>
-              <div className="course-Subscribe flex flex-col gap-[8px]">
-                <div className="course-title H3">{dataDetail.course_name}</div>
-                <div className="course-description Body2 text-[--gray700]">
+              <div className='course-Subscribe flex flex-col gap-[8px]'>
+                <div className='course-title H3'>{dataDetail.course_name}</div>
+                <div className='course-description Body2 text-[--gray700]'>
                   {dataDetail.course_detail.slice(0, 65)}
                 </div>
               </div>
-              <div className="course-price  H3 text-[--gray700] flex flex-row justify-center items-center">
-                <div className="mr-[1rem]">THB</div>
+              <div className='course-price  H3 text-[--gray700] flex flex-row justify-center items-center'>
+                <div className='mr-[1rem]'>THB</div>
                 <div>{coursePrice}</div>
               </div>
-              <div className="btn-grp">
+              <div className='btn-grp'>
                 {isSubscribe ? null : (
                   <button
                     onClick={userId ? openDesire : noAuthHandle}
@@ -320,7 +316,7 @@ function CourseDetail() {
                         ? "Remove from Desire Course"
                         : "Add in Desire Course"
                     }
-                    noDes="No, I don’t"
+                    noDes='No, I don’t'
                     yesOnClick={
                       isDesireExist ? desireRemoveHandle : desireAddHandle
                     }
@@ -332,9 +328,9 @@ function CourseDetail() {
                     open={subscribeToggle}
                     onClose={closeSubscribe}
                     closeButton={closeSubscribe}
-                    description="Do you sure to subscribe Service Design Essentials Course?"
-                    yesDes="Yes, I want to subscribe"
-                    noDes="No, I don’t"
+                    description='Do you sure to subscribe Service Design Essentials Course?'
+                    yesDes='Yes, I want to subscribe'
+                    noDes='No, I don’t'
                     yesOnClick={subscribeHandle}
                     // yesOnClick={startLearningHandle}
                     noOnClick={closeSubscribe}
@@ -352,7 +348,7 @@ function CourseDetail() {
                       noAuthHandle();
                     }
                   }}
-                  className="Primary w-[100%] border-none">
+                  className='Primary w-[100%] border-none'>
                   {isSubscribe ? "Start Learning" : "Subscribe This Course"}
                 </button>
               </div>

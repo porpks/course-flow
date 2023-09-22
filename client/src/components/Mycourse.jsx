@@ -14,6 +14,7 @@ import { Button } from "@mui/base/Button";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import "../components/myCourseComponent/CourseCard.css";
+import CircularIndeterminate from "../assets/loadingProgress";
 
 function MyCourse() {
   const [dataCourse, setDataCourse] = useState([]);
@@ -81,6 +82,7 @@ function MyCourse() {
 
   const getDataCourse = async () => {
     try {
+      setIsLoading(true);
       const result = await axios.get(
         `http://localhost:4000/mycourse/${userIdFromCookie}`
       );
@@ -105,6 +107,7 @@ function MyCourse() {
       setCompleteCount(counts.completeCount);
       // } else {
       //   setUserName("No User Data Available");
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -150,7 +153,6 @@ function MyCourse() {
       console.log(data, "data");
 
       if (data !== undefined) {
-
         const handleShowVideo = (sublessonName, sublessonID) => {
           setVideoHead(sublessonName);
           localStorage.setItem("sublessonName", sublessonName);
@@ -216,11 +218,10 @@ function MyCourse() {
 
     const courseCards = currentCourses.map((item) => (
       <Link
-        className="no-underline"
+        className='no-underline'
         key={item.courses.course_id}
         to={`/learning/${item.courses.course_id}`}
-        onClick={() => handleClick(item.courses.course_id)}
-      >
+        onClick={() => handleClick(item.courses.course_id)}>
         <CourseCard
           key={item.courses.course_id}
           courseid={item.courses.course_id}
@@ -233,7 +234,6 @@ function MyCourse() {
       </Link>
     ));
     return (
-
       <div className='grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]'>
         {dataCourse.map((item) => (
           <div
@@ -265,7 +265,7 @@ function MyCourse() {
         ))}
       </div>
     );
-  }
+  };
 
   function Inprogress() {
     if (dataCourse.length > 0) {
@@ -337,8 +337,14 @@ function MyCourse() {
       );
     }
   }
-
-
+  if (isLoading) {
+    return (
+      <div className='flex justify-center items-center w-[100%] min-h-[100vh] text-black'>
+        <h1>Loading...</h1>
+        <CircularIndeterminate />
+      </div>
+    );
+  }
   return (
     <div className='w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative '>
       <div className=' absolute right-0 top-[216px]'>
@@ -405,7 +411,6 @@ function MyCourse() {
             onClick={() => handleComplete("All")}
             className={`box-content  cursor-pointer Component1 p-2 flex items-start gap-2 border-solid border-white border-b-2 hover:border-b-2 hover:border-solid hover:border-black border-t-0 border-r-0 border-l-0  m-0`}>
             <div className='Body2'>Complete</div>
-
           </div>
         </div>
       </div>
@@ -425,7 +430,7 @@ function MyCourse() {
               <p className='H3'>{completeCount}</p>
             </div>
           </div>
-          <div className="mt-16">
+          <div className='mt-16'>
             {allCourse && totalPagesAllCourse > 1 && (
               <Pagination
                 count={totalPagesAllCourse}
@@ -433,7 +438,7 @@ function MyCourse() {
                   handlePageChange(event, newPage, "all")
                 }
                 page={currentPage}
-                size="large"
+                size='large'
               />
             )}
             {inprogress && totalPagesInprogress > 1 && (
@@ -443,7 +448,7 @@ function MyCourse() {
                   handlePageChange(event, newPage, "inProgress")
                 }
                 page={currentPage}
-                size="large"
+                size='large'
               />
             )}
             {complete && totalPagesComplete > 1 && (
@@ -453,17 +458,17 @@ function MyCourse() {
                   handlePageChange(event, newPage, "complete")
                 }
                 page={currentPage}
-                size="large"
+                size='large'
               />
             )}
           </div>
         </div>
 
-        {allCourse && <CourseList dataCourse={dataCourse} status="all" />}
+        {allCourse && <CourseList dataCourse={dataCourse} status='all' />}
         {inprogress && (
-          <CourseList dataCourse={dataCourse} status="inProgress" />
+          <CourseList dataCourse={dataCourse} status='inProgress' />
         )}
-        {complete && <CourseList dataCourse={dataCourse} status="complete" />}
+        {complete && <CourseList dataCourse={dataCourse} status='complete' />}
       </div>
     </div>
   );

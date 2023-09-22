@@ -976,7 +976,7 @@ function Instructure() {
                       />
                     </div>
 
-                    <div className='flex flex-col gap-[24px] bg-[--blue100] w-[578.784px] h-[309.485px] absolute right-0 z-[-1] pt-[66.792px] pr-[25.358px] pb-[68.693px] pl-[72.283px] justify-end items-start'>
+                    <div className='flex flex-col gap-[24px] bg-[--blue100] w-[578.784px] h-[309.485px] absolute right-0 z-[-1]  justify-center items-start'>
                       <div className='H3 text-[--Primary]'>Saiful Islam</div>
                       <div className='Body2 text-[--gray700] w-[481.142px]'>
                         Start with something simple and small, then expand over

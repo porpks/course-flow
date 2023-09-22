@@ -8,6 +8,7 @@ import calendarIcon from "../../public/image/calendarIcon.svg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
+import CircularIndeterminate from "../assets/loadingProgress";
 
 function UpdateProfile() {
   const { setUserID, setUsername, userId } = useAuth();
@@ -18,6 +19,7 @@ function UpdateProfile() {
   const [avatar, setAvatar] = useState({});
 
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -51,26 +53,26 @@ function UpdateProfile() {
     email: "",
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getData = async () => {
-    const result = await axios.get(`http://localhost:4000/profile/${userId}`);
+  // const getData = async () => {
+  //   const result = await axios.get(`http://localhost:4000/profile/${userId}`);
 
-    const initialValues = {
-      full_name: result.data.data.full_name,
-      date_of_birth: dayjs(result.data.data.date_of_birth) || "",
-      edu_background: result.data.data.edu_background,
-      email: result.data.data.email,
-    };
+  //   const initialValues = {
+  //     full_name: result.data.data.full_name,
+  //     date_of_birth: dayjs(result.data.data.date_of_birth) || "",
+  //     edu_background: result.data.data.edu_background,
+  //     email: result.data.data.email,
+  //   };
 
-    formik.setValues(initialValues);
-  };
+  //   formik.setValues(initialValues);
+  // };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getDataImage = async () => {
-    const imageUrl = await axios.get(
-      `http://localhost:4000/profile/image/${userId}`
-    );
-    setImage(imageUrl.data);
-  };
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // const getDataImage = async () => {
+  //   const imageUrl = await axios.get(
+  //     `http://localhost:4000/profile/image/${userId}`
+  //   );
+  //   setImage(imageUrl.data);
+  // };
 
   const onSubmit = async () => {
     const newUserData = {
@@ -156,10 +158,41 @@ function UpdateProfile() {
   const today = dayjs();
 
   useEffect(() => {
-    getData();
-    getDataImage();
+    const fetchData = async () => {
+      try {
+        const result = await axios.get(
+          `http://localhost:4000/profile/${userId}`
+        );
+        const imageUrl = await axios.get(
+          `http://localhost:4000/profile/image/${userId}`
+        );
+
+        const initialValues = {
+          full_name: result.data.data.full_name,
+          date_of_birth: dayjs(result.data.data.date_of_birth) || "",
+          edu_background: result.data.data.edu_background,
+          email: result.data.data.email,
+        };
+
+        setImage(imageUrl.data);
+        formik.setValues(initialValues);
+        setIsLoading(false); // Set loading to false when data is fetched
+      } catch (error) {
+        setIsLoading(false); // Handle errors here if needed
+      }
+    };
+
+    fetchData();
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className='flex justify-center items-center w-[100%] min-h-[100vh] text-black'>
+        <h1>Loading...</h1>
+        <CircularIndeterminate />
+      </div>
+    );
+  }
   return (
     <div className='relative flex justify-center w-[100%]'>
       <div className='flex flex-col items-center w-[1440px] h-[995px]'>
@@ -219,8 +252,8 @@ function UpdateProfile() {
                 avatarUrl
                   ? avatarUrl
                   : image
-                    ? image
-                    : "../public/image/noprofile.svg"
+                  ? image
+                  : "../public/image/noprofile.svg"
               }
               className='relative w-[358px] h-[358px] object-cover	rounded-2xl	'
             />
@@ -270,10 +303,11 @@ function UpdateProfile() {
                   type='text'
                   id='full_name'
                   name='full_name'
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.full_name && formik.errors.full_name
-                    ? " border-[#9B2FAC]"
-                    : " border-[--gray500]"
-                    }`}
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
+                    formik.touched.full_name && formik.errors.full_name
+                      ? " border-[#9B2FAC]"
+                      : " border-[--gray500]"
+                  }`}
                   placeholder='Enter Name and Lastname'
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -307,7 +341,7 @@ function UpdateProfile() {
                         borderRadius: "0.5rem",
                         border:
                           formik.errors.date_of_birth &&
-                            formik.touched.date_of_birth
+                          formik.touched.date_of_birth
                             ? "2px solid #9B2FAC"
                             : "2px solid #CBD5E0",
                         width: "100%",
@@ -354,11 +388,12 @@ function UpdateProfile() {
                   type='text'
                   id='edu_background'
                   name='edu_background'
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.edu_background &&
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
+                    formik.touched.edu_background &&
                     formik.errors.edu_background
-                    ? " border-[#9B2FAC]"
-                    : " border-[--gray500]"
-                    }`}
+                      ? " border-[#9B2FAC]"
+                      : " border-[--gray500]"
+                  }`}
                   placeholder='Enter Educational Background'
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -366,13 +401,13 @@ function UpdateProfile() {
                 />
 
                 {formik.touched.edu_background &&
-                  formik.errors.edu_background ? (
+                formik.errors.edu_background ? (
                   <div className='text-[#9B2FAC] absolute right-0 -bottom-6 top-[50px]'>
                     {formik.errors.edu_background}
                   </div>
                 ) : null}
                 {formik.touched.edu_background &&
-                  formik.errors.edu_background ? (
+                formik.errors.edu_background ? (
                   <img
                     src='../../public/Exclamation-circle.svg'
                     className='absolute right-[16px] top-[16px]'
@@ -386,10 +421,11 @@ function UpdateProfile() {
                   type='email'
                   id='email'
                   name='email'
-                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.email && formik.errors.email
-                    ? " border-[#9B2FAC]"
-                    : " border-[--gray500]"
-                    }`}
+                  className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
+                    formik.touched.email && formik.errors.email
+                      ? " border-[#9B2FAC]"
+                      : " border-[--gray500]"
+                  }`}
                   placeholder='Enter Email'
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}

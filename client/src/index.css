@@ -147,6 +147,7 @@
   line-height: 150%;
   transition: background 0.3s ease-out;
   cursor: pointer;
+  border: none;
 }
 
 .Primary:hover {
