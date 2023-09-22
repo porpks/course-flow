@@ -44,7 +44,7 @@ const AssignmentListAdmin = (props) => {
   if (loading) {
     return <div>Loading...</div>;
   }
-  console.log(assignmentList);
+
   return (
     <>
       <div className={` w-[1200px] max-h-[932px]`}>
@@ -166,9 +166,8 @@ const AssignmentListAdmin = (props) => {
               <button
                 onClick={prevPage}
                 disabled={currentPage === 1}
-                className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${
-                  currentPage === 1 ? "cursor-not-allowed" : ""
-                }`}>
+                className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${currentPage === 1 ? "cursor-not-allowed" : ""
+                  }`}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 inline-block mr-2"

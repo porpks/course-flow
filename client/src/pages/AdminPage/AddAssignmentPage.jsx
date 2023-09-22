@@ -1,8 +1,8 @@
-import AddAssignmentHeader from "../../components/adminAssignment/AddAssignmentHeader"
 import AssignmentField from "../../components/adminAssignment/AssignmentField"
 import Sidebar from "../../components/Sidebar"
 
 function AddAssignmentPage() {
+
   return (
     <>
       <div className="flex">
@@ -10,8 +10,7 @@ function AddAssignmentPage() {
           <Sidebar />
         </div>
         <div className="flex flex-col w-full">
-          <AddAssignmentHeader />
-          <AssignmentField />
+          <AssignmentField addAssignment={true} />
         </div>
       </div>
     </>
