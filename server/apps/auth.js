@@ -10,11 +10,14 @@ authRouter.post("/register", async (req, res) => {
     edu_background: req.body.educationBackground,
     email: req.body.email,
   };
+  
+  
   try {
     const { data, error } = await supabase
       .from("users")
       .insert([registerData])
       .select();
+     
     try {
       const { user, session, error } = await supabase.auth.signUp({
         email: req.body.email,

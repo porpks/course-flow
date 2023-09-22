@@ -3,14 +3,12 @@ import "./ourCourse.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-
+import CircularIndeterminate from "../assets/loadingProgress";
 function OurCourse() {
   const navigate = useNavigate();
   const [dataCourse, setDataCourse] = useState([]);
   const [searchKey, setSearchKey] = useState(""); //searchKeyword
   const [currentPage, setCurrentPage] = useState(1);
-
 
   async function getDataCourse() {
     try {
@@ -61,29 +59,30 @@ function OurCourse() {
   /////////////////////////////////////////////////
   if (dataCourse.length === 0) {
     return (
-      <div className="flex justify-center items-center absolute top-[150px] w-[100%] h-[100vh] text-slate-100">
+      <div className='flex justify-center items-center w-[100%] min-h-[100vh] text-black'>
         <h1> Loading...</h1>
+        <CircularIndeterminate />
       </div>
     );
   }
 
   return (
-    <div className="canvas-ourCourse">
+    <div className='canvas-ourCourse '>
       {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
-      <div className="topSection">
-        <h2 className="H2">Our Courses</h2>
-        <div className="input-container">
-          <img src="../../public/image/search.svg" alt="searchIcon" />
+      <div className='topSection'>
+        <h2 className='H2'>Our Courses</h2>
+        <div className='input-container'>
+          <img src='../../public/image/search.svg' alt='searchIcon' />
           <input
-            type="text"
-            placeholder="Search..."
+            type='text'
+            placeholder='Search...'
             value={searchKey}
             onChange={handleSearch}
           />
         </div>
       </div>
-      <div className="content-Section">
-        <div className="card-container">
+      <div className='content-Section'>
+        <div className='card-container'>
           {cardCourseToDisplay.map((item) => (
             <CourseItem
               key={item.course_id}
@@ -99,15 +98,14 @@ function OurCourse() {
             />
           ))}
         </div>
-        <div className="pagination-card">
+        <div className='pagination-card'>
           {Array.from({ length: totalPages }).map((_, index) => (
             <button
               key={index}
               onClick={() => handlePageChange(index + 1)}
               className={`paginationOurCourse-item ${
                 currentPage === index + 1 ? "active" : ""
-              }`}
-            >
+              }`}>
               {index + 1}
             </button>
           ))}
