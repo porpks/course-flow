@@ -3,6 +3,7 @@ import "./adminAddCourse.css";
 import Sidebar from "../Sidebar";
 
 import { Formik, Form, Field } from "formik";
+import LessonTable from "./LessonTable";
 function AdminAddCourse() {
   return (
     <>
@@ -103,7 +104,7 @@ function AdminAddCourse() {
                         >
                           <label
                             htmlFor="upload"
-                            className="hidden group-hover:block w-full h-full  text-[--blue500] text-center text-xl  cursor-pointer"
+                            className="hidden group-hover:block hover:transition  w-full h-full  text-[--blue500] text-center text-xl  cursor-pointer"
                           >
                             <input
                               id="upload"
@@ -142,7 +143,7 @@ function AdminAddCourse() {
                         >
                           <label
                             htmlFor="upload"
-                            className="hidden group-hover:block w-full h-full  text-[--blue500] text-center text-xl  cursor-pointer"
+                            className="hidden hover:block hover:transition w-full h-full  text-[--blue500] text-center text-xl  cursor-pointer"
                           >
                             <input
                               id="upload"
@@ -167,7 +168,9 @@ function AdminAddCourse() {
               </button>
             </div>
             {/* table-SubLesson */}
-            <div className="table-SubLesson">table-SubLesson</div>
+            <div className="table-SubLesson">
+              <LessonTable />
+            </div>
           </div>
         </div>
       </div>
