@@ -3,11 +3,13 @@ import CourseFlowIcon from '../../assets/CourseFlowIcon'
 import axios from 'axios'
 import Login from '../Login'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext.jsx'
 
 function AdminLogin() {
   const navigate = useNavigate()
   const [adminId, setAdminId] = useState(null)
-  const [login, isLoggedIn] = useState(false)
+  // const [login, isLoggedIn] = useState(false)
+  const { loginAdmin } = useAuth()
   const [loginData, setLoginData] = useState({
     email: null,
     password: null,
@@ -39,7 +41,7 @@ function AdminLogin() {
     if (!loginData.email || !loginData.password) {
       alert('nodata')
     } else {
-      handleLogin(loginData)
+      loginAdmin(loginData)
     }
   }
   return (
@@ -78,7 +80,7 @@ function AdminLogin() {
           </div>
           <button
             className="Primary w-[446px] border-none"
-            onClick={handleLogin}
+            onClick={loginAdmin}
           >
             Login
           </button>
