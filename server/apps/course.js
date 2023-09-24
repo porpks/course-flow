@@ -23,7 +23,6 @@ courseRouter.get("/", async (req, res) => {
       query.range(start, end);
     }
 
-
     const { data, error } = await query;
 
     return res.json({
