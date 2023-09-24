@@ -1,46 +1,47 @@
-import React, { useState } from "react";
-import CourseFlowIcon from "../../assets/CourseFlowIcon";
-import axios from "axios";
-import Login from "../Login";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react'
+import CourseFlowIcon from '../../assets/CourseFlowIcon'
+import axios from 'axios'
+import Login from '../Login'
+import { useNavigate } from 'react-router-dom'
 
 function AdminLogin() {
-  const navigate = useNavigate();
-  const [adminId, setAdminId] = useState(null);
-  const [login, isLoggedIn] = useState(false);
+  const navigate = useNavigate()
+  const [adminId, setAdminId] = useState(null)
+  const [login, isLoggedIn] = useState(false)
   const [loginData, setLoginData] = useState({
     email: null,
     password: null,
-  });
+  })
 
   const handleLogin = async (loginData) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/authadmin/login",
+        'http://localhost:4000/authadmin/login',
         loginData
-      );
-      console.log(response);
-      if (response.data.success) {
-        console.log("Login successful");
+      )
+      console.log(response)
+      if (!response.data.error) {
+        console.log('Login successful')
+        console.log(response)
+        const admin_id = response.data.data[0].admin_id
+        setAdminId(admin_id)
+        localStorage.setItem('adminID', admin_id)
+      } else if (response.data.error.status === 400) {
+        throw new Error('Invalid login credentials')
       }
-      const admin_id = response.data.data[0].user_id;
-      setAdminId(admin_id);
-      localStorage.setItem("adminID", admin_id);
-
-      console.log(response.data.data[0]);
     } catch (error) {
-      console.error("Error during login:", error.message);
+      console.error('Error during login:', error.message)
     }
-  };
+  }
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     if (!loginData.email || !loginData.password) {
-      alert("nodata");
+      alert('nodata')
     } else {
-      handleLogin(loginData);
+      handleLogin(loginData)
     }
-  };
+  }
   return (
     <form className="flex flex-col" onSubmit={(e) => handleSubmit(e)}>
       <div className="Linear2 w-[100vw]  flex flex-col justify-center items-center">
@@ -84,7 +85,7 @@ function AdminLogin() {
         </div>
       </div>
     </form>
-  );
+  )
 }
 
-export default AdminLogin;
+export default AdminLogin

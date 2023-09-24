@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import { func } from "prop-types";
-import axios from "axios";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from 'react'
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
+import { func } from 'prop-types'
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
 
 function AddLesson() {
-  const { courseid } = useParams();
-  const [dataCourse, setDataCourse] = useState([]);
-  const [updatedSubLessonName, setUpdatedSubLessonName] = useState(""); // State to store updated subLessonName
-  const [updatedLessonId, setUpdatedLessonId] = useState(""); // State to store the lessonId to be updated
+  const { courseid } = useParams()
+  const [dataCourse, setDataCourse] = useState([])
+  const [updatedSubLessonName, setUpdatedSubLessonName] = useState('') // State to store updated subLessonName
+  const [updatedLessonId, setUpdatedLessonId] = useState('') // State to store the lessonId to be updated
   const [subLessonList, setSubLessonList] = useState([
-    { lessonId: 1, subLessonName: "" },
-  ]);
+    { lessonId: 1, subLessonName: '' },
+  ])
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
         `http://localhost:4000/admin/editcourse/${courseid}`
-      );
+      )
       setDataCourse({
         course_id: dataDetailCourse.data.data.course_id,
         course_name: dataDetailCourse.data.data.course_name,
@@ -24,69 +24,67 @@ function AddLesson() {
           lesson_name: lesson.lesson_name,
           sublessons: lesson.sublessons,
         })),
-      });
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
-  console.log(dataCourse);
+  console.log(dataCourse)
 
-  useEffect(() => {
-    getDetailCourse();
-    if (updatedSubLessonName && updatedLessonId) {
-      const updatedSubLessonList = subLessonList.map((subLesson) =>
-        subLesson.lessonId === updatedLessonId
-          ? { ...subLesson, subLessonName: updatedSubLessonName }
-          : subLesson
-      );
-      setSubLessonList(updatedSubLessonList);
-
-      // Reset the states after updating
-      setUpdatedSubLessonName("");
-      setUpdatedLessonId("");
-    }
-  }, [updatedSubLessonName, updatedLessonId, subLessonList]);
+  // useEffect(() => {
+  //   getDetailCourse()
+  //   if (updatedSubLessonName && updatedLessonId) {
+  //     const updatedSubLessonList = subLessonList.map((subLesson) =>
+  //       subLesson.lessonId === updatedLessonId
+  //         ? { ...subLesson, subLessonName: updatedSubLessonName }
+  //         : subLesson
+  //     )
+  //     setSubLessonList(updatedSubLessonList)
+  //     setUpdatedSubLessonName('')
+  //     setUpdatedLessonId('')
+  //   }
+  // }, [updatedSubLessonName, updatedLessonId, subLessonList])
 
   const addSubLesson = () => {
-    const newLessonId = subLessonList.length + 1;
-    const newSubLesson = { lessonId: newLessonId, subLessonName: "" };
-    setSubLessonList([...subLessonList, newSubLesson]);
-  };
+    const newLessonId = subLessonList.length + 1
+    const newSubLesson = { lessonId: newLessonId, subLessonName: '' }
+    setSubLessonList([...subLessonList, newSubLesson])
+  }
 
   const deleteSubLesson = (lessonIdToDelete) => {
     if (subLessonList.length === 1) {
-      alert("You can't delete the last sub-lesson.");
-      return;
+      alert("You can't delete the last sub-lesson.")
+      return
     }
     const updatedSubLessonList = subLessonList.filter(
       (subLesson) => subLesson.lessonId !== lessonIdToDelete
-    );
-    setSubLessonList(updatedSubLessonList);
-  };
+    )
+    setSubLessonList(updatedSubLessonList)
+  }
 
   const handleSublesson = (lessonId, subLessonName) => {
     const updatedSubLessonList = subLessonList.map((subLesson) =>
       subLesson.lessonId === lessonId
         ? { ...subLesson, subLessonName }
         : subLesson
-    );
-    setSubLessonList(updatedSubLessonList);
-  };
+    )
+    setSubLessonList(updatedSubLessonList)
+  }
 
   const SubLessonComponent = ({ subLesson, onDelete }) => {
-    const [subLessonName, setSubLessonName] = useState(subLesson.subLessonName);
+    const [subLessonName, setSubLessonName] = useState(subLesson.subLessonName)
 
     const handleSubLessonNameChange = (e) => {
-      setSubLessonName(e.target.value);
-      handleSublesson(subLesson.lessonId, e.target.value);
-    };
+      setSubLessonName(e.target.value)
+      handleSublesson(subLesson.lessonId, e.target.value)
+    }
 
     return (
       <div>
         <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
           <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
             <DragIndicatorIcon
-              style={{ fontSize: 24, color: "#C8CCDB" }}
+              style={{ fontSize: 24, color: '#C8CCDB' }}
               className="hover:cursor-pointer"
             />
           </div>
@@ -129,8 +127,8 @@ function AddLesson() {
           </div>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <>
@@ -166,7 +164,7 @@ function AddLesson() {
       <form
         className="w-[1200px] pb-[219px] h-auto  flex flex-col justify-center items-center bg-[#F6F7FC]"
         onSubmit={(e) => {
-          e.preventDefault();
+          e.preventDefault()
         }}
       >
         <div className="w-[1120px]  flex flex-col justify-center items-center bg-[#FFF]">
@@ -184,7 +182,7 @@ function AddLesson() {
               />
             </div>
             <hr />
-            <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{" "}
+            <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{' '}
             {subLessonList.map((subLesson, index) => (
               <SubLessonComponent
                 key={index}
@@ -203,7 +201,7 @@ function AddLesson() {
         </div>
       </form>
     </>
-  );
+  )
 }
 
-export default AddLesson;
+export default AddLesson
