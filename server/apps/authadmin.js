@@ -20,17 +20,22 @@ authAdminRouter.post("/login", async (req, res) => {
     }
 
     if (data) {
-      // const token = data.session.access_token;
+      const token = data.session.access_token;
       try {
         const { data, error } = await supabase
-          .from("users")
+          .from("admins")
+          .select("*")
           .eq("email", loginData.email);
 
+        const adminId = data;
+        console.log(data);
         if (error) {
           return res.status(500).json({ error: "Supabase query failed" });
         }
         return res.json({
           message: "login succesfully",
+          token,
+          data: adminId,
         });
       } catch (error) {
         res.json({ error: error });

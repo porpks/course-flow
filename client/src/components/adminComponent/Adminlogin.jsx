@@ -19,8 +19,9 @@ function AdminLogin() {
         "http://localhost:4000/authadmin/login",
         loginData
       );
+      console.log(response);
       if (response.data.success) {
-        // console.log("Login successful");
+        console.log("Login successful");
       }
       const admin_id = response.data.data[0].user_id;
       setAdminId(admin_id);
@@ -28,7 +29,7 @@ function AdminLogin() {
 
       console.log(response.data.data[0]);
     } catch (error) {
-      // console.error("Error during login:", error.message);
+      console.error("Error during login:", error.message);
     }
   };
 

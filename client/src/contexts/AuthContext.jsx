@@ -34,7 +34,7 @@ function AuthProvider(props) {
     try {
       localStorage.clear();
       setIsLoggedIn(false);
-      setUserID("");
+      // setUserID("");
       // const response = await axios.get(`http://localhost:4000/auth/logout`);
       // if (response.status === 200) {
       //   localStorage.clear();

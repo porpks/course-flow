@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Mymodal from "../Mymodal";
 
-function Courselist() {
+function CourseList() {
   const [courseData, setCourseData] = useState([]);
   const [searchBox, setSearchBox] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -100,7 +100,8 @@ function Courselist() {
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -121,7 +122,8 @@ function Courselist() {
           </div>
           <button
             onClick={() => navigate("/admin/addcourse")}
-            className="Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex border-none">
+            className="Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex border-none"
+          >
             <div className=" text-center text-white text-base font-bold font-['Inter'] leading-normal">
               + Add Course
             </div>
@@ -158,7 +160,8 @@ function Courselist() {
           {courseData.map((item) => (
             <div
               key={item.course_id}
-              className="w-[1120px] h-[88px] grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] bg-white Body2">
+              className="w-[1120px] h-[88px] grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] bg-white Body2"
+            >
               <div className="w-[48px] flex items-center px-[16px] py-[32px]">
                 {item.course_id}
               </div>
@@ -190,13 +193,15 @@ function Courselist() {
               <div className="w-[120px]  flex items-center justify-center gap-[17px] ">
                 <button
                   className="cursor-pointer bg-white border-none"
-                  onClick={() => setDeleteToggle(true)}>
+                  onClick={() => setDeleteToggle(true)}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
-                    fill="none">
+                    fill="none"
+                  >
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"
@@ -211,7 +216,8 @@ function Courselist() {
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
-                    fill="none">
+                    fill="none"
+                  >
                     <path
                       d="M21.7313 2.26899C21.239 1.77681 20.5714 1.50031 19.8753 1.50031C19.1791 1.50031 18.5115 1.77681 18.0193 2.26899L16.8623 3.42599L20.5743 7.13799L21.7313 5.98099C22.2234 5.48872 22.4999 4.82111 22.4999 4.12499C22.4999 3.42888 22.2234 2.76127 21.7313 2.26899ZM19.5133 8.199L15.8013 4.48699L7.40125 12.887C6.78411 13.5038 6.33043 14.2648 6.08125 15.101L5.28125 17.786C5.24263 17.9156 5.23975 18.0532 5.27292 18.1842C5.30608 18.3153 5.37407 18.435 5.46967 18.5306C5.56527 18.6262 5.68494 18.6942 5.81601 18.7273C5.94709 18.7605 6.08469 18.7576 6.21425 18.719L8.89925 17.919C9.73548 17.6698 10.4964 17.2161 11.1133 16.599L19.5133 8.199Z"
                       fill="#8DADE0"
@@ -230,13 +236,15 @@ function Courselist() {
             <button
               className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center
               cursor-pointer	}`}
-              onClick={page > 1 ? changeLowerPage : undefined}>
+              onClick={page > 1 ? changeLowerPage : undefined}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6 inline-block mr-2"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor">
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -249,14 +257,16 @@ function Courselist() {
             <span className="text-gray-600 text-lg">Page {page}</span>
             <button
               className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center cursor-pointer`}
-              onClick={courseData.length < 8 ? undefined : changeUpperPage}>
+              onClick={courseData.length < 8 ? undefined : changeUpperPage}
+            >
               Next
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6 inline-block ml-2"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor">
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -272,4 +282,4 @@ function Courselist() {
   );
 }
 
-export default Courselist;
+export default CourseList;
