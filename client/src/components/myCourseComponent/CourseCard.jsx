@@ -1,6 +1,6 @@
-import React from "react";
-import "./CourseCard.css";
-import { Link } from "react-router-dom";
+import React from 'react'
+import './CourseCard.css'
+import { Link } from 'react-router-dom'
 
 function CourseCard(props) {
   return (
@@ -14,16 +14,17 @@ function CourseCard(props) {
           <h2 className="H3 text-[#000] py-[8px]">{props.coursename}</h2>
           <p
             className="Body2 text-[--gray700]  truncate"
-            style={{ maxLines: "2" }}
+            style={{ maxLines: '2' }}
           >
             {props.coursedetail}
           </p>
           <br />
+          <div></div>
           <Link
             className="no-underline"
             to={`/ourcourse/coursedetail/${props.courseid}`}
             onClick={() => {
-              window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+              window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
             }}
           >
             Course Detail
@@ -48,7 +49,7 @@ function CourseCard(props) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default CourseCard;
+export default CourseCard
