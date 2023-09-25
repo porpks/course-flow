@@ -18,7 +18,7 @@ function Sidebar(props) {
   const { logoutAdmin } = useAuth();
 
   return (
-    <div className="border-solid border-b-0 border-t-0 border-l-0 border-r-[1px] border-gray-300  h-auto">
+    <div className="border-solid border-b-0 border-t-0 border-l-0 border-r-[1px] border-gray-300  h-full">
       <div className="cursor-pointer flex flex-col justify-center items-center h-[131px] px-6 pt-10 pb-6">
         <CourseFlowIcon width="174" height="19" />
         <p className="Body2 text-[--gray700] pt-6">Admin Panel Control</p>

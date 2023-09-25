@@ -106,8 +106,8 @@ function CourseList() {
   }
 
   return (
-    // <div className="w-[1200px]">
-    <div className="w-[100%]">
+    <div className="w-[1200px]">
+      {/* <div className="w-[100%]"> */}
       {deleteToggle ? (
         <Mymodal
           open={deleteToggle}
