@@ -323,6 +323,43 @@ assignmentRouter.get("/:userID", async (req, res) => {
     // res.json({ data:flatData});
 });
 
+assignmentRouter.post('/create', async (req, res) => {
+    const sublesson_id = Number(req.body.sublessonId)
+    const assignment_question = req.body.assignDetail
+    const duration = Number(req.body.duration)
+
+    const created_at = new Date()
+
+    const input = { sublesson_id, assignment_question, duration, created_at }
+
+    // const { error } = await supabase.from('assignments').insert(input)
+    // if (error) {
+    //     return res.status(404).json({ error })
+    // }
+
+    return res.json({ message: "New assignment has been created." })
+})
+
+assignmentRouter.put('/edit', async (req, res) => {
+    const assignment_id = Number(req.body.assignId)
+    const assignment_question = req.body.assignDetail
+    const duration = Number(req.body.duration)
+
+    const input = { assignment_question, duration }
+
+    // const { error } = await supabase
+    //     .from('assignments')
+    //     .update(input)
+    //     .eq("assignment_id", assignment_id)
+
+    // if (error) {
+    //     return res.status(404).json({ error })
+    // }
+
+    return res.json({ message: `Assignment id:${assignment_id} has been updated.` })
+
+})
+
 assignmentRouter.put('/:userID', async (req, res) => {
     const body = req.body;
     const userId = req.params.userID;
