@@ -215,7 +215,7 @@ function MyCourse() {
     }
 
     const courseCards = currentCourses.map((item) => (
-      <Link
+      <div
         className="no-underline"
         key={item.courses.course_id}
         to={`/learning/${item.courses.course_id}`}
@@ -230,7 +230,7 @@ function MyCourse() {
           coursesummary={item.courses.course_summary}
           totallearningtime={item.courses.total_time}
         />
-      </Link>
+      </div>
     ))
     return (
       <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]">
