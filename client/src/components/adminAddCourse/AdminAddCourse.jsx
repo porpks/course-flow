@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react'
 import './adminAddCourse.css'
 import Sidebar from '../Sidebar'
@@ -92,6 +93,39 @@ function AdminAddCourse() {
     navigate(`/admin/addcourse/addlesson`)
     console.log(localStorage.getItem(`course_data`))
   }
+=======
+import React, { useState } from "react";
+import "./adminAddCourse.css";
+import Sidebar from "../Sidebar";
+import { Formik, Form, Field } from "formik";
+import LessonTable from "./LessonTable";
+import { UploadImage } from "./UploadImage.jsx";
+
+function AdminAddCourse() {
+  const [image, setImage] = useState("");
+  const [avatar, setAvatar] = useState({});
+  const [avatarUrl, setAvatarUrl] = useState("");
+  
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+      if (allowedTypes.includes(file.type)) {
+        if (file.size <= 5 * 1024 * 1024) {
+          setAvatar(event.target.files[0]);
+          setAvatarUrl(URL.createObjectURL(event.target.files[0]));
+        } else {
+          alert("File size exceeds 2MB.");
+        }
+      } else {
+        alert("Invalid file type. Please choose a .jpg, .jpeg, or .png file.");
+      }
+    }
+  };
+  console.log(avatar);
+  console.log(avatarUrl);
+>>>>>>> 17f8f51 (feat : upload img)
 
   return (
     <>
@@ -203,6 +237,7 @@ function AdminAddCourse() {
                     <label className="">Cover image *</label>
                     <div className="relative h-fit">
                       <div className="relative bg-[--gray100] w-[358px] h-[358px] object-cover	rounded-2xl group	">
+<<<<<<< HEAD
                         <div
                           className="
                           upload-position   w-[200px] h-[200px] 
@@ -216,6 +251,19 @@ function AdminAddCourse() {
                             Upload Image
                           </div>
                         </div>
+=======
+                        <img
+                          src={
+                            avatarUrl
+                              ? avatarUrl
+                              : image
+                              ? image
+                              : "../public/image/uploadImage.svg"
+                          }
+                          className="relative w-[358px] h-[358px] object-cover	rounded-2xl	"
+                        />
+                        
+>>>>>>> 17f8f51 (feat : upload img)
                         <div
                           className="
                           upload-position w-[90%] h-[90%]
