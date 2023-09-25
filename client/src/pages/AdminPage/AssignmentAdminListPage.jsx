@@ -14,7 +14,7 @@ function AssignmentAdminListPage() {
         <ModalAssignmentDelete />
       ) : (
         <>
-          <div className="flex">
+          <div className='flex h-[100vh]  '>
             <Sidebar isAssignmentPage={true} />
             <div>
               <AssignmentTopbar setSearchQuery={setSearchQuery} />

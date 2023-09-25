@@ -4,9 +4,10 @@ import "../components/Assignment.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
-
+import CircularIndeterminate from "../assets/loadingProgress";
 function AssignmentPage() {
   const { userId } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,6 +15,7 @@ function AssignmentPage() {
 
   useEffect(() => {
     const getAssignmentData = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get(
           `http://localhost:4000/assignment/${userId}`
@@ -26,6 +28,7 @@ function AssignmentPage() {
           assignment_status: assignment.assignment_status,
         }));
         setAnswers(initialAnswers);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -108,7 +111,14 @@ function AssignmentPage() {
       console.log(error.message);
     }
   };
-
+  if (isLoading) {
+    return (
+      <div className='flex justify-center items-center w-[100%] min-h-[100vh] text-black'>
+        <h1>Loading...</h1>
+        <CircularIndeterminate />
+      </div>
+    );
+  }
   return (
     <>
       <Navbar />
