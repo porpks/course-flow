@@ -292,3 +292,6 @@
 .Dropdown-arrow {
   top: 24px !important;
 }
+.Dropdown-disabled {
+  background-color: var(--gray100) !important;
+}
