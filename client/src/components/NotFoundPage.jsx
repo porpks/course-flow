@@ -1,5 +1,4 @@
-import React from "react";
-
+/* eslint-disable react/no-unescaped-entities */
 function NotFoundPage() {
   return (
     <div className='gradient-bg min-h-screen flex flex-col justify-center items-center'>
