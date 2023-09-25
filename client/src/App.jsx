@@ -14,10 +14,6 @@ import UnauthenticatedApp from './components/UnauthenticatedApp.jsx'
 
 function App() {
   const auth = useAuth()
-  if (!auth.isAuthenticated) {
-    localStorage.clear()
-    auth.logout()
-  }
 
   return auth.isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />
 }
