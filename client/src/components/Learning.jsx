@@ -185,22 +185,39 @@ function Learning() {
   };
 
   const handleEnd = async () => {
-    console.log("end");
     const sublessonID = localStorage.getItem("videoKey") || videoKey
-    const response = await axios.get(
-      `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
+    console.log(subStatus[sublessonID]);
+
+    //check assignment
+    const result = await axios.get(
+      `http://localhost:4000/assignment/check?sublessonId=${sublessonID}`
     )
-    if (response.data.data.length === 0) {
-      await axios.post(
-        `http://localhost:4000/assignment/`,
-        {
-          user_id: userId,
-          sublesson_id: sublessonID,
-        });
+    if (result.data.data.length === 0) {
+      await axios.put(
+        `http://localhost:4000/learn/complete?userID=${userId}&sublessonID=${sublessonID}`
+      );
+      const newStatus = { ...subStatus };
+      newStatus[videoKey] = "complete";
+      setSubStatus(newStatus);
     }
 
-    updateIsShowAsm(true);
-    setRenderAsm(true);
+    //have assignment
+    else {
+      const response = await axios.get(
+        `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
+      )
+      if (response.data.data.length === 0) {
+        await axios.post(
+          `http://localhost:4000/assignment/`,
+          {
+            user_id: userId,
+            sublesson_id: sublessonID,
+          });
+      }
+
+      updateIsShowAsm(true);
+      setRenderAsm(true);
+    }
   };
 
   useEffect(() => {
@@ -288,7 +305,7 @@ function Learning() {
             <h1 className='Body3 text-[--orange500] mb-6'>Course</h1>
             <h1 className='H3 mb-2'>{courseData.course_name}</h1>
             <h1 className='Body2 text-[--gray700] mb-6 leading-8'>
-              {courseData.course_detail}
+              {courseData.course_detail.slice(0, 100)}...
             </h1>
           </div>
           <div className='mb-6'>

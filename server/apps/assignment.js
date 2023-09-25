@@ -221,6 +221,26 @@ assignmentRouter.get('/byId', async (req, res) => {
     }
 })
 
+assignmentRouter.get('/check', async (req, res) => {
+    const sublesson_id = Number(req.query.sublessonId)
+    try {
+        const { data, error } = await supabase
+            .from('assignments')
+            .select('assignment_id, assignment_question')
+            .eq("sublesson_id", sublesson_id)
+
+
+        if (error) {
+            return res.status(404).json({ error })
+        }
+
+        return res.json({ data: data })
+
+    } catch (err) {
+        return res.status(404).json({ err })
+    }
+})
+
 assignmentRouter.get("/:userID", async (req, res) => {
     const userId = req.params.userID;
     const Sublessonid = req.query.sublessonid
