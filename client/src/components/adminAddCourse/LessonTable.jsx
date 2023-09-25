@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import "./lessonTable.css";
+import React, { useState } from 'react'
+import './lessonTable.css'
 
 function LessonTable() {
   const mockData = [
     {
       id: 1,
-      Lesson_name: "Prinsessa Ruusunen",
+      Lesson_name: 'Prinsessa Ruusunen',
       Sub_lesson: 8,
     },
     {
       id: 2,
-      Lesson_name: "Merry Christmas Mr. Lawrence",
+      Lesson_name: 'Merry Christmas Mr. Lawrence',
       Sub_lesson: 1,
     },
     {
@@ -20,48 +20,48 @@ function LessonTable() {
     },
     {
       id: 4,
-      Lesson_name: "Killer Inside Me, The",
+      Lesson_name: 'Killer Inside Me, The',
       Sub_lesson: 5,
     },
     {
       id: 5,
-      Lesson_name: "Girl from Monaco, The (fille de Monaco, La)",
+      Lesson_name: 'Girl from Monaco, The (fille de Monaco, La)',
       Sub_lesson: 2,
     },
     {
       id: 6,
-      Lesson_name: "Bad Boy (Story of Danny Lester, The)",
+      Lesson_name: 'Bad Boy (Story of Danny Lester, The)',
       Sub_lesson: 6,
     },
     {
       id: 7,
-      Lesson_name: "Tooth Fairy",
+      Lesson_name: 'Tooth Fairy',
       Sub_lesson: 7,
     },
     {
       id: 8,
-      Lesson_name: "Marseillaise, La",
+      Lesson_name: 'Marseillaise, La',
       Sub_lesson: 5,
     },
     {
       id: 9,
-      Lesson_name: "Music for One Apartment and Six Drummers",
+      Lesson_name: 'Music for One Apartment and Six Drummers',
       Sub_lesson: 2,
     },
     {
       id: 10,
-      Lesson_name: "Stormheart",
+      Lesson_name: 'Stormheart',
       Sub_lesson: 6,
     },
-  ];
+  ]
 
   const handleDelete = (id, lessonName) => {
-    alert(`Deleted lesson with ID ${id} ${lessonName}`);
-  };
+    alert(`Deleted lesson with ID ${id} ${lessonName}`)
+  }
 
   const handleEdit = (id, lessonName) => {
-    alert(`Edited lesson with ID ${id} ${lessonName}`);
-  };
+    alert(`Edited lesson with ID ${id} ${lessonName}`)
+  }
 
   return (
     <>
@@ -97,7 +97,7 @@ function LessonTable() {
         </tbody>
       </table>
     </>
-  );
+  )
 }
 
-export default LessonTable;
+export default LessonTable

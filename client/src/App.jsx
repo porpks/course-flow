@@ -17,11 +17,9 @@ import ReactDOM from "react-dom";
 // Disable the warning
 ReactDOM.unstable_disableWarnOnNestedVirtualComponents = true;
 function App() {
-  const auth = useAuth();
-  if (!auth.isAuthenticated) {
-    localStorage.clear();
-    auth.logout();
-  }
+
+  const auth = useAuth()
+
 
   return auth.isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />;
 }

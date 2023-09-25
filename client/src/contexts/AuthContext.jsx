@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 const AuthContext = React.createContext()
@@ -49,6 +49,15 @@ function AuthProvider(props) {
       alert(error.message)
     }
   }
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      localStorage.clear()
+      logout()
+    }
+
+    return () => {}
+  }, [userId])
 
   function clearAllCookies() {
     const cookies = document.cookie.split(';')
