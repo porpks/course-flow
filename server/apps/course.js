@@ -8,7 +8,7 @@ courseRouter.get("/", async (req, res) => {
     const query = supabase
       .from("courses")
       .select("*,lessons(*,sublessons(*))")
-      .order("course_id", { ascending: desc });
+      .order("course_id");
 
     const { data, error } = await query;
 
@@ -37,7 +37,6 @@ courseRouter.get("/admin", async (req, res) => {
     if (course) {
       query.ilike("course_name", `%${course}%`);
     }
-
     query.range(start, end);
 
     const { data, error } = await query;
