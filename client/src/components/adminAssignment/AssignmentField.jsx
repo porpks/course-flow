@@ -4,6 +4,10 @@ import 'react-dropdown/style.css'
 
 function AssignmentField() {
     const [course, setCourse] = useState("");
+    const [lesson, setLesson] = useState("");
+    const [sublesson, setSublesson] = useState("");
+    const [duration, setDuration] = useState("");
+    const [assignDetail, setAssignDetail] = useState("");
     const courseData = ['Course1', 'Course2', 'Course3']
     const lessonData = ['Lesson1', 'Lesson2', 'Lesson3']
     const sublessonData = ['SubLesson1', 'SubLesson2', 'SubLesson3']
@@ -21,9 +25,10 @@ function AssignmentField() {
                         <div className="w-1/2 pr-5">
                             <label htmlFor="course" className="text-lg">Course</label>
                             <Dropdown name="course" id="course"
+                                disabled={true}
                                 controlClassName="Dropdown-asm w-full text-lg text-black"
                                 placeholder="* Select course"
-                                // value={course}
+                                value={course}
                                 options={courseData}
                                 onChange={(e) => console.log(e.value)} />
                         </div>
@@ -31,17 +36,19 @@ function AssignmentField() {
                             <div className="w-1/2">
                                 <label htmlFor="lesson" className="text-lg">Lesson</label><br />
                                 <Dropdown name="lesson" id="lesson"
+                                    disabled={true}
                                     controlClassName="Dropdown-asm w-full text-lg text-black"
                                     placeholder="* Select lesson"
-                                    // value={lessons}
+                                    value={lesson}
                                     options={lessonData}
                                     onChange={(e) => console.log(e.value)} />
                             </div>                    <div className="w-1/2">
                                 <label htmlFor="sublesson" className="text-lg">Sub-lesson</label><br />
                                 <Dropdown name="sublesson" id="sublesson"
+                                    disabled={true}
                                     controlClassName="Dropdown-asm w-full text-lg text-black"
                                     placeholder="* Select sublesson"
-                                    // value={sublessons}
+                                    value={sublesson}
                                     options={sublessonData}
                                     onChange={(e) => console.log(e.value)} />
                             </div>
@@ -52,14 +59,18 @@ function AssignmentField() {
 
                         <div>
                             <label htmlFor="assignment" className="text-lg">Assignment *</label><br />
-                            <input className="w-full text-lg p-3 border-solid border-[1px] border-[--gray300] rounded-lg" />
+                            <input
+                                className="w-full text-lg p-3 border-solid border-[1px] border-[--gray300] rounded-lg"
+                                value={assignDetail}
+                                onChange={(e) => setAssignDetail(e.target.value)}
+                            />
                         </div>
                         <div className="w-1/2 pr-5">
                             <label htmlFor="duration" className="text-lg">Duration of assignment (day)</label><br />
                             <Dropdown name="duration" id="duration"
                                 controlClassName="Dropdown-asm w-full text-lg text-black"
                                 placeholder="* Select duration"
-                                // value={sublessons}
+                                value={duration}
                                 options={durations}
                                 onChange={(e) => console.log(e.value)} />
                         </div>
