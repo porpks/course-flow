@@ -84,6 +84,7 @@ function CourseList() {
           open={openDelete}
           onClose={closeDelete}
           closeButton={closeDelete}
+          yesOnClick={closeDelete}
           description="Do you sure to delete this course?"
           yesDes="No, I don’t"
           noDes="Yes, I want to delete this course"
