@@ -137,10 +137,13 @@ courseRouter.delete("/:courseId", async (req, res) => {
     const { error } = await supabase
       .from("courses")
       .delete()
-      .eq("course_id", 1);
+      .eq("course_id", courseId);
+    return res.json({
+      message: "course has been delete",
+    });
   } catch (error) {
     return res.status(400).json({
-      message: "no course",
+      message: error,
     });
   }
 });
