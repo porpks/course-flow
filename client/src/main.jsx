@@ -7,7 +7,7 @@ import { AuthProvider } from "./contexts/AuthContext.jsx";
 import jwtInterceptor from "./utils/jwtInterceptors.jsx";
 
 jwtInterceptor();
-ReactDOM.unstable_disableWarnOnNestedVirtualComponents = true;
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
