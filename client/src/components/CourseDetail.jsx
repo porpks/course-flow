@@ -26,7 +26,7 @@ function CourseDetail() {
   const isDesireExist = Boolean(desireData?.length > 0)
 
   const [subscribeData, setSubscribeData] = useState([])
-  const isSubscribe = Boolean(subscribeData?.length > 0)
+  const isSubscribe = subscribeData?.length > 0
 
   const [isRequestPending, setIsRequestPending] = useState(false)
 

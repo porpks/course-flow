@@ -75,7 +75,10 @@ function Sidebar(props) {
             <p>Assignment</p>
           </div>
         </div>
-        <div className="flex items-center py-[16px] px-[24px]  mt-[40px] cursor-pointer text-[#424C6B] font-medium hover:bg-[#e4e4e6] active:bg-[#F1F2F6]">
+        <div
+          className="flex items-center py-[16px] px-[24px]  mt-[40px] cursor-pointer text-[#424C6B] font-medium hover:bg-[#e4e4e6] active:bg-[#F1F2F6]"
+          onClick={logoutAdmin}
+        >
           <div className="pr-[16px]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
