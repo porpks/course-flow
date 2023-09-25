@@ -11,6 +11,7 @@ import { useAuth } from "../contexts/AuthContext.jsx";
 import axios from "axios";
 import AssignmentBox from "./AssignmentBox.jsx";
 import CircularIndeterminate from "../assets/loadingProgress";
+import { useNavigate } from "react-router-dom";
 
 function Learning() {
   const [isLoading, setIsLoading] = useState(true);
@@ -45,6 +46,7 @@ function Learning() {
   const [videoThumbnail, setVideoThumbnail] = useState("");
   const [subStatus, setSubStatus] = useState({});
   const [percentComplete, setPercentComplete] = useState(0);
+  const navigate = useNavigate();
 
   const getStatus = async () => {
     try {
@@ -185,22 +187,37 @@ function Learning() {
   };
 
   const handleEnd = async () => {
-    console.log("end");
-    const sublessonID = localStorage.getItem("videoKey") || videoKey
-    const response = await axios.get(
-      `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
-    )
-    if (response.data.data.length === 0) {
-      await axios.post(
-        `http://localhost:4000/assignment/`,
-        {
+    const sublessonID = localStorage.getItem("videoKey") || videoKey;
+    console.log(subStatus[sublessonID]);
+
+    //check assignment
+    const result = await axios.get(
+      `http://localhost:4000/assignment/check?sublessonId=${sublessonID}`
+    );
+    if (result.data.data.length === 0) {
+      await axios.put(
+        `http://localhost:4000/learn/complete?userID=${userId}&sublessonID=${sublessonID}`
+      );
+      const newStatus = { ...subStatus };
+      newStatus[videoKey] = "complete";
+      setSubStatus(newStatus);
+    }
+
+    //have assignment
+    else {
+      const response = await axios.get(
+        `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
+      );
+      if (response.data.data.length === 0) {
+        await axios.post(`http://localhost:4000/assignment/`, {
           user_id: userId,
           sublesson_id: sublessonID,
         });
-    }
+      }
 
-    updateIsShowAsm(true);
-    setRenderAsm(true);
+      updateIsShowAsm(true);
+      setRenderAsm(true);
+    }
   };
 
   useEffect(() => {
@@ -249,7 +266,7 @@ function Learning() {
 
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center w-[100%] min-h-[100vh] text-black'>
+      <div className='flex justify-center items-center w-[100%] gap-8 min-h-[100vh] text-black'>
         <h1>Loading...</h1>
         <CircularIndeterminate />
       </div>
@@ -282,13 +299,21 @@ function Learning() {
 
   return (
     <>
+      <div className='absolute left-[155px] top-[150px] back-btn'>
+        <a
+          onClick={() => navigate(-1)}
+          className='flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer'>
+          <img src='../../public/image/arrow_back.svg' alt='arrow_back' />
+          <p className='text-[--blue500] font-[700] text-[16px]'>Back</p>
+        </a>
+      </div>
       <div className='flex justify-center pt-[100px] px-[160px]'>
-        <div className='flex flex-col w-[360px] mr-[24px] px-6 py-8 shadow-[4px_4px_24px_0px_rgba(0,0,0,0.08)]'>
+        <div className=' flex flex-col w-[360px] mr-[24px] px-6 py-8 shadow-[4px_4px_24px_0px_rgba(0,0,0,0.08)]'>
           <div className=''>
             <h1 className='Body3 text-[--orange500] mb-6'>Course</h1>
             <h1 className='H3 mb-2'>{courseData.course_name}</h1>
             <h1 className='Body2 text-[--gray700] mb-6 leading-8'>
-              {courseData.course_detail}
+              {courseData.course_detail.slice(0, 100)}...
             </h1>
           </div>
           <div className='mb-6'>
@@ -326,10 +351,11 @@ function Learning() {
                           <label
                             key={index}
                             id={sublesson.sublesson_id}
-                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${sublesson.sublesson_id === videoKey
-                              ? "bg-[--gray400]"
-                              : ""
-                              }`}
+                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${
+                              sublesson.sublesson_id === videoKey
+                                ? "bg-[--gray400]"
+                                : ""
+                            }`}
                             onClick={() =>
                               handleShowVideo(
                                 sublesson.sublesson_name,
@@ -338,7 +364,7 @@ function Learning() {
                             }>
                             <div className='mr-4 h-[20px]'>
                               {subStatus[sublesson.sublesson_id] ===
-                                "complete" ? (
+                              "complete" ? (
                                 <svg
                                   xmlns='http://www.w3.org/2000/svg'
                                   width='20'
@@ -484,7 +510,7 @@ function Learning() {
         )}
 
         {sublessonIdArray.findIndex((element) => element === videoKey) <
-          sublessonIdArray.length - 1 ? (
+        sublessonIdArray.length - 1 ? (
           <button
             className='Primary border-none cursor-pointer'
             onClick={() => {

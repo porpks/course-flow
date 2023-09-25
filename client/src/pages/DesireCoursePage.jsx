@@ -44,7 +44,7 @@ function DesireCoursePage() {
 
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center w-[100%] min-h-[100vh] text-black'>
+      <div className='flex justify-center items-center w-[100%] min-h-[100vh] gap-8 text-black'>
         <h1>Loading...</h1>
         <CircularIndeterminate />
       </div>
@@ -115,7 +115,7 @@ function DesireCoursePage() {
             </div>
           )}
           {!isLoading && desireData.length === 0 && (
-            <div className='text-center'>
+            <div className='text-center h-[115px]'>
               <p className='Body1 text-center text-[#646D89]'>
                 You haven't added any desired courses yet
               </p>

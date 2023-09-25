@@ -17,7 +17,7 @@ function OurCourse() {
       setDataCourse(result.data.data);
       setIsLoading(false);
     } catch (error) {
-      message: error;
+      console.log(error.message);
     }
   }
   useEffect(() => {
@@ -64,7 +64,9 @@ function OurCourse() {
   /////////////////////////////////////////////////
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center w-[100%] min-h-[100vh] text-black">
+
+      <div className="flex justify-center items-center w-[100%] gap-8 min-h-[100vh] text-black">
+
         <h1> Loading...</h1>
         <CircularIndeterminate />
       </div>
@@ -72,48 +74,53 @@ function OurCourse() {
   }
 
   return (
-    <div className="canvas-ourCourse ">
+    <div className='canvas-ourCourse '>
       {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
-      <div className="topSection">
-        <h2 className="H2">Our Courses</h2>
-        <div className="input-container">
-          <img src="../../public/image/search.svg" alt="searchIcon" />
+      <div className='topSection'>
+        <h2 className='H2'>Our Courses</h2>
+        <div className='input-container'>
+          <img src='../../public/image/search.svg' alt='searchIcon' />
           <input
-            type="text"
-            placeholder="Search..."
+            type='text'
+            placeholder='Search...'
             value={searchKey}
             onChange={handleSearch}
           />
         </div>
-      </div>
-      <div className="content-Section">
-        <div className="card-container">
-          {cardCourseToDisplay.map((item) => (
-            <CourseItem
-              key={item.course_id}
-              count={item.course_id}
-              coverimg={item.cover_img}
-              coursename={item.course_name}
-              coursedetail={item.course_detail}
-              coursesummary={item.course_summary}
-              totallearningtime={item.total_time}
-              onClick={() => {
-                navigate(`/ourcourse/coursedetail/${item.course_id}`);
-              }}
-            />
-          ))}
-        </div>
-        <div className="pagination-card">
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handlePageChange(index + 1)}
-              className={`paginationOurCourse-item ${
-                currentPage === index + 1 ? "active" : ""
-              }`}>
-              {index + 1}
-            </button>
-          ))}
+
+        <div className="content-Section">
+          {cardCourseToDisplay.length <= 0 ? (
+            <h1 className="้H1 text-red-500 ">{`No course found matching "${searchKey}"`}</h1>
+          ) : (
+            <div className="card-container">
+              {cardCourseToDisplay.map((item) => (
+                <CourseItem
+                  key={item.course_id}
+                  count={item.course_id}
+                  coverimg={item.cover_img}
+                  coursename={item.course_name}
+                  coursedetail={item.course_detail}
+                  coursesummary={item.course_summary}
+                  totallearningtime={item.total_time}
+                  onClick={() => {
+                    navigate(`/ourcourse/coursedetail/${item.course_id}`);
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          <div className="pagination-card">
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handlePageChange(index + 1)}
+                className={`paginationOurCourse-item ${currentPage === index + 1 ? "active" : ""
+                  }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

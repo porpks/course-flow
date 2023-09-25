@@ -118,6 +118,129 @@ assignmentRouter.post('/', async (req, res) => {
     return res.json({ message: `assignment has been added.` });
 })
 
+assignmentRouter.get('/courseList', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('courses')
+            .select('course_id, course_name')
+
+        if (error) {
+            return res.status(404).json({ error })
+        }
+
+        const result = []
+        data.map((item) => {
+            const newFormat = {}
+            newFormat.value = item.course_id
+            newFormat.label = item.course_name
+            result.push(newFormat);
+        })
+
+        return res.json({ data: result })
+    } catch (err) {
+        return res.status(404).json({ err })
+    }
+})
+
+assignmentRouter.get('/lessonList/', async (req, res) => {
+    const course_id = Number(req.query.courseId)
+    try {
+        const { data, error } = await supabase
+            .from('lessons')
+            .select('lesson_id, lesson_name')
+            .eq("course_id", course_id)
+
+        if (error) {
+            return res.status(404).json({ error })
+        }
+
+        const result = []
+        data.map((item) => {
+            const newFormat = {}
+            newFormat.value = item.lesson_id
+            newFormat.label = item.lesson_name
+            result.push(newFormat);
+        })
+
+        return res.json({ data: result })
+    } catch (err) {
+        return res.status(404).json({ err })
+    }
+})
+
+assignmentRouter.get('/sublessonList/', async (req, res) => {
+    const lesson_id = Number(req.query.lessonId)
+    try {
+        const { data, error } = await supabase
+            .from('sublessons')
+            .select('sublesson_id, sublesson_name')
+            .eq("lesson_id", lesson_id)
+
+        if (error) {
+            return res.status(404).json({ error })
+        }
+
+        const result = []
+        data.map((item) => {
+            const newFormat = {}
+            newFormat.value = item.sublesson_id
+            newFormat.label = item.sublesson_name
+            result.push(newFormat);
+        })
+
+        return res.json({ data: result })
+    } catch (err) {
+        return res.status(404).json({ err })
+    }
+})
+
+assignmentRouter.get('/byId', async (req, res) => {
+    const assignment_id = Number(req.query.assignId)
+    try {
+        const { data, error } = await supabase
+            .from('assignments')
+            .select('assignment_id, assignment_question ,duration, sublessons(sublesson_name,lessons(lesson_name, courses(course_name)))')
+            .eq("assignment_id", assignment_id)
+            .single()
+
+        if (error) {
+            return res.status(404).json({ error })
+        }
+
+        const result = {
+            assignment_id: data.assignment_id,
+            question: data.assignment_question,
+            duration: data.duration,
+            course: data.sublessons.lessons.courses.course_name,
+            lesson: data.sublessons.lessons.lesson_name,
+            sublesson: data.sublessons.sublesson_name,
+        }
+        return res.json({ data: result })
+    } catch (err) {
+        return res.status(404).json({ err })
+    }
+})
+
+assignmentRouter.get('/check', async (req, res) => {
+    const sublesson_id = Number(req.query.sublessonId)
+    try {
+        const { data, error } = await supabase
+            .from('assignments')
+            .select('assignment_id, assignment_question')
+            .eq("sublesson_id", sublesson_id)
+
+
+        if (error) {
+            return res.status(404).json({ error })
+        }
+
+        return res.json({ data: data })
+
+    } catch (err) {
+        return res.status(404).json({ err })
+    }
+})
+
 assignmentRouter.get("/:userID", async (req, res) => {
     const userId = req.params.userID;
     const Sublessonid = req.query.sublessonid
@@ -129,7 +252,7 @@ assignmentRouter.get("/:userID", async (req, res) => {
                 "*,assignments(sublesson_id,assignment_question,sublessons(lesson_id,sublesson_name,sublesson_video,lessons(*,courses(course_name))))"
             )
             .eq("user_id", `${userId}`)
-            .order("assignment_status");    
+            .order("assignment_status");
         let flatData = data;
 
         const flatData2 = flatData.filter(dataItem => {
@@ -219,6 +342,43 @@ assignmentRouter.get("/:userID", async (req, res) => {
 
     // res.json({ data:flatData});
 });
+
+assignmentRouter.post('/create', async (req, res) => {
+    const sublesson_id = Number(req.body.sublessonId)
+    const assignment_question = req.body.assignDetail
+    const duration = Number(req.body.duration)
+
+    const created_at = new Date()
+
+    const input = { sublesson_id, assignment_question, duration, created_at }
+
+    // const { error } = await supabase.from('assignments').insert(input)
+    // if (error) {
+    //     return res.status(404).json({ error })
+    // }
+
+    return res.json({ message: "New assignment has been created." })
+})
+
+assignmentRouter.put('/edit', async (req, res) => {
+    const assignment_id = Number(req.body.assignId)
+    const assignment_question = req.body.assignDetail
+    const duration = Number(req.body.duration)
+
+    const input = { assignment_question, duration }
+
+    // const { error } = await supabase
+    //     .from('assignments')
+    //     .update(input)
+    //     .eq("assignment_id", assignment_id)
+
+    // if (error) {
+    //     return res.status(404).json({ error })
+    // }
+
+    return res.json({ message: `Assignment id:${assignment_id} has been updated.` })
+
+})
 
 assignmentRouter.put('/:userID', async (req, res) => {
     const body = req.body;
