@@ -51,7 +51,7 @@ async function init() {
   app.use("/assignment", assignmentRouter);
   app.use("/learn", learnRouter);
   app.use("/admin", courseRouter);
-  app.use("/admin", addCourseRouter);
+  app.use("/admin/addcourse", addCourseRouter);
 
   app.get("/", function (req, res) {
     // Cookies that have not been signed
