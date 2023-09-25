@@ -1,56 +1,133 @@
-import { useState } from 'react';
+/* eslint-disable react/prop-types */
+import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from 'react';
+import axios from 'axios'
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 
-function AssignmentField() {
+function AssignmentField(props) {
+    const navigate = useNavigate()
+
+    const [courseId, setCourseId] = useState(null);
     const [course, setCourse] = useState("");
+    const [lessonId, setLessonId] = useState(null);
     const [lesson, setLesson] = useState("");
+    const [sublessonId, setSublessonId] = useState(null);
     const [sublesson, setSublesson] = useState("");
     const [duration, setDuration] = useState("");
     const [assignDetail, setAssignDetail] = useState("");
-    const courseData = ['Course1', 'Course2', 'Course3']
-    const lessonData = ['Lesson1', 'Lesson2', 'Lesson3']
-    const sublessonData = ['SubLesson1', 'SubLesson2', 'SubLesson3']
+    const [courseData, setCourseData] = useState([])
+    const [lessonData, setLessonData] = useState([])
+    const [sublessonData, setSublessonData] = useState([])
     const durations = ['1 day', '2 days', '3 days']
-    const handleChange = (event) => {
-        // setCourse(event.target.value);
-        console.log(event.value);
-    };
-    return (
-        <>
 
+    const getCourse = async () => {
+        try {
+            const result = await axios.get('http://localhost:4000/assignment/courseList')
+            setCourseData(result.data.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    const getLesson = async (course_id) => {
+        try {
+            const result = await axios.get(`http://localhost:4000/assignment/lessonList?courseId=${course_id}`)
+            setLessonData(result.data.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    const getSublesson = async (lesson_id) => {
+        try {
+            const result = await axios.get(`http://localhost:4000/assignment/sublessonList?lessonId=${lesson_id}`)
+            setSublessonData(result.data.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleCreate = () => {
+        // setCourse(event.target.value);
+        if (courseId && lessonId && sublessonId && assignDetail && duration) {
+            console.log(courseId, lessonId, sublessonId, assignDetail, Number(duration.split(" ")[0]));
+        } else {
+            alert("Please input data")
+        }
+    }
+
+    useEffect(() => {
+        if (props.addAssignment) {
+            getCourse()
+        }
+    }, [])
+
+    return (
+        <> {
+            props.addAssignment ?
+                <div className="flex justify-between items-center px-10 py-4 border-solid border-0 border-b-[1px] border-gray-300">
+                    <h1 className="H3">Add Assignment</h1>
+                    <div className="space-x-4">
+                        <button className="Secondary"
+                            onClick={() => navigate('/admin/assingmentlist')}>
+                            Cancel
+                        </button>
+                        <button className="Primary border-none"
+                            onClick={handleCreate}>
+                            Create
+                        </button>
+                    </div>
+                </div>
+                : null
+        }
             <div className="p-10 bg-[--gray100] h-auto">
                 <div className="bg-white w-full px-[100px] pt-10 pb-[60px] rounded-2xl border-solid border-[1px] border-[--gray300]">
                     <div className="space-y-10">
                         <div className="w-1/2 pr-5">
                             <label htmlFor="course" className="text-lg">Course</label>
                             <Dropdown name="course" id="course"
-                                disabled={true}
+                                // disabled={true}
                                 controlClassName="Dropdown-asm w-full text-lg text-black"
-                                placeholder="* Select course"
+                                placeholder={<span className='text-gray-400'>* Select course</span>}
                                 value={course}
                                 options={courseData}
-                                onChange={(e) => console.log(e.value)} />
+                                onChange={(e) => {
+                                    setLesson("")
+                                    setSublesson("")
+                                    setCourseId(e.value)
+                                    setCourse(e.label)
+                                    getLesson(e.value)
+                                }} />
                         </div>
                         <div className="flex space-x-10">
                             <div className="w-1/2">
                                 <label htmlFor="lesson" className="text-lg">Lesson</label><br />
                                 <Dropdown name="lesson" id="lesson"
-                                    disabled={true}
+                                    // disabled={true}
                                     controlClassName="Dropdown-asm w-full text-lg text-black"
-                                    placeholder="* Select lesson"
+                                    placeholder={lesson === "" ? <span className='text-gray-400'>* Select lesson</span> : null}
                                     value={lesson}
                                     options={lessonData}
-                                    onChange={(e) => console.log(e.value)} />
-                            </div>                    <div className="w-1/2">
+                                    onChange={(e) => {
+                                        setSublesson("")
+                                        setLessonId(e.value)
+                                        setLesson(e.label)
+                                        getSublesson(e.value)
+                                    }} />
+                            </div>
+                            <div className="w-1/2">
                                 <label htmlFor="sublesson" className="text-lg">Sub-lesson</label><br />
                                 <Dropdown name="sublesson" id="sublesson"
-                                    disabled={true}
+                                    // disabled={true}
                                     controlClassName="Dropdown-asm w-full text-lg text-black"
-                                    placeholder="* Select sublesson"
+                                    placeholder={<span className='text-gray-400'>* Select sublesson</span>}
                                     value={sublesson}
                                     options={sublessonData}
-                                    onChange={(e) => console.log(e.value)} />
+                                    onChange={(e) => {
+                                        setSublesson("")
+                                        setSublessonId(e.value)
+                                        setSublesson(e.label)
+                                        // getSublesson(e.value)
+                                    }} />
                             </div>
                         </div>
 
@@ -60,7 +137,8 @@ function AssignmentField() {
                         <div>
                             <label htmlFor="assignment" className="text-lg">Assignment *</label><br />
                             <input
-                                className="w-full text-lg p-3 border-solid border-[1px] border-[--gray300] rounded-lg"
+                                className="w-full text-lg p-3 border-solid border-[1px] border-[--gray300] rounded-lg placeholder:text-gray-400"
+                                placeholder="Assignment Question..."
                                 value={assignDetail}
                                 onChange={(e) => setAssignDetail(e.target.value)}
                             />
@@ -69,26 +147,14 @@ function AssignmentField() {
                             <label htmlFor="duration" className="text-lg">Duration of assignment (day)</label><br />
                             <Dropdown name="duration" id="duration"
                                 controlClassName="Dropdown-asm w-full text-lg text-black"
-                                placeholder="* Select duration"
+                                placeholder={<span className='text-gray-400'>* Select duration</span>}
                                 value={duration}
                                 options={durations}
-                                onChange={(e) => console.log(e.value)} />
+                                onChange={(e) => setDuration(e.value)} />
                         </div>
                     </div>
                 </div>
             </div>
-            {/* <style>{`.select:after {
-                    content: "▼";
-                padding: 12px 8px;
-                position: absolute;
-                right: 10px;
-                top: 0;
-                z-index: 1;
-                text-align: center;
-                width: 10%;
-                height: 100%;
-                pointer-events: none;
-}`}</style> */}
         </>
     )
 }
