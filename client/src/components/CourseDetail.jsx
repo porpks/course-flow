@@ -155,11 +155,67 @@ function CourseDetail() {
   };
 
   const startLearningHandle = async () => {
+    getDataCourse2();
     navigate(`/learning/${param.id}`);
   };
 
   const noAuthHandle = () => {
     navigate("/login");
+  };
+
+  const getDataCourse2 = async () => {
+    try {
+      localStorage.removeItem("sublessonName");
+      localStorage.removeItem("sublessonID");
+      localStorage.removeItem("isShowVdo");
+      localStorage.removeItem("isShowAsm");
+      localStorage.removeItem("pauseTime");
+      localStorage.removeItem("videoUrl");
+      localStorage.removeItem("pauseTime");
+      localStorage.removeItem("nonepause");
+      localStorage.removeItem("videoKey");
+      localStorage.setItem("course_id", param.id);
+
+      const result = await axios.get("http://localhost:4000/learn/videotime", {
+        params: {
+          userID: userId,
+          courseID: param.id,
+        },
+      });
+      const data = await result.data.data;
+      console.log(data);
+      console.log(Object.keys(data).length > 0);
+      if (Object.keys(data).length > 0) {
+        const handleShowVideo = (sublessonName, sublessonID) => {
+          setVideoHead(sublessonName);
+          localStorage.setItem("sublessonName", sublessonName);
+          setVideoKey(sublessonID);
+          localStorage.setItem("sublessonID", sublessonID);
+          localStorage.setItem("videoKey", sublessonID);
+          setIsShowVdo(true);
+          localStorage.setItem("isShowVdo", true);
+          setIsShowAsm(false);
+          localStorage.setItem("isShowAsm", false);
+          setPauseTime(data.sublesson_video_timestop);
+          localStorage.setItem(data.sublesson_video_timestop);
+          setvideoUrl(data.sublesson_video);
+          localStorage.setItem("videoUrl", data.sublesson_video);
+          localStorage.setItem("nonepause", false);
+          console.log(data.sublesson_video_timestop);
+        };
+        handleShowVideo(data.sublesson_name, data.sublesson_id);
+      } else {
+        setIsShowVdo(true);
+        localStorage.setItem("isShowVdo", true);
+        setIsShowAsm(false);
+        localStorage.setItem("isShowAsm", false);
+        setPauseTime(0);
+        localStorage.setItem("pauseTime", 0);
+        localStorage.setItem("nonepause", true);
+      }
+    } catch (error) {
+      console.log("there is no sublesson in this code");
+    }
   };
 
   useEffect(() => {
