@@ -22,6 +22,9 @@ import AddCoursePage from "../pages/AdminPage/AddCoursePage";
 import EditCoursePage from "../pages/AdminPage/EditCoursePage";
 import EditLessonPage from "../pages/AdminPage/EditLessonPage";
 import AssignmentAdminListPage from "../pages/AdminPage/AssignmentAdminListPage.jsx";
+import NotFoundPage from "./NotFoundPage.jsx";
+import AddAssignmentPage from '../pages/AdminPage/AddAssignmentPage';
+import EditAssignmentPage from '../pages/AdminPage/EditAssignmentPage';
 
 function AuthenticatedApp() {
   const { userId, logout } = useAuth();
@@ -71,9 +74,9 @@ function AuthenticatedApp() {
           path='/admin/assingmentlist'
           element={<AssignmentAdminListPage />}
         />
-        {/* <Route path="/admin/addassingment" element={< />} />
-        <Route path="/admin/editassingment/:sublessonId" element={< />} /> */}
-        <Route path="*" element={null} />{" "}
+        <Route path="/admin/addassingment" element={<AddAssignmentPage />} />
+        <Route path="/admin/editassingment/:sublessonId" element={<EditAssignmentPage />} />
+        <Route path='*' element={<NotFoundPage />} />{" "}
       </Routes>
     </>
   );
