@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useState, useEffect } from 'react';
 import axios from 'axios'
 import Dropdown from 'react-dropdown'
@@ -7,6 +7,7 @@ import 'react-dropdown/style.css'
 
 function AssignmentField(props) {
     const navigate = useNavigate()
+    const { assignId } = useParams()
 
     const [courseId, setCourseId] = useState(null);
     const [course, setCourse] = useState("");
@@ -26,7 +27,7 @@ function AssignmentField(props) {
             const result = await axios.get('http://localhost:4000/assignment/courseList')
             setCourseData(result.data.data);
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
     const getLesson = async (course_id) => {
@@ -34,7 +35,7 @@ function AssignmentField(props) {
             const result = await axios.get(`http://localhost:4000/assignment/lessonList?courseId=${course_id}`)
             setLessonData(result.data.data);
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
     const getSublesson = async (lesson_id) => {
@@ -42,7 +43,24 @@ function AssignmentField(props) {
             const result = await axios.get(`http://localhost:4000/assignment/sublessonList?lessonId=${lesson_id}`)
             setSublessonData(result.data.data);
         } catch (err) {
-            console.log(err);
+            console.error(err);
+        }
+    }
+    const getAssingment = async () => {
+        try {
+            const result = await axios.get(`http://localhost:4000/assignment/byId?assignId=${assignId}`)
+            console.log(result.data.data);
+            setCourse(result.data.data.course)
+            setLesson(result.data.data.lesson)
+            setSublesson(result.data.data.sublesson)
+            setAssignDetail(result.data.data.question)
+            if (result.data.data.duration > 1) {
+                setDuration(`${result.data.data.duration} days`)
+            } else {
+                setDuration(`${result.data.data.duration} day`)
+            }
+        } catch (err) {
+            console.error(err);
         }
     }
 
@@ -54,10 +72,20 @@ function AssignmentField(props) {
             alert("Please input data")
         }
     }
+    const handleEdit = () => {
+        if (assignDetail && duration) {
+            console.log(assignId, assignDetail, Number(duration.split(" ")[0]));
+        } else {
+            alert("Please input data")
+        }
+    }
 
     useEffect(() => {
         if (props.addAssignment) {
             getCourse()
+        }
+        if (props.editAssignment) {
+            getAssingment()
         }
     }, [])
 
@@ -77,7 +105,30 @@ function AssignmentField(props) {
                         </button>
                     </div>
                 </div>
-                : null
+                : props.editAssignment ?
+                    <div className="flex justify-between items-center px-10 py-4 border-solid border-0 border-b-[1px] border-gray-300">
+                        <div className="flex space-x-4">
+                            <div className="flex space-x-4 active:underline cursor-pointer"
+                                onClick={() => navigate('/admin/assingmentlist')}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M18.7915 11.0051H7.62148L12.5015 6.1251C12.8915 5.7351 12.8915 5.0951 12.5015 4.7051C12.1115 4.3151 11.4815 4.3151 11.0915 4.7051L4.50148 11.2951C4.11148 11.6851 4.11148 12.3151 4.50148 12.7051L11.0915 19.2951C11.4815 19.6851 12.1115 19.6851 12.5015 19.2951C12.8915 18.9051 12.8915 18.2751 12.5015 17.8851L7.62148 13.0051H18.7915C19.3415 13.0051 19.7915 12.5551 19.7915 12.0051C19.7915 11.4551 19.3415 11.0051 18.7915 11.0051Z" fill="#9AA1B9" />
+                                </svg>
+                                <h1 className="H3 text-[--gray600]">Assignment</h1>
+                            </div>
+                            <h1 className="H3">{assignDetail}</h1>
+                        </div>
+                        <div className="space-x-4">
+                            <button className="Secondary"
+                                onClick={() => navigate('/admin/assingmentlist')}>
+                                Cancel
+                            </button>
+                            <button className="Primary border-none"
+                                onClick={handleEdit}>
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                    : null
         }
             <div className="p-10 bg-[--gray100] h-auto">
                 <div className="bg-white w-full px-[100px] pt-10 pb-[60px] rounded-2xl border-solid border-[1px] border-[--gray300]">
@@ -85,7 +136,7 @@ function AssignmentField(props) {
                         <div className="w-1/2 pr-5">
                             <label htmlFor="course" className="text-lg">Course</label>
                             <Dropdown name="course" id="course"
-                                // disabled={true}
+                                disabled={props.editAssignment}
                                 controlClassName="Dropdown-asm w-full text-lg text-black"
                                 placeholder={<span className='text-gray-400'>* Select course</span>}
                                 value={course}
@@ -102,7 +153,7 @@ function AssignmentField(props) {
                             <div className="w-1/2">
                                 <label htmlFor="lesson" className="text-lg">Lesson</label><br />
                                 <Dropdown name="lesson" id="lesson"
-                                    // disabled={true}
+                                    disabled={props.editAssignment}
                                     controlClassName="Dropdown-asm w-full text-lg text-black"
                                     placeholder={lesson === "" ? <span className='text-gray-400'>* Select lesson</span> : null}
                                     value={lesson}
@@ -117,7 +168,7 @@ function AssignmentField(props) {
                             <div className="w-1/2">
                                 <label htmlFor="sublesson" className="text-lg">Sub-lesson</label><br />
                                 <Dropdown name="sublesson" id="sublesson"
-                                    // disabled={true}
+                                    disabled={props.editAssignment}
                                     controlClassName="Dropdown-asm w-full text-lg text-black"
                                     placeholder={<span className='text-gray-400'>* Select sublesson</span>}
                                     value={sublesson}
@@ -126,7 +177,6 @@ function AssignmentField(props) {
                                         setSublesson("")
                                         setSublessonId(e.value)
                                         setSublesson(e.label)
-                                        // getSublesson(e.value)
                                     }} />
                             </div>
                         </div>
