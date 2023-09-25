@@ -1,27 +1,28 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import authRouter from "./apps/auth.js";
-import profileRouter from "./apps/profile.js";
-import courseRouter from "./apps/course.js";
-import desireRouter from "./apps/desire.js";
-import MyCourseRouter from "./apps/mycourse.js";
-import assignmentRouter from "./apps/assignment.js";
-import authAdminRouter from "./apps/authadmin.js";
+import express from 'express'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import authRouter from './apps/auth.js'
+import profileRouter from './apps/profile.js'
+import courseRouter from './apps/course.js'
+import desireRouter from './apps/desire.js'
+import MyCourseRouter from './apps/mycourse.js'
+import assignmentRouter from './apps/assignment.js'
+import authAdminRouter from './apps/authadmin.js'
+import adminRouter from './apps/admin.js'
 
-import learnRouter from "./apps/learn.js";
-import session from "express-session";
-import cookieSession from "cookie-session";
-import { validateTokenMiddleware } from "./middlewares/protect.js";
-import cookieParser from "cookie-parser";
+import learnRouter from './apps/learn.js'
+import session from 'express-session'
+import cookieSession from 'cookie-session'
+import { validateTokenMiddleware } from './middlewares/protect.js'
+import cookieParser from 'cookie-parser'
 
 async function init() {
-  const app = express();
-  const port = 4000;
+  const app = express()
+  const port = 4000
 
-  app.use(cors());
-  app.use(bodyParser.json());
-  app.use(cookieParser());
+  app.use(cors())
+  app.use(bodyParser.json())
+  app.use(cookieParser())
   // app.set("trust proxy", 1); // trust first proxy
   // app.use(
   //   session({
@@ -31,7 +32,7 @@ async function init() {
   //     cookie: { secure: true },
   //   })
   // );
-  app.use(session({ secret: "keyboard cat", cookie: { maxAge: 60000 } }));
+  app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 } }))
   // app.use(
   //   cookieSession({
   //     name: "session",
@@ -40,38 +41,38 @@ async function init() {
   //   })
   // );
 
-  app.use("/auth", authRouter);
-  app.use("/authadmin", authAdminRouter);
-  app.use("/profile", profileRouter);
-  app.use("/ourcourse", courseRouter);
-  app.use("/coursedetail", courseRouter);
-  app.use("/desire", desireRouter);
-  app.use("/mycourse", MyCourseRouter);
-  app.use("/assignment", assignmentRouter);
-  app.use("/learn", learnRouter);
-  app.use("/admin", courseRouter);
+  app.use('/auth', authRouter)
+  app.use('/authadmin', authAdminRouter)
+  app.use('/profile', profileRouter)
+  app.use('/ourcourse', courseRouter)
+  app.use('/coursedetail', courseRouter)
+  app.use('/desire', desireRouter)
+  app.use('/mycourse', MyCourseRouter)
+  app.use('/assignment', assignmentRouter)
+  app.use('/learn', learnRouter)
+  app.use('/admin', adminRouter)
 
-  app.get("/", function (req, res) {
+  app.get('/', function (req, res) {
     // Cookies that have not been signed
-    console.log("Cookies: ", req.cookies);
+    console.log('Cookies: ', req.cookies)
 
     // Cookies that have been signed
-    console.log("Signed Cookies: ", req.signedCookies);
-  });
+    console.log('Signed Cookies: ', req.signedCookies)
+  })
 
   //   app.use("/posts", postRouter);
 
-  app.get("/", (req, res) => {
-    res.send("Hello World!");
-  });
+  app.get('/', (req, res) => {
+    res.send('Hello World!')
+  })
 
-  app.get("*", (req, res) => {
-    res.status(404).send("Not found");
-  });
+  app.get('*', (req, res) => {
+    res.status(404).send('Not found')
+  })
 
   app.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
-  });
+    console.log(`Server is listening on port ${port}`)
+  })
 }
 
-init();
+init()

@@ -1,46 +1,47 @@
-import React from "react";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./courseDetail.css";
-import Collapsible from "../assets/Collapsible.jsx";
-import Mymodal from "../components/Mymodal";
-import { Hidden } from "@mui/material";
-import axios from "axios";
-import ReactPlayer from "react-player";
-import CircularIndeterminate from "../assets/loadingProgress";
+import React from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import './courseDetail.css'
+import Collapsible from '../assets/Collapsible.jsx'
+import Mymodal from '../components/Mymodal'
+import { Hidden } from '@mui/material'
+import axios from 'axios'
+import ReactPlayer from 'react-player'
+import CircularIndeterminate from '../assets/loadingProgress'
 // import ExampleComponent from "../assets/test/ParamTest";
-import { useParams } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
-import { useAuth } from "../contexts/AuthContext";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useParams } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid'
+import { useAuth } from '../contexts/AuthContext'
+import Accordion from '@mui/material/Accordion'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import Typography from '@mui/material/Typography'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 // import { useHistory } from "react-router-dom";
 
 function CourseDetail() {
-  const navigate = useNavigate();
-  const [desireData, setDesireData] = useState([]);
+  const navigate = useNavigate()
+  const [desireData, setDesireData] = useState([])
 
-  const isDesireExist = Boolean(desireData?.length > 0);
+  const isDesireExist = Boolean(desireData?.length > 0)
 
-  const [subscribeData, setSubscribeData] = useState([]);
-  const isSubscribe = Boolean(subscribeData?.length > 0);
+  const [subscribeData, setSubscribeData] = useState([])
+  const isSubscribe = subscribeData?.length > 0
 
-  const [isRequestPending, setIsRequestPending] = useState(false);
+  const [isRequestPending, setIsRequestPending] = useState(false)
 
-  const [desireToggle, setDesireToggle] = useState(false);
-  const openDesire = () => setDesireToggle(true);
-  const closeDesire = () => setDesireToggle(false);
+  const [desireToggle, setDesireToggle] = useState(false)
+  const openDesire = () => setDesireToggle(true)
+  const closeDesire = () => setDesireToggle(false)
 
-  const [subscribeToggle, setSubscribeToggle] = useState(false);
-  const openSubscribe = () => setSubscribeToggle(true);
-  const closeSubscribe = () => setSubscribeToggle(false);
+  const [subscribeToggle, setSubscribeToggle] = useState(false)
+  const openSubscribe = () => setSubscribeToggle(true)
+  const closeSubscribe = () => setSubscribeToggle(false)
 
-  const [dataCourse, setDataCourse] = useState([]);
-  const param = useParams();
-  const { userId } = useAuth();
+  const [dataCourse, setDataCourse] = useState([])
+  const param = useParams()
+  const { userIdFromCookie } = useAuth()
+  const userId = userIdFromCookie
 
   // const history = useHistory();
   // const handleGoBack = () => {
@@ -50,125 +51,125 @@ function CourseDetail() {
   //   }
   // };
   const handleGoBack = () => {
-    navigate(-1);
-  };
+    navigate(-1)
+  }
 
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
         `http://localhost:4000/coursedetail/${param.id}`
-      );
-      setDataCourse(dataDetailCourse.data.data);
+      )
+      setDataCourse(dataDetailCourse.data.data)
       // if (dataDetailCourse.data.data.course_id) {
       //   fetchDesire(dataDetailCourse.data.data.course_id);
       // }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
-  const dataDetail = dataCourse;
+  const dataDetail = dataCourse
 
   const checkDesire = async () => {
     try {
       const result = await axios.get(
         `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
-      );
-      setDesireData(result.data.data);
+      )
+      setDesireData(result.data.data)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const checkSubscribe = async () => {
     try {
       const result = await axios.get(
         `http://localhost:4000/mycourse/?user_id=${userId}&course_id=${param.id}`
-      );
-      setSubscribeData(result.data.data);
+      )
+      setSubscribeData(result.data.data)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const desireAddHandle = async () => {
     if (isRequestPending) {
-      return;
+      return
     }
 
-    setIsRequestPending(true);
+    setIsRequestPending(true)
 
     const desireBody = {
       user_id: userId,
       course_id: dataCourse.course_id,
-    };
+    }
 
     try {
-      await axios.post(`http://localhost:4000/desire`, desireBody);
-      navigate("/desire");
+      await axios.post(`http://localhost:4000/desire`, desireBody)
+      navigate('/desire')
     } catch (error) {
-      console.log(error);
+      console.log(error)
     } finally {
-      setIsRequestPending(false);
+      setIsRequestPending(false)
     }
-  };
+  }
 
   const desireRemoveHandle = async () => {
     if (isRequestPending) {
-      return;
+      return
     }
 
-    setIsRequestPending(true);
+    setIsRequestPending(true)
     try {
       await axios.delete(
         `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
-      );
-      navigate("/desire");
+      )
+      navigate('/desire')
     } catch (error) {
-      console.log(error);
+      console.log(error)
     } finally {
-      setIsRequestPending(false);
+      setIsRequestPending(false)
     }
-  };
+  }
 
   const subscribeHandle = async () => {
     if (isRequestPending) {
-      return;
+      return
     }
 
-    setIsRequestPending(true);
+    setIsRequestPending(true)
 
     const subscribe = {
       user_id: userId,
       course_id: param.id,
-    };
+    }
     try {
-      await axios.post(`http://localhost:4000/mycourse/`, subscribe);
+      await axios.post(`http://localhost:4000/mycourse/`, subscribe)
       await axios.delete(
         `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
-      );
-      navigate("/mycourse");
+      )
+      navigate('/mycourse')
     } catch (error) {
-      console.log(error);
+      console.log(error)
     } finally {
-      setIsRequestPending(false);
+      setIsRequestPending(false)
     }
-  };
+  }
 
   const startLearningHandle = async () => {
-    navigate(`/learning/${param.id}`);
-  };
+    navigate(`/learning/${param.id}`)
+  }
 
   const noAuthHandle = () => {
-    navigate("/login");
-  };
+    navigate('/login')
+  }
 
   useEffect(() => {
-    getDetailCourse();
-    if (localStorage.getItem("isLoggedIn")) {
-      checkDesire();
-      checkSubscribe();
+    getDetailCourse()
+    if (localStorage.getItem('isLoggedIn')) {
+      checkDesire()
+      checkSubscribe()
     }
-  }, []);
+  }, [])
 
   if (dataCourse.length === 0) {
     return (
@@ -176,23 +177,24 @@ function CourseDetail() {
         <h1> Loading...</h1>
         <CircularIndeterminate />
       </div>
-    );
+    )
   }
-  const coursePrice = dataDetail.price.toLocaleString("en-US", {
+  const coursePrice = dataDetail.price.toLocaleString('en-US', {
     minimumFractionDigits: 2,
-  });
-  const lessonTotal = dataDetail.lessons;
+  })
+  const lessonTotal = dataDetail.lessons
   // const subLessonsTotal = lessonTotal;
-  console.log(isDesireExist);
+
   return (
     <>
-      {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
+      {window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
       <section className="flex justify-center items-center border-2 border-sky-500">
         <div className="canvas_CourseDetail ">
           <div className="back-btn">
             <a
               onClick={handleGoBack}
-              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer">
+              className="flex flex-row justify-start items-center px-[8px] py-[4px] gap-[8px] cursor-pointer"
+            >
               <img src="../../public/image/arrow_back.svg" alt="arrow_back" />
               <p className="text-[--blue500] font-[700] text-[16px]">Back</p>
             </a>
@@ -213,7 +215,8 @@ function CourseDetail() {
                       width="104"
                       height="104"
                       viewBox="0 0 104 104"
-                      fill="none">
+                      fill="none"
+                    >
                       <rect
                         width="104"
                         height="104"
@@ -250,10 +253,11 @@ function CourseDetail() {
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1a-content"
                           id="panel1a-header"
-                          className="accordionSummary">
+                          className="accordionSummary"
+                        >
                           <div className="typography">
                             <div className="H3 text-[--gray700]">
-                              {index < 10 ? "0" + (index + 1) : index + 1}
+                              {index < 10 ? '0' + (index + 1) : index + 1}
                             </div>
                             <div className="H3 text-[--black]">
                               {lesson.lesson_name}
@@ -296,10 +300,11 @@ function CourseDetail() {
                 {isSubscribe ? null : (
                   <button
                     onClick={Boolean(userId) ? openDesire : noAuthHandle}
-                    className={`Secondary w-[100%] hidden`}>
+                    className={`Secondary w-[100%] hidden`}
+                  >
                     {isDesireExist
-                      ? "Remove from Desire Course"
-                      : "Get in Desire Course"}
+                      ? 'Remove from Desire Course'
+                      : 'Get in Desire Course'}
                   </button>
                 )}
 
@@ -309,12 +314,12 @@ function CourseDetail() {
                     onClose={closeDesire}
                     closeButton={closeDesire}
                     description={`Do you sure to ${
-                      isDesireExist ? "add" : "remove"
+                      isDesireExist ? 'add' : 'remove'
                     } ${dataCourse.course_name} to your desire Course?`}
                     yesDes={
                       isDesireExist
-                        ? "Remove from Desire Course"
-                        : "Add in Desire Course"
+                        ? 'Remove from Desire Course'
+                        : 'Add in Desire Course'
                     }
                     noDes="No, I don’t"
                     yesOnClick={
@@ -340,16 +345,17 @@ function CourseDetail() {
                   onClick={() => {
                     if (Boolean(userId)) {
                       if (isSubscribe) {
-                        startLearningHandle();
+                        startLearningHandle()
                       } else {
-                        openSubscribe();
+                        openSubscribe()
                       }
                     } else {
-                      noAuthHandle();
+                      noAuthHandle()
                     }
                   }}
-                  className="Primary w-[100%] border-none">
-                  {isSubscribe ? "Start Learning" : "Subscribe This Course"}
+                  className="Primary w-[100%] border-none"
+                >
+                  {isSubscribe ? 'Start Learning' : 'Subscribe This Course'}
                 </button>
               </div>
             </div>
@@ -357,7 +363,7 @@ function CourseDetail() {
         </div>
       </section>
     </>
-  );
+  )
 }
 
-export default CourseDetail;
+export default CourseDetail

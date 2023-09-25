@@ -1,43 +1,43 @@
-import "../App.css";
-import "../index.css";
-import HomePage from "../pages/HomePage.jsx";
-import OurCoursePage from "../pages/OurCoursePage.jsx";
-import RegisterPage from "../pages/RegisterPage.jsx";
-import LoginPage from "../pages/LoginPage.jsx";
-import Profile from "../pages/Profile.jsx";
-import CourseDetailPage from "../pages/CourseDetailPage";
-import MyCoursePage from "../pages/MyCoursePage";
-import DesireCoursePage from "../pages/DesireCoursePage";
-import AssignmentPage from "../pages/AssignmentPage";
-import { Routes, Route } from "react-router-dom";
+import '../App.css'
+import '../index.css'
+import HomePage from '../pages/HomePage.jsx'
+import OurCoursePage from '../pages/OurCoursePage.jsx'
+import RegisterPage from '../pages/RegisterPage.jsx'
+import LoginPage from '../pages/LoginPage.jsx'
+import Profile from '../pages/Profile.jsx'
+import CourseDetailPage from '../pages/CourseDetailPage'
+import MyCoursePage from '../pages/MyCoursePage'
+import DesireCoursePage from '../pages/DesireCoursePage'
+import AssignmentPage from '../pages/AssignmentPage'
+import { Routes, Route } from 'react-router-dom'
 // import { AuthProvider } from "../contexts/AuthContext.jsx";
 // import jwtInterceptor from "./utils/jwtInterceptors"
-import { useAuth } from "../contexts/AuthContext.jsx";
-import LearningPage from "../pages/LearningPage";
-import { useParams } from "react-router-dom";
-import AdminPage from "../pages/AdminPage/AdminPage";
-import AddLessonPage from "../pages/AdminPage/AddLessonPage";
-import CourseListPage from "../pages/AdminPage/CourseListPage";
-import AddCoursePage from "../pages/AdminPage/AddCoursePage";
-import EditCoursePage from "../pages/AdminPage/EditCoursePage";
-import EditLessonPage from "../pages/AdminPage/EditLessonPage";
-import AssignmentAdminListPage from "../pages/AdminPage/AssignmentAdminListPage.jsx";
+import { useAuth } from '../contexts/AuthContext.jsx'
+import LearningPage from '../pages/LearningPage'
+import { useParams } from 'react-router-dom'
+import AdminPage from '../pages/AdminPage/AdminPage'
+import AddLessonPage from '../pages/AdminPage/AddLessonPage'
+import CourseListPage from '../pages/AdminPage/CourseListPage'
+import AddCoursePage from '../pages/AdminPage/AddCoursePage'
+import EditCoursePage from '../pages/AdminPage/EditCoursePage'
+import EditLessonPage from '../pages/AdminPage/EditLessonPage'
+import AssignmentAdminListPage from '../pages/AdminPage/AssignmentAdminListPage.jsx'
 
 function AuthenticatedApp() {
-  const { userId, logout } = useAuth();
+  const { userId, logout } = useAuth()
 
   const ProtectedProfileRoute = () => {
-    const params = useParams();
-    const userID = Number(params.id);
+    const params = useParams()
+    const userID = Number(params.id)
     if (userId == userID) {
-      return <Profile />;
+      return <Profile />
     } else {
       // localStorage.removeItem("token");
       // setIsLoggedIn(false);
-      logout();
-      return <LoginPage />;
+      logout()
+      return <LoginPage />
     }
-  };
+  }
 
   return (
     <>
@@ -73,10 +73,10 @@ function AuthenticatedApp() {
         />
         {/* <Route path="/admin/addassingment" element={< />} />
         <Route path="/admin/editassingment/:sublessonId" element={< />} /> */}
-        <Route path="*" element={null} />{" "}
+        <Route path="*" element={null} />{' '}
       </Routes>
     </>
-  );
+  )
 }
 
-export default AuthenticatedApp;
+export default AuthenticatedApp
