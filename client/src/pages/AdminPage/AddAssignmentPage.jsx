@@ -2,7 +2,6 @@ import AssignmentField from "../../components/adminAssignment/AssignmentField"
 import Sidebar from "../../components/Sidebar"
 
 function AddAssignmentPage() {
-
   return (
     <>
       <div className="flex">
