@@ -92,6 +92,7 @@ function MyCourse() {
       if (newDataCourse.length > 0) {
         setDataCourse(newDataCourse)
       }
+      true
       const counts = newDataCourse.reduce(
         (accumulator, course) => {
           if (course.course_status === false || course.course_status === null) {
@@ -239,7 +240,7 @@ function MyCourse() {
   }
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center w-[100%] min-h-[100vh] text-black">
+      <div className="flex justify-center items-center w-[100%] h-[1607px] text-black ">
         <h1>Loading...</h1>
         <CircularIndeterminate />
       </div>
@@ -247,7 +248,7 @@ function MyCourse() {
   }
 
   return (
-    <div className="w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative ">
+    <div className="w-[100%] flex flex-col justify-center items-center pt-[100px] mb-[200px] relative">
       <div className=" absolute right-0 top-[216px]">
         <Ellipse5 className="top-1/2 absolute" style={{ top: '50%' }} />
       </div>
@@ -302,7 +303,7 @@ function MyCourse() {
           </div>
         </div>
       </div>
-      <div className="flex flex-row mt-[80px] ">
+      <div className="flex flex-row mt-[80px] h-[1080px]">
         <div className="flex flex-col w-[357px] h-[500px] Shadow2 px-[24px] py-[32px] content-center items-center mr-[24px] rounded-lg  sticky top-0 ">
           <div className="flex flex-col justify-center items-center">
             <Avatar alt="" src={avatar} sx={{ width: 120, height: 120 }} />
