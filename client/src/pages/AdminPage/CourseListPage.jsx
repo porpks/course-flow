@@ -5,7 +5,9 @@ import CourseList from "../../components/adminCourseListComponent/courselist";
 function CourseListPage() {
   return (
     <div className="flex">
-      <Sidebar isCoursePage={true} />
+      <div>
+        <Sidebar isCoursePage={true} />
+      </div>
       <CourseList />
     </div>
   );

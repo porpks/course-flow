@@ -98,7 +98,7 @@ function AdminAddCourse() {
       <div className="canvas flex flex-row">
         {/* LEFT-NAV */}
         <div className="">
-          <Sidebar />
+          <Sidebar isCoursePage={true} />
         </div>
         {/* RIGHT-NAV */}
         <div className="w-full">
@@ -208,8 +208,7 @@ function AdminAddCourse() {
                           upload-position   w-[200px] h-[200px] 
                           flex flex-col justify-center items-center  
                           text-[--blue500] text-center text-xl rounded-2xl
-                       "
-                        >
+                       ">
                           <div className="text-[48px] font-extralight mb-3">
                             +
                           </div>
@@ -220,12 +219,10 @@ function AdminAddCourse() {
                         <div
                           className="
                           upload-position w-[90%] h-[90%]
-                         hover:bg-[rgba(264,264,264,0.25)] rounded-lg cursor-pointer group-hover:block border-[--blue500] border-[2px] hover:border-dashed"
-                        >
+                         hover:bg-[rgba(264,264,264,0.25)] rounded-lg cursor-pointer group-hover:block border-[--blue500] border-[2px] hover:border-dashed">
                           <label
                             htmlFor="upload"
-                            className="hidden group-hover:block hover:transition  w-full h-full  text-[--blue500] text-center text-xl  cursor-pointer"
-                          >
+                            className="hidden group-hover:block hover:transition  w-full h-full  text-[--blue500] text-center text-xl  cursor-pointer">
                             <input
                               id="upload"
                               name="avatar"
@@ -247,8 +244,7 @@ function AdminAddCourse() {
                           upload-position   w-[200px] h-[200px] 
                           flex flex-col justify-center items-center  
                           text-[--blue500] text-center text-xl rounded-2xl
-                       "
-                        >
+                       ">
                           <div className="text-[48px] font-extralight mb-3">
                             +
                           </div>
@@ -259,12 +255,10 @@ function AdminAddCourse() {
                         <div
                           className="
                           upload-position w-[90%] h-[90%]
-                         hover:bg-[rgba(264,264,264,0.25)] rounded-lg cursor-pointer group-hover:block border-[--blue500] border-[2px] hover:border-dashed"
-                        >
+                         hover:bg-[rgba(264,264,264,0.25)] rounded-lg cursor-pointer group-hover:block border-[--blue500] border-[2px] hover:border-dashed">
                           <label
                             htmlFor="upload"
-                            className="hidden hover:block hover:transition w-full h-full  text-[--blue500] text-center text-xl  cursor-pointer"
-                          >
+                            className="hidden hover:block hover:transition w-full h-full  text-[--blue500] text-center text-xl  cursor-pointer">
                             <input
                               id="upload"
                               name="avatar"

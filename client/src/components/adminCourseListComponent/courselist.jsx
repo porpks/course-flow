@@ -2,25 +2,26 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Mymodal from "../Mymodal";
+import CircularIndeterminate from "../../assets/loadingProgress.jsx";
 
 function CourseList() {
   const [courseData, setCourseData] = useState([]);
   const [searchBox, setSearchBox] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [start, setStart] = useState(1);
   const [end, setEnd] = useState(8);
   const [page, setPage] = useState(1);
 
+  const [targetCourseId, setTargetCourseId] = useState(null);
+  const [targetCourseName, setTargetCourseName] = useState(null);
   const [deleteToggle, setDeleteToggle] = useState(false);
-  const openDelete = () => setDeleteToggle(true);
   const closeDelete = () => setDeleteToggle(false);
 
   const navigate = useNavigate();
 
   const courseFetching = async () => {
     try {
-      setIsLoading(true);
       const result = await axios.get(
         `http://localhost:4000/ourcourse/admin?course=${searchBox}&start=${start}&end=${end}&desc&`
       );
@@ -57,7 +58,7 @@ function CourseList() {
 
   const changeUpperPage = () => {
     let newStart = start + 8;
-    let newEnd = end * 2;
+    let newEnd = end + 8;
     let newPage = page + 1;
     setStart(newStart);
     setEnd(newEnd);
@@ -65,32 +66,63 @@ function CourseList() {
   };
 
   const changeLowerPage = () => {
-    let newStart = start - 8;
-    let newEnd = end / 2;
-    let newPage = page - 1;
-    setStart(newStart);
-    setEnd(newEnd);
-    setPage(newPage);
+    if (start > 1) {
+      let newStart = start - 8;
+      let newEnd = end - 8;
+      let newPage = page - 1;
+      setStart(newStart);
+      setEnd(newEnd);
+      setPage(newPage);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (targetCourseId) {
+      try {
+        await axios.delete(`http://localhost:4000/ourcourse/${targetCourseId}`);
+
+        setTargetCourseName(null);
+        setTargetCourseId(null);
+        setDeleteToggle(false);
+        courseFetching();
+        alert("ลบแล้วจ้า");
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   useEffect(() => {
     courseFetching();
   }, [searchBox, page]);
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center w-[100%] min-h-[100vh] text-black">
+        <h1>Loading...</h1>
+        <CircularIndeterminate />
+      </div>
+    );
+  }
+
   return (
     <div className="w-[1200px]">
+      {/* <div className="w-[100%]"> */}
       {deleteToggle ? (
         <Mymodal
-          open={openDelete}
+          open={deleteToggle}
           onClose={closeDelete}
           closeButton={closeDelete}
           yesOnClick={closeDelete}
-          description="Do you sure to delete this course?"
+          noOnClick={handleDelete}
+          description={`Do you sure to delete ${targetCourseName} ?`}
           yesDes="No, I don’t"
-          noDes="Yes, I want to delete this course"
+          noDes={`Yes, I want to delete this course`}
         />
       ) : null}
-      <div className="TopBar w-[1200px] h-[92px] px-10 py-4 bg-white border-solid border-b border-t-0 border-l-0 border-r-0 border-gray-300 justify-start items-center gap-4 flex">
+      {/* <div className="TopBar w-[1200px] h-[92px] px-10 py-4 bg-white border-solid border-b border-t-0 border-l-0 border-r-0 border-gray-300 justify-start items-center gap-4 flex"> */}
+
+      <div className="TopBar w-[100%] h-[92px] px-10 py-4 bg-white border-solid border-b border-t-0 border-l-0 border-r-0 border-gray-300 justify-start items-center gap-4 flex">
         <div className="Assignment grow shrink basis-0 text-slate-800 text-2xl font-medium font-['Inter'] leading-loose">
           Course
         </div>
@@ -130,7 +162,6 @@ function CourseList() {
         </div>
       </div>
       <div className="flex justify-center h-[932px] bg-[#F6F7FC]">
-        {isLoading && <div>Loading...</div>}
         <div>
           <div className="rounded-t-lg mt-[48px] w-[1120px] h-[41px] grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] bg-[--gray300] text-slate-600 text-sm">
             <div className="w-[48px]  flex items-center px-[16px] py-[10px]"></div>
@@ -191,7 +222,11 @@ function CourseList() {
               <div className="w-[120px]  flex items-center justify-center gap-[17px] ">
                 <button
                   className="cursor-pointer bg-white border-none"
-                  onClick={() => setDeleteToggle(true)}>
+                  onClick={() => {
+                    setDeleteToggle(true);
+                    setTargetCourseId(item.course_id);
+                    setTargetCourseName(item.course_name);
+                  }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
