@@ -55,7 +55,7 @@ async function init() {
   app.use('/assignment', assignmentRouter)
   app.use('/learn', learnRouter)
   app.use('/admin', adminRouter)
-  app.use("/admin/addcourse", addCourseRouter);
+  app.use("/test", addCourseRouter);
 
 
   app.get('/', function (req, res) {

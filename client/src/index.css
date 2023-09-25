@@ -283,3 +283,15 @@
 .gradient-bg {
   background: linear-gradient(110deg, #95beff 18.21%, #0040e5 95.27%);
 }
+
+.Dropdown-control {
+  padding: 10px 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid #d6d9e4 !important;
+}
+.Dropdown-arrow {
+  top: 24px !important;
+}
+.Dropdown-disabled {
+  background-color: var(--gray100) !important;
+}
