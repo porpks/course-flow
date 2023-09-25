@@ -8,6 +8,7 @@ import 'react-dropdown/style.css'
 function AssignmentField(props) {
     const navigate = useNavigate()
     const { assignId } = useParams()
+    console.log(useParams());
 
     const [courseId, setCourseId] = useState(null);
     const [course, setCourse] = useState("");
@@ -49,6 +50,7 @@ function AssignmentField(props) {
     const getAssingment = async () => {
         try {
             const result = await axios.get(`http://localhost:4000/assignment/byId?assignId=${assignId}`)
+            console.log(result);
             setCourse(result.data.data.course)
             setLesson(result.data.data.lesson)
             setSublesson(result.data.data.sublesson)

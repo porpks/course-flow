@@ -75,7 +75,7 @@ function AuthenticatedApp() {
           element={<AssignmentAdminListPage />}
         />
         <Route path="/admin/addassingment" element={<AddAssignmentPage />} />
-        <Route path="/admin/editassingment/:sublessonId" element={<EditAssignmentPage />} />
+        <Route path="/admin/editassingment/:assignId" element={<EditAssignmentPage />} />
         <Route path='*' element={<NotFoundPage />} />{" "}
       </Routes>
     </>
