@@ -187,7 +187,7 @@ function UpdateProfile() {
 
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center w-[100%] min-h-[100vh] text-black'>
+      <div className='flex justify-center items-center w-[100%] min-h-[100vh] gap-8 text-black'>
         <h1>Loading...</h1>
         <CircularIndeterminate />
       </div>
