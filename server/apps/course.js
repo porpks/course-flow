@@ -5,6 +5,25 @@ const courseRouter = Router();
 
 courseRouter.get("/", async (req, res) => {
   try {
+    const query = supabase
+      .from("courses")
+      .select("*,lessons(*,sublessons(*))")
+      .order("course_id");
+
+    const { data, error } = await query;
+
+    return res.json({
+      data,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: `Get course error message ${error.message}` });
+  }
+});
+
+courseRouter.get("/admin", async (req, res) => {
+  try {
     let start = req.query.start - 1;
     let desc = req.query.desc;
     let course = req.query.course;
