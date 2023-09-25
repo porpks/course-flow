@@ -6,7 +6,7 @@
   margin: 0px;
   box-sizing: border-box;
   padding: 0px;
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 :root {
@@ -46,7 +46,7 @@
 }
 
 .H1 {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 66px;
   font-style: normal;
   font-weight: 500;
@@ -55,7 +55,7 @@
 }
 
 .H2 {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 36px;
   font-style: normal;
   font-weight: 500;
@@ -63,7 +63,7 @@
   letter-spacing: -0.72px;
 }
 .H3 {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -72,7 +72,7 @@
 }
 
 .Body1 {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -243,7 +243,7 @@
 }
 
 .Nunito {
-  font-family: "Nunito", sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
 .Ghost {

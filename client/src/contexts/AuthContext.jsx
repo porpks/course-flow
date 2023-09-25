@@ -9,6 +9,7 @@ function AuthProvider(props) {
   const [state, setState] = useState('eiei')
   const [registerData, setRegisterData] = useState({})
   const [loginData, setLoginData] = useState({})
+  const [adminId, setAdminId] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userID, setUserID] = useState(null)
   const [username, setUsername] = useState({})
@@ -59,6 +60,7 @@ function AuthProvider(props) {
       document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
     }
   }
+
   function getCookie(cname) {
     let name = cname + '='
     let ca = document.cookie.split(';')
@@ -119,6 +121,51 @@ function AuthProvider(props) {
     }
   }
 
+  const loginAdmin = async (loginData) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:4000/authadmin/login',
+        loginData
+      )
+      if (!response.data.error) {
+        console.log('Login successful')
+        const admin_id = response.data.data[0].admin_id
+        const token = response.data.token
+        console.log(token)
+        localStorage.setItem('adminID', admin_id)
+        localStorage.setItem('token', token)
+        setCookie('token', token, 1)
+        setCookie('cookieAdminID', admin_id, 1)
+        setTimeout(async () => {
+          try {
+            const hasToken = !!localStorage.getItem('token')
+            localStorage.setItem('isLoggedIn', hasToken ? 'true' : 'false')
+          } catch (error) {
+            console.error(error)
+          }
+        }, 50)
+        // setCookie('cookieAdminID', Test, 1)
+        // setCookie('token', token, 1)
+        // setAdminId(admin_id)
+        // setIsLoggedIn(true)
+
+        navigate('admin/courselist')
+      } else if (response.data.error.status === 400) {
+        throw new Error('Invalid login credentials')
+      }
+    } catch (error) {
+      console.error('Error during login:', error.message)
+    }
+  }
+
+  const logoutAdmin = () => {
+    localStorage.clear(),
+      setIsLoggedIn(false),
+      clearAllCookies(),
+      setAdminId(''),
+      navigate('/admin') // Update this path as needed
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -155,6 +202,8 @@ function AuthProvider(props) {
         deleteAssignment,
         setDeleteAssignment,
         userIdFromCookie,
+        loginAdmin,
+        logoutAdmin,
       }}
     >
       {props.children}

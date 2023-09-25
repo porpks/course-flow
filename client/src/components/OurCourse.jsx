@@ -9,11 +9,13 @@ function OurCourse() {
   const [dataCourse, setDataCourse] = useState([]);
   const [searchKey, setSearchKey] = useState(""); //searchKeyword
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function getDataCourse() {
     try {
       const result = await axios.get(`http://localhost:4000/ourcourse`);
       setDataCourse(result.data.data);
+      setIsLoading(false);
     } catch (error) {
       message: error;
     }
@@ -48,18 +50,21 @@ function OurCourse() {
 
   /////////////////////////////////////////////////
   const pageSize = 9;
-  const totalPages = Math.ceil(dataCourse.length / pageSize);
+  const totalPages = Math.ceil(dataCourse?.length / pageSize);
+  // const totalPages = Math.ceil(dataCourse.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = currentPage * pageSize;
+  // const cardCourseToDisplay =
+  //   dataCourse.length === 0 ? [] : dataCourse.slice(startIndex, endIndex);
   const cardCourseToDisplay = dataCourse.slice(startIndex, endIndex);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
   /////////////////////////////////////////////////
-  if (dataCourse.length === 0) {
+  if (isLoading) {
     return (
-      <div className='flex justify-center items-center w-[100%] min-h-[100vh] text-black'>
+      <div className="flex justify-center items-center w-[100%] min-h-[100vh] text-black">
         <h1> Loading...</h1>
         <CircularIndeterminate />
       </div>
@@ -67,22 +72,22 @@ function OurCourse() {
   }
 
   return (
-    <div className='canvas-ourCourse '>
+    <div className="canvas-ourCourse ">
       {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
-      <div className='topSection'>
-        <h2 className='H2'>Our Courses</h2>
-        <div className='input-container'>
-          <img src='../../public/image/search.svg' alt='searchIcon' />
+      <div className="topSection">
+        <h2 className="H2">Our Courses</h2>
+        <div className="input-container">
+          <img src="../../public/image/search.svg" alt="searchIcon" />
           <input
-            type='text'
-            placeholder='Search...'
+            type="text"
+            placeholder="Search..."
             value={searchKey}
             onChange={handleSearch}
           />
         </div>
       </div>
-      <div className='content-Section'>
-        <div className='card-container'>
+      <div className="content-Section">
+        <div className="card-container">
           {cardCourseToDisplay.map((item) => (
             <CourseItem
               key={item.course_id}
@@ -98,7 +103,7 @@ function OurCourse() {
             />
           ))}
         </div>
-        <div className='pagination-card'>
+        <div className="pagination-card">
           {Array.from({ length: totalPages }).map((_, index) => (
             <button
               key={index}

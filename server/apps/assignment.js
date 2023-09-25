@@ -128,8 +128,8 @@ assignmentRouter.get("/:userID", async (req, res) => {
             .select(
                 "*,assignments(sublesson_id,assignment_question,sublessons(lesson_id,sublesson_name,sublesson_video,lessons(*,courses(course_name))))"
             )
-            .eq("user_id", `${userId}`);
-
+            .eq("user_id", `${userId}`)
+            .order("assignment_status");    
         let flatData = data;
 
         const flatData2 = flatData.filter(dataItem => {
