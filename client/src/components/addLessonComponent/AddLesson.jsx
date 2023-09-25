@@ -7,11 +7,10 @@ import { useParams } from 'react-router-dom'
 function AddLesson() {
   const { courseid } = useParams()
   const [dataCourse, setDataCourse] = useState([])
-  const [updatedSubLessonName, setUpdatedSubLessonName] = useState('') // State to store updated subLessonName
-  const [updatedLessonId, setUpdatedLessonId] = useState('') // State to store the lessonId to be updated
   const [subLessonList, setSubLessonList] = useState([
     { lessonId: 1, subLessonName: '' },
   ])
+  const [lessonName, setLessonName] = useState('')
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
@@ -29,7 +28,7 @@ function AddLesson() {
       console.log(error)
     }
   }
-  console.log(dataCourse)
+  // console.log(dataCourse)
 
   // useEffect(() => {
   //   getDetailCourse()
@@ -62,7 +61,7 @@ function AddLesson() {
     setSubLessonList(updatedSubLessonList)
   }
 
-  const handleSublesson = (lessonId, subLessonName) => {
+  const handleSubLesson = (lessonId, subLessonName) => {
     const updatedSubLessonList = subLessonList.map((subLesson) =>
       subLesson.lessonId === lessonId
         ? { ...subLesson, subLessonName }
@@ -71,67 +70,29 @@ function AddLesson() {
     setSubLessonList(updatedSubLessonList)
   }
 
-  const SubLessonComponent = ({ subLesson, onDelete }) => {
-    const [subLessonName, setSubLessonName] = useState(subLesson.subLessonName)
+  const handleLesson = (event) => {
+    const value = event.target.value
+    setLessonName(value)
+  }
 
-    const handleSubLessonNameChange = (e) => {
-      setSubLessonName(e.target.value)
-      handleSublesson(subLesson.lessonId, e.target.value)
-    }
-
-    return (
-      <div>
-        <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
-          <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
-            <DragIndicatorIcon
-              style={{ fontSize: 24, color: '#C8CCDB' }}
-              className="hover:cursor-pointer"
-            />
-          </div>
-          <div className="flex flex-col w-full">
-            <div className="flex flex-row justify-between">
-              <p className="Body2 pb-1">Sub-lesson name*</p>
-              <button
-                className="Ghost hover:cursor-pointer"
-                onClick={() => onDelete(subLesson.lessonId)}
-              >
-                Delete
-              </button>
-            </div>
-            <input
-              type="text"
-              name="sub-lesson-name"
-              className="Body2 Input w-[530px] h-[48px] mb-10 p"
-              value={subLessonName}
-              onChange={handleSubLessonNameChange}
-            />
-            <p className="Body2 pb-1">Video*</p>
-            <button className="w-[160px] h-[160px] flex flex-col justify-center items-center #F1F2F6 border-none hover:cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="25"
-                height="24"
-                viewBox="0 0 25 24"
-                fill="none"
-              >
-                <path
-                  d="M12.5 4.5V19.5M20 12H5"
-                  stroke="#5483D0"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <p className="Body3 text-[#5483D0] pt-2">Upload Video</p>
-            </button>
-          </div>
-        </div>
-      </div>
+  const createButton = (event) => {
+    const data = { lessonName, subLessonList }
+    console.log(data)
+    const lessonData = { lessonName, subLessonList }
+    const subLessonsArray = Object.values(lessonData).filter(
+      (item) => typeof item === 'object'
     )
+    // Map and prepare the data for sending to the server
+    const preparedData = subLessonsArray.map((subLesson) => ({
+      lessonName: lessonData.lessonName,
+      ...subLesson,
+    }))
+
+    console.log(preparedData)
   }
 
   return (
-    <>
+    <div className="flex flex-col">
       <div className="w-[1200px] ">
         <div className="flex flex-row justify-between file: items-center px-10 py-4">
           <div className="flex flex-row justify-center items-center space-x-4">
@@ -157,12 +118,14 @@ function AddLesson() {
           </div>
           <div className="space-x-4">
             <button className="Secondary">Cancle</button>
-            <button className="Primary border-none">Create</button>
+            <button className="Primary border-none" onClick={createButton}>
+              Create
+            </button>
           </div>
         </div>
       </div>
       <form
-        className="w-[1200px] pb-[219px] h-auto  flex flex-col justify-center items-center bg-[#F6F7FC]"
+        className="w-[1200px] pb-[219px] h-auto  flex flex-col justify-center items-center bg-[#F6F7FC] pt-10"
         onSubmit={(e) => {
           e.preventDefault()
         }}
@@ -175,22 +138,63 @@ function AddLesson() {
                 type="text"
                 name="Lesson name"
                 className="Input w-full h-[48px] mb-10"
-                // value={}
-                // onChange={(e) =>
-                //   setLessonData({ ...lessonData, lessonName: e.target.value })
-                // }
+                value={lessonName}
+                onChange={handleLesson}
               />
             </div>
             <hr />
             <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{' '}
             {subLessonList.map((subLesson, index) => (
-              <SubLessonComponent
-                key={index}
-                subLesson={subLesson}
-                onDelete={deleteSubLesson}
-              />
+              <div>
+                <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
+                  <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
+                    <DragIndicatorIcon
+                      style={{ fontSize: 24, color: '#C8CCDB' }}
+                      className="hover:cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex flex-col w-full">
+                    <div className="flex flex-row justify-between">
+                      <p className="Body2 pb-1">Sub-lesson name*</p>
+                      <button
+                        className="Ghost hover:cursor-pointer"
+                        onClick={() => deleteSubLesson(subLesson.lessonId)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      name="sub-lesson-name"
+                      className="Body2 Input w-[530px] h-[48px] mb-10 p"
+                      value={subLesson.subLessonName}
+                      onChange={(e) =>
+                        handleSubLesson(subLesson.lessonId, e.target.value)
+                      }
+                    />
+                    <p className="Body2 pb-1">Video*</p>
+                    <button className="w-[160px] h-[160px] flex flex-col justify-center items-center #F1F2F6 border-none hover:cursor-pointer">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="25"
+                        height="24"
+                        viewBox="0 0 25 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M12.5 4.5V19.5M20 12H5"
+                          stroke="#5483D0"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      <p className="Body3 text-[#5483D0] pt-2">Upload Video</p>
+                    </button>
+                  </div>
+                </div>
+              </div>
             ))}
-            {/* <SubLessonComponent /> */}
             <button
               className="Secondary w-fit mb-[60px] mt-3"
               onClick={addSubLesson}
@@ -200,7 +204,7 @@ function AddLesson() {
           </div>
         </div>
       </form>
-    </>
+    </div>
   )
 }
 

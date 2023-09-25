@@ -1,28 +1,9 @@
 import { Router } from 'express'
 import supabase from '../utils/db.js'
 
-const courseRouter = Router()
+const adminRouter = Router()
 
-courseRouter.get('/', async (req, res) => {
-  try {
-    const query = supabase
-      .from('courses')
-      .select('*,lessons(*,sublessons(*))')
-      .order('course_id')
-
-    const { data, error } = await query
-
-    return res.json({
-      data,
-    })
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: `Get course error message ${error.message}` })
-  }
-})
-
-courseRouter.get('/admin', async (req, res) => {
+adminRouter.get('/', async (req, res) => {
   try {
     let start = req.query.start - 1
     let desc = req.query.desc
@@ -37,7 +18,10 @@ courseRouter.get('/admin', async (req, res) => {
     if (course) {
       query.ilike('course_name', `%${course}%`)
     }
-    query.range(start, end)
+
+    if (start) {
+      query.range(start, end)
+    }
 
     const { data, error } = await query
 
@@ -51,7 +35,7 @@ courseRouter.get('/admin', async (req, res) => {
   }
 })
 
-courseRouter.get('/course', async (req, res) => {
+adminRouter.get('/course', async (req, res) => {
   try {
     let keywords = req.query.keywords
 
@@ -88,7 +72,7 @@ courseRouter.get('/course', async (req, res) => {
   }
 })
 
-courseRouter.get('/:courseId', async (req, res) => {
+adminRouter.get('/:courseId', async (req, res) => {
   try {
     const courseId = req.params.courseId
     const { data, error } = await supabase
@@ -108,7 +92,7 @@ courseRouter.get('/:courseId', async (req, res) => {
   }
 })
 
-courseRouter.post('/:courseId', async (req, res) => {
+adminRouter.post('/:courseId', async (req, res) => {
   const lessonData = { lesson_name: req.body.lesson_name }
   // try {
   //   const courseId = req.params.courseId
@@ -129,4 +113,4 @@ courseRouter.post('/:courseId', async (req, res) => {
   // }
 })
 
-export default courseRouter
+export default adminRouter
