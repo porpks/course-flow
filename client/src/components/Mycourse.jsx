@@ -241,7 +241,7 @@ function MyCourse() {
   };
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center w-[100%] h-[1607px] text-black '>
+      <div className='flex justify-center items-center gap-8 w-[100%] h-[1607px] text-black '>
         <h1>Loading...</h1>
         <CircularIndeterminate />
       </div>
