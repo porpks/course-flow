@@ -8,6 +8,7 @@ import desireRouter from "./apps/desire.js";
 import MyCourseRouter from "./apps/mycourse.js";
 import assignmentRouter from "./apps/assignment.js";
 import authAdminRouter from "./apps/authadmin.js";
+import addCourseRouter from "./apps/addcoursebyadmin.js"
 
 import learnRouter from "./apps/learn.js";
 import session from "express-session";
@@ -50,6 +51,7 @@ async function init() {
   app.use("/assignment", assignmentRouter);
   app.use("/learn", learnRouter);
   app.use("/admin", courseRouter);
+  app.use("/admin", addCourseRouter);
 
   app.get("/", function (req, res) {
     // Cookies that have not been signed
