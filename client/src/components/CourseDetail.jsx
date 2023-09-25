@@ -42,7 +42,6 @@ function CourseDetail() {
   const param = useParams()
   const { userIdFromCookie } = useAuth()
   const userId = userIdFromCookie
-  console.log(Boolean(userId))
 
   // const history = useHistory();
   // const handleGoBack = () => {
@@ -185,7 +184,7 @@ function CourseDetail() {
   })
   const lessonTotal = dataDetail.lessons
   // const subLessonsTotal = lessonTotal;
-  console.log(isDesireExist)
+
   return (
     <>
       {window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}

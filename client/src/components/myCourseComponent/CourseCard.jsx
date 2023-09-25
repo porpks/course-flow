@@ -19,7 +19,7 @@ function CourseCard(props) {
             {props.coursedetail}
           </p>
           <br />
-          <div>
+          <div></div>
           <Link
             className="no-underline"
             to={`/ourcourse/coursedetail/${props.courseid}`}

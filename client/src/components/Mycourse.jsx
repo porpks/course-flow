@@ -15,9 +15,11 @@ import Pagination from '@mui/material/Pagination'
 import Stack from '@mui/material/Stack'
 import '../components/myCourseComponent/CourseCard.css'
 import CircularIndeterminate from '../assets/loadingProgress'
+import { useNavigate } from 'react-router-dom'
 
 function MyCourse() {
   const [dataCourse, setDataCourse] = useState([])
+  const navigate = useNavigate()
   // const [dataCourse, setDataCourse] = localStorage.getItem("dataCourse");
   const [courseID, setCourseID] = useState(null)
   const [allCourse, setAllCourse] = useState(true)
@@ -51,11 +53,11 @@ function MyCourse() {
     setVideoHead,
     setVideoKey,
     setPauseTime,
-    userId,
     setvideoUrl,
     userIdFromCookie,
   } = useAuth()
 
+  const userId = userIdFromCookie
   useEffect(() => {
     // try {
     //   fetch(`http://localhost:4000/mycourse/${userIdFromCookie}`)
@@ -148,9 +150,9 @@ function MyCourse() {
           courseID: localStorage.getItem('course_id'),
         },
       })
-      const data = await result.data.data
-      console.log(data)
-      console.log(Object.keys(data).length > 0)
+
+      const data = result.data.data
+
       if (Object.keys(data).length > 0) {
         const handleShowVideo = (sublessonName, sublessonID) => {
           setVideoHead(sublessonName)
@@ -215,7 +217,7 @@ function MyCourse() {
     }
 
     const courseCards = currentCourses.map((item) => (
-      <div
+      <Link
         className="no-underline"
         key={item.courses.course_id}
         to={`/learning/${item.courses.course_id}`}
@@ -230,7 +232,7 @@ function MyCourse() {
           coursesummary={item.courses.course_summary}
           totallearningtime={item.courses.total_time}
         />
-      </div>
+      </Link>
     ))
     return (
       <div className="grid grid-cols-2 gap-x-[26px] gap-y-[40px] w-[740px]">
