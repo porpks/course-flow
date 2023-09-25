@@ -1,3 +1,4 @@
+
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
@@ -9,6 +10,8 @@ import MyCourseRouter from './apps/mycourse.js'
 import assignmentRouter from './apps/assignment.js'
 import authAdminRouter from './apps/authadmin.js'
 import adminRouter from './apps/admin.js'
+import addCourseRouter from "./apps/addcoursebyadmin.js"
+
 
 import learnRouter from './apps/learn.js'
 import session from 'express-session'
@@ -41,6 +44,7 @@ async function init() {
   //   })
   // );
 
+
   app.use('/auth', authRouter)
   app.use('/authadmin', authAdminRouter)
   app.use('/profile', profileRouter)
@@ -51,6 +55,8 @@ async function init() {
   app.use('/assignment', assignmentRouter)
   app.use('/learn', learnRouter)
   app.use('/admin', adminRouter)
+  app.use("/admin/addcourse", addCourseRouter);
+
 
   app.get('/', function (req, res) {
     // Cookies that have not been signed
