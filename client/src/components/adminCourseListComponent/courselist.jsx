@@ -167,7 +167,7 @@ function CourseList() {
                 <img
                   src={item.cover_img}
                   alt={item.course_name}
-                  className="w-[64px] h-[47px]"
+                  className="w-[64px] h-[47px] object-cover"
                 />
               </div>
               <div className="w-[268px]  flex items-center px-[16px] py-[10px]">
@@ -177,7 +177,7 @@ function CourseList() {
                 {item.lessons.length}
               </div>
               <div className="w-[105px]  flex items-center px-[16px] py-[10px]">
-                {item.price.toLocaleString("en-US", {
+                {item.price?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
