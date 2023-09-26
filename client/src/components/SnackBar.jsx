@@ -1,7 +1,6 @@
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import Slide from "@mui/material/Slide";
 
 const SnackBar = (props) => {
   const CustomAlert = React.forwardRef(function CustomAlert(props, ref) {
@@ -11,13 +10,12 @@ const SnackBar = (props) => {
     <>
       <Snackbar
         open={props.open}
-        autoHideDuration={3000}
+        autoHideDuration="4500"
         onClose={props.onClose}
         anchorOrigin={{
           vertical: "top",
           horizontal: "center",
-        }}
-        TransitionComponent={Slide}>
+        }}>
         <CustomAlert
           onClose={props.onClose}
           severity={props.severity}
