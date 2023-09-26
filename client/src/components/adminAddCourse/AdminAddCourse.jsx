@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import "./adminAddCourse.css";
 import Sidebar from "../Sidebar";
 import { useNavigate } from "react-router-dom";
-
 import { Formik, Form, Field, useFormik } from "formik";
 import LessonTable from "./LessonTable";
 import AddLesson from "../addLessonComponent/AddLesson";
 import axios from "axios";
 import * as Yup from "yup";
+import UploadVideo from "./UploadVideo";
+import UploadImage from "./UploadImage";
 function AdminAddCourse() {
   // const history = useHistory()
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ function AdminAddCourse() {
   };
   useEffect(() => {
     const storedData = localStorage.getItem("course_data");
-    console.log(storedData);
+    // console.log(storedData);
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       console.log(parsedData);
@@ -92,37 +93,6 @@ function AdminAddCourse() {
     navigate(`/admin/addcourse/addlesson`);
     console.log(localStorage.getItem(`course_data`));
   };
-
-  const [image, setImage] = useState("");
-  const [avatar, setAvatar] = useState({});
-  const [avatarUrl, setAvatarUrl] = useState("");
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-
-      if (allowedTypes.includes(file.type)) {
-        if (file.size <= 5 * 1024 * 1024) {
-          setAvatar(event.target.files[0]);
-          setAvatarUrl(URL.createObjectURL(event.target.files[0]));
-        } else {
-          alert("File size exceeds 2MB.");
-        }
-      } else {
-        alert("Invalid file type. Please choose a .jpg, .jpeg, or .png file.");
-      }
-    }
-  };
-
-  const handleRemoveImage = async () => {
-    setAvatar({});
-    setAvatarUrl("");
-    setImage("");
-    await axios.put(`http://localhost:4000/profile/delete/${userId}`);
-  };
-  console.log(avatar);
-  console.log(avatarUrl);
 
   return (
     <>
@@ -153,7 +123,7 @@ function AdminAddCourse() {
                     className="flex flex-col  gap-[40px]"
                     onSubmit={formik.handleSubmit}
                   >
-                    <div className="flex flex-col gap-[4px]">
+                    <div className="flex flex-col gap-[4px] border-2 border-sky-500">
                       <label htmlFor="courseName" className="">
                         Course name *
                       </label>
@@ -234,102 +204,11 @@ function AdminAddCourse() {
                         <div>{formik.errors.courseDetail}</div>
                       ) : null}
                     </div>
-                    <div className="flex flex-col gap-[6px]">
-                      <label className="">Cover image *</label>
-                      <div className="relative h-fit">
-                        <div className="relative bg-[--gray100] w-[358px] h-[358px] object-cover	rounded-2xl group	">
-                          <img
-                            src={
-                              avatarUrl
-                                ? avatarUrl
-                                : image
-                                ? image
-                                : "../public/image/uploadImage.svg"
-                            }
-                            className="relative w-[358px] h-[358px] object-cover	rounded-2xl	"
-                          />
-                          {avatarUrl || image ? (
-                            <button
-                              className="flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer"
-                              onClick={handleRemoveImage}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="22"
-                                height="22"
-                                viewBox="0 0 22 22"
-                                fill="none"
-                              >
-                                <path
-                                  d="M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764"
-                                  stroke="white"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                            </button>
-                          ) : null}
-                          <div
-                            className="
-                          upload-position w-[90%] h-[90%]
-                         hover:bg-[rgba(264,264,264,0.25)] rounded-lg cursor-pointer group-hover:block border-[--blue500] border-[2px] hover:border-dashed"
-                          >
-                            <label
-                              htmlFor="upload"
-                              className="hidden group-hover:block hover:transition  w-full h-full  text-[--blue500] text-center text-xl  cursor-pointer"
-                            >
-                              <input
-                                id="upload"
-                                name="avatar"
-                                type="file"
-                                onChange={(e) => handleFileChange(e)}
-                                hidden
-                              />
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-[6px]">
-                      <label className="">Video Trailer *</label>
-                      <div className="relative h-fit">
-                        <div className="relative bg-[--gray100] w-[358px] h-[358px] object-cover	rounded-2xl group	">
-                          <div
-                            className="
-                          upload-position   w-[200px] h-[200px] 
-                          flex flex-col justify-center items-center  
-                          text-[--blue500] text-center text-xl rounded-2xl
-                       "
-                          >
-                            <div className="text-[48px] font-extralight mb-3">
-                              +
-                            </div>
-                            <div className="text-[20px] font-medium">
-                              Upload Video Trailer
-                            </div>
-                          </div>
-                          <div
-                            className="
-                          upload-position w-[90%] h-[90%]
-                         hover:bg-[rgba(264,264,264,0.25)] rounded-lg cursor-pointer group-hover:block border-[--blue500] border-[2px] hover:border-dashed"
-                          >
-                            <label
-                              htmlFor="upload"
-                              className="hidden hover:block hover:transition w-full h-full  text-[--blue500] text-center text-xl  cursor-pointer"
-                            >
-                              <input
-                                id="upload"
-                                name="avatar"
-                                type="file"
-                                onChange={(e) => handleFileChange(e)}
-                                hidden
-                              />
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+
+                    {/*----------------------- UPLOAD IMG --------------------- */}
+                    <UploadImage />
+                    {/*----------------------- UPLOAD VIDEO --------------------- */}
+                    <UploadVideo />
                     <button type="submit">Submit</button>
                   </Form>
                 </Formik>
