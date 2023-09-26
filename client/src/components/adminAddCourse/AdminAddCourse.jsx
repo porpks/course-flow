@@ -114,6 +114,13 @@ function AdminAddCourse() {
       }
     }
   };
+
+  const handleRemoveImage = async () => {
+    setAvatar({});
+    setAvatarUrl("");
+    setImage("");
+    await axios.put(`http://localhost:4000/profile/delete/${userId}`);
+  };
   console.log(avatar);
   console.log(avatarUrl);
 
@@ -241,7 +248,28 @@ function AdminAddCourse() {
                             }
                             className="relative w-[358px] h-[358px] object-cover	rounded-2xl	"
                           />
-
+                          {avatarUrl || image ? (
+                            <button
+                              className="flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer"
+                              onClick={handleRemoveImage}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="22"
+                                height="22"
+                                viewBox="0 0 22 22"
+                                fill="none"
+                              >
+                                <path
+                                  d="M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764"
+                                  stroke="white"
+                                  strokeWidth="1.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </button>
+                          ) : null}
                           <div
                             className="
                           upload-position w-[90%] h-[90%]

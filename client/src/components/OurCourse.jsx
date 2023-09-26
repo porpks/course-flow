@@ -36,12 +36,15 @@ function OurCourse() {
 
         const data = response.data.data;
         setDataCourse(data);
+       
       } catch (error) {
         // message: error;
         console.log(error);
       }
     };
     getCourseByKeywords(searchKey);
+    {
+    }
   }, [searchKey]);
 
   const handleSearch = (event) => {
@@ -64,9 +67,7 @@ function OurCourse() {
   /////////////////////////////////////////////////
   if (isLoading) {
     return (
-
       <div className="flex justify-center items-center w-[100%] gap-8 min-h-[100vh] text-black">
-
         <h1> Loading...</h1>
         <CircularIndeterminate />
       </div>
@@ -74,15 +75,17 @@ function OurCourse() {
   }
 
   return (
-    <div className='canvas-ourCourse '>
-      {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
-      <div className='topSection'>
-        <h2 className='H2'>Our Courses</h2>
-        <div className='input-container'>
-          <img src='../../public/image/search.svg' alt='searchIcon' />
+    <div className="canvas-ourCourse ">
+      {searchKey
+        ? window.scrollTo({ top: 150, left: 0, behavior: "auto" })
+        : window.scrollTo({ top: 0, left: 0, behavior: "auto" })}
+      <div className="topSection">
+        <h2 className="H2">Our Courses</h2>
+        <div className="input-container">
+          <img src="../../public/image/search.svg" alt="searchIcon" />
           <input
-            type='text'
-            placeholder='Search...'
+            type="text"
+            placeholder="Search..."
             value={searchKey}
             onChange={handleSearch}
           />
@@ -114,8 +117,9 @@ function OurCourse() {
               <button
                 key={index}
                 onClick={() => handlePageChange(index + 1)}
-                className={`paginationOurCourse-item ${currentPage === index + 1 ? "active" : ""
-                  }`}
+                className={`paginationOurCourse-item ${
+                  currentPage === index + 1 ? "active" : ""
+                }`}
               >
                 {index + 1}
               </button>
