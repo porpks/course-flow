@@ -152,7 +152,7 @@ function AssignmentPage() {
               strokeLinecap='round'
             />
           </svg>
-          <div className='w-[480px] h-[153px] flex-col justify-start items-center gap-14 inline-flex z-[1]'>
+          <div className='w-[500px] h-[153px] flex-col justify-start items-center gap-14 inline-flex z-[1]'>
             <div className='flex-col justify-start items-center gap-[60px] flex'>
               <div className='MyAssignments H2'>My Assignments</div>
             </div>
@@ -193,7 +193,7 @@ function AssignmentPage() {
                 className={`cursor-pointer Component1 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${
                   selectedFilter === "Submitted late" ? "border-b-2" : ""
                 }`}>
-                <div className='Body2'>Submitted late</div>
+                <div className='Body2'>Submitted Late</div>
               </div>
             </div>
           </div>
@@ -240,7 +240,9 @@ function AssignmentPage() {
                                 ? "text-[#9B2FAC]"
                                 : null
                             } text-base font-medium leading-normal`}>
-                            {assignment.assignment_status}
+                            {assignment.assignment_status === "Submitted late"
+                              ? "Submitted Late"
+                              : assignment.assignment_status}
                           </div>
                         </div>
                         {assignment.assignment_status === "Pending" ? (
@@ -251,11 +253,7 @@ function AssignmentPage() {
                       </div>
                     </div>
                     <div
-                      className={`w-[100%] Frame427321002  p-6  ${
-                        assignment.assignment_status === "Submitted" ||
-                        assignment.assignment_status === "Submitted late"
-                          ? "bg-none "
-                          : " bg-white"
+                      className={`w-[100%] Frame427321002  p-6  
                       } rounded-lg border border-gray-300 justify-start items-end gap-6 inline-flex`}>
                       <div className='InputStyle grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex'>
                         <div className='Label self-stretch justify-start items-start gap-1 inline-flex'>
@@ -264,18 +262,7 @@ function AssignmentPage() {
                           </div>
                         </div>
                         <div
-                          className={`InputField self-stretch pl-3 pr-4 py-3 bg-none ${
-                            (assignment.assignment_status === "Submitted" ||
-                              assignment.assignment_status ===
-                                "Submitted late") &&
-                            !assignment.assignment_answer
-                              ? "bg-none"
-                              : "bg-white"
-                          }  ${
-                            assignment.assignment_answer
-                              ? "border-none"
-                              : "rounded-lg border border-solid border-gray-300"
-                          } justify-start items-start gap-2 inline-flex`}>
+                          className={`InputField self-stretch pl-3 pr-4 py-3 bg-white rounded-lg border border-solid border-gray-300  justify-start items-start gap-2 inline-flex`}>
                           <div className='ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex'>
                             <textarea
                               className={`${

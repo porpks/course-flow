@@ -255,7 +255,7 @@ assignmentRouter.get("/:userID", async (req, res) => {
             .order("assignment_status");
         let flatData = data;
 
-        const flatData2 = flatData.filter(dataItem => {
+        const flatData2 = flatData.filter(async(dataItem) => {
             if (dataItem.assignment_status === null) {
                 return false;
             } else {
@@ -268,19 +268,15 @@ assignmentRouter.get("/:userID", async (req, res) => {
                 delete dataItem.user_id;
                 delete dataItem.user_assignment_id;
 
-                if (dataItem.assignment_duedate === "Overdue") {
-                    supabase
-                        .from('user_assignments')
-                        .update({ "assignment_status": 'Overdue' })
-                        .eq('assignment_id', dataItem.assignment_id)
-                        .select()
-                        .then(response => {
-                            dataItem.assignment_status = "Overdue";
-                        })
-                        .catch(error => {
-                            console.error("Error updating assignment_status:", error);
-                        });
-                }
+              
+            if (dataItem.assignment_duedate === "Overdue" && dataItem.assignment_status !== "Submitted late" ) {
+                const { data: update, error } = await supabase
+                    .from('user_assignments')
+                    .update({ "assignment_status": 'Overdue' })
+                    .eq('assignment_id', dataItem.assignment_id)
+                    .select();
+               
+            }
 
                 return true;
             }
@@ -303,6 +299,7 @@ assignmentRouter.get("/:userID", async (req, res) => {
         if (flatData) {
             filteredData = flatData.filter(item => item.assignments !== null);
         }
+
         for (const dataItem of filteredData) {
             dataItem.sublesson_name = dataItem.assignments.sublessons.sublesson_name;
             dataItem.lesson_name = dataItem.assignments.sublessons.lessons.lesson_name;
@@ -312,7 +309,6 @@ assignmentRouter.get("/:userID", async (req, res) => {
             dataItem.userId = dataItem.user_id;
             if (!dataItem.assignment_status) {
                 dataItem.assignment_status = "Pending"
-
                 const { data, error } = await supabase
                     .from('user_assignments')
                     .update({ assignment_status: 'Pending' })
@@ -322,19 +318,14 @@ assignmentRouter.get("/:userID", async (req, res) => {
             delete dataItem.user_id;
             delete dataItem.user_assignment_id
 
-            if (dataItem.assignment_duedate === "Overdue") {
+            if (dataItem.assignment_duedate === "Overdue" && dataItem.assignment_status !== "Submitted late" ) {
                 const { data: update, error } = await supabase
                     .from('user_assignments')
                     .update({ "assignment_status": 'Overdue' })
                     .eq('assignment_id', dataItem.assignment_id)
                     .select();
-                dataItem.assignment_status = "Overdue"
+               
             }
-
-
-
-
-
 
         }
         res.json({ data: filteredData });
