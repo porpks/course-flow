@@ -25,7 +25,6 @@ function Learning() {
     userId,
     isShowAsm,
     setIsShowAsm,
-    setRenderAsm,
     isShowVdo,
     setIsShowVdo,
     videoHead,
@@ -114,7 +113,6 @@ function Learning() {
       setIsLoading(true);
       updateVideoDisplay(sublessonName, sublessonID);
       fetchPauseTime();
-
       localStorage.setItem("pauseTime", 0);
       setIsShowVdo(true);
       localStorage.setItem("isShowVdo", true);
@@ -145,7 +143,10 @@ function Learning() {
   };
   const handleStart = async () => {
     updateIsShowAsm(false);
-    playerRef.current.seekTo(pauseTime, "seconds");
+    playerRef.current.seekTo(
+      pauseTime || localStorage.getItem("pauseTime"),
+      "seconds"
+    );
     try {
       await axios.put(
         `http://localhost:4000/learn/start?userID=${userId}&sublessonID=${localStorage.getItem(
@@ -190,7 +191,6 @@ function Learning() {
     const sublessonID = localStorage.getItem("videoKey") || videoKey;
     console.log(subStatus[sublessonID]);
 
-    //check assignment
     const result = await axios.get(
       `http://localhost:4000/assignment/check?sublessonId=${sublessonID}`
     );
@@ -216,7 +216,6 @@ function Learning() {
       }
 
       updateIsShowAsm(true);
-      setRenderAsm(true);
     }
   };
 
@@ -271,8 +270,8 @@ function Learning() {
       </div>
     );
   }
-
-  if (localStorage.getItem("nonepause")) {
+  // eslint-disable-next-line no-extra-boolean-cast
+  if (Boolean(localStorage.getItem("nonepause"))) {
     setVideoHead(sublessonNameObject[sublessonIdArray[0]]);
     setVideoKey(sublessonIdArray[0]);
     setIsShowVdo(true);
@@ -292,7 +291,7 @@ function Learning() {
         </a>
       </div>
       <div className='flex justify-center pt-[100px] px-[160px]'>
-        <div className=' flex flex-col w-[360px] mr-[24px] px-6 py-8 shadow-[4px_4px_24px_0px_rgba(0,0,0,0.08)]'>
+        <div className=' flex flex-col w-[360px] mr-[24px] px-6 py-8 shadow-[4px_4px_24px_0px_rgba(0,0,0,0.08)] '>
           <div className=''>
             <h1 className='Body3 text-[--orange500] mb-6'>Course</h1>
             <h1 className='H3 mb-2'>{courseData.course_name}</h1>
@@ -472,14 +471,16 @@ function Learning() {
               </div>
             ) : null}
           </div>
-          {isShowAsm ? (
-            <AssignmentBox
-              sublessonID={localStorage.getItem("videoKey") || videoKey}
-              subStatus={subStatus}
-              setSubStatus={setSubStatus}
-              setPercentComplete={setPercentComplete}
-            />
-          ) : null}
+          <div className='self-center'>
+            {isShowAsm ? (
+              <AssignmentBox
+                sublessonID={localStorage.getItem("videoKey") || videoKey}
+                subStatus={subStatus}
+                setSubStatus={setSubStatus}
+                setPercentComplete={setPercentComplete}
+              />
+            ) : null}
+          </div>
         </div>
       </div>
       <div className='Shadow1 flex justify-between px-[60px] py-[20px]'>

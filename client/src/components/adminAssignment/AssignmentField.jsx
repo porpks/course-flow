@@ -8,7 +8,6 @@ import 'react-dropdown/style.css'
 function AssignmentField(props) {
     const navigate = useNavigate()
     const { assignId } = useParams()
-    console.log(useParams());
 
     const [courseId, setCourseId] = useState(null);
     const [course, setCourse] = useState("");
@@ -21,6 +20,7 @@ function AssignmentField(props) {
     const [courseData, setCourseData] = useState([])
     const [lessonData, setLessonData] = useState([])
     const [sublessonData, setSublessonData] = useState([])
+    const [editHeader, setEditHeader] = useState("");
     const durations = ['1 day', '2 days', '3 days']
 
     const getCourse = async () => {
@@ -50,11 +50,11 @@ function AssignmentField(props) {
     const getAssingment = async () => {
         try {
             const result = await axios.get(`http://localhost:4000/assignment/byId?assignId=${assignId}`)
-            console.log(result);
             setCourse(result.data.data.course)
             setLesson(result.data.data.lesson)
             setSublesson(result.data.data.sublesson)
             setAssignDetail(result.data.data.question)
+            setEditHeader(result.data.data.question)
             if (result.data.data.duration > 1) {
                 setDuration(`${result.data.data.duration} days`)
             } else {
@@ -65,16 +65,49 @@ function AssignmentField(props) {
         }
     }
 
-    const handleCreate = () => {
+    const handleCreate = async () => {
         if (courseId && lessonId && sublessonId && assignDetail && duration) {
-            console.log(courseId, lessonId, sublessonId, assignDetail, Number(duration.split(" ")[0]));
+            // console.log(courseId, lessonId, sublessonId, assignDetail, Number(duration.split(" ")[0]));
+            const assignmentBody = {
+                sublessonId,
+                assignDetail,
+                duration: Number(duration.split(" ")[0])
+            }
+            try {
+                await axios.post(`http://localhost:4000/assignment/create`, assignmentBody)
+            } catch (err) {
+                console.error(err);
+            }
+            setCourse("")
+            setLesson("")
+            setSublesson("")
+            setLessonData([]);
+            setSublessonData([]);
+            setAssignDetail("")
+            setDuration("")
+
+            navigate('/admin/assingmentlist')
         } else {
             alert("Please input data")
         }
     }
-    const handleEdit = () => {
+    const handleEdit = async () => {
         if (assignDetail && duration) {
-            console.log(Number(assignId), assignDetail, Number(duration.split(" ")[0]));
+            // console.log(Number(assignId), assignDetail, Number(duration.split(" ")[0]));
+            const assignmentBody = {
+                assignId,
+                assignDetail,
+                duration: Number(duration.split(" ")[0])
+            }
+            try {
+                await axios.put(`http://localhost:4000/assignment/edit`, assignmentBody)
+            } catch (err) {
+                console.error(err);
+            }
+            setAssignDetail("")
+            setDuration("")
+
+            navigate('/admin/assingmentlist')
         } else {
             alert("Please input data")
         }
@@ -115,7 +148,7 @@ function AssignmentField(props) {
                                 </svg>
                                 <h1 className="H3 text-[--gray600]">Assignment</h1>
                             </div>
-                            <h1 className="H3">{assignDetail}</h1>
+                            <h1 className="H3">{editHeader}</h1>
                         </div>
                         <div className="space-x-4">
                             <button className="Secondary"
@@ -147,6 +180,7 @@ function AssignmentField(props) {
                                     setCourseId(e.value)
                                     setCourse(e.label)
                                     getLesson(e.value)
+                                    setSublessonData([]);
                                 }} />
                         </div>
                         <div className="flex space-x-10">
@@ -187,7 +221,7 @@ function AssignmentField(props) {
                         <div>
                             <label htmlFor="assignment" className="text-lg">Assignment *</label><br />
                             <input
-                                className="w-full text-lg p-3 border-solid border-[1px] border-[--gray300] rounded-lg placeholder:text-gray-400"
+                                className="w-full text-lg p-3 border-solid border-[1px] border-[--gray300] rounded-lg focus:border-[--orange500] focus:outline-none placeholder:text-gray-400"
                                 placeholder="Assignment Question..."
                                 value={assignDetail}
                                 onChange={(e) => setAssignDetail(e.target.value)}

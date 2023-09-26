@@ -1,21 +1,39 @@
 import Sidebar from "../../components/Sidebar"
 import AssignmentField from "../../components/adminAssignment/AssignmentField"
+import ModalAssignmentDelete from "../../components/adminAssignment/modalAssignmentDelete"
+import { useAuth } from "../../contexts/AuthContext"
+import { useParams } from "react-router-dom"
 
 function EditAssignmentPage() {
+    const { deleteAssignment, setDeleteAssignment } = useAuth();
+    const { assignId } = useParams()
+
     return (
-        <>
-            <div className="flex">
-                <div className="w-[240px]">
-                    <Sidebar />
-                </div>
-                <div className="flex flex-col w-full">
-                    <AssignmentField editAssignment={true} />
-                    <div className="bg-[--gray100] px-10 text-end">
-                        <h1 className="text-lg text-[--blue500] active:underline cursor-pointer">Delete Assignment</h1>
+        <>{
+            deleteAssignment.state ?
+                <ModalAssignmentDelete />
+                : <>
+                    <div className="flex">
+                        <div className="w-[240px]">
+                            <Sidebar />
+                        </div>
+                        <div className="flex flex-col w-full">
+                            <AssignmentField editAssignment={true} />
+                            <div className="bg-[--gray100] px-10 text-end pb-4">
+                                <h1 className="text-lg text-[--blue500] active:underline cursor-pointer"
+                                    onClick={() =>
+                                        setDeleteAssignment({
+                                            state: true,
+                                            assignment_id: Number(assignId),
+                                        })}
+                                >
+                                    Delete Assignment
+                                </h1>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </>
+                </>
+        }</>
     )
 }
 

@@ -18,7 +18,6 @@ function AuthProvider(props) {
   const [courseId, setCourseId] = useState(null);
   const [isShowVdo, setIsShowVdo] = useState(false);
   const [isShowAsm, setIsShowAsm] = useState(false);
-  const [renderAsm, setRenderAsm] = useState(false);
   const [videoHead, setVideoHead] = useState("");
   const [videoKey, setVideoKey] = useState(null);
   const [pauseTime, setPauseTime] = useState(0);
@@ -29,6 +28,7 @@ function AuthProvider(props) {
     state: false,
     assignment_id: null,
   });
+
 
   const userIdFromCookie = getCookie("cookieUserID");
   const userId = secureLocalStorage.getItem("userID");
@@ -49,6 +49,7 @@ function AuthProvider(props) {
 
     setOpenSnackBar(false);
   };
+
 
   const logout = async () => {
     try {
@@ -145,6 +146,7 @@ function AuthProvider(props) {
       navigate("/ourcourse");
     } catch (error) {
       displaySnackbar("Email or password is incorrect. Please try again.");
+
     }
   };
 
