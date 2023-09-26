@@ -4,12 +4,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios'
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
-import AssignmentBox from "../AssignmentBox";
 
 function AssignmentField(props) {
     const navigate = useNavigate()
     const { assignId } = useParams()
-    console.log(useParams());
 
     const [courseId, setCourseId] = useState(null);
     const [course, setCourse] = useState("");
@@ -52,7 +50,6 @@ function AssignmentField(props) {
     const getAssingment = async () => {
         try {
             const result = await axios.get(`http://localhost:4000/assignment/byId?assignId=${assignId}`)
-            console.log(result);
             setCourse(result.data.data.course)
             setLesson(result.data.data.lesson)
             setSublesson(result.data.data.sublesson)
