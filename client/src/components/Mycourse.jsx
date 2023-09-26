@@ -153,7 +153,7 @@ function MyCourse() {
 
       const data = result.data.data;
 
-      if (Object.keys(data).length > 0) {
+      if (data !== undefined) {
         const handleShowVideo = (sublessonName, sublessonID) => {
           setVideoHead(sublessonName);
           localStorage.setItem("sublessonName", sublessonName);

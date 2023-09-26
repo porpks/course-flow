@@ -40,7 +40,15 @@ function CourseDetail() {
 
   const [dataCourse, setDataCourse] = useState([])
   const param = useParams()
-  const { userIdFromCookie } = useAuth()
+  const {
+    setIsShowVdo,
+    setIsShowAsm,
+    setVideoHead,
+    setVideoKey,
+    setPauseTime,
+    setvideoUrl,
+    userIdFromCookie,
+  } = useAuth();
   const userId = userIdFromCookie
 
   // const history = useHistory();
@@ -184,10 +192,9 @@ function CourseDetail() {
           courseID: param.id,
         },
       });
-      const data = await result.data.data;
+      const data = result.data.data;
       console.log(data);
-      console.log(Object.keys(data).length > 0);
-      if (Object.keys(data).length > 0) {
+      if (data !== undefined) {
         const handleShowVideo = (sublessonName, sublessonID) => {
           setVideoHead(sublessonName);
           localStorage.setItem("sublessonName", sublessonName);
@@ -370,9 +377,8 @@ function CourseDetail() {
                     open={desireToggle}
                     onClose={closeDesire}
                     closeButton={closeDesire}
-                    description={`Do you sure to ${
-                      isDesireExist ? 'add' : 'remove'
-                    } ${dataCourse.course_name} to your desire Course?`}
+                    description={`Do you sure to ${isDesireExist ? 'add' : 'remove'
+                      } ${dataCourse.course_name} to your desire Course?`}
                     yesDes={
                       isDesireExist
                         ? 'Remove from Desire Course'
