@@ -32,6 +32,22 @@ function AuthProvider(props) {
   const userId = secureLocalStorage.getItem("userID");
   const navigate = useNavigate();
 
+  function displaySnackbar(message) {
+    setOpenSnackBar(false);
+    setSnackbarMes(message);
+    setOpenSnackBar(true);
+  }
+  const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [snackBarMes, setSnackbarMes] = useState("");
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
+
   const logout = async () => {
     try {
       localStorage.clear(), setIsLoggedIn(false), clearAllCookies();
