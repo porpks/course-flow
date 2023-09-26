@@ -255,7 +255,7 @@ assignmentRouter.get("/:userID", async (req, res) => {
             .order("assignment_status");
         let flatData = data;
 
-        const flatData2 = flatData.filter(async(dataItem) => {
+        const flatData2 = flatData.filter(async (dataItem) => {
             if (dataItem.assignment_status === null) {
                 return false;
             } else {
@@ -268,15 +268,15 @@ assignmentRouter.get("/:userID", async (req, res) => {
                 delete dataItem.user_id;
                 delete dataItem.user_assignment_id;
 
-              
-            if (dataItem.assignment_duedate === "Overdue" && dataItem.assignment_status !== "Submitted late" ) {
-                const { data: update, error } = await supabase
-                    .from('user_assignments')
-                    .update({ "assignment_status": 'Overdue' })
-                    .eq('assignment_id', dataItem.assignment_id)
-                    .select();
-               
-            }
+
+                if (dataItem.assignment_duedate === "Overdue" && dataItem.assignment_status !== "Submitted late") {
+                    const { data: update, error } = await supabase
+                        .from('user_assignments')
+                        .update({ "assignment_status": 'Overdue' })
+                        .eq('assignment_id', dataItem.assignment_id)
+                        .select();
+
+                }
 
                 return true;
             }
@@ -318,13 +318,13 @@ assignmentRouter.get("/:userID", async (req, res) => {
             delete dataItem.user_id;
             delete dataItem.user_assignment_id
 
-            if (dataItem.assignment_duedate === "Overdue" && dataItem.assignment_status !== "Submitted late" ) {
+            if (dataItem.assignment_duedate === "Overdue" && dataItem.assignment_status !== "Submitted late") {
                 const { data: update, error } = await supabase
                     .from('user_assignments')
                     .update({ "assignment_status": 'Overdue' })
                     .eq('assignment_id', dataItem.assignment_id)
                     .select();
-               
+
             }
 
         }
@@ -341,12 +341,16 @@ assignmentRouter.post('/create', async (req, res) => {
 
     const created_at = new Date()
 
+    if (!sublesson_id || !assignment_question || !duration) {
+        return res.status(400).json({ message: "Invalid request body." })
+    }
+
     const input = { sublesson_id, assignment_question, duration, created_at }
 
-    // const { error } = await supabase.from('assignments').insert(input)
-    // if (error) {
-    //     return res.status(404).json({ error })
-    // }
+    const { error } = await supabase.from('assignments').insert(input)
+    if (error) {
+        return res.status(404).json({ error })
+    }
 
     return res.json({ message: "New assignment has been created." })
 })
@@ -356,16 +360,20 @@ assignmentRouter.put('/edit', async (req, res) => {
     const assignment_question = req.body.assignDetail
     const duration = Number(req.body.duration)
 
+    if (!assignment_id || !assignment_question || !duration) {
+        return res.status(400).json({ message: "Invalid request body." })
+    }
+
     const input = { assignment_question, duration }
 
-    // const { error } = await supabase
-    //     .from('assignments')
-    //     .update(input)
-    //     .eq("assignment_id", assignment_id)
+    const { error } = await supabase
+        .from('assignments')
+        .update(input)
+        .eq("assignment_id", assignment_id)
 
-    // if (error) {
-    //     return res.status(404).json({ error })
-    // }
+    if (error) {
+        return res.status(404).json({ error })
+    }
 
     return res.json({ message: `Assignment id:${assignment_id} has been updated.` })
 
