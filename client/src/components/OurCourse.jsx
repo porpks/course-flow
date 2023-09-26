@@ -36,7 +36,6 @@ function OurCourse() {
 
         const data = response.data.data;
         setDataCourse(data);
-       
       } catch (error) {
         // message: error;
         console.log(error);
@@ -59,7 +58,7 @@ function OurCourse() {
   const endIndex = currentPage * pageSize;
   // const cardCourseToDisplay =
   //   dataCourse.length === 0 ? [] : dataCourse.slice(startIndex, endIndex);
-  const cardCourseToDisplay = dataCourse.slice(startIndex, endIndex);
+  const cardCourseToDisplay = dataCourse?.slice(startIndex, endIndex);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -76,9 +75,9 @@ function OurCourse() {
 
   return (
     <div className="canvas-ourCourse ">
-      {searchKey
+      {/* {searchKey
         ? window.scrollTo({ top: 150, left: 0, behavior: "auto" })
-        : window.scrollTo({ top: 0, left: 0, behavior: "auto" })}
+        : window.scrollTo({ top: 0, left: 0, behavior: "auto" })} */}
       <div className="topSection">
         <h2 className="H2">Our Courses</h2>
         <div className="input-container">
@@ -92,11 +91,11 @@ function OurCourse() {
         </div>
 
         <div className="content-Section">
-          {cardCourseToDisplay.length <= 0 ? (
-            <h1 className="้H1 text-red-500 ">{`No course found matching "${searchKey}"`}</h1>
+          {cardCourseToDisplay?.length <= 0 ? (
+            <h1 className="H2 text-red-500 ">{`No course found matching "${searchKey}"`}</h1>
           ) : (
             <div className="card-container">
-              {cardCourseToDisplay.map((item) => (
+              {cardCourseToDisplay?.map((item) => (
                 <CourseItem
                   key={item.course_id}
                   count={item.course_id}
@@ -106,7 +105,9 @@ function OurCourse() {
                   coursesummary={item.course_summary}
                   totallearningtime={item.total_time}
                   onClick={() => {
+                    window.scrollTo(0, 0);
                     navigate(`/ourcourse/coursedetail/${item.course_id}`);
+                    window.scrollTo(0, 0);
                   }}
                 />
               ))}
@@ -119,8 +120,7 @@ function OurCourse() {
                 onClick={() => handlePageChange(index + 1)}
                 className={`paginationOurCourse-item ${
                   currentPage === index + 1 ? "active" : ""
-                }`}
-              >
+                }`}>
                 {index + 1}
               </button>
             ))}

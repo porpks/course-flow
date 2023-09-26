@@ -90,7 +90,6 @@ function Sidebar(props) {
             </svg>
           </div>
           <p>Log out</p>
-          {/* <button onClick={logoutAdmin}>Log out</button> */}
         </div>
       </div>
     </div>
