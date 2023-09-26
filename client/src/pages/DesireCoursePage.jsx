@@ -133,7 +133,7 @@ function DesireCoursePage() {
                 totallearningtime={item.courses.total_time}
                 onClick={() => {
                   navigate(`/ourcourse/coursedetail/${item.course_id}`);
-                  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
                 }}
               />
             ))}

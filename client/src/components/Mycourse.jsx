@@ -213,7 +213,7 @@ function MyCourse() {
       localStorage.removeItem("course_id");
       localStorage.setItem("course_id", courseId);
       getDataCourse2();
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     };
 
     const courseCards = currentCourses.map((item) => (
