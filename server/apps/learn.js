@@ -183,11 +183,11 @@ learnRouter.get('/videotime', async (req, res) => {
         }
 
         const filteredSublessons = interval.filter(item => {
-            // Check if the sublesson is related to the specified course_id
+       
             if (item.sublessons.lessons && item.sublessons.lessons.course_id === courseID) {
-                return true; // Include this sublesson in the filtered array
+                return true; 
             } else {
-                return false; // Exclude this sublesson from the filtered array
+                return false; 
             }
         });
 

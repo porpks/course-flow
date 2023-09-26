@@ -11,10 +11,9 @@ const AssignmentBox = (props) => {
   const [answers, setAnswers] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   // eslint-disable-next-line react/prop-types
-  const sublessonID = props.sublessonID || null
+  const sublessonID = props.sublessonID || null;
   useEffect(() => {
     const getAssignmentData = async () => {
-
       try {
         const response = await axios.get(
           `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
@@ -27,12 +26,10 @@ const AssignmentBox = (props) => {
           assignment_status: assignment.assignment_status,
         }));
         setAnswers(initialAnswers);
-
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    }
-
+    };
 
     getAssignmentData();
   }, []);
@@ -102,8 +99,11 @@ const AssignmentBox = (props) => {
         const statusCompleteBody = {
           user_id: userId,
           course_id: localStorage.getItem("course_id"),
-        }
-        await axios.post("http://localhost:4000/learn/status/", statusCompleteBody)
+        };
+        await axios.post(
+          "http://localhost:4000/learn/status/",
+          statusCompleteBody
+        );
       }
     } catch (error) {
       console.log(error.message);
@@ -126,28 +126,32 @@ const AssignmentBox = (props) => {
                       Assignment
                     </div>
                     <div
-                      className={`StatusHomework px-2 py-1 ${assignment.assignment_status === "Pending"
-                        ? "bg-[#FFFBDA]"
-                        : assignment.assignment_status === "Submitted late"
+                      className={`StatusHomework px-2 py-1 ${
+                        assignment.assignment_status === "Pending"
+                          ? "bg-[#FFFBDA]"
+                          : assignment.assignment_status === "Submitted late"
                           ? "bg-[#EAF0FF]"
                           : assignment.assignment_status === "Submitted"
-                            ? "bg-[#DCF8EE]"
-                            : assignment.assignment_status === "Overdue"
-                              ? "bg-[#FAE7F4]"
-                              : null
-                        } rounded justify-start items-start gap-2 inline-flex `}>
+                          ? "bg-[#DCF8EE]"
+                          : assignment.assignment_status === "Overdue"
+                          ? "bg-[#FAE7F4]"
+                          : null
+                      } rounded justify-start items-start gap-2 inline-flex `}>
                       <div
-                        className={`${assignment.assignment_status === "Pending"
-                          ? " text-[#996400]"
-                          : assignment.assignment_status === "Submitted late"
+                        className={`${
+                          assignment.assignment_status === "Pending"
+                            ? " text-[#996400]"
+                            : assignment.assignment_status === "Submitted late"
                             ? "text-[#3456CF]"
                             : assignment.assignment_status === "Submitted"
-                              ? "text-[#0A7B60]"
-                              : assignment.assignment_status === "Overdue"
-                                ? "text-[#9B2FAC]"
-                                : null
-                          } text-base font-medium leading-normal`}>
-                        {assignment.assignment_status}
+                            ? "text-[#0A7B60]"
+                            : assignment.assignment_status === "Overdue"
+                            ? "text-[#9B2FAC]"
+                            : null
+                        } text-base font-medium leading-normal`}>
+                        {assignment.assignment_status === "Submitted late"
+                          ? "Submitted Late"
+                          : assignment.assignment_status}
                       </div>
                     </div>
                   </div>
@@ -162,23 +166,16 @@ const AssignmentBox = (props) => {
                         </div>
                       </div>
                       <div
-                        className={`InputField self-stretch  pl-3 pr-4 py-3 rounded-lg border border-solid${assignment.assignment_status === "Submitted" ||
-                          assignment.assignment_status === "Submitted late"
-                          ? "bg-none "
-                          : " bg-white"
-                          } border-gray-300 justify-start items-start gap-2 inline-flex`}>
+                        className={`InputField self-stretch  pl-3 pr-4 py-3 rounded-lg border border-solid bg-white border-gray-300 justify-start items-start gap-2 inline-flex`}>
                         <div
-                          className={`ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex ${assignment.assignment_status === "Submitted" ||
-                            assignment.assignment_status === "Submitted late"
-                            ? "bg-none "
-                            : " bg-white"
-                            }`}>
+                          className={`ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex bg-white`}>
                           <textarea
-                            className={`${assignment.assignment_status === "Submitted" ||
+                            className={`${
+                              assignment.assignment_status === "Submitted" ||
                               assignment.assignment_status === "Submitted late"
-                              ? "bg-slate-200 text-slate-500 "
-                              : "bg-white  text-slate-400"
-                              }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
+                                ? "bg-slate-200 text-slate-500 "
+                                : "bg-white  text-slate-400"
+                            }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
                             placeholder='Answer...'
                             value={
                               answers.find(
