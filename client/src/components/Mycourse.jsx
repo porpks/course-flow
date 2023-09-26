@@ -165,7 +165,7 @@ function MyCourse() {
           setIsShowAsm(false);
           localStorage.setItem("isShowAsm", false);
           setPauseTime(data.sublesson_video_timestop);
-          localStorage.setItem(data.sublesson_video_timestop);
+          localStorage.setItem("pauseTime", data.sublesson_video_timestop);
           setvideoUrl(data.sublesson_video);
           localStorage.setItem("videoUrl", data.sublesson_video);
           localStorage.setItem("nonepause", false);
@@ -182,7 +182,7 @@ function MyCourse() {
         localStorage.setItem("nonepause", true);
       }
     } catch (error) {
-      console.log("there is no sublesson in this code");
+      console.log(error);
     }
   };
 

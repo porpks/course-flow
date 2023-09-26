@@ -1,8 +1,11 @@
+/* eslint-disable react/jsx-key */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext.jsx";
+import { v4 as uuidv4 } from "uuid";
 
 import "./Assignment.css";
 const AssignmentBox = (props) => {
@@ -110,18 +113,16 @@ const AssignmentBox = (props) => {
     }
   };
 
-  // console.log("Render ass box", new Date().getTime());
-  // console.log(data);
-  // console.log(answers);
   return (
     <>
       <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex'>
         {data &&
           assignmentsToDisplay.map((assignment, index) => {
+            const assignmentKey = uuidv4();
             return (
               <>
-                <div key={"A" + index} className='w-[100%]'>
-                  <div className='Frame427320997 self-stretch flex items-start justify-between'>
+                <div key={assignmentKey} className='w-[100%]'>
+                  <div className=' Frame427320997 self-stretch flex items-start justify-between'>
                     <div className='Assignment grow shrink basis-0 h-8 text-black text-xl font-normal leading-loose'>
                       Assignment
                     </div>
@@ -130,7 +131,7 @@ const AssignmentBox = (props) => {
                         assignment.assignment_status === "Pending"
                           ? "bg-[#FFFBDA]"
                           : assignment.assignment_status === "Submitted late"
-                          ? "bg-[#EAF0FF]"
+                          ? "bg-red-100"
                           : assignment.assignment_status === "Submitted"
                           ? "bg-[#DCF8EE]"
                           : assignment.assignment_status === "Overdue"
@@ -142,7 +143,7 @@ const AssignmentBox = (props) => {
                           assignment.assignment_status === "Pending"
                             ? " text-[#996400]"
                             : assignment.assignment_status === "Submitted late"
-                            ? "text-[#3456CF]"
+                            ? "text-red-500"
                             : assignment.assignment_status === "Submitted"
                             ? "text-[#0A7B60]"
                             : assignment.assignment_status === "Overdue"
@@ -157,7 +158,6 @@ const AssignmentBox = (props) => {
                   </div>
 
                   <div
-                    key={index}
                     className={`w-[100%] Frame427321002  p-6   rounded-lg border border-gray-300 justify-start items-end gap-6 inline-flex`}>
                     <div className='InputStyle grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex'>
                       <div className='Label self-stretch justify-start items-start gap-1 inline-flex'>
@@ -170,12 +170,7 @@ const AssignmentBox = (props) => {
                         <div
                           className={`ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex bg-white`}>
                           <textarea
-                            className={`${
-                              assignment.assignment_status === "Submitted" ||
-                              assignment.assignment_status === "Submitted late"
-                                ? "bg-slate-200 text-slate-500 "
-                                : "bg-white  text-slate-400"
-                            }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
+                            className={`bg-white  text-slate-400  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
                             placeholder='Answer...'
                             value={
                               answers.find(
@@ -198,9 +193,7 @@ const AssignmentBox = (props) => {
                       </div>
                     </div>
                   </div>
-                  <div
-                    className='Frame427321005 self-stretch justify-between items-center gap-6 flex'
-                    key={index + "00"}>
+                  <div className='Frame427321005 self-stretch justify-between items-center gap-6 flex'>
                     {assignment.assignment_status !== "Pending" ? null : (
                       <div
                         className='Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex '
