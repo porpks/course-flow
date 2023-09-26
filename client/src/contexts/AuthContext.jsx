@@ -28,26 +28,9 @@ function AuthProvider(props) {
     state: false,
     assignment_id: null,
   });
-
   const userIdFromCookie = getCookie("cookieUserID");
   const userId = secureLocalStorage.getItem("userID");
   const navigate = useNavigate();
-
-  function displaySnackbar(message) {
-    setOpenSnackBar(false);
-    setSnackbarMes(message);
-    setOpenSnackBar(true);
-  }
-  const [openSnackbar, setOpenSnackBar] = useState(false);
-  const [snackBarMes, setSnackbarMes] = useState("");
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpenSnackBar(false);
-  };
 
   const logout = async () => {
     try {
@@ -143,7 +126,7 @@ function AuthProvider(props) {
 
       navigate("/ourcourse");
     } catch (error) {
-      displaySnackbar("Email or password is incorrect. Please try again.");
+      alert(error);
     }
   };
 
