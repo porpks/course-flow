@@ -20,7 +20,7 @@ function Learning() {
   const [sublessonIdArray, setSublessonIdArray] = useState([]);
   const [sublessonNameObject, setSublessonNameObject] = useState({});
   const [sublessonVideoObject, setSublessonVideoObject] = useState({});
-  const [loading, setLoading] = useState(true);
+
   const {
     userId,
     isShowAsm,
@@ -69,7 +69,7 @@ function Learning() {
   };
 
   const handleLesson = async (action) => {
-    if (loading) {
+    if (isLoading) {
       return;
     }
     setvideoUrl(null);
@@ -253,7 +253,6 @@ function Learning() {
         setSublessonNameObject(newSublessonNameObject);
         setSublessonVideoObject(newSublessonVideoObject);
 
-        setLoading(false); // Data has been loaded
         setIsLoading(false); // Data fetching is complete
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -273,28 +272,13 @@ function Learning() {
     );
   }
 
-  if (sublessonIdArray.length !== 0) {
-    if (localStorage.getItem("nonepause")) {
-      setVideoHead(sublessonNameObject[sublessonIdArray[0]]);
-      localStorage.setItem(
-        "sublessonName",
-        sublessonNameObject[sublessonIdArray[0]]
-      );
-      setVideoKey(sublessonIdArray[0]);
-      localStorage.setItem("sublessonID", sublessonIdArray[0]);
-      localStorage.setItem("videoKey", sublessonIdArray[0]);
-      setIsShowVdo(true);
-      localStorage.setItem("isShowVdo", true);
-      setPauseTime(0);
-      localStorage.setItem("pauseTime", 0);
-      setvideoUrl(sublessonVideoObject[sublessonIdArray[0]]);
-      localStorage.setItem(
-        "videoUrl",
-        sublessonVideoObject[sublessonIdArray[0]]
-      );
-
-      localStorage.removeItem("nonepause");
-    }
+  if (localStorage.getItem("nonepause")) {
+    setVideoHead(sublessonNameObject[sublessonIdArray[0]]);
+    setVideoKey(sublessonIdArray[0]);
+    setIsShowVdo(true);
+    setPauseTime(0);
+    setvideoUrl(sublessonVideoObject[sublessonIdArray[0]]);
+    localStorage.removeItem("nonepause");
   }
 
   return (
