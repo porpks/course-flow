@@ -29,7 +29,6 @@ function AuthProvider(props) {
     assignment_id: null,
   });
 
-
   const userIdFromCookie = getCookie("cookieUserID");
   const userId = secureLocalStorage.getItem("userID");
   const navigate = useNavigate();
@@ -49,7 +48,6 @@ function AuthProvider(props) {
 
     setOpenSnackBar(false);
   };
-
 
   const logout = async () => {
     try {
@@ -146,7 +144,6 @@ function AuthProvider(props) {
       navigate("/ourcourse");
     } catch (error) {
       displaySnackbar("Email or password is incorrect. Please try again.");
-
     }
   };
 
