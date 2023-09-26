@@ -27,7 +27,6 @@ function jwtInterceptor() {
       ) {
         window.localStorage.removeItem("token");
         window.localStorage.clear();
-        window.location.replace("/");
       }
     }
   );
