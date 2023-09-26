@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const AuthContext = React.createContext();
 import secureLocalStorage from "react-secure-storage";
+import SnackBar from "../components/SnackBar";
 
 function AuthProvider(props) {
   const [state, setState] = useState("eiei");
@@ -27,9 +28,28 @@ function AuthProvider(props) {
     state: false,
     assignment_id: null,
   });
+
+
   const userIdFromCookie = getCookie("cookieUserID");
   const userId = secureLocalStorage.getItem("userID");
   const navigate = useNavigate();
+
+  function displaySnackbar(message) {
+    setOpenSnackBar(false);
+    setSnackbarMes(message);
+    setOpenSnackBar(true);
+  }
+  const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [snackBarMes, setSnackbarMes] = useState("");
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
+
 
   const logout = async () => {
     try {
@@ -125,7 +145,8 @@ function AuthProvider(props) {
 
       navigate("/ourcourse");
     } catch (error) {
-      alert(error);
+      displaySnackbar("Email or password is incorrect. Please try again.");
+
     }
   };
 
@@ -175,46 +196,54 @@ function AuthProvider(props) {
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        state,
-        setState,
-        isLoggedIn,
-        setIsLoggedIn,
-        registerData,
-        setRegisterData,
-        loginData,
-        setLoginData,
-        userID,
-        setUserID,
-        username,
-        setUsername,
-        logout,
-        isAuthenticated,
-        courseId,
-        setCourseId,
-        isShowVdo,
-        setIsShowVdo,
-        isShowAsm,
-        setIsShowAsm,
-        videoHead,
-        setVideoHead,
-        videoKey,
-        setVideoKey,
-        pauseTime,
-        setPauseTime,
-        login,
-        userId,
-        videoUrl,
-        setvideoUrl,
-        deleteAssignment,
-        setDeleteAssignment,
-        userIdFromCookie,
-        loginAdmin,
-        logoutAdmin,
-      }}>
-      {props.children}
-    </AuthContext.Provider>
+    <>
+      <SnackBar
+        open={openSnackbar}
+        onClose={handleClose}
+        severity={"error"}
+        message={snackBarMes}
+      />
+      <AuthContext.Provider
+        value={{
+          state,
+          setState,
+          isLoggedIn,
+          setIsLoggedIn,
+          registerData,
+          setRegisterData,
+          loginData,
+          setLoginData,
+          userID,
+          setUserID,
+          username,
+          setUsername,
+          logout,
+          isAuthenticated,
+          courseId,
+          setCourseId,
+          isShowVdo,
+          setIsShowVdo,
+          isShowAsm,
+          setIsShowAsm,
+          videoHead,
+          setVideoHead,
+          videoKey,
+          setVideoKey,
+          pauseTime,
+          setPauseTime,
+          login,
+          userId,
+          videoUrl,
+          setvideoUrl,
+          deleteAssignment,
+          setDeleteAssignment,
+          userIdFromCookie,
+          loginAdmin,
+          logoutAdmin,
+        }}>
+        {props.children}
+      </AuthContext.Provider>
+    </>
   );
 }
 
