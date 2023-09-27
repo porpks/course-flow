@@ -4,9 +4,8 @@ import { func } from 'prop-types'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import AddLessonVideo from './AddLessonVideo'
 
-function AddLesson(sharedState, updateState) {
+function EditLesson(sharedState, updateState) {
   const { lessonIndex } = useParams() // รับค่า index จาก URL
   // const lessonToEdit = lessonData[lessonIndex]
   const navigate = useNavigate()
@@ -48,6 +47,19 @@ function AddLesson(sharedState, updateState) {
   //     setUpdatedLessonId('')
   //   }
   // }, [updatedSubLessonName, updatedLessonId, subLessonList])
+
+  useEffect(() => {
+    // 1. รับข้อมูลบทเรียนที่ต้องการแก้ไขจาก LocalStorage
+    const storage = localStorage.getItem('lesson_data')
+    if (storage) {
+      const parsedData = JSON.parse(storage)
+      if (lessonIndex >= 0 && lessonIndex < parsedData.length) {
+        const lessonToEdit = parsedData[lessonIndex]
+        setLessonName(lessonToEdit.lessonName)
+        setSubLessonList(lessonToEdit.subLessonList)
+      }
+    }
+  }, [lessonIndex])
 
   const addSubLesson = () => {
     const newLessonId = subLessonList.length + 1
@@ -173,7 +185,7 @@ function AddLesson(sharedState, updateState) {
             <hr />
             <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{' '}
             {subLessonList.map((subLesson, index) => (
-              <div key={index}>
+              <div>
                 <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
                   <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
                     <DragIndicatorIcon
@@ -201,7 +213,24 @@ function AddLesson(sharedState, updateState) {
                       }
                     />
                     <p className="Body2 pb-1">Video*</p>
-                    <AddLessonVideo />
+                    <button className="w-[160px] h-[160px] flex flex-col justify-center items-center #F1F2F6 border-none hover:cursor-pointer">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="25"
+                        height="24"
+                        viewBox="0 0 25 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M12.5 4.5V19.5M20 12H5"
+                          stroke="#5483D0"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      <p className="Body3 text-[#5483D0] pt-2">Upload Video</p>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -219,4 +248,4 @@ function AddLesson(sharedState, updateState) {
   )
 }
 
-export default AddLesson
+export default EditLesson
