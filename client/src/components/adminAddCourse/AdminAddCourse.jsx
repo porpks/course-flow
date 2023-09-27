@@ -78,12 +78,14 @@ function AdminAddCourse() {
 
   // console.log(localImg);
   // console.log(localVdo);
+  const [getImgUrl, setGetImgUrl] = useState("");
+  const [getVdoUrl, setGetVdoUrl] = useState("");
 
   if (localImg && localVdo) {
     const storedImageUrl = localImg;
     const storedVideoUrl = localVdo;
     if (storedImageUrl !== image_url) {
-      setImage_url(storedImageUrl);
+      getImgUrl;
     }
     if (storedVideoUrl !== video_url) {
       setVideo_url(storedVideoUrl);
@@ -126,17 +128,20 @@ function AdminAddCourse() {
     // // Clear the interval when the component unmounts
     // return () => clearInterval(intervalId);
   }, []);
+  console.log(getImgUrl);
+  console.log(getVdoUrl);
 
   const sendData = async (course) => {
     const updatedCourseData = {
       ...courseData,
-      cover_img: image_url,
-      video_trailer: video_url,
+      cover_img: getImgUrl,
+      video_trailer: getVdoUrl,
     };
     try {
       await axios.post(
         `http://localhost:4000/admin/addcourse`,
-        updatedCourseData
+        updatedCourseData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
       // console.log(updatedCourseData);
       localStorage.removeItem("video_url");
@@ -170,7 +175,7 @@ function AdminAddCourse() {
 
     setOpenSnackBar(false);
   };
-
+  // console.log(getImgUrl);
   return (
     <>
       <SnackBar
@@ -292,9 +297,17 @@ function AdminAddCourse() {
                     </div>
 
                     {/*----------------------- UPLOAD IMG --------------------- */}
-                    <UploadImage submitData={submitData} getUrl={setLocalImg} />
+                    <UploadImage
+                      submitData={submitData}
+                      getUrl={setLocalImg}
+                      setGetImgUrl={setGetImgUrl}
+                    />
                     {/*----------------------- UPLOAD VIDEO --------------------- */}
-                    <UploadVideo submitData={submitData} getUrl={setLocalVdo} />
+                    <UploadVideo
+                      submitData={submitData}
+                      getUrl={setLocalVdo}
+                      setGetVdoUrl={setGetVdoUrl}
+                    />
 
                     <button type="submit">Submit</button>
                   </Form>

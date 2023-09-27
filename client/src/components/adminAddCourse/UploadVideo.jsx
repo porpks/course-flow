@@ -23,7 +23,7 @@ function UploadVideo(props) {
       if (allowedVdoTypes.includes(vdoFile.type)) {
         if (vdoFile.size <= 20 * 1024 * 1024) {
           const video_url = URL.createObjectURL(vdoFile);
-          setAvatarVdo(vdoFile);
+          props.setGetVdoUrl(vdoFile);
           setVdoUrl(URL.createObjectURL(vdoFile));
           localStorage.setItem("video_url", video_url);
           props.getUrl(localStorage.getItem("video_url"));

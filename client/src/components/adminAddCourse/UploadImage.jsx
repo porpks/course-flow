@@ -5,6 +5,7 @@ function UploadImage(props) {
   const [image, setImage] = useState("");
   const [avatar, setAvatar] = useState({});
   const [avatarUrl, setAvatarUrl] = useState("");
+ 
 
   const handleUploadImage = (event) => {
     const imgFile = event.target.files[0];
@@ -14,7 +15,9 @@ function UploadImage(props) {
       if (allowedImgTypes.includes(imgFile.type)) {
         if (imgFile.size <= 5 * 1024 * 1024) {
           const image_url = URL.createObjectURL(imgFile);
-          setAvatar(imgFile);
+          // setGetImgUrl(URL.createObjectURL(imgFile));
+          // setAvatar(imgFile);
+          props.setGetImgUrl(imgFile)
           setAvatarUrl(image_url);
           localStorage.setItem("image_url", image_url);
           props.getUrl(localStorage.getItem("image_url"));
