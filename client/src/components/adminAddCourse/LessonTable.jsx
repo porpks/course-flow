@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './lessonTable.css'
 
 function LessonTable() {
@@ -50,11 +50,49 @@ function LessonTable() {
     },
     {
       id: 10,
-      Lesson_name: 'Stormheart',
-      Sub_lesson: 6,
+      lessonName: 'Stormheart',
+      subLessonName: 6,
     },
   ]
+  const [lessonData, setLessonData] = useState([])
+  useEffect(() => {
+    try {
+      const storedData = localStorage.getItem('lesson_data')
+      if (storedData) {
+        const parsedData = JSON.parse(storedData)
+        // console.log(parsedData)
+        const lessonName = parsedData.lessonName
+        const transformedData = parsedData.subLessonList.map((subLesson) => ({
+          lessonName, // เรียกใช้ lessonName จากตัวแปรด้านบน
+          subLessonId: subLesson.lessonId,
+          subLessonName: subLesson.subLessonName,
+        }))
+        console.log(transformedData)
+        setLessonData(transformedData)
+        // console.log(parsedData.subLessonList)
+        const subLessonListData = parsedData.subLessonList
 
+        // console.log(Array.isArray(subLessonListData))
+        // if (Array.isArray(subLessonListData)) {
+        //   const lessonDataFromLocal = subLessonListData.map((item) => ({
+        //     Sub_lesson: item.subLessonName,
+        //   }))
+        //   console.log(lessonDataFromLocal)
+        //   // setLessonData({
+        //   //   Lesson_name: parsedData.lessonName,
+        //   //   Sub_lesson: lessonDataFromLocal,
+        //   // })
+        //   setLessonData(parsedData)
+        // } else if (typeof parsedData === 'object') {
+        //   setLessonData([parsedData])
+        //   console.log(lessonDataFromLocal)
+        // }
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }, [])
+  console.log(lessonData)
   const handleDelete = (id, lessonName) => {
     alert(`Deleted lesson with ID ${id} ${lessonName}`)
   }
@@ -73,10 +111,10 @@ function LessonTable() {
             <th>Sub-lesson</th>
             <th>Action</th>
           </tr>
-          {mockData.map((data, index) => (
+          {lessonData.map((data, index) => (
             <tr key={index}>
               <td>{data.id}</td>
-              <td>{data.Lesson_name}</td>
+              <td>{data.lessonName}</td>
               <td>{data.Sub_lesson}</td>
               <td className="flex gap-[17px] items-center justify-center">
                 <button
