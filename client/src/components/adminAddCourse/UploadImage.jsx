@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-357 * 240;
+import SnackBar from "../SnackBar.jsx";
+
 function UploadImage() {
   const [image, setImage] = useState("");
   const [avatar, setAvatar] = useState({});
@@ -14,10 +15,12 @@ function UploadImage() {
           setAvatar(imgFile);
           setAvatarUrl(URL.createObjectURL(imgFile));
         } else {
-          alert("File size exceeds 5 MB.");
+          displaySnackbar("File size exceeds 5 MB.");
         }
       } else {
-        alert("Invalid file type. Please choose a .jpg, .jpeg, or .png file.");
+        displaySnackbar(
+          "Invalid file type. Please choose a .jpg, .jpeg, or .png file."
+        );
       }
     }
   };
@@ -32,15 +35,38 @@ function UploadImage() {
 
   // console.log(`avatar : ${avatar}`);
   // console.log(`avatar URL : ${avatarUrl}`);
+
+  function displaySnackbar(message) {
+    setOpenSnackBar(false);
+    setSnackbarMes(message);
+    setOpenSnackBar(true);
+  }
+  const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [snackBarMes, setSnackbarMes] = useState("");
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
   return (
     <div>
+      {" "}
+      <SnackBar
+        open={openSnackbar}
+        onClose={handleClose}
+        severity={"error"}
+        message={snackBarMes}
+      />
       <div className="flex flex-col gap-[6px]">
         <label className="">Cover image *</label>
         <div className="relative h-fit">
           {/*---------------------- IMG THUMBNAIL UPLOAD -----------------------*/}
           {!avatarUrl ? (
             <img
-              src="../public/image/uploadImage.svg"
+              src="../../../public/image/uploadImage.svg"
               className="relative bg-[--gray100] w-[358px] h-[358px] object-cover	rounded-2xl"
             />
           ) : null}
@@ -58,7 +84,7 @@ function UploadImage() {
               onClick={handleRemoveImage}
             >
               <img
-                src="../public/image/closeIcon.svg"
+                src="../../../public/image/closeIcon.svg"
                 alt=""
                 className="w-[10px] h-[10px]"
               />
