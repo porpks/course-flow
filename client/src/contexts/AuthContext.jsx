@@ -33,13 +33,15 @@ function AuthProvider(props) {
   const userId = secureLocalStorage.getItem("userID");
   const navigate = useNavigate();
 
-  function displaySnackbar(message) {
+  function displaySnackbar(message, status) {
     setOpenSnackBar(false);
+    setSnackStatus(status);
     setSnackbarMes(message);
     setOpenSnackBar(true);
   }
   const [openSnackbar, setOpenSnackBar] = useState(false);
   const [snackBarMes, setSnackbarMes] = useState("");
+  const [snackStatus, setSnackStatus] = useState("");
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -141,9 +143,13 @@ function AuthProvider(props) {
         }
       }, 50);
 
+      displaySnackbar("login successful", "success");
       navigate("/ourcourse");
     } catch (error) {
-      displaySnackbar("Email or password is incorrect. Please try again.");
+      displaySnackbar(
+        "Email or password is incorrect. Please try again.",
+        "warning"
+      );
     }
   };
 
@@ -197,7 +203,7 @@ function AuthProvider(props) {
       <SnackBar
         open={openSnackbar}
         onClose={handleClose}
-        severity={"error"}
+        severity={snackStatus}
         message={snackBarMes}
       />
       <AuthContext.Provider

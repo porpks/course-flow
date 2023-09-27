@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Mymodal from "../Mymodal";
 import CircularIndeterminate from "../../assets/loadingProgress.jsx";
+import SnackBar from "../SnackBar";
 
 function CourseList() {
   const [courseData, setCourseData] = useState([]);
@@ -85,11 +86,29 @@ function CourseList() {
         setTargetCourseId(null);
         setDeleteToggle(false);
         courseFetching();
-        alert("ลบแล้วจ้า");
+        displaySnackbar(`${targetCourseName} has been deleted`, "success");
       } catch (error) {
         console.log(error);
       }
     }
+  };
+
+  function displaySnackbar(message, status) {
+    setOpenSnackBar(false);
+    setSnackStatus(status);
+    setSnackbarMes(message);
+    setOpenSnackBar(true);
+  }
+  const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [snackBarMes, setSnackbarMes] = useState("");
+  const [snackStatus, setSnackStatus] = useState("");
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
   };
 
   useEffect(() => {
@@ -108,6 +127,12 @@ function CourseList() {
   return (
     <div className="w-[1200px]">
       {/* <div className="w-[100%]"> */}
+      <SnackBar
+        open={openSnackbar}
+        onClose={handleClose}
+        severity={snackStatus}
+        message={snackBarMes}
+      />
       {deleteToggle ? (
         <Mymodal
           open={deleteToggle}
@@ -280,7 +305,7 @@ function CourseList() {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              Previous
+              Prev
             </button>
             <span className="text-gray-600 text-lg">Page {page}</span>
             <button
