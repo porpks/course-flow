@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
 import SnackBar from "../SnackBar.jsx";
 
-function UploadVideo() {
+function UploadVideo(props) {
   const [vdo, setVdo] = useState("");
   const [avatarVdo, setAvatarVdo] = useState({});
   const [VdoUrl, setVdoUrl] = useState("");
@@ -26,6 +26,7 @@ function UploadVideo() {
           setAvatarVdo(vdoFile);
           setVdoUrl(URL.createObjectURL(vdoFile));
           localStorage.setItem("video_url", video_url);
+          props.setState(localStorage.getItem("video_url"));
         } else {
           displaySnackbar("File size exceeds 20 MB.");
         }
@@ -60,6 +61,12 @@ function UploadVideo() {
 
     setOpenSnackBar(false);
   };
+
+  useEffect(() => {
+    if (props.submitData) {
+      setVdoUrl("");
+    }
+  }, [props.submitData]);
   return (
     <div>
       <SnackBar

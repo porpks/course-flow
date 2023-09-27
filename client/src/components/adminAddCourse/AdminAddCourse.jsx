@@ -9,11 +9,16 @@ import axios from "axios";
 import * as Yup from "yup";
 import UploadVideo from "./UploadVideo";
 import UploadImage from "./UploadImage";
+import SnackBar from "../SnackBar.jsx";
 function AdminAddCourse() {
   // const history = useHistory()
   const navigate = useNavigate();
   const [image_url, setImage_url] = useState("");
   const [video_url, setVideo_url] = useState("");
+  const [submitData, setSubmitData] = useState(false);
+
+  const [localImg, setLocalImg] = useState("");
+  const [localVdo, setLocalVdo] = useState("");
 
   const handleChange = (event) => {
     setValues((prevValues) => ({
@@ -61,7 +66,6 @@ function AdminAddCourse() {
     },
   });
 
-
   const courseData = {
     course_name: formik.values.courseName,
     price: formik.values.price,
@@ -72,22 +76,24 @@ function AdminAddCourse() {
     video_trailer: video_url,
   };
 
+  console.log(localImg);
+  console.log(localVdo);
+
+  if (localImg && localVdo) {
+    const storedImageUrl = localImg;
+    const storedVideoUrl = localVdo;
+    if (storedImageUrl !== image_url) {
+      setImage_url(storedImageUrl);
+    }
+    if (storedVideoUrl !== video_url) {
+      setVideo_url(storedVideoUrl);
+    }
+  }
+
   useEffect(() => {
     const storedData = localStorage.getItem("course_data");
-    const storedImageUrl = localStorage.getItem("image_url");
-    const storedVideoUrl = localStorage.getItem("video_url");
-
     const fetchData = async () => {
       try {
-        if (storedImageUrl !== image_url) {
-          setImage_url(storedImageUrl);
-          console.log(image_url);
-        }
-
-        if (storedVideoUrl !== video_url) {
-          setVideo_url(storedVideoUrl);
-        }
-
         if (storedData) {
           const parsedData = JSON.parse(storedData);
           const courseDataFromLocal = {
@@ -104,23 +110,43 @@ function AdminAddCourse() {
       }
     };
 
-    fetchData();
+    // const intervalId = setInterval(() => {
+    //   const storedImageUrl = localStorage.getItem("image_url");
+    //   const storedVideoUrl = localStorage.getItem("video_url");
+    //   if (storedImageUrl !== image_url) {
+    //     setImage_url(storedImageUrl);
+    //     // console.log("Updated Image URL:", storedImageUrl);
+    //   }
+    //   if (storedVideoUrl !== video_url) {
+    //     setVideo_url(storedVideoUrl);
+    //     // console.log("Updated VDO URL:", storedVideoUrl);
+    //   }
+    // }, 2000);
 
-    
+    // // Clear the interval when the component unmounts
+    // return () => clearInterval(intervalId);
   }, []);
 
   const sendData = async (course) => {
     const updatedCourseData = {
       ...courseData,
       cover_img: image_url,
-      // video_trailer: video_url,
+      video_trailer: video_url,
     };
-
-    // await axios.post(
-    //   `http://localhost:4000/admin/addcourse`,
-    //   updatedCourseData
-    // );
-    console.log(updatedCourseData);
+    try {
+      await axios.post(
+        `http://localhost:4000/admin/addcourse`,
+        updatedCourseData
+      );
+      // console.log(updatedCourseData);
+      localStorage.removeItem("video_url");
+      localStorage.removeItem("image_url");
+      formik.resetForm();
+      setSubmitData(true);
+    } catch (error) {
+      message: error;
+    }
+    displaySnackbar("You've Successfully Added a New Course. 🎉");
   };
 
   const handleData = () => {
@@ -129,8 +155,31 @@ function AdminAddCourse() {
     // console.log(localStorage.getItem(`course_data`))
   };
 
+  function displaySnackbar(message) {
+    setOpenSnackBar(false);
+    setSnackbarMes(message);
+    setOpenSnackBar(true);
+  }
+  const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [snackBarMes, setSnackbarMes] = useState("");
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
+
   return (
     <>
+      <SnackBar
+        open={openSnackbar}
+        onClose={handleClose}
+        severity={"success"}
+        message={snackBarMes}
+      />
+
       <div className="flex justify-center items-center">
         <div className="canvas flex flex-row w-[1440px]">
           {/* LEFT-NAV */}
@@ -243,9 +292,10 @@ function AdminAddCourse() {
                     </div>
 
                     {/*----------------------- UPLOAD IMG --------------------- */}
-                    <UploadImage />
+                    <UploadImage submitData={submitData} setState={localImg} />
                     {/*----------------------- UPLOAD VIDEO --------------------- */}
-                    <UploadVideo />
+                    <UploadVideo submitData={submitData} setState={localVdo} />
+
                     <button type="submit">Submit</button>
                   </Form>
                 </Formik>
