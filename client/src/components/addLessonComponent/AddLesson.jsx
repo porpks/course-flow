@@ -12,8 +12,9 @@ function AddLesson(sharedState, updateState) {
   const navigate = useNavigate()
   const { courseid } = useParams()
   const [dataCourse, setDataCourse] = useState([])
+  const [dataCourseName, setDataCourseName] = useState('')
   const [subLessonList, setSubLessonList] = useState([
-    { SubLessonId: 1, subLessonName: '' },
+    { subLessonId: 1, subLessonName: '' },
   ])
   const [lessonName, setLessonName] = useState('')
   async function getDetailCourse() {
@@ -34,6 +35,22 @@ function AddLesson(sharedState, updateState) {
     }
   }
   // console.log(dataCourse)
+  useEffect(() => {
+    // 1. รับข้อมูลบทเรียนที่ต้องการแก้ไขจาก LocalStorage
+    const courseDataStorage = localStorage.getItem('course_data')
+    const courseParsedData = JSON.parse(courseDataStorage)
+    setDataCourseName(courseParsedData.course_name)
+
+    const storage = localStorage.getItem('lesson_data')
+    if (storage) {
+      const parsedData = JSON.parse(storage)
+      if (lessonIndex >= 0 && lessonIndex < parsedData.length) {
+        const lessonToEdit = parsedData[lessonIndex]
+        setLessonName(lessonToEdit.lessonName)
+        setSubLessonList(lessonToEdit.subLessonList)
+      }
+    }
+  }, [lessonIndex])
 
   // useEffect(() => {
   //   getDetailCourse()
@@ -61,14 +78,14 @@ function AddLesson(sharedState, updateState) {
       return
     }
     const updatedSubLessonList = subLessonList.filter(
-      (subLesson) => subLesson.SubLessonId !== lessonIdToDelete
+      (subLesson) => subLesson.subLessonId !== lessonIdToDelete
     )
     setSubLessonList(updatedSubLessonList)
   }
 
-  const handleSubLesson = (SubLessonId, subLessonName) => {
+  const handleSubLesson = (subLessonId, subLessonName) => {
     const updatedSubLessonList = subLessonList.map((subLesson) =>
-      subLesson.SubLessonId === SubLessonId
+      subLesson.subLessonId === subLessonId
         ? { ...subLesson, subLessonName }
         : subLesson
     )
@@ -139,7 +156,7 @@ function AddLesson(sharedState, updateState) {
             <div className="flex flex-col ">
               <div className="flex flex-row Body3 space-x-2">
                 <p className="text-[#9AA1B9]">Course</p>
-                <p>{dataCourse.course_name}</p>
+                <p>{dataCourseName}</p>
               </div>
               <h1 className="H3">Add Lesson</h1>
             </div>
@@ -186,7 +203,7 @@ function AddLesson(sharedState, updateState) {
                       <p className="Body2 pb-1">Sub-lesson name*</p>
                       <button
                         className="Ghost hover:cursor-pointer"
-                        onClick={() => deleteSubLesson(subLesson.SubLessonId)}
+                        onClick={() => deleteSubLesson(subLesson.subLessonId)}
                       >
                         Delete
                       </button>
@@ -197,7 +214,7 @@ function AddLesson(sharedState, updateState) {
                       className="Body2 Input w-[530px] h-[48px] mb-10 p"
                       value={subLesson.subLessonName}
                       onChange={(e) =>
-                        handleSubLesson(subLesson.SubLessonId, e.target.value)
+                        handleSubLesson(subLesson.subLessonId, e.target.value)
                       }
                     />
                     <p className="Body2 pb-1">Video*</p>

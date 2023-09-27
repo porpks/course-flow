@@ -86,7 +86,7 @@ function LessonTable() {
                 >
                   <img src="../../../public/image/delete.svg" alt="" />
                 </button>
-                <Link to={`/admin/addcourse/addlesson/edit/${index}`}>
+                <Link to={`/admin/addcourse/editlesson/${index}`}>
                   <button className="btn cursor-pointer">
                     <img src="../../../public/image/edit.svg" alt="Edit" />
                   </button>
