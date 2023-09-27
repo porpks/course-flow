@@ -18,13 +18,10 @@ function AuthProvider(props) {
   const [courseId, setCourseId] = useState(null);
   const [isShowVdo, setIsShowVdo] = useState(false);
   const [isShowAsm, setIsShowAsm] = useState(false);
-  const [renderAsm, setRenderAsm] = useState(false);
   const [videoHead, setVideoHead] = useState("");
   const [videoKey, setVideoKey] = useState(null);
   const [pauseTime, setPauseTime] = useState(0);
   const [videoUrl, setvideoUrl] = useState(
-    "https://xkebssagktnylcibaxzh.supabase.co/storage/v1/object/public/test-avatar/video/1%20Minute%20Sample%20Video.mp4?t=2023-09-20T08%3A40%3A19.620Z"
-  );
     "https://xkebssagktnylcibaxzh.supabase.co/storage/v1/object/public/test-avatar/video/1%20Minute%20Sample%20Video.mp4?t=2023-09-20T08%3A40%3A19.620Z"
   );
   const [deleteAssignment, setDeleteAssignment] = useState({
@@ -55,7 +52,6 @@ function AuthProvider(props) {
   const logout = async () => {
     try {
       localStorage.clear(), setIsLoggedIn(false), clearAllCookies();
-      localStorage.clear(), setIsLoggedIn(false), clearAllCookies();
       // (window.location.href = '/')
       // setUserID("");
       // const response = await axios.get(`http://localhost:4000/auth/logout`);
@@ -68,33 +64,22 @@ function AuthProvider(props) {
       // }
     } catch (error) {
       alert(error.message);
-      alert(error.message);
     }
-  };
   };
 
   useEffect(() => {
     if (!isAuthenticated) {
       localStorage.clear();
       logout();
-      localStorage.clear();
-      logout();
     }
 
-    return () => {};
-  }, [userId]);
     return () => {};
   }, [userId]);
 
   function clearAllCookies() {
     const cookies = document.cookie.split(";");
-    const cookies = document.cookie.split(";");
 
     for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i];
-      const eqPos = cookie.indexOf("=");
-      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
       const cookie = cookies[i];
       const eqPos = cookie.indexOf("=");
       const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
@@ -105,30 +90,19 @@ function AuthProvider(props) {
   function getCookie(cname) {
     let name = cname + "=";
     let ca = document.cookie.split(";");
-    let name = cname + "=";
-    let ca = document.cookie.split(";");
     for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == " ") {
-        c = c.substring(1);
       let c = ca[i];
       while (c.charAt(0) == " ") {
         c = c.substring(1);
       }
       if (c.indexOf(name) == 0) {
         return c.substring(name.length, c.length);
-        return c.substring(name.length, c.length);
       }
     }
-    return "";
     return "";
   }
 
   function setCookie(name, value, days) {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000); // Calculate expiration time
-    const cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
-    document.cookie = cookie;
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000); // Calculate expiration time
     const cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
@@ -139,18 +113,10 @@ function AuthProvider(props) {
     try {
       const result = await axios.post(
         "http://localhost:4000/auth/login",
-        "http://localhost:4000/auth/login",
         userData
       );
       const token = result.data.token;
-      );
-      const token = result.data.token;
       // setUserID(result.data.data[0].user_id);
-      setCookie("cookieUserID", result.data.data[0].user_id, 1);
-      setCookie("token", token, 1);
-      localStorage.setItem("isLoggedIn", true);
-      secureLocalStorage.setItem("userID", result.data.data[0].user_id);
-      localStorage.setItem("token", token);
       setCookie("cookieUserID", result.data.data[0].user_id, 1);
       setCookie("token", token, 1);
       localStorage.setItem("isLoggedIn", true);
@@ -170,44 +136,24 @@ function AuthProvider(props) {
           localStorage.setItem("username", response.data.data.full_name);
           localStorage.setItem("userimage", response.data.data.image_url);
           localStorage.setItem("isLoggedIn", hasToken ? "true" : "false");
-          );
-          const hasToken = !!localStorage.getItem("token");
-          setUsername(response.data.data);
-          localStorage.setItem("username", response.data.data.full_name);
-          localStorage.setItem("userimage", response.data.data.image_url);
-          localStorage.setItem("isLoggedIn", hasToken ? "true" : "false");
         } catch (error) {
-          console.error(error);
           console.error(error);
         }
       }, 50);
-      }, 50);
 
-      navigate("/ourcourse");
       navigate("/ourcourse");
     } catch (error) {
       displaySnackbar("Email or password is incorrect. Please try again.");
     }
-  };
   };
 
   const loginAdmin = async (loginData) => {
     try {
       const response = await axios.post(
         "http://localhost:4000/authadmin/login",
-        "http://localhost:4000/authadmin/login",
         loginData
       );
-      );
       if (!response.data.error) {
-        console.log("Login successful");
-        const admin_id = response.data.data[0].admin_id;
-        const token = response.data.token;
-        console.log(token);
-        localStorage.setItem("adminID", admin_id);
-        localStorage.setItem("token", token);
-        setCookie("token", token, 1);
-        setCookie("cookieAdminID", admin_id, 1);
         console.log("Login successful");
         const admin_id = response.data.data[0].admin_id;
         const token = response.data.token;
@@ -220,13 +166,9 @@ function AuthProvider(props) {
           try {
             const hasToken = !!localStorage.getItem("token");
             localStorage.setItem("isLoggedIn", hasToken ? "true" : "false");
-            const hasToken = !!localStorage.getItem("token");
-            localStorage.setItem("isLoggedIn", hasToken ? "true" : "false");
           } catch (error) {
             console.error(error);
-            console.error(error);
           }
-        }, 50);
         }, 50);
         // setCookie('cookieAdminID', Test, 1)
         // setCookie('token', token, 1)
@@ -234,25 +176,18 @@ function AuthProvider(props) {
         // setIsLoggedIn(true)
 
         navigate("admin/courselist");
-        navigate("admin/courselist");
       } else if (response.data.error.status === 400) {
-        throw new Error("Invalid login credentials");
         throw new Error("Invalid login credentials");
       }
     } catch (error) {
       console.error("Error during login:", error.message);
-      console.error("Error during login:", error.message);
     }
-  };
   };
 
   const logoutAdmin = () => {
     localStorage.clear(),
       setIsLoggedIn(false),
       clearAllCookies(),
-      setAdminId(""),
-      navigate("/admin"); // Update this path as needed
-  };
       setAdminId(""),
       navigate("/admin"); // Update this path as needed
   };
@@ -302,7 +237,8 @@ function AuthProvider(props) {
           userIdFromCookie,
           loginAdmin,
           logoutAdmin,
-        }}>
+        }}
+      >
         {props.children}
       </AuthContext.Provider>
     </>
@@ -310,7 +246,5 @@ function AuthProvider(props) {
 }
 
 const useAuth = () => React.useContext(AuthContext);
-const useAuth = () => React.useContext(AuthContext);
 
-export { AuthProvider, useAuth };
 export { AuthProvider, useAuth };

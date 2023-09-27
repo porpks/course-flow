@@ -219,7 +219,7 @@ function AddLesson(sharedState, updateState) {
                     />
                     <p className="Body2 pb-1">Video*</p>
                     <AddLessonVideo />
-                    <AddLessonVideo />
+
                   </div>
                 </div>
               </div>
