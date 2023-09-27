@@ -154,6 +154,7 @@ function AdminAddCourse() {
                         <div>{formik.errors.price}</div>
                       ) : null}
                     </div>
+
                     <div className="flex flex-col flex-1 gap-[4px]">
                       <label className="">Total learning time *</label>
                       <input
@@ -163,12 +164,30 @@ function AdminAddCourse() {
                         placeholder="Enter Total learning time"
                         className="Input"
                         value={formik.values.totalLearningTime}
+
                         onChange={formik.handleChange}
                       />{' '}
                       {formik.errors.totalLearningTime ? (
                         <div>{formik.errors.totalLearningTime}</div>
                       ) : null}
                     </div>
+
+                    <div className="flex flex-col gap-[4px]">
+                      <label className="">Course detail *</label>
+                      <Field
+                        as="textarea"
+                        // type="text"
+                        name="courseDetail"
+                        // id="courseDetail"
+                        placeholder="Enter Course detail"
+                        className="Input h-[220px] resize-none flex text- align-text-top "
+                        value={formik.values.courseDetail}
+                        onChange={formik.handleChange}
+                      />
+                      {formik.errors.courseDetail ? (
+                        <div>{formik.errors.courseDetail}</div>
+                      ) : null}
+
                   </div>
                   <div className="flex flex-col gap-[4px]">
                     <label className="">Course summary *</label>
@@ -237,6 +256,7 @@ function AdminAddCourse() {
                           </label>
                         </div>
                       </div>
+
                     </div>
                   </div>
                   <div className="flex flex-col gap-[6px]">
