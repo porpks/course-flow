@@ -237,7 +237,8 @@ function AuthProvider(props) {
           userIdFromCookie,
           loginAdmin,
           logoutAdmin,
-        }}>
+        }}
+      >
         {props.children}
       </AuthContext.Provider>
     </>
