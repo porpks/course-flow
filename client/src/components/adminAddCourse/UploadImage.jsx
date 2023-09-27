@@ -17,7 +17,7 @@ function UploadImage(props) {
           setAvatar(imgFile);
           setAvatarUrl(image_url);
           localStorage.setItem("image_url", image_url);
-          props.setState(localStorage.getItem("image_url"));
+          props.getUrl(localStorage.getItem("image_url"));
         } else {
           displaySnackbar("File size exceeds 5 MB.");
         }
