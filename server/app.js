@@ -10,12 +10,13 @@ import assignmentRouter from './apps/assignment.js'
 import authAdminRouter from './apps/authadmin.js'
 import adminRouter from './apps/admin.js'
 import addCourseRouter from './apps/addcoursebyadmin.js'
-
+import testRouter from './apps/test.js'
 import learnRouter from './apps/learn.js'
 import session from 'express-session'
 import cookieSession from 'cookie-session'
 import { validateTokenMiddleware } from './middlewares/protect.js'
 import cookieParser from 'cookie-parser'
+import test2Router from './apps/test2.js'
 
 async function init() {
   const app = express()
@@ -51,7 +52,8 @@ async function init() {
   app.use('/mycourse', MyCourseRouter)
   app.use('/assignment', assignmentRouter)
   app.use('/learn', learnRouter)
-
+  app.use('/test', testRouter)
+  app.use('/test2', test2Router)
   // app.use('/admin', adminRouter)
   app.use('/admin', addCourseRouter)
 
