@@ -6,8 +6,8 @@ function AddLessonVideo() {
   const [avatarVdo, setAvatarVdo] = useState({});
   const [VdoUrl, setVdoUrl] = useState("");
 
-    console.log(`VDO : ${avatarVdo}`);
-    console.log(`VDO URL : ${VdoUrl}`);
+  console.log(`VDO : ${avatarVdo}`);
+  console.log(`VDO URL : ${VdoUrl}`);
 
   const handleUploadVideo = async (event) => {
     const vdoFile = event.target.files[0];
@@ -46,7 +46,7 @@ function AddLessonVideo() {
           {VdoUrl || vdo ? null : (
             <img
               src="../../public/image/uploadVdo.svg"
-              className="relative w-[250px] h-[250px] object-cover rounded-2xl	"
+              className="relative w-[250px] h-[250px] object-cover rounded-2xl  	"
             />
           )}
           {/*---------------------- VDO PLAYER -----------------------*/}
@@ -78,7 +78,7 @@ function AddLessonVideo() {
           {/*---------------------- UPLOAD BTN -----------------------*/}
 
           {!VdoUrl ? (
-            <div className="absolute top-0 left-0 w-[250px] h-[250px] border-[--blue500] border-[3px] rounded-2xl hover:border-dashed   group ">
+            <div className="absolute top-0 left-0 w-[250px] h-[250px] border-[2px] border-[--gray300] border-solid rounded-2xl hover:border-dashed  hover:border-[--blue500] hover:border-[3px]   group ">
               <label
                 htmlFor="video-upload"
                 className="hidden group-hover:block w-full h-full pt-[45px] rounded-full  cursor-pointer "
