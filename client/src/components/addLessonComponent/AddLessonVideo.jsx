@@ -1,43 +1,43 @@
-import React, { useState, useEffect } from "react";
-import ReactPlayer from "react-player";
+import React, { useState, useEffect } from 'react'
+import ReactPlayer from 'react-player'
 
 function AddLessonVideo() {
-  const [vdo, setVdo] = useState("");
-  const [avatarVdo, setAvatarVdo] = useState({});
-  const [VdoUrl, setVdoUrl] = useState("");
+  const [vdo, setVdo] = useState('')
+  const [avatarVdo, setAvatarVdo] = useState({})
+  const [VdoUrl, setVdoUrl] = useState('')
 
-  console.log(`VDO : ${avatarVdo}`);
-  console.log(`VDO URL : ${VdoUrl}`);
+  console.log(`VDO : ${avatarVdo}`)
+  console.log(`VDO URL : ${VdoUrl}`)
 
   const handleUploadVideo = async (event) => {
-    const vdoFile = event.target.files[0];
+    const vdoFile = event.target.files[0]
 
     if (vdoFile) {
       const allowedVdoTypes = [
-        "video/mp4",
-        "video/quicktime",
-        "video/x-msvideo",
-      ];
+        'video/mp4',
+        'video/quicktime',
+        'video/x-msvideo',
+      ]
 
       if (allowedVdoTypes.includes(vdoFile.type)) {
         if (vdoFile.size <= 20 * 1024 * 1024) {
-          setAvatarVdo(vdoFile);
-          setVdoUrl(URL.createObjectURL(vdoFile));
+          setAvatarVdo(vdoFile)
+          setVdoUrl(URL.createObjectURL(vdoFile))
         } else {
-          alert("File size exceeds 20 MB.");
+          alert('File size exceeds 20 MB.')
         }
       } else {
-        alert("Invalid video type. Please choose a .mp4, .mov, or .avi file.");
+        alert('Invalid video type. Please choose a .mp4, .mov, or .avi file.')
       }
     }
-  };
+  }
 
   const handleRemoveVdo = async () => {
-    setAvatarVdo({});
-    setVdoUrl("");
-    setVdo("");
+    setAvatarVdo({})
+    setVdoUrl('')
+    setVdo('')
     // await axios.put(`http://localhost:4000/profile/delete/${userId}`);
-  };
+  }
   return (
     <div>
       <div className="flex flex-col gap-[6px]">
@@ -58,7 +58,7 @@ function AddLessonVideo() {
                 height="100%"
                 controls={true}
                 // light={dataDetail.cover_img}
-                playIcon={"../public/image/playIcon.svg"}
+                playIcon={'../public/image/playIcon.svg'}
               />
             </div>
           ) : null}
@@ -97,7 +97,7 @@ function AddLessonVideo() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default AddLessonVideo;
+export default AddLessonVideo
