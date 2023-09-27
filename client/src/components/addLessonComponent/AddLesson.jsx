@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from "react";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import { func } from "prop-types";
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import AddLessonVideo from "./AddLessonVideo";
+import React, { useState, useEffect } from 'react'
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
+import { func } from 'prop-types'
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import AddLessonVideo from './AddLessonVideo'
 
 function AddLesson(sharedState, updateState) {
-  const navigate = useNavigate();
-  const { courseid } = useParams();
-  const [dataCourse, setDataCourse] = useState([]);
+  const navigate = useNavigate()
+  const { courseid } = useParams()
+  const [dataCourse, setDataCourse] = useState([])
   const [subLessonList, setSubLessonList] = useState([
-    { lessonId: 1, subLessonName: "" },
-  ]);
-  const [lessonName, setLessonName] = useState("");
+    { lessonId: 1, subLessonName: '' },
+  ])
+  const [lessonName, setLessonName] = useState('')
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
         `http://localhost:4000/admin/editcourse/${courseid}`
-      );
+      )
       setDataCourse({
         course_id: dataDetailCourse.data.data.course_id,
         course_name: dataDetailCourse.data.data.course_name,
@@ -26,9 +26,9 @@ function AddLesson(sharedState, updateState) {
           lesson_name: lesson.lesson_name,
           sublessons: lesson.sublessons,
         })),
-      });
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
   // console.log(dataCourse)
@@ -48,46 +48,55 @@ function AddLesson(sharedState, updateState) {
   // }, [updatedSubLessonName, updatedLessonId, subLessonList])
 
   const addSubLesson = () => {
-    const newLessonId = subLessonList.length + 1;
-    const newSubLesson = { lessonId: newLessonId, subLessonName: "" };
-    setSubLessonList([...subLessonList, newSubLesson]);
-  };
+    const newLessonId = subLessonList.length + 1
+    const newSubLesson = { lessonId: newLessonId, subLessonName: '' }
+    setSubLessonList([...subLessonList, newSubLesson])
+  }
 
   const deleteSubLesson = (lessonIdToDelete) => {
     if (subLessonList.length === 1) {
-      alert("You can't delete the last sub-lesson.");
-      return;
+      alert("You can't delete the last sub-lesson.")
+      return
     }
     const updatedSubLessonList = subLessonList.filter(
       (subLesson) => subLesson.lessonId !== lessonIdToDelete
-    );
-    setSubLessonList(updatedSubLessonList);
-  };
+    )
+    setSubLessonList(updatedSubLessonList)
+  }
 
   const handleSubLesson = (lessonId, subLessonName) => {
     const updatedSubLessonList = subLessonList.map((subLesson) =>
       subLesson.lessonId === lessonId
         ? { ...subLesson, subLessonName }
         : subLesson
-    );
-    setSubLessonList(updatedSubLessonList);
-  };
+    )
+    setSubLessonList(updatedSubLessonList)
+  }
 
   const handleLesson = (event) => {
-    const value = event.target.value;
-    setLessonName(value);
-  };
+    const value = event.target.value
+    setLessonName(value)
+  }
 
   const lessonData = [
     { lessonName: lessonName },
     { subLessonName: subLessonList },
-  ];
-  console.log(lessonData);
+  ]
+  // console.log(lessonData)
 
   const createButton = (event) => {
-    const data = { lessonName, ...subLessonList[1] };
-    console.log(data);
-    updateState(data);
+    const data = { lessonName, subLessonList }
+    console.log(data)
+    console.log(data.subLessonList)
+    const subLessonData = {
+      lessonName: lessonName,
+      lessonId: subLessonList[0].lessonId,
+    }
+
+    localStorage.setItem(`lesson_data`, JSON.stringify(data))
+    // navigate(`/admin/addcourse`)
+    // console.log(data)
+    // updateState(data)
     // const lessonData = { lessonName, subLessonList }
     // const subLessonsArray = Object.values(lessonData).filter(
     //   (item) => typeof item === 'object'
@@ -99,7 +108,7 @@ function AddLesson(sharedState, updateState) {
     // }))
 
     // console.log(preparedData)
-  };
+  }
 
   return (
     <div className="flex flex-col">
@@ -109,7 +118,7 @@ function AddLesson(sharedState, updateState) {
             <div
               className=""
               onClick={() => {
-                navigate(`/admin/addcourse`);
+                navigate(`/admin/addcourse`)
               }}
             >
               <svg
@@ -144,7 +153,7 @@ function AddLesson(sharedState, updateState) {
       <form
         className="w-[1200px] pb-[219px] h-auto  flex flex-col justify-center items-center bg-[#F6F7FC] pt-10"
         onSubmit={(e) => {
-          e.preventDefault();
+          e.preventDefault()
         }}
       >
         <div className="w-[1120px]  flex flex-col justify-center items-center bg-[#FFF]">
@@ -160,13 +169,13 @@ function AddLesson(sharedState, updateState) {
               />
             </div>
             <hr />
-            <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{" "}
+            <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{' '}
             {subLessonList.map((subLesson, index) => (
               <div key={index}>
                 <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
                   <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
                     <DragIndicatorIcon
-                      style={{ fontSize: 24, color: "#C8CCDB" }}
+                      style={{ fontSize: 24, color: '#C8CCDB' }}
                       className="hover:cursor-pointer"
                     />
                   </div>
@@ -205,7 +214,7 @@ function AddLesson(sharedState, updateState) {
         </div>
       </form>
     </div>
-  );
+  )
 }
 
-export default AddLesson;
+export default AddLesson

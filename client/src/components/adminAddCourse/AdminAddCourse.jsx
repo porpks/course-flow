@@ -1,62 +1,62 @@
-import React, { useState, useEffect } from "react";
-import "./adminAddCourse.css";
-import Sidebar from "../Sidebar";
-import { useNavigate } from "react-router-dom";
-import { Formik, Form, Field, useFormik } from "formik";
-import LessonTable from "./LessonTable";
-import AddLesson from "../addLessonComponent/AddLesson";
-import axios from "axios";
-import * as Yup from "yup";
-import UploadVideo from "./UploadVideo";
-import UploadImage from "./UploadImage";
+import React, { useState, useEffect } from 'react'
+import './adminAddCourse.css'
+import Sidebar from '../Sidebar'
+import { useNavigate } from 'react-router-dom'
+import { Formik, Form, Field, useFormik } from 'formik'
+import LessonTable from './LessonTable'
+import AddLesson from '../addLessonComponent/AddLesson'
+import axios from 'axios'
+import * as Yup from 'yup'
+import UploadVideo from './UploadVideo'
+import UploadImage from './UploadImage'
 function AdminAddCourse() {
   // const history = useHistory()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleChange = (event) => {
     setValues((prevValues) => ({
       ...prevValues,
       [event.target.name]: event.target.value,
-    }));
-  };
+    }))
+  }
   const validate = (values) => {
-    const errors = {};
+    const errors = {}
     if (!values.courseName) {
-      errors.courseName = "Required";
+      errors.courseName = 'Required'
     } else if (values.courseName.length > 15) {
-      errors.courseName = "Must be 15 characters or less";
+      errors.courseName = 'Must be 15 characters or less'
     }
     if (!values.price) {
-      errors.price = "Required";
+      errors.price = 'Required'
     }
     if (!values.totalLearningTime) {
-      errors.totalLearningTime = "Required";
+      errors.totalLearningTime = 'Required'
     }
     if (!values.courseSummary) {
-      errors.courseSummary = "Required";
+      errors.courseSummary = 'Required'
     } else if (values.courseSummary.length > 15) {
-      errors.courseSummary = "Must be more than 15 characters";
+      errors.courseSummary = 'Must be more than 15 characters'
     }
     if (!values.courseDetail) {
-      errors.courseDetail = "Required";
+      errors.courseDetail = 'Required'
     } else if (values.courseDetail.length > 15) {
-      errors.courseDetail = "Must be more than 15 characters";
+      errors.courseDetail = 'Must be more than 15 characters'
     }
-    return errors;
-  };
+    return errors
+  }
   const formik = useFormik({
     initialValues: {
-      courseName: "",
-      price: "",
-      totalLearningTime: "",
-      courseSummary: "",
-      courseDetail: "",
+      courseName: '',
+      price: '',
+      totalLearningTime: '',
+      courseSummary: '',
+      courseDetail: '',
     },
     onSubmit: (values) => {
-      console.log("onSubmit", values);
-      alert(JSON.stringify(values, null, 2));
+      console.log('onSubmit', values)
+      alert(JSON.stringify(values, null, 2))
     },
-  });
+  })
 
   const courseData = {
     course_name: formik.values.courseName,
@@ -66,33 +66,33 @@ function AdminAddCourse() {
     course_detail: formik.values.courseDetail,
     // cover_img,
     // video_trailer,
-  };
+  }
   useEffect(() => {
-    const storedData = localStorage.getItem("course_data");
-    // console.log(storedData);
+    const storedData = localStorage.getItem('course_data')
+    // console.log(storedData)
     if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      console.log(parsedData);
+      const parsedData = JSON.parse(storedData)
+      // console.log(parsedData)
       const courseDataFromLocal = {
         courseName: parsedData.course_name,
         price: parsedData.price,
         totalLearningTime: parsedData.total_time,
         courseSummary: parsedData.course_summary,
         courseDetail: parsedData.course_detail,
-      };
-      formik.setValues(courseDataFromLocal);
+      }
+      formik.setValues(courseDataFromLocal)
     }
-  }, []);
+  }, [])
 
   const sendData = async (course) => {
-    await axios.post(`http://localhost:4000/admin/addcourse`, courseData);
-  };
+    await axios.post(`http://localhost:4000/admin/addcourse`, courseData)
+  }
 
   const handleData = () => {
-    localStorage.setItem(`course_data`, JSON.stringify(courseData));
-    navigate(`/admin/addcourse/addlesson`);
-    console.log(localStorage.getItem(`course_data`));
-  };
+    localStorage.setItem(`course_data`, JSON.stringify(courseData))
+    navigate(`/admin/addcourse/addlesson`)
+    console.log(localStorage.getItem(`course_data`))
+  }
 
   return (
     <>
@@ -168,7 +168,7 @@ function AdminAddCourse() {
                           className="Input"
                           value={formik.values.totalLearningTime}
                           onChange={formik.handleChange}
-                        />{" "}
+                        />{' '}
                         {formik.errors.totalLearningTime ? (
                           <div>{formik.errors.totalLearningTime}</div>
                         ) : null}
@@ -221,7 +221,7 @@ function AdminAddCourse() {
                 <button
                   className="Primary Shadow1 px-[32px] py-[18px] justify-center border-none"
                   onClick={() => {
-                    handleData();
+                    handleData()
                   }}
                 >
                   + Add Lesson
@@ -236,6 +236,6 @@ function AdminAddCourse() {
         </div>
       </div>
     </>
-  );
+  )
 }
-export default AdminAddCourse;
+export default AdminAddCourse
