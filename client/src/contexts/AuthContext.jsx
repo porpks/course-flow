@@ -28,6 +28,7 @@ function AuthProvider(props) {
     state: false,
     assignment_id: null,
   });
+
   const userIdFromCookie = getCookie("cookieUserID");
   const userId = secureLocalStorage.getItem("userID");
   const navigate = useNavigate();
@@ -142,7 +143,7 @@ function AuthProvider(props) {
 
       navigate("/ourcourse");
     } catch (error) {
-      alert(error);
+      displaySnackbar("Email or password is incorrect. Please try again.");
     }
   };
 
