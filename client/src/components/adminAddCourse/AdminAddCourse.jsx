@@ -176,8 +176,9 @@ function AdminAddCourse() {
                     </div>
                     <div className="flex flex-col gap-[4px]">
                       <label className="">Course summary *</label>
-                      <input
-                        type="text"
+                      <Field
+                        as="textarea"
+                        // type="text"
                         name="courseSummary"
                         // id="courseSummary"
                         placeholder="Enter Course summary"
@@ -191,8 +192,9 @@ function AdminAddCourse() {
                     </div>
                     <div className="flex flex-col gap-[4px]">
                       <label className="">Course detail *</label>
-                      <input
-                        type="text"
+                      <Field
+                        as="textarea"
+                        // type="text"
                         name="courseDetail"
                         // id="courseDetail"
                         placeholder="Enter Course detail"

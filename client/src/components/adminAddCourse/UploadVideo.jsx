@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
+import SnackBar from "../SnackBar.jsx";
 
 function UploadVideo() {
   const [vdo, setVdo] = useState("");
@@ -24,10 +25,10 @@ function UploadVideo() {
           setAvatarVdo(vdoFile);
           setVdoUrl(URL.createObjectURL(vdoFile));
         } else {
-          alert("File size exceeds 20 MB.");
+          displaySnackbar("File size exceeds 20 MB.");
         }
       } else {
-        alert("Invalid video type. Please choose a .mp4, .mov, or .avi file.");
+        displaySnackbar("Invalid video type. Please choose a .mp4, .mov, or .avi file.");
       }
     }
   };
@@ -38,15 +39,37 @@ function UploadVideo() {
     setVdo("");
     // await axios.put(`http://localhost:4000/profile/delete/${userId}`);
   };
+
+  function displaySnackbar(message) {
+    setOpenSnackBar(false);
+    setSnackbarMes(message);
+    setOpenSnackBar(true);
+  }
+  const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [snackBarMes, setSnackbarMes] = useState("");
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
   return (
     <div>
+       <SnackBar
+        open={openSnackbar}
+        onClose={handleClose}
+        severity={"error"}
+        message={snackBarMes}
+      />
       <div className="flex flex-col gap-[6px]">
         <label className="">Video Trailer *</label>
         <div className="relative ">
           {/*---------------------- IMG THUMBNAIL UPLOAD -----------------------*/}
           {VdoUrl || vdo ? null : (
             <img
-              src="../public/image/uploadVdo.svg"
+              src="../../../public/image/uploadVdo.svg"
               className="relative w-[358px] h-[358px] object-cover rounded-2xl	"
             />
           )}
@@ -59,7 +82,7 @@ function UploadVideo() {
                 height="100%"
                 controls={true}
                 // light={dataDetail.cover_img}
-                playIcon={"../public/image/playIcon.svg"}
+                playIcon={"../../../public/image/playIcon.svg"}
               />
             </div>
           ) : null}
@@ -70,7 +93,7 @@ function UploadVideo() {
               onClick={handleRemoveVdo}
             >
               <img
-                src="../public/image/closeIcon.svg"
+                src="../../../public/image/closeIcon.svg"
                 alt=""
                 className="w-[10px] h-[10px]"
               />
