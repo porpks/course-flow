@@ -109,11 +109,12 @@ profileRouter.put(
     try {
       if (req.files.length > 0 || req.files.avatar) {
         const file = req.files.avatar[0];
-        const fileImage = new Blob([file.buffer], { type: file.mimetype });
-        const fileName = file.originalname.replace(/ /g, "_");
-
-        // const { data: dd, error: ee } = await supabase.storage.from('test-avatar').remove(`profile/${userId}`)
-
+        
+       const fileImage = new Blob([file.buffer], { type: file.mimetype });
+       console.log(fileImage)
+       const fileName = file.originalname.replace(/ /g, "_");
+        console.log(fileName)
+        
         const { data: objects, error: err } = await supabase.storage
           .from('test-avatar')
           .list(`profile/${userId}`);
@@ -122,7 +123,7 @@ profileRouter.put(
           console.error('Error listing objects:', err.message);
         }
 
-        // Delete each object in the folder
+    
         for (const object of objects) {
           const { error: errorRemove } = await supabase.storage
             .from('test-avatar')
@@ -142,9 +143,10 @@ profileRouter.put(
           console.log("File uploaded successfully:", data);
         }
 
+
         const path = data.path;
         const imgUrl = `${process.env.VITE_SUPABASE_URL}/storage/v1/object/public/test-avatar/${path}`;
-        const now1 = new Date(); // Get the current date and time
+        const now1 = new Date(); 
         const formattedDate1 =
           now1.toISOString().replace(/T/, " ").replace(/\..+/, "") +
           ".682314+00";
@@ -168,7 +170,7 @@ profileRouter.put(
           console.error(error);
         }
       } else {
-        const now2 = new Date(); // Get the current date and time
+        const now2 = new Date(); 
         const formattedDate2 =
           now2.toISOString().replace(/T/, " ").replace(/\..+/, "") +
           ".682314+00";
