@@ -76,8 +76,8 @@ function AdminAddCourse() {
     video_trailer: video_url,
   };
 
-  console.log(localImg);
-  console.log(localVdo);
+  // console.log(localImg);
+  // console.log(localVdo);
 
   if (localImg && localVdo) {
     const storedImageUrl = localImg;
@@ -292,9 +292,9 @@ function AdminAddCourse() {
                     </div>
 
                     {/*----------------------- UPLOAD IMG --------------------- */}
-                    <UploadImage submitData={submitData} setState={localImg} />
+                    <UploadImage submitData={submitData} getUrl={setLocalImg} />
                     {/*----------------------- UPLOAD VIDEO --------------------- */}
-                    <UploadVideo submitData={submitData} setState={localVdo} />
+                    <UploadVideo submitData={submitData} getUrl={setLocalVdo} />
 
                     <button type="submit">Submit</button>
                   </Form>
