@@ -11,7 +11,7 @@ function AddLesson(sharedState, updateState) {
   const { courseid } = useParams()
   const [dataCourse, setDataCourse] = useState([])
   const [subLessonList, setSubLessonList] = useState([
-    { lessonId: 1, subLessonName: '' },
+    { SubLessonId: 1, subLessonName: '' },
   ])
   const [lessonName, setLessonName] = useState('')
   async function getDetailCourse() {
@@ -37,7 +37,7 @@ function AddLesson(sharedState, updateState) {
   //   getDetailCourse()
   //   if (updatedSubLessonName && updatedLessonId) {
   //     const updatedSubLessonList = subLessonList.map((subLesson) =>
-  //       subLesson.lessonId === updatedLessonId
+  //       subLesson.SubLessonId === updatedLessonId
   //         ? { ...subLesson, subLessonName: updatedSubLessonName }
   //         : subLesson
   //     )
@@ -49,7 +49,7 @@ function AddLesson(sharedState, updateState) {
 
   const addSubLesson = () => {
     const newLessonId = subLessonList.length + 1
-    const newSubLesson = { lessonId: newLessonId, subLessonName: '' }
+    const newSubLesson = { subLessonId: newLessonId, subLessonName: '' }
     setSubLessonList([...subLessonList, newSubLesson])
   }
 
@@ -59,14 +59,14 @@ function AddLesson(sharedState, updateState) {
       return
     }
     const updatedSubLessonList = subLessonList.filter(
-      (subLesson) => subLesson.lessonId !== lessonIdToDelete
+      (subLesson) => subLesson.SubLessonId !== lessonIdToDelete
     )
     setSubLessonList(updatedSubLessonList)
   }
 
-  const handleSubLesson = (lessonId, subLessonName) => {
+  const handleSubLesson = (SubLessonId, subLessonName) => {
     const updatedSubLessonList = subLessonList.map((subLesson) =>
-      subLesson.lessonId === lessonId
+      subLesson.SubLessonId === SubLessonId
         ? { ...subLesson, subLessonName }
         : subLesson
     )
@@ -78,22 +78,22 @@ function AddLesson(sharedState, updateState) {
     setLessonName(value)
   }
 
-  const lessonData = [
-    { lessonName: lessonName },
-    { subLessonName: subLessonList },
-  ]
-  // console.log(lessonData)
-
   const createButton = (event) => {
-    const data = { lessonName, subLessonList }
-    console.log(data)
-    console.log(data.subLessonList)
-    const subLessonData = {
-      lessonName: lessonName,
-      lessonId: subLessonList[0].lessonId,
-    }
+    const storage = localStorage.getItem('lesson_data')
 
-    localStorage.setItem(`lesson_data`, JSON.stringify(data))
+    if (!storage) {
+      console.log('dont have storage')
+      const data = [{ lessonName, subLessonList }]
+
+      localStorage.setItem(`lesson_data`, JSON.stringify(data))
+    } else if (storage) {
+      console.log('have storage')
+      const parsedData = JSON.parse(storage)
+      console.log(Array.isArray(parsedData))
+      const newData = [...parsedData, { lessonName, subLessonList }]
+      console.log(newData)
+      localStorage.setItem('lesson_data', JSON.stringify(newData))
+    }
     // navigate(`/admin/addcourse`)
     // console.log(data)
     // updateState(data)
@@ -184,7 +184,7 @@ function AddLesson(sharedState, updateState) {
                       <p className="Body2 pb-1">Sub-lesson name*</p>
                       <button
                         className="Ghost hover:cursor-pointer"
-                        onClick={() => deleteSubLesson(subLesson.lessonId)}
+                        onClick={() => deleteSubLesson(subLesson.SubLessonId)}
                       >
                         Delete
                       </button>
@@ -195,7 +195,7 @@ function AddLesson(sharedState, updateState) {
                       className="Body2 Input w-[530px] h-[48px] mb-10 p"
                       value={subLesson.subLessonName}
                       onChange={(e) =>
-                        handleSubLesson(subLesson.lessonId, e.target.value)
+                        handleSubLesson(subLesson.SubLessonId, e.target.value)
                       }
                     />
                     <p className="Body2 pb-1">Video*</p>
