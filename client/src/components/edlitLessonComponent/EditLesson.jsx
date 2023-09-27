@@ -6,13 +6,13 @@ import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 
 function EditLesson(sharedState, updateState) {
-  const { lessonIndex } = useParams() // รับค่า index จาก URL
-  // const lessonToEdit = lessonData[lessonIndex]
+  // const { lessonIndex } = useParams()
   const navigate = useNavigate()
-  const { courseid } = useParams()
+  const { lessonId } = useParams()
   const [dataCourse, setDataCourse] = useState([])
+  const [dataCourseName, setDataCourseName] = useState('')
   const [subLessonList, setSubLessonList] = useState([
-    { SubLessonId: 1, subLessonName: '' },
+    { subLessonId: 1, subLessonName: '' },
   ])
   const [lessonName, setLessonName] = useState('')
   async function getDetailCourse() {
@@ -32,55 +32,46 @@ function EditLesson(sharedState, updateState) {
       console.log(error)
     }
   }
-  // console.log(dataCourse)
-
-  // useEffect(() => {
-  //   getDetailCourse()
-  //   if (updatedSubLessonName && updatedLessonId) {
-  //     const updatedSubLessonList = subLessonList.map((subLesson) =>
-  //       subLesson.SubLessonId === updatedLessonId
-  //         ? { ...subLesson, subLessonName: updatedSubLessonName }
-  //         : subLesson
-  //     )
-  //     setSubLessonList(updatedSubLessonList)
-  //     setUpdatedSubLessonName('')
-  //     setUpdatedLessonId('')
-  //   }
-  // }, [updatedSubLessonName, updatedLessonId, subLessonList])
 
   useEffect(() => {
-    // 1. รับข้อมูลบทเรียนที่ต้องการแก้ไขจาก LocalStorage
-    const storage = localStorage.getItem('lesson_data')
-    if (storage) {
-      const parsedData = JSON.parse(storage)
-      if (lessonIndex >= 0 && lessonIndex < parsedData.length) {
-        const lessonToEdit = parsedData[lessonIndex]
-        setLessonName(lessonToEdit.lessonName)
-        setSubLessonList(lessonToEdit.subLessonList)
-      }
-    }
-  }, [lessonIndex])
+    const courseDataStorage = localStorage.getItem('course_data')
+    const courseParsedData = JSON.parse(courseDataStorage)
+    setDataCourseName(courseParsedData.course_name)
+    const lessonDataStorage = localStorage.getItem('lesson_data')
+    const lessonParsedData = JSON.parse(lessonDataStorage)
+    const lessonName = lessonParsedData[0].lessonName
+    setLessonName(lessonName)
+    // console.log(lessonParsedData)
+    const subLessonListFromLessonData = lessonParsedData
+      .map((lesson) => lesson.subLessonList)
+      .flat()
+    const lessonToEdit = lessonParsedData[lessonId]
+    console.log(lessonId)
+    console.log(lessonId)
+    setSubLessonList(lessonToEdit.subLessonList)
+  }, [])
 
+  // console.log(subLessonList)
   const addSubLesson = () => {
     const newLessonId = subLessonList.length + 1
     const newSubLesson = { subLessonId: newLessonId, subLessonName: '' }
     setSubLessonList([...subLessonList, newSubLesson])
   }
-
+  // console.log(dataCourseName)
   const deleteSubLesson = (lessonIdToDelete) => {
     if (subLessonList.length === 1) {
       alert("You can't delete the last sub-lesson.")
       return
     }
     const updatedSubLessonList = subLessonList.filter(
-      (subLesson) => subLesson.SubLessonId !== lessonIdToDelete
+      (subLesson) => subLesson.subLessonId !== lessonIdToDelete
     )
     setSubLessonList(updatedSubLessonList)
   }
 
-  const handleSubLesson = (SubLessonId, subLessonName) => {
+  const handleSubLesson = (subLessonId, subLessonName) => {
     const updatedSubLessonList = subLessonList.map((subLesson) =>
-      subLesson.SubLessonId === SubLessonId
+      subLesson.subLessonId === subLessonId
         ? { ...subLesson, subLessonName }
         : subLesson
     )
@@ -151,15 +142,15 @@ function EditLesson(sharedState, updateState) {
             <div className="flex flex-col ">
               <div className="flex flex-row Body3 space-x-2">
                 <p className="text-[#9AA1B9]">Course</p>
-                <p>{dataCourse.course_name}</p>
+                <p>{dataCourseName}</p>
               </div>
-              <h1 className="H3">Add Lesson</h1>
+              <h1 className="H3">Lesson</h1>
             </div>
           </div>
           <div className="space-x-4">
             <button className="Secondary">Cancle</button>
             <button className="Primary border-none" onClick={createButton}>
-              Create
+              Edit
             </button>
           </div>
         </div>
@@ -198,7 +189,7 @@ function EditLesson(sharedState, updateState) {
                       <p className="Body2 pb-1">Sub-lesson name*</p>
                       <button
                         className="Ghost hover:cursor-pointer"
-                        onClick={() => deleteSubLesson(subLesson.SubLessonId)}
+                        onClick={() => deleteSubLesson(subLesson.subLessonId)}
                       >
                         Delete
                       </button>
@@ -209,7 +200,7 @@ function EditLesson(sharedState, updateState) {
                       className="Body2 Input w-[530px] h-[48px] mb-10 p"
                       value={subLesson.subLessonName}
                       onChange={(e) =>
-                        handleSubLesson(subLesson.SubLessonId, e.target.value)
+                        handleSubLesson(subLesson.subLessonId, e.target.value)
                       }
                     />
                     <p className="Body2 pb-1">Video*</p>
