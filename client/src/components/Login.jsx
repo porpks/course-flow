@@ -41,7 +41,7 @@ function Login() {
       <SnackBar
         open={openSnackbar}
         onClose={handleClose}
-        severity={"warning"}
+        severity={"error"}
         message={snackBarMes}
       />
       <div className="flex justify-center min-h-[100vh] relative overflow-hidden">
