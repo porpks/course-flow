@@ -11,7 +11,7 @@ test2Router.post('/', async (req, res) => {
         const extractedData = body[0] || {};
         const lessons = Object.values(extractedData).filter(item => typeof item === "object");
         let lessonIdMap = {};
-
+        let subLessonId = [];
         try {
             const courseId = 94; 
             const insertPromises = lessons.map(async (lesson) => {
@@ -39,24 +39,22 @@ test2Router.post('/', async (req, res) => {
                         const { data: subLessonData,error } = await supabase
                             .from("sublessons")
                             .insert([{ lesson_id: lessonId, sublesson_name: subLessonName }])
-                            .select()
+                            .select("sublesson_id")
                             .order("sublesson_id", { ascending: false });
                         
-                        console.log(error)
-                        console.log(subLessonData)
-                        const subLessonId = subLessonData[0]?.sub_lesson_id;
-                        console.log(subLessonId)
-                        lessonIdMap[lessonId].push(subLessonId); 
+                        subLessonId.push(subLessonData[0].sublesson_id)
+                        let subLessonId1 = subLessonData[0].sublesson_id;
+                        lessonIdMap[lessonId].push(subLessonId1); 
                     });
 
                     await Promise.all(subLessonInsertPromises);
                 }
             });
 
-          
+            
             await Promise.all(insertPromises);
-
-            console.log(lessonIdMap);
+            console.log(lessonIdMap)
+            console.log(subLessonId)
 
             res.json({ success: true, message: "Lessons and sub-lessons inserted successfully" });
         } catch (error) {
