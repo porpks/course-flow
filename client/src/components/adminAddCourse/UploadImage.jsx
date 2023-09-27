@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import SnackBar from "../SnackBar.jsx";
 
-function UploadImage() {
+function UploadImage(props) {
   const [image, setImage] = useState("");
   const [avatar, setAvatar] = useState({});
   const [avatarUrl, setAvatarUrl] = useState("");
+
   const handleUploadImage = (event) => {
     const imgFile = event.target.files[0];
     if (imgFile) {
@@ -12,8 +13,11 @@ function UploadImage() {
 
       if (allowedImgTypes.includes(imgFile.type)) {
         if (imgFile.size <= 5 * 1024 * 1024) {
+          const image_url = URL.createObjectURL(imgFile);
           setAvatar(imgFile);
-          setAvatarUrl(URL.createObjectURL(imgFile));
+          setAvatarUrl(image_url);
+          localStorage.setItem("image_url", image_url);
+          props.setState(localStorage.getItem("image_url"));
         } else {
           displaySnackbar("File size exceeds 5 MB.");
         }
@@ -29,12 +33,8 @@ function UploadImage() {
     setAvatar({});
     setAvatarUrl("");
     setImage("");
-
-    // await axios.put(`http://localhost:4000/profile/delete/${userId}`);
+    localStorage.removeItem("image_url");
   };
-
-  // console.log(`avatar : ${avatar}`);
-  // console.log(`avatar URL : ${avatarUrl}`);
 
   function displaySnackbar(message) {
     setOpenSnackBar(false);
@@ -51,6 +51,15 @@ function UploadImage() {
 
     setOpenSnackBar(false);
   };
+
+  // console.log(props.submitData);
+
+  useEffect(() => {
+    if (props.submitData) {
+      setAvatarUrl("");
+    }
+  }, [props.submitData]);
+
   return (
     <div>
       {" "}

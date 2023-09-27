@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
 import SnackBar from "../SnackBar.jsx";
 
-function UploadVideo() {
+function UploadVideo(props) {
   const [vdo, setVdo] = useState("");
   const [avatarVdo, setAvatarVdo] = useState({});
   const [VdoUrl, setVdoUrl] = useState("");
@@ -22,13 +22,18 @@ function UploadVideo() {
 
       if (allowedVdoTypes.includes(vdoFile.type)) {
         if (vdoFile.size <= 20 * 1024 * 1024) {
+          const video_url = URL.createObjectURL(vdoFile);
           setAvatarVdo(vdoFile);
           setVdoUrl(URL.createObjectURL(vdoFile));
+          localStorage.setItem("video_url", video_url);
+          props.setState(localStorage.getItem("video_url"));
         } else {
           displaySnackbar("File size exceeds 20 MB.");
         }
       } else {
-        displaySnackbar("Invalid video type. Please choose a .mp4, .mov, or .avi file.");
+        displaySnackbar(
+          "Invalid video type. Please choose a .mp4, .mov, or .avi file."
+        );
       }
     }
   };
@@ -37,6 +42,7 @@ function UploadVideo() {
     setAvatarVdo({});
     setVdoUrl("");
     setVdo("");
+    localStorage.removeItem("video_url");
     // await axios.put(`http://localhost:4000/profile/delete/${userId}`);
   };
 
@@ -55,9 +61,15 @@ function UploadVideo() {
 
     setOpenSnackBar(false);
   };
+
+  useEffect(() => {
+    if (props.submitData) {
+      setVdoUrl("");
+    }
+  }, [props.submitData]);
   return (
     <div>
-       <SnackBar
+      <SnackBar
         open={openSnackbar}
         onClose={handleClose}
         severity={"error"}
