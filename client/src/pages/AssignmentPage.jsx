@@ -122,7 +122,7 @@ function AssignmentPage() {
   return (
     <>
       <Navbar />
-      <div className='flex flex-col items-center  '>
+      <div className='flex flex-col items-center pt-[100px] '>
         <div className='top-5 h-[2050px] bg-white  w-[1440px] flex flex-col items-center relative'>
           <svg
             width='1418'
