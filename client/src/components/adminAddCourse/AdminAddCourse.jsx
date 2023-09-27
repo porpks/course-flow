@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import UploadVideo from "./UploadVideo";
 import UploadImage from "./UploadImage";
 import SnackBar from "../SnackBar.jsx";
+
 function AdminAddCourse() {
   // const history = useHistory()
   const navigate = useNavigate();
@@ -138,20 +139,21 @@ function AdminAddCourse() {
       video_trailer: getVdoUrl,
     };
     try {
-      await axios.post(
-        `http://localhost:4000/admin/addcourse`,
-        updatedCourseData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      // console.log(updatedCourseData);
+      // await axios.post(
+      //   `http://localhost:4000/admin/addcourse`,
+      //   updatedCourseData,
+      //   { headers: { "Content-Type": "multipart/form-data" } }
+      // );
+      console.log(updatedCourseData);
       localStorage.removeItem("video_url");
       localStorage.removeItem("image_url");
       formik.resetForm();
       setSubmitData(true);
+      displaySnackbar("You've Successfully Added a New Course. 🎉");
+      navigate("/admin/courselist");
     } catch (error) {
       message: error;
     }
-    displaySnackbar("You've Successfully Added a New Course. 🎉");
   };
 
   const handleData = () => {
