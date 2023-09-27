@@ -32,10 +32,13 @@ function UpdateProfile() {
           setAvatar(event.target.files[0]);
           setAvatarUrl(URL.createObjectURL(event.target.files[0]));
         } else {
-          alert("File size exceeds 2MB.");
+          displaySnackbar("File size exceeds 2MB.", "warning");
         }
       } else {
-        alert("Invalid file type. Please choose a .jpg, .jpeg, or .png file.");
+        displaySnackbar(
+          "Invalid file type. Please choose a .jpg, .jpeg, or .png file.",
+          "warning"
+        );
       }
     }
   };

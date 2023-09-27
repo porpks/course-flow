@@ -5,25 +5,6 @@ const courseRouter = Router();
 
 courseRouter.get("/", async (req, res) => {
   try {
-    const query = supabase
-      .from("courses")
-      .select("*,lessons(*,sublessons(*))")
-      .order("course_id");
-
-    const { data, error } = await query;
-
-    return res.json({
-      data,
-    });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: `Get course error message ${error.message}` });
-  }
-});
-
-courseRouter.get("/admin", async (req, res) => {
-  try {
     let start = req.query.start - 1;
     let desc = req.query.desc;
     let course = req.query.course;
@@ -33,6 +14,12 @@ courseRouter.get("/admin", async (req, res) => {
       .from("courses")
       .select("*,lessons(*,sublessons(*))")
       .order("course_id", { ascending: desc });
+
+    const { count } = await supabase
+      .from("courses")
+      .select("*", { count: "exact", head: true });
+
+    console.log(count);
 
     if (course) {
       query.ilike("course_name", `%${course}%`);
@@ -44,6 +31,7 @@ courseRouter.get("/admin", async (req, res) => {
 
     return res.json({
       data,
+      count,
     });
   } catch (error) {
     return res
@@ -55,6 +43,8 @@ courseRouter.get("/admin", async (req, res) => {
 courseRouter.get("/course", async (req, res) => {
   try {
     let keywords = req.query.keywords;
+    let start = req.query.start - 1;
+    let end = req.query.end - 1;
 
     if (keywords === undefined) {
       return res.status(400).json({
@@ -75,10 +65,17 @@ courseRouter.get("/course", async (req, res) => {
       .from("courses")
       .select("*")
       .or(`${queryFullName},${queryKeywords}`)
-      .order("course_id", { ascending: true });
+      .order("course_id", { ascending: true })
+      .range(start, end);
+
+    const { count } = await supabase
+      .from("courses")
+      .select("*", { count: "exact", head: true })
+      .or(`${queryFullName},${queryKeywords}`);
 
     return res.json({
       data: data,
+      count,
     });
   } catch (error) {
     console.log(error);

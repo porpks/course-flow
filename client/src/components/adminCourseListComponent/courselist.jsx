@@ -24,7 +24,7 @@ function CourseList() {
   const courseFetching = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:4000/ourcourse/admin?course=${searchBox}&start=${start}&end=${end}&desc&`
+        `http://localhost:4000/ourcourse?course=${searchBox}&start=${start}&end=${end}&desc&`
       );
       setCourseData(result.data.data);
       setIsLoading(false);
@@ -86,7 +86,7 @@ function CourseList() {
         setTargetCourseId(null);
         setDeleteToggle(false);
         courseFetching();
-        displaySnackbar(`${targetCourseName} has been deleted`, "success");
+        displaySnackbar(`${targetCourseId} has been deleted`, "success");
       } catch (error) {
         console.log(error);
       }
@@ -305,7 +305,7 @@ function CourseList() {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              Prev
+              Previous
             </button>
             <span className="text-gray-600 text-lg">Page {page}</span>
             <button
