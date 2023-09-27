@@ -1,6 +1,9 @@
 import { useAuth } from "../../contexts/AuthContext";
 import axios from "axios";
-function ModalAssignmentDelete() {
+import { useNavigate } from "react-router-dom";
+function ModalAssignmentDelete(props) {
+  const navigate = useNavigate()
+
   const { deleteAssignment, setDeleteAssignment } = useAuth();
   const handleDelete = async () => {
     try {
@@ -12,6 +15,10 @@ function ModalAssignmentDelete() {
         state: false,
         assignment_id: null,
       });
+      // eslint-disable-next-line react/prop-types
+      if (props.editPage) {
+        navigate('/admin/assingmentlist')
+      }
     } catch (e) {
       console.log(e);
     }

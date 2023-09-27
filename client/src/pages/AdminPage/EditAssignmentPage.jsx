@@ -11,7 +11,7 @@ function EditAssignmentPage() {
     return (
         <>{
             deleteAssignment.state ?
-                <ModalAssignmentDelete />
+                <ModalAssignmentDelete editPage={true} />
                 : <>
                     <div className="flex">
                         <div className="w-[240px]">
