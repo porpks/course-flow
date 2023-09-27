@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './lessonTable.css'
+import { Link } from 'react-router-dom'
 
 function LessonTable() {
   const [lessonData, setLessonData] = useState([])
@@ -85,12 +86,11 @@ function LessonTable() {
                 >
                   <img src="../../../public/image/delete.svg" alt="" />
                 </button>
-                <button
-                  className="btn cursor-pointer"
-                  onClick={() => handleEdit(data.id, data.Lesson_name)}
-                >
-                  <img src="../../../public/image/edit.svg" alt="" />
-                </button>
+                <Link to={`/admin/addcourse/addlesson/edit/${index}`}>
+                  <button className="btn cursor-pointer">
+                    <img src="../../../public/image/edit.svg" alt="Edit" />
+                  </button>
+                </Link>
               </td>
             </tr>
           ))}
