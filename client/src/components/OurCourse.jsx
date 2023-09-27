@@ -8,61 +8,87 @@ function OurCourse() {
   const navigate = useNavigate();
   const [dataCourse, setDataCourse] = useState([]);
   const [searchKey, setSearchKey] = useState(""); //searchKeyword
-  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [start, setStart] = useState(1);
+  const [end, setEnd] = useState(9);
+  const [page, setPage] = useState(1);
+  const [maxPage, setMaxpage] = useState(9);
 
   async function getDataCourse() {
     try {
-      const result = await axios.get(`http://localhost:4000/ourcourse`);
+      const result = await axios.get(
+        `http://localhost:4000/ourcourse?start=${start}&end=${end}`
+      );
       setDataCourse(result.data.data);
+      setMaxpage(Math.ceil(result.data.count / 9));
       setIsLoading(false);
     } catch (error) {
       console.log(error.message);
     }
   }
-  useEffect(() => {
-    getDataCourse();
-  }, []);
-  ///////////// useEffect for searchKeyword
-  useEffect(() => {
-    const getCourseByKeywords = async (keywords) => {
-      try {
-        const response = await axios.get(
-          "http://localhost:4000/ourcourse/course",
-          {
-            params: { keywords },
-          }
-        );
 
-        const data = response.data.data;
-        setDataCourse(data);
-      } catch (error) {
-        // message: error;
-        console.log(error);
-      }
-    };
-    getCourseByKeywords(searchKey);
-    {
+  const getCourseByKeywords = async (keywords) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/ourcourse/course?start=${start}&end=${end}`,
+        {
+          params: { keywords },
+        }
+      );
+      setDataCourse(response.data.data);
+      setMaxpage(Math.ceil(response.data.count / 9));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    setPage(1);
+    setStart(1);
+    setEnd(9);
+
+    if (searchKey) {
+      getCourseByKeywords(searchKey);
+    } else {
+      getDataCourse();
     }
   }, [searchKey]);
+
+  useEffect(() => {
+    if (searchKey) {
+      getCourseByKeywords(searchKey);
+    } else {
+      getDataCourse();
+    }
+  }, [page]);
 
   const handleSearch = (event) => {
     setSearchKey(event.target.value);
   };
 
   /////////////////////////////////////////////////
-  const pageSize = 9;
-  const totalPages = Math.ceil(dataCourse?.length / pageSize);
-  // const totalPages = Math.ceil(dataCourse.length / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = currentPage * pageSize;
-  // const cardCourseToDisplay =
-  //   dataCourse.length === 0 ? [] : dataCourse.slice(startIndex, endIndex);
-  const cardCourseToDisplay = dataCourse?.slice(startIndex, endIndex);
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+  const changeUpperPage = () => {
+    let newStart = start + 9;
+    let newEnd = end + 9;
+    let newPage = page + 1;
+    setStart(newStart);
+    setEnd(newEnd);
+    setPage(newPage);
   };
+
+  const changeLowerPage = () => {
+    if (start > 1) {
+      let newStart = start - 9;
+      let newEnd = end - 9;
+      let newPage = page - 1;
+      setStart(newStart);
+      setEnd(newEnd);
+      setPage(newPage);
+    }
+  };
+
   /////////////////////////////////////////////////
   if (isLoading) {
     return (
@@ -90,11 +116,11 @@ function OurCourse() {
           />
         </div>
         <div className="content-Section">
-          {cardCourseToDisplay?.length <= 0 ? (
+          {dataCourse?.length <= 0 ? (
             <h1 className="H2 text-red-500 ">{`No course found matching "${searchKey}"`}</h1>
           ) : (
             <div className="card-container">
-              {cardCourseToDisplay?.map((item) => (
+              {dataCourse?.map((item) => (
                 <CourseItem
                   key={item.course_id}
                   count={item.course_id}
@@ -112,18 +138,50 @@ function OurCourse() {
               ))}
             </div>
           )}
-          <div className="pagination-card">
-            {Array.from({ length: totalPages }).map((_, index) => (
+          {maxPage > 1 && (
+            <div className="flex justify-center items-center space-x-4 mt-6 self-center">
               <button
-                key={index}
-                onClick={() => handlePageChange(index + 1)}
-                className={`paginationOurCourse-item ${
-                  currentPage === index + 1 ? "active" : ""
-                }`}>
-                {index + 1}
+                className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center
+              cursor-pointer	}`}
+                onClick={page > 1 ? changeLowerPage : undefined}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 inline-block mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  />
+                </svg>
+                Prev
               </button>
-            ))}
-          </div>
+              <span className="text-gray-600 text-lg">
+                Page {page} / {maxPage}
+              </span>
+              <button
+                className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center cursor-pointer`}
+                onClick={maxPage <= page ? undefined : changeUpperPage}>
+                Next
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 inline-block ml-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
