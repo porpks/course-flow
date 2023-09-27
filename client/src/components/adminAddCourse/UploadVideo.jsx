@@ -26,7 +26,7 @@ function UploadVideo(props) {
           setAvatarVdo(vdoFile);
           setVdoUrl(URL.createObjectURL(vdoFile));
           localStorage.setItem("video_url", video_url);
-          props.setState(localStorage.getItem("video_url"));
+          props.getUrl(localStorage.getItem("video_url"));
         } else {
           displaySnackbar("File size exceeds 20 MB.");
         }

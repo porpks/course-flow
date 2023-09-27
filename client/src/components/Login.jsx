@@ -14,19 +14,21 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!loginData.email || !loginData.password) {
-      displaySnackbar("Please fill in both email and password.");
+      displaySnackbar("Please fill in both email and password.", "warning");
     } else {
       login(loginData);
     }
   };
 
-  function displaySnackbar(message) {
+  function displaySnackbar(message, status) {
     setOpenSnackBar(false);
+    setSnackStatus(status);
     setSnackbarMes(message);
     setOpenSnackBar(true);
   }
   const [openSnackbar, setOpenSnackBar] = useState(false);
   const [snackBarMes, setSnackbarMes] = useState("");
+  const [snackStatus, setSnackStatus] = useState("");
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -41,7 +43,7 @@ function Login() {
       <SnackBar
         open={openSnackbar}
         onClose={handleClose}
-        severity={"error"}
+        severity={snackStatus}
         message={snackBarMes}
       />
       <div className="flex justify-center min-h-[100vh] relative overflow-hidden">

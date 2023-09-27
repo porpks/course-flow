@@ -75,9 +75,9 @@ function OurCourse() {
 
   return (
     <div className="canvas-ourCourse ">
-      {/* {searchKey
+      {searchKey
         ? window.scrollTo({ top: 150, left: 0, behavior: "auto" })
-        : window.scrollTo({ top: 0, left: 0, behavior: "auto" })} */}
+        : window.scrollTo({ top: 0, left: 0, behavior: "auto" })}
       <div className="topSection">
         <h2 className="H2">Our Courses</h2>
         <div className="input-container">
@@ -89,7 +89,6 @@ function OurCourse() {
             onChange={handleSearch}
           />
         </div>
-
         <div className="content-Section">
           {cardCourseToDisplay?.length <= 0 ? (
             <h1 className="H2 text-red-500 ">{`No course found matching "${searchKey}"`}</h1>
