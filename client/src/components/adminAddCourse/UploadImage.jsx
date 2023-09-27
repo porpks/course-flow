@@ -12,8 +12,10 @@ function UploadImage() {
 
       if (allowedImgTypes.includes(imgFile.type)) {
         if (imgFile.size <= 5 * 1024 * 1024) {
+          const image_url = URL.createObjectURL(imgFile);
           setAvatar(imgFile);
           setAvatarUrl(URL.createObjectURL(imgFile));
+          localStorage.setItem("image_url", image_url);
         } else {
           displaySnackbar("File size exceeds 5 MB.");
         }
@@ -29,6 +31,7 @@ function UploadImage() {
     setAvatar({});
     setAvatarUrl("");
     setImage("");
+    localStorage.removeItem("image_url");
 
     // await axios.put(`http://localhost:4000/profile/delete/${userId}`);
   };
