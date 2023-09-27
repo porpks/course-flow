@@ -4,13 +4,11 @@ import { func } from 'prop-types'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import AddLessonVideo from './AddLessonVideo'
 
-function AddLesson(sharedState, updateState) {
-  const { lessonIndex } = useParams() // รับค่า index จาก URL
-  // const lessonToEdit = lessonData[lessonIndex]
+function EditLesson(sharedState, updateState) {
+  // const { lessonIndex } = useParams()
   const navigate = useNavigate()
-  const { courseid } = useParams()
+  const { lessonId } = useParams()
   const [dataCourse, setDataCourse] = useState([])
   const [dataCourseName, setDataCourseName] = useState('')
   const [subLessonList, setSubLessonList] = useState([
@@ -34,44 +32,32 @@ function AddLesson(sharedState, updateState) {
       console.log(error)
     }
   }
-  // console.log(dataCourse)
+
   useEffect(() => {
-    // 1. รับข้อมูลบทเรียนที่ต้องการแก้ไขจาก LocalStorage
     const courseDataStorage = localStorage.getItem('course_data')
     const courseParsedData = JSON.parse(courseDataStorage)
     setDataCourseName(courseParsedData.course_name)
+    const lessonDataStorage = localStorage.getItem('lesson_data')
+    const lessonParsedData = JSON.parse(lessonDataStorage)
+    const lessonName = lessonParsedData[0].lessonName
+    setLessonName(lessonName)
+    // console.log(lessonParsedData)
+    const subLessonListFromLessonData = lessonParsedData
+      .map((lesson) => lesson.subLessonList)
+      .flat()
+    const lessonToEdit = lessonParsedData[lessonId]
+    console.log(lessonId)
+    console.log(lessonId)
+    setSubLessonList(lessonToEdit.subLessonList)
+  }, [])
 
-    const storage = localStorage.getItem('lesson_data')
-    if (storage) {
-      const parsedData = JSON.parse(storage)
-      if (lessonIndex >= 0 && lessonIndex < parsedData.length) {
-        const lessonToEdit = parsedData[lessonIndex]
-        setLessonName(lessonToEdit.lessonName)
-        setSubLessonList(lessonToEdit.subLessonList)
-      }
-    }
-  }, [lessonIndex])
-
-  // useEffect(() => {
-  //   getDetailCourse()
-  //   if (updatedSubLessonName && updatedLessonId) {
-  //     const updatedSubLessonList = subLessonList.map((subLesson) =>
-  //       subLesson.SubLessonId === updatedLessonId
-  //         ? { ...subLesson, subLessonName: updatedSubLessonName }
-  //         : subLesson
-  //     )
-  //     setSubLessonList(updatedSubLessonList)
-  //     setUpdatedSubLessonName('')
-  //     setUpdatedLessonId('')
-  //   }
-  // }, [updatedSubLessonName, updatedLessonId, subLessonList])
-
+  // console.log(subLessonList)
   const addSubLesson = () => {
     const newLessonId = subLessonList.length + 1
     const newSubLesson = { subLessonId: newLessonId, subLessonName: '' }
     setSubLessonList([...subLessonList, newSubLesson])
   }
-
+  // console.log(dataCourseName)
   const deleteSubLesson = (lessonIdToDelete) => {
     if (subLessonList.length === 1) {
       alert("You can't delete the last sub-lesson.")
@@ -158,13 +144,13 @@ function AddLesson(sharedState, updateState) {
                 <p className="text-[#9AA1B9]">Course</p>
                 <p>{dataCourseName}</p>
               </div>
-              <h1 className="H3">Add Lesson</h1>
+              <h1 className="H3">Lesson</h1>
             </div>
           </div>
           <div className="space-x-4">
             <button className="Secondary">Cancle</button>
             <button className="Primary border-none" onClick={createButton}>
-              Create
+              Edit
             </button>
           </div>
         </div>
@@ -190,7 +176,7 @@ function AddLesson(sharedState, updateState) {
             <hr />
             <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{' '}
             {subLessonList.map((subLesson, index) => (
-              <div key={index}>
+              <div>
                 <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
                   <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
                     <DragIndicatorIcon
@@ -218,8 +204,24 @@ function AddLesson(sharedState, updateState) {
                       }
                     />
                     <p className="Body2 pb-1">Video*</p>
-                    <AddLessonVideo />
-
+                    <button className="w-[160px] h-[160px] flex flex-col justify-center items-center #F1F2F6 border-none hover:cursor-pointer">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="25"
+                        height="24"
+                        viewBox="0 0 25 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M12.5 4.5V19.5M20 12H5"
+                          stroke="#5483D0"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      <p className="Body3 text-[#5483D0] pt-2">Upload Video</p>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -237,4 +239,4 @@ function AddLesson(sharedState, updateState) {
   )
 }
 
-export default AddLesson
+export default EditLesson

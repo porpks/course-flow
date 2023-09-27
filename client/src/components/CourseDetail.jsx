@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./courseDetail.css";
 import Collapsible from "../assets/Collapsible.jsx";
@@ -16,6 +16,8 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SnackBar from "./SnackBar";
+import MuiAlert from "@mui/material/Alert";
 
 function CourseDetail() {
   const navigate = useNavigate();
@@ -35,6 +37,22 @@ function CourseDetail() {
   const [subscribeToggle, setSubscribeToggle] = useState(false);
   const openSubscribe = () => setSubscribeToggle(true);
   const closeSubscribe = () => setSubscribeToggle(false);
+
+  function displaySnackbar(message) {
+    setOpenSnackBar(false);
+    setSnackbarMes(message);
+    setOpenSnackBar(true);
+  }
+  const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [snackBarMes, setSnackbarMes] = useState("");
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
 
   const [dataCourse, setDataCourse] = useState([]);
   const param = useParams();
@@ -105,14 +123,15 @@ function CourseDetail() {
 
     try {
       await axios.post(`http://localhost:4000/desire`, desireBody);
-      navigate("/desire");
+      setDesireToggle(false);
+      setDesireData([1]);
+      displaySnackbar("Desire course has been added!");
     } catch (error) {
       console.log(error);
     } finally {
       setIsRequestPending(false);
     }
   };
-
   const desireRemoveHandle = async () => {
     if (isRequestPending) {
       return;
@@ -122,7 +141,9 @@ function CourseDetail() {
       await axios.delete(
         `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
       );
-      navigate("/desire");
+      setDesireToggle(false);
+      setDesireData();
+      displaySnackbar("Desire course has been deleted!");
     } catch (error) {
       console.log(error);
     } finally {
@@ -146,7 +167,9 @@ function CourseDetail() {
       await axios.delete(
         `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
       );
-      navigate("/mycourse");
+      setSubscribeToggle(false);
+      displaySnackbar("Thank you for subscribing to our course!");
+      setSubscribeData([1]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -242,6 +265,12 @@ function CourseDetail() {
 
   return (
     <>
+      <SnackBar
+        open={openSnackbar}
+        onClose={handleClose}
+        severity={"success"}
+        message={snackBarMes}
+      />
       <section className="flex justify-center items-center border-2 border-sky-500">
         <div className="canvas_CourseDetail ">
           <div className="back-btn">

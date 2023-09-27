@@ -9,9 +9,16 @@ import axios from "axios";
 import * as Yup from "yup";
 import UploadVideo from "./UploadVideo";
 import UploadImage from "./UploadImage";
+import SnackBar from "../SnackBar.jsx";
 function AdminAddCourse() {
   // const history = useHistory()
   const navigate = useNavigate();
+  const [image_url, setImage_url] = useState("");
+  const [video_url, setVideo_url] = useState("");
+  const [submitData, setSubmitData] = useState(false);
+
+  const [localImg, setLocalImg] = useState("");
+  const [localVdo, setLocalVdo] = useState("");
 
   const handleChange = (event) => {
     setValues((prevValues) => ({
@@ -52,6 +59,7 @@ function AdminAddCourse() {
       courseSummary: "",
       courseDetail: "",
     },
+    validate,
     onSubmit: (values) => {
       console.log("onSubmit", values);
       alert(JSON.stringify(values, null, 2));
@@ -64,38 +72,114 @@ function AdminAddCourse() {
     total_time: formik.values.totalLearningTime,
     course_summary: formik.values.courseSummary,
     course_detail: formik.values.courseDetail,
-    // cover_img,
-    // video_trailer,
+    cover_img: image_url,
+    video_trailer: video_url,
   };
+
+  console.log(localImg);
+  console.log(localVdo);
+
+  if (localImg && localVdo) {
+    const storedImageUrl = localImg;
+    const storedVideoUrl = localVdo;
+    if (storedImageUrl !== image_url) {
+      setImage_url(storedImageUrl);
+    }
+    if (storedVideoUrl !== video_url) {
+      setVideo_url(storedVideoUrl);
+    }
+  }
+
   useEffect(() => {
     const storedData = localStorage.getItem("course_data");
-    // console.log(storedData);
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      console.log(parsedData);
-      const courseDataFromLocal = {
-        courseName: parsedData.course_name,
-        price: parsedData.price,
-        totalLearningTime: parsedData.total_time,
-        courseSummary: parsedData.course_summary,
-        courseDetail: parsedData.course_detail,
-      };
-      formik.setValues(courseDataFromLocal);
-    }
+    const fetchData = async () => {
+      try {
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          const courseDataFromLocal = {
+            courseName: parsedData.course_name,
+            price: parsedData.price,
+            totalLearningTime: parsedData.total_time,
+            courseSummary: parsedData.course_summary,
+            courseDetail: parsedData.course_detail,
+          };
+          formik.setValues(courseDataFromLocal);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    // const intervalId = setInterval(() => {
+    //   const storedImageUrl = localStorage.getItem("image_url");
+    //   const storedVideoUrl = localStorage.getItem("video_url");
+    //   if (storedImageUrl !== image_url) {
+    //     setImage_url(storedImageUrl);
+    //     // console.log("Updated Image URL:", storedImageUrl);
+    //   }
+    //   if (storedVideoUrl !== video_url) {
+    //     setVideo_url(storedVideoUrl);
+    //     // console.log("Updated VDO URL:", storedVideoUrl);
+    //   }
+    // }, 2000);
+
+    // // Clear the interval when the component unmounts
+    // return () => clearInterval(intervalId);
   }, []);
 
   const sendData = async (course) => {
-    await axios.post(`http://localhost:4000/admin/addcourse`, courseData);
+    const updatedCourseData = {
+      ...courseData,
+      cover_img: image_url,
+      video_trailer: video_url,
+    };
+    try {
+      await axios.post(
+        `http://localhost:4000/admin/addcourse`,
+        updatedCourseData
+      );
+      // console.log(updatedCourseData);
+      localStorage.removeItem("video_url");
+      localStorage.removeItem("image_url");
+      formik.resetForm();
+      setSubmitData(true);
+    } catch (error) {
+      message: error;
+    }
+    displaySnackbar("You've Successfully Added a New Course. 🎉");
   };
 
   const handleData = () => {
     localStorage.setItem(`course_data`, JSON.stringify(courseData));
     navigate(`/admin/addcourse/addlesson`);
-    console.log(localStorage.getItem(`course_data`));
+    // console.log(localStorage.getItem(`course_data`))
+  };
+
+  function displaySnackbar(message) {
+    setOpenSnackBar(false);
+    setSnackbarMes(message);
+    setOpenSnackBar(true);
+  }
+  const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [snackBarMes, setSnackbarMes] = useState("");
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
   };
 
   return (
     <>
+      <SnackBar
+        open={openSnackbar}
+        onClose={handleClose}
+        severity={"success"}
+        message={snackBarMes}
+      />
+
       <div className="flex justify-center items-center">
         <div className="canvas flex flex-row w-[1440px]">
           {/* LEFT-NAV */}
@@ -176,8 +260,9 @@ function AdminAddCourse() {
                     </div>
                     <div className="flex flex-col gap-[4px]">
                       <label className="">Course summary *</label>
-                      <input
-                        type="text"
+                      <Field
+                        as="textarea"
+                        // type="text"
                         name="courseSummary"
                         // id="courseSummary"
                         placeholder="Enter Course summary"
@@ -191,8 +276,9 @@ function AdminAddCourse() {
                     </div>
                     <div className="flex flex-col gap-[4px]">
                       <label className="">Course detail *</label>
-                      <input
-                        type="text"
+                      <Field
+                        as="textarea"
+                        // type="text"
                         name="courseDetail"
                         // id="courseDetail"
                         placeholder="Enter Course detail"
@@ -206,9 +292,10 @@ function AdminAddCourse() {
                     </div>
 
                     {/*----------------------- UPLOAD IMG --------------------- */}
-                    <UploadImage />
+                    <UploadImage submitData={submitData} setState={localImg} />
                     {/*----------------------- UPLOAD VIDEO --------------------- */}
-                    <UploadVideo />
+                    <UploadVideo submitData={submitData} setState={localVdo} />
+
                     <button type="submit">Submit</button>
                   </Form>
                 </Formik>
