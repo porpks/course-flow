@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import UploadVideo from "./UploadVideo";
 import UploadImage from "./UploadImage";
 import SnackBar from "../SnackBar.jsx";
+
 function AdminAddCourse() {
   // const history = useHistory()
   const navigate = useNavigate();
@@ -78,12 +79,14 @@ function AdminAddCourse() {
 
   // console.log(localImg);
   // console.log(localVdo);
+  const [getImgUrl, setGetImgUrl] = useState("");
+  const [getVdoUrl, setGetVdoUrl] = useState("");
 
   if (localImg && localVdo) {
     const storedImageUrl = localImg;
     const storedVideoUrl = localVdo;
     if (storedImageUrl !== image_url) {
-      setImage_url(storedImageUrl);
+      getImgUrl;
     }
     if (storedVideoUrl !== video_url) {
       setVideo_url(storedVideoUrl);
@@ -126,27 +129,31 @@ function AdminAddCourse() {
     // // Clear the interval when the component unmounts
     // return () => clearInterval(intervalId);
   }, []);
+  console.log(getImgUrl);
+  console.log(getVdoUrl);
 
   const sendData = async (course) => {
     const updatedCourseData = {
       ...courseData,
-      cover_img: image_url,
-      video_trailer: video_url,
+      cover_img: getImgUrl,
+      video_trailer: getVdoUrl,
     };
     try {
-      await axios.post(
-        `http://localhost:4000/admin/addcourse`,
-        updatedCourseData
-      );
-      // console.log(updatedCourseData);
+      // await axios.post(
+      //   `http://localhost:4000/admin/addcourse`,
+      //   updatedCourseData,
+      //   { headers: { "Content-Type": "multipart/form-data" } }
+      // );
+      console.log(updatedCourseData);
       localStorage.removeItem("video_url");
       localStorage.removeItem("image_url");
       formik.resetForm();
       setSubmitData(true);
+      displaySnackbar("You've Successfully Added a New Course. 🎉");
+      navigate("/admin/courselist");
     } catch (error) {
       message: error;
     }
-    displaySnackbar("You've Successfully Added a New Course. 🎉");
   };
 
   const handleData = () => {
@@ -170,7 +177,7 @@ function AdminAddCourse() {
 
     setOpenSnackBar(false);
   };
-
+  // console.log(getImgUrl);
   return (
     <>
       <SnackBar
@@ -292,9 +299,17 @@ function AdminAddCourse() {
                     </div>
 
                     {/*----------------------- UPLOAD IMG --------------------- */}
-                    <UploadImage submitData={submitData} getUrl={setLocalImg} />
+                    <UploadImage
+                      submitData={submitData}
+                      getUrl={setLocalImg}
+                      setGetImgUrl={setGetImgUrl}
+                    />
                     {/*----------------------- UPLOAD VIDEO --------------------- */}
-                    <UploadVideo submitData={submitData} getUrl={setLocalVdo} />
+                    <UploadVideo
+                      submitData={submitData}
+                      getUrl={setLocalVdo}
+                      setGetVdoUrl={setGetVdoUrl}
+                    />
 
                     <button type="submit">Submit</button>
                   </Form>
