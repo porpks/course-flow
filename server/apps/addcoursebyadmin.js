@@ -3,9 +3,7 @@ import supabase from '../utils/db.js'
 
 const addCourseRouter = Router()
 
-
 addCourseRouter.post('/addcourse', async (req, res) => {
-
   const dataCourse = {
     course_name: req.body?.course_name,
     price: req.body.price,
@@ -27,7 +25,6 @@ addCourseRouter.post('/addcourse', async (req, res) => {
 
     console.log(data)
 
-
     if (error) {
       return res.status(400).json({
         error: 'Upload Course failed',
@@ -35,9 +32,7 @@ addCourseRouter.post('/addcourse', async (req, res) => {
       })
     }
 
-
     console.log()
-
 
     res.status(201).json({
       success: 'Course uploaded successfully',
