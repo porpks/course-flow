@@ -139,12 +139,12 @@ function AdminAddCourse() {
       video_trailer: getVdoUrl,
     };
     try {
-      // await axios.post(
-      //   `http://localhost:4000/admin/addcourse`,
-      //   updatedCourseData,
-      //   { headers: { "Content-Type": "multipart/form-data" } }
-      // );
-      console.log(updatedCourseData);
+      await axios.post(
+        `http://localhost:4000/admin/addcourse`,
+        updatedCourseData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      // console.log(updatedCourseData);
       localStorage.removeItem("video_url");
       localStorage.removeItem("image_url");
       formik.resetForm();
