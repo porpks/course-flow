@@ -12,6 +12,8 @@ import UploadImage from "./UploadImage";
 function AdminAddCourse() {
   // const history = useHistory()
   const navigate = useNavigate();
+  const [image_url, setImage_url] = useState("");
+  const [video_url, setVideo_url] = useState("");
 
   const handleChange = (event) => {
     setValues((prevValues) => ({
@@ -59,34 +61,66 @@ function AdminAddCourse() {
     },
   });
 
+
   const courseData = {
     course_name: formik.values.courseName,
     price: formik.values.price,
     total_time: formik.values.totalLearningTime,
     course_summary: formik.values.courseSummary,
     course_detail: formik.values.courseDetail,
-    // cover_img,
-    // video_trailer,
+    cover_img: image_url,
+    video_trailer: video_url,
   };
+
   useEffect(() => {
     const storedData = localStorage.getItem("course_data");
-    // console.log(storedData)
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      // console.log(parsedData)
-      const courseDataFromLocal = {
-        courseName: parsedData.course_name,
-        price: parsedData.price,
-        totalLearningTime: parsedData.total_time,
-        courseSummary: parsedData.course_summary,
-        courseDetail: parsedData.course_detail,
-      };
-      formik.setValues(courseDataFromLocal);
-    }
+    const storedImageUrl = localStorage.getItem("image_url");
+    const storedVideoUrl = localStorage.getItem("video_url");
+
+    const fetchData = async () => {
+      try {
+        if (storedImageUrl !== image_url) {
+          setImage_url(storedImageUrl);
+          console.log(image_url);
+        }
+
+        if (storedVideoUrl !== video_url) {
+          setVideo_url(storedVideoUrl);
+        }
+
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          const courseDataFromLocal = {
+            courseName: parsedData.course_name,
+            price: parsedData.price,
+            totalLearningTime: parsedData.total_time,
+            courseSummary: parsedData.course_summary,
+            courseDetail: parsedData.course_detail,
+          };
+          formik.setValues(courseDataFromLocal);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+
+    
   }, []);
 
   const sendData = async (course) => {
-    await axios.post(`http://localhost:4000/admin/addcourse`, courseData);
+    const updatedCourseData = {
+      ...courseData,
+      cover_img: image_url,
+      // video_trailer: video_url,
+    };
+
+    // await axios.post(
+    //   `http://localhost:4000/admin/addcourse`,
+    //   updatedCourseData
+    // );
+    console.log(updatedCourseData);
   };
 
   const handleData = () => {
