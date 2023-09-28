@@ -1,79 +1,79 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useFormik } from "formik";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
-import calendarIcon from "../../public/image/calendarIcon.svg";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useAuth } from "../contexts/AuthContext";
-import CircularIndeterminate from "../assets/loadingProgress";
-import SnackBar from "./SnackBar";
+import { useNavigate, useParams } from 'react-router-dom'
+import { useFormik } from 'formik'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import dayjs from 'dayjs'
+import calendarIcon from '../../public/image/calendarIcon.svg'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useAuth } from '../contexts/AuthContext'
+import CircularIndeterminate from '../assets/loadingProgress'
+import SnackBar from './SnackBar'
 
 function UpdateProfile() {
-  const { setUserID, setUsername, userId } = useAuth();
-  const params = useParams();
+  const { setUserID, setUsername, userId } = useAuth()
+  const params = useParams()
 
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState('')
 
-  const [avatar, setAvatar] = useState({});
+  const [avatar, setAvatar] = useState({})
 
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [avatarUrl, setAvatarUrl] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files[0]
     if (file) {
-      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png']
 
       if (allowedTypes.includes(file.type)) {
         if (file.size <= 2 * 1024 * 1024) {
-          setAvatar(event.target.files[0]);
-          setAvatarUrl(URL.createObjectURL(event.target.files[0]));
+          setAvatar(event.target.files[0])
+          setAvatarUrl(URL.createObjectURL(event.target.files[0]))
         } else {
-          displaySnackbar("File size exceeds 2MB.", "warning");
+          displaySnackbar('File size exceeds 2MB.', 'warning')
         }
       } else {
         displaySnackbar(
-          "Invalid file type. Please choose a .jpg, .jpeg, or .png file.",
-          "warning"
-        );
+          'Invalid file type. Please choose a .jpg, .jpeg, or .png file.',
+          'warning'
+        )
       }
     }
-  };
+  }
 
   function displaySnackbar(message, status) {
-    setOpenSnackBar(false);
-    setSnackStatus(status);
-    setSnackbarMes(message);
-    setOpenSnackBar(true);
+    setOpenSnackBar(false)
+    setSnackStatus(status)
+    setSnackbarMes(message)
+    setOpenSnackBar(true)
   }
-  const [openSnackbar, setOpenSnackBar] = useState(false);
-  const [snackBarMes, setSnackbarMes] = useState("");
-  const [snackStatus, setSnackStatus] = useState("");
+  const [openSnackbar, setOpenSnackBar] = useState(false)
+  const [snackBarMes, setSnackbarMes] = useState('')
+  const [snackStatus, setSnackStatus] = useState('')
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+    if (reason === 'clickaway') {
+      return
     }
 
-    setOpenSnackBar(false);
-  };
+    setOpenSnackBar(false)
+  }
 
   const handleRemoveImage = async () => {
-    setAvatar({});
-    setAvatarUrl("");
-    setImage("");
-    await axios.put(`http://localhost:4000/profile/delete/${userId}`);
-  };
+    setAvatar({})
+    setAvatarUrl('')
+    setImage('')
+    await axios.put(`http://localhost:4000/profile/delete/${userId}`)
+  }
 
   const initialValues = {
-    full_name: "",
+    full_name: '',
     date_of_birth: null,
-    edu_background: "",
-    email: "",
-  };
+    edu_background: '',
+    email: '',
+  }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   // const getData = async () => {
   //   const result = await axios.get(`http://localhost:4000/profile/${userId}`);
@@ -103,112 +103,112 @@ function UpdateProfile() {
       edu_background: formik.values.edu_background,
       email: formik.values.email,
       avatar: avatar,
-    };
+    }
 
     await axios.put(`http://localhost:4000/profile/${userId}`, newUserData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
 
     try {
       const response = await axios.get(
         `http://localhost:4000/profile/${userId}`
-      );
-      setUsername(response.data.data);
-      localStorage.removeItem("username");
-      localStorage.removeItem("userimage");
-      localStorage.setItem("username", response.data.data.full_name);
-      localStorage.setItem("userimage", response.data.data.image_url);
+      )
+      setUsername(response.data.data)
+      localStorage.removeItem('username')
+      localStorage.removeItem('userimage')
+      localStorage.setItem('username', response.data.data.full_name)
+      localStorage.setItem('userimage', response.data.data.image_url)
     } catch (error) {
-      alert(error.message);
+      alert(error.message)
     }
-    const useid = userId;
-    setUserID(params.id ? params.id : useid);
+    const useid = userId
+    setUserID(params.id ? params.id : useid)
 
-    navigate("/ourcourse");
-  };
+    navigate('/ourcourse')
+  }
 
   const validate = (values) => {
-    let errors = {};
+    let errors = {}
 
     if (!values.full_name) {
-      errors.full_name = "Required!";
+      errors.full_name = 'Required!'
     } else if (!/^[A-Z' -]+$/i.test(values.full_name)) {
-      errors.full_name = `Name must be included (A-Z) , (a-z) and (' , -)z`;
+      errors.full_name = `Name must be included (A-Z) , (a-z) and (' , -)z`
     }
 
     if (!values.date_of_birth) {
-      errors.date_of_birth = "Required!";
+      errors.date_of_birth = 'Required!'
     } else {
-      const currentDate = new Date();
-      const selectedDate = new Date(values.date_of_birth);
+      const currentDate = new Date()
+      const selectedDate = new Date(values.date_of_birth)
       if (selectedDate > currentDate) {
-        errors.date_of_birth = "Date must be in the past";
+        errors.date_of_birth = 'Date must be in the past'
       }
     }
 
     if (!values.edu_background) {
-      errors.edu_background = "Required!";
+      errors.edu_background = 'Required!'
     }
 
     if (!values.email) {
-      errors.email = "Required!";
+      errors.email = 'Required!'
     } else if (!/^[a-zA-Z0-9._-]+@[^.]+\.(com)$/i.test(values.email)) {
-      errors.email = "Invalid email address!";
+      errors.email = 'Invalid email address!'
     }
 
-    return errors;
-  };
+    return errors
+  }
 
   const formik = useFormik({
     initialValues,
     onSubmit,
     validate,
-  });
+  })
 
   const handleDatePickerChange = (newValue) => {
-    const timestamp = new Date(newValue);
+    const timestamp = new Date(newValue)
     formik.handleChange({
       target: {
-        name: "date_of_birth",
+        name: 'date_of_birth',
         value: dayjs(timestamp),
-        type: "date",
+        type: 'date',
       },
-    });
-  };
+    })
+  }
 
-  const navigate = useNavigate();
-  const today = dayjs();
+  const navigate = useNavigate()
+  const today = dayjs()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await axios.get(
           `http://localhost:4000/profile/${userId}`
-        );
+        )
         const imageUrl = await axios.get(
           `http://localhost:4000/profile/image/${userId}`
-        );
+        )
 
         const initialValues = {
           full_name: result.data.data.full_name,
-          date_of_birth: dayjs(result.data.data.date_of_birth) || "",
+          date_of_birth: dayjs(result.data.data.date_of_birth) || '',
           edu_background: result.data.data.edu_background,
           email: result.data.data.email,
-        };
+        }
 
-        setImage(imageUrl.data);
-        formik.setValues(initialValues);
-        setIsLoading(false); // Set loading to false when data is fetched
+        setImage(imageUrl.data)
+        formik.setValues(initialValues)
+        setIsLoading(false) // Set loading to false when data is fetched
       } catch (error) {
-        setIsLoading(false); // Handle errors here if needed
+        setIsLoading(false) // Handle errors here if needed
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   const onSubmitForm = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (
       !formik.values.full_name ||
@@ -216,12 +216,12 @@ function UpdateProfile() {
       !formik.values.edu_background ||
       !formik.values.email
     ) {
-      displaySnackbar("Please fill out all fields.", "warning");
-      return;
+      displaySnackbar('Please fill out all fields.', 'warning')
+      return
     }
-    displaySnackbar("Your profile has been updated.", "success");
-    formik.handleSubmit(e);
-  };
+    displaySnackbar('Your profile has been updated.', 'success')
+    formik.handleSubmit(e)
+  }
 
   if (isLoading) {
     return (
@@ -229,7 +229,7 @@ function UpdateProfile() {
         <h1>Loading...</h1>
         <CircularIndeterminate />
       </div>
-    );
+    )
   }
   return (
     <>
@@ -248,7 +248,8 @@ function UpdateProfile() {
               width="11"
               height="11"
               viewBox="0 0 11 11"
-              fill="none">
+              fill="none"
+            >
               <circle
                 cx="5.5"
                 cy="5.5"
@@ -265,7 +266,8 @@ function UpdateProfile() {
               width="27"
               height="27"
               viewBox="0 0 27 27"
-              fill="none">
+              fill="none"
+            >
               <circle cx="13.1741" cy="13.1741" r="13.1741" fill="#C6DCFF" />
             </svg>
           </div>
@@ -276,7 +278,8 @@ function UpdateProfile() {
               width="53"
               height="74"
               viewBox="0 0 53 74"
-              fill="none">
+              fill="none"
+            >
               <circle cx="37" cy="37" r="37" fill="#C6DCFF" />
             </svg>
           </div>
@@ -287,7 +290,8 @@ function UpdateProfile() {
               width="51"
               height="51"
               viewBox="0 0 51 51"
-              fill="none">
+              fill="none"
+            >
               <path
                 d="M11.3581 19.9099L37.1499 15.9774L27.6597 40.28L11.3581 19.9099Z"
                 stroke="#FBAA1C"
@@ -305,7 +309,7 @@ function UpdateProfile() {
                     ? avatarUrl
                     : image
                     ? image
-                    : "../public/image/noprofile.svg"
+                    : '../public/image/noprofile.svg'
                 }
                 className="relative w-[358px] h-[358px] object-cover	rounded-2xl	"
               />
@@ -313,13 +317,15 @@ function UpdateProfile() {
               {avatarUrl || image ? (
                 <button
                   className="flex justify-center items-center absolute top-0 right-0 m-[6px] bg-[#9B2FAC] rounded-full w-[32px] h-[32px] border-none cursor-pointer"
-                  onClick={handleRemoveImage}>
+                  onClick={handleRemoveImage}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="22"
                     height="22"
                     viewBox="0 0 22 22"
-                    fill="none">
+                    fill="none"
+                  >
                     <path
                       d="M5.82422 16.1764L16.1772 5.82349M5.82422 5.82349L16.1772 16.1764"
                       stroke="white"
@@ -334,7 +340,8 @@ function UpdateProfile() {
               <div className="absolute w-[180px] h-[180px] top-[89px] left-[89px] rounded-full flex justify-center items-center hover:bg-[rgba(264,264,264,0.5)] border-[--blue500] border-[3px] hover:border-dashed group">
                 <label
                   htmlFor="upload"
-                  className="hidden group-hover:block w-full h-full pt-[45px] text-[--blue500] text-center text-xl rounded-full cursor-pointer">
+                  className="hidden group-hover:block w-full h-full pt-[45px] text-[--blue500] text-center text-xl rounded-full cursor-pointer"
+                >
                   <div className="text-[48px] font-extralight mb-3">+</div>
                   <div className="text-[20px] font-medium">Upload Image</div>
                   <input
@@ -357,8 +364,8 @@ function UpdateProfile() {
                     name="full_name"
                     className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
                       formik.touched.full_name && formik.errors.full_name
-                        ? " border-[#9B2FAC]"
-                        : " border-[--gray500]"
+                        ? ' border-[#9B2FAC]'
+                        : ' border-[--gray500]'
                     }`}
                     placeholder="Enter Name and Lastname"
                     onChange={formik.handleChange}
@@ -388,19 +395,19 @@ function UpdateProfile() {
                       // slotProps={{ popper: { placement: "bottom-end" } }}
                       sx={{
                         width: 450,
-                        "& .MuiInputBase-root": {
+                        '& .MuiInputBase-root': {
                           height: 50,
-                          borderRadius: "0.5rem",
+                          borderRadius: '0.5rem',
                           border:
                             formik.errors.date_of_birth &&
                             formik.touched.date_of_birth
-                              ? "2px solid #9B2FAC"
-                              : "2px solid #CBD5E0",
-                          width: "100%",
-                          marginBottom: "40px",
+                              ? '2px solid #9B2FAC'
+                              : '2px solid #CBD5E0',
+                          width: '100%',
+                          marginBottom: '40px',
                         },
-                        "& .MuiInputBase-root:focus": {
-                          border: "none",
+                        '& .MuiInputBase-root:focus': {
+                          border: 'none',
                         },
                       }}
                       components={{
@@ -445,8 +452,8 @@ function UpdateProfile() {
                     className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
                       formik.touched.edu_background &&
                       formik.errors.edu_background
-                        ? " border-[#9B2FAC]"
-                        : " border-[--gray500]"
+                        ? ' border-[#9B2FAC]'
+                        : ' border-[--gray500]'
                     }`}
                     placeholder="Enter Educational Background"
                     onChange={formik.handleChange}
@@ -477,8 +484,8 @@ function UpdateProfile() {
                     name="email"
                     className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
                       formik.touched.email && formik.errors.email
-                        ? " border-[#9B2FAC]"
-                        : " border-[--gray500]"
+                        ? ' border-[#9B2FAC]'
+                        : ' border-[--gray500]'
                     }`}
                     placeholder="Enter Email"
                     onChange={formik.handleChange}
@@ -501,7 +508,8 @@ function UpdateProfile() {
 
                 <button
                   className="Primary w-[100%] border-none cursor-pointer"
-                  type="submit">
+                  type="submit"
+                >
                   Update Profile
                 </button>
               </div>
@@ -510,6 +518,6 @@ function UpdateProfile() {
         </div>
       </div>
     </>
-  );
+  )
 }
-export default UpdateProfile;
+export default UpdateProfile

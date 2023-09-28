@@ -84,8 +84,8 @@ function AdminAddCourse() {
   //   // sublesson_name,
   //   // sublesson_video,
   // }
-  // console.log(localImg);
-  // console.log(localVdo);
+  console.log(localImg)
+  console.log(localVdo)
   const [getImgUrl, setGetImgUrl] = useState('')
   const [getVdoUrl, setGetVdoUrl] = useState('')
 
@@ -155,6 +155,7 @@ function AdminAddCourse() {
 
     // // Clear the interval when the component unmounts
     // return () => clearInterval(intervalId);
+    fetchData()
   }, [])
   // console.log(getImgUrl)
   // console.log(getVdoUrl)

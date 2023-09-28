@@ -23,17 +23,14 @@ function AdminEditCourse() {
   const [localImg, setLocalImg] = useState('')
   const [localVdo, setLocalVdo] = useState('')
   const [courseData, setCourseData] = useState([])
-  const { courseid } = useParams()
-  const courseFetching = async () => {
-    try {
-      const result = await axios.get(
-        `http://localhost:4000/ourcourse?course=${searchBox}&start=${start}&end=${end}&desc&`
-      )
-      setCourseData(result.data.data)
-      setIsLoading(false)
-    } catch (error) {
-      console.log(error)
-    }
+  const { courseId } = useParams()
+
+  const initialValues = {
+    courseName: '',
+    price: '',
+    totalLearningTime: '',
+    courseSummary: '',
+    courseDetail: '',
   }
 
   const handleChange = (event) => {
@@ -68,13 +65,7 @@ function AdminEditCourse() {
     return errors
   }
   const formik = useFormik({
-    initialValues: {
-      courseName: '',
-      price: '',
-      totalLearningTime: '',
-      courseSummary: '',
-      courseDetail: '',
-    },
+    initialValues,
     validate,
     onSubmit: (values) => {
       console.log('onSubmit', values)
@@ -82,15 +73,40 @@ function AdminEditCourse() {
     },
   })
 
-  // const courseData = {
-  //   course_name: formik.values.courseName,
-  //   price: formik.values.price,
-  //   total_time: formik.values.totalLearningTime,
-  //   course_summary: formik.values.courseSummary,
-  //   course_detail: formik.values.courseDetail,
-  //   cover_img: image_url,
-  //   video_trailer: video_url,
-  // }
+  const onSubmit = async () => {
+    const newCourseData = {
+      courseName: formik.values.courseName,
+      price: formik.values.price,
+      totalLearningTime: formik.values.totalLearningTime,
+      courseSummary: formik.values.courseSummary,
+      courseDetail: formik.values.courseDetail,
+    }
+    console.log(newCourseData)
+    await axios.put(
+      `http://localhost:4000/ourcourse/${courseId}`,
+      newCourseData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
+    )
+
+    // try {
+    //   const response = await axios.get(
+    //     `http://localhost:4000/profile/${userId}`
+    //   )
+    //   setUsername(response.data.data)
+    //   localStorage.removeItem('username')
+    //   localStorage.removeItem('userimage')
+    //   localStorage.setItem('username', response.data.data.full_name)
+    //   localStorage.setItem('userimage', response.data.data.image_url)
+    // } catch (error) {
+    //   alert(error.message)
+    // }
+    // const useid = userId
+    // setUserID(params.id ? params.id : useid)
+
+    // navigate('/ourcourse')
+  }
 
   const [getImgUrl, setGetImgUrl] = useState('')
   const [getVdoUrl, setGetVdoUrl] = useState('')
@@ -107,45 +123,46 @@ function AdminEditCourse() {
   }
 
   useEffect(() => {
-    const lessonDataStorage = localStorage.getItem('lesson_data')
-    try {
-      if (lessonDataStorage) {
-        // console.log('have storage')
-        const parsedData = JSON.parse(lessonDataStorage)
-        // console.log(parsedData)
-        const lessonName = parsedData.lessonName
-        const transformedData = parsedData.map((lesson, index) => ({
-          lessonName: lesson.lessonName,
-          subLessonData: lesson.subLessonList,
-        }))
-        const subLessonData = { ...parsedData }
-        // console.log(subLessonData)
-
-        setLessonData(transformedData)
-      }
-    } catch (error) {
-      console.error('Error:', error)
-    }
-
-    const storedData = localStorage.getItem('course_data')
-    const fetchData = async () => {
+    const courseFetching = async () => {
       try {
-        if (storedData) {
-          const parsedData = JSON.parse(storedData)
-          const courseDataFromLocal = {
-            courseName: parsedData.course_name,
-            price: parsedData.price,
-            totalLearningTime: parsedData.total_time,
-            courseSummary: parsedData.course_summary,
-            courseDetail: parsedData.course_detail,
-          }
-          formik.setValues(courseDataFromLocal)
+        const result = await axios.get(
+          `http://localhost:4000/ourcourse/${courseId}`
+        )
+        console.log(result)
+
+        const initialValues = {
+          courseName: result.data.data.course_name,
+          price: result.data.data.price,
+          totalLearningTime: result.data.data.total_time,
+          courseSummary: result.data.data.course_summary,
+          courseDetail: result.data.data.course_detail,
         }
+        formik.setValues(initialValues)
+        setCourseData(result.data.data)
+        setIsLoading(false)
       } catch (error) {
-        console.error('Error fetching data:', error)
+        console.log(error)
       }
     }
+    courseFetching()
   }, [])
+
+  const onSubmitForm = (e) => {
+    e.preventDefault()
+
+    if (
+      !formik.values.courseName ||
+      !formik.values.price ||
+      !formik.values.totalLearningTime ||
+      !formik.values.courseSummary ||
+      !formik.values.courseDetail
+    ) {
+      displaySnackbar('Please fill out all fields.', 'warning')
+      return
+    }
+    displaySnackbar('Your Course has been updated.', 'success')
+    formik.handleSubmit(e)
+  }
 
   const sendData = async (course) => {
     const updatedCourseData = {
@@ -279,7 +296,7 @@ function AdminEditCourse() {
                 <button className="Secondary Shadow1">Cancel</button>
                 <button
                   className="Primary Shadow1 border-none"
-                  onClick={sendData}
+                  onClick={onSubmit}
                 >
                   Edit
                 </button>
@@ -292,7 +309,7 @@ function AdminEditCourse() {
                 <Formik>
                   <Form
                     className="flex flex-col  gap-[40px]"
-                    onSubmit={formik.handleSubmit}
+                    onSubmit={onSubmitForm}
                   >
                     <div className="flex flex-col gap-[4px] border-2 border-sky-500">
                       <label htmlFor="courseName" className="">

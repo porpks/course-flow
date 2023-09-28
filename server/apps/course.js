@@ -1,113 +1,113 @@
-import { Router } from "express";
-import supabase from "../utils/db.js";
+import { Router } from 'express'
+import supabase from '../utils/db.js'
 
-const courseRouter = Router();
+const courseRouter = Router()
 
-courseRouter.get("/", async (req, res) => {
+courseRouter.get('/', async (req, res) => {
   try {
-    let start = req.query.start - 1;
-    let desc = req.query.desc;
-    let course = req.query.course;
-    let end = req.query.end - 1;
+    let start = req.query.start - 1
+    let desc = req.query.desc
+    let course = req.query.course
+    let end = req.query.end - 1
 
     const query = supabase
-      .from("courses")
-      .select("*,lessons(*,sublessons(*))")
-      .order("course_id", { ascending: desc });
+      .from('courses')
+      .select('*,lessons(*,sublessons(*))')
+      .order('course_id', { ascending: desc })
 
     const { count } = await supabase
-      .from("courses")
-      .select("*", { count: "exact", head: true });
+      .from('courses')
+      .select('*', { count: 'exact', head: true })
 
-    console.log(count);
+    console.log(count)
 
     if (course) {
-      query.ilike("course_name", `%${course}%`);
+      query.ilike('course_name', `%${course}%`)
     }
 
-    query.range(start, end);
+    query.range(start, end)
 
-    const { data, error } = await query;
+    const { data, error } = await query
 
     return res.json({
       data,
       count,
-    });
+    })
   } catch (error) {
     return res
       .status(500)
-      .json({ message: `Get course error message ${error.message}` });
+      .json({ message: `Get course error message ${error.message}` })
   }
-});
+})
 
-courseRouter.get("/course", async (req, res) => {
+courseRouter.get('/course', async (req, res) => {
   try {
-    let keywords = req.query.keywords;
-    let start = req.query.start - 1;
-    let end = req.query.end - 1;
+    let keywords = req.query.keywords
+    let start = req.query.start - 1
+    let end = req.query.end - 1
 
     if (keywords === undefined) {
       return res.status(400).json({
-        message: "Please send keywords parameter in the URL endpoint",
-      });
+        message: 'Please send keywords parameter in the URL endpoint',
+      })
     }
 
     const regexKeywords = keywords
-      .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       .split(/\s+/) // Split on whitespace
-      .map((word) => word.replace(/\s/g, "\\s*"))
-      .join(" ");
+      .map((word) => word.replace(/\s/g, '\\s*'))
+      .join(' ')
 
-    const queryFullName = `course_name.ilike.${keywords}`;
-    const queryKeywords = `course_name.ilike.%${regexKeywords}%`;
+    const queryFullName = `course_name.ilike.${keywords}`
+    const queryKeywords = `course_name.ilike.%${regexKeywords}%`
 
     const { data, error } = await supabase
-      .from("courses")
-      .select("*")
+      .from('courses')
+      .select('*')
       .or(`${queryFullName},${queryKeywords}`)
-      .order("course_id", { ascending: true })
-      .range(start, end);
+      .order('course_id', { ascending: true })
+      .range(start, end)
 
     const { count } = await supabase
-      .from("courses")
-      .select("*", { count: "exact", head: true })
-      .or(`${queryFullName},${queryKeywords}`);
+      .from('courses')
+      .select('*', { count: 'exact', head: true })
+      .or(`${queryFullName},${queryKeywords}`)
 
     return res.json({
       data: data,
       count,
-    });
+    })
   } catch (error) {
-    console.log(error);
+    console.log(error)
     return res.status(500).json({
-      message: "An error occurred while fetching data from Supabase",
+      message: 'An error occurred while fetching data from Supabase',
       error: error.message,
-    });
+    })
   }
-});
+})
 
-courseRouter.get("/:courseId", async (req, res) => {
+courseRouter.get('/:courseId', async (req, res) => {
   try {
-    const courseId = req.params.courseId;
+    const courseId = req.params.courseId
     const { data, error } = await supabase
-      .from("courses")
-      .select("*,lessons(*,sublessons(sublesson_name,sublesson_id))")
-      .eq("course_id", courseId);
+      .from('courses')
+      .select('*,lessons(*,sublessons(sublesson_name,sublesson_id))')
+      .eq('course_id', courseId)
 
     if (error) {
-      throw error;
+      throw error
     }
 
     return res.json({
       data: data[0],
-    });
+    })
   } catch (error) {
-    message: error;
+    message: error
   }
-});
+})
 
-courseRouter.post("/:courseId", async (req, res) => {
-  const lessonData = { lesson_name: req.body.lesson_name };
+courseRouter.post('/:courseId', async (req, res) => {
+  const lessonData = { lesson_name: req.body.lesson_name }
   // try {
   //   const courseId = req.params.courseId
   //   const { data, error } = await supabase
@@ -125,24 +125,24 @@ courseRouter.post("/:courseId", async (req, res) => {
   // } catch (error) {
   //   message: error
   // }
-});
+})
 
-courseRouter.delete("/:courseId", async (req, res) => {
-  const courseId = req.params.courseId;
+courseRouter.delete('/:courseId', async (req, res) => {
+  const courseId = req.params.courseId
 
   try {
     const { error } = await supabase
-      .from("courses")
+      .from('courses')
       .delete()
-      .eq("course_id", courseId);
+      .eq('course_id', courseId)
     return res.json({
-      message: "course has been delete",
-    });
+      message: 'course has been delete',
+    })
   } catch (error) {
     return res.status(400).json({
       message: error,
-    });
+    })
   }
-});
+})
 
-export default courseRouter;
+export default courseRouter
