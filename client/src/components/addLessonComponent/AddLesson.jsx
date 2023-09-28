@@ -102,7 +102,7 @@ function AddLesson(sharedState, updateState) {
         ? { ...subLesson, subLessonName }
         : subLesson
     );
-    setLesson(updatedSubLessonList);
+    // setLesson(updatedSubLessonList);
     setSubLessonList(updatedSubLessonList);
   };
   const handleLesson = (event) => {
@@ -136,7 +136,9 @@ function AddLesson(sharedState, updateState) {
         .filter((item) => item.subLessonVideo && item.subLessonVideo !== "")
         .map((item) => item.subLessonVideo);
 
-      setLesson({ lessonName, subLessonData, subLessonVideo });
+      const newLesson = lesson
+      newLesson.push({ lessonName, subLessonData, subLessonVideo })
+      setLesson(newLesson);
     }
     console.log(lesson, "final");
 
