@@ -87,8 +87,7 @@ function AdminAddCourse() {
   //   // sublesson_name,
   //   // sublesson_video,
   // }
-  console.log(localImg);
-  console.log(localVdo);
+
   const [getImgUrl, setGetImgUrl] = useState("");
   const [getVdoUrl, setGetVdoUrl] = useState("");
 
@@ -181,23 +180,48 @@ function AdminAddCourse() {
       video_trailer: getVdoUrl,
       ...lesson, //เปลี่ยน
     };
-    console.log(updatedCourseData, "sss");
-    // try {
-    //   const result = await axios.post(
-    //     `http://localhost:4000/admin/addcourse`,
-    //     updatedCourseData,
-    //     { headers: { "Content-Type": "multipart/form-data" } }
-    //   );
-    //   // //console.log(updatedCourseData);
-    //   // localStorage.removeItem('video_url')
-    //   // localStorage.removeItem('image_url')
-    //   // formik.resetForm()
-    //   setSubmitData(true);
-    //   // displaySnackbar("You've Successfully Added a New Course. 🎉")
-    //   // navigate('/admin/courselist')
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    // console.log(updatedCourseData);
+    // Object.values(updatedCourseData).map((value) => {
+    //   console.log(value);
+    // })
+    const formData = new FormData()
+    for (let key in updatedCourseData) {
+      // if (key === "subLessonVideo") {
+      //   for (let value of updatedCourseData.subLessonVideo) {
+      //     console.log(value);
+      //     formData.append("subLessonVideo", value)
+      //   }
+      // }
+      // else
+      if (key !== "cover_img" && key !== "video_trailer" && typeof updatedCourseData[key] === "object") {
+        formData.append(key, JSON.stringify(updatedCourseData[key]))
+        // console.log(updatedCourseData[key].subLessonVideo);
+        for (let value of updatedCourseData[key].subLessonVideo) {
+          formData.append("subLessonVideo", value)
+        }
+
+      }
+      else {
+        formData.append(key, updatedCourseData[key])
+      }
+    }
+
+    try {
+      const result = await axios.post(
+        `http://localhost:4000/admin/addcourse`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      // localStorage.removeItem('video_url')
+      // localStorage.removeItem('image_url')
+      // formik.resetForm()
+      setSubmitData(true);
+      // displaySnackbar("You've Successfully Added a New Course. 🎉")
+      // navigate('/admin/courselist')
+    } catch (error) {
+      console.error(error);
+    }
 
     displaySnackbar("You've Successfully Added a New Course. 🎉");
   };
