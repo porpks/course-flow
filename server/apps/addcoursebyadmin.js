@@ -165,16 +165,18 @@ addCourseRouter.post('/addcourse', imageCoverUpload, async (req, res) => {
       const lessons = Object.values(extractedData).filter(item => typeof item === "object");
       let lessonIdMap = {};
       let subLessonId = [];
-      let { data: courses, error } = await supabase
+      let { data: courses, error: errorGetcourse } = await supabase
         .from('courses')
         .select('course_id')
         .order("course_id", { ascending: false })
         .limit(1)
+      if (errorGetcourse) {
+        return res.status(400).json({ errorGetcourse })
+      }
       try {
         const courseId = courses[0].course_id
         const insertPromises = lessons.map(async (lesson) => {
           const lessonName = lesson.lessonName;
-
 
           const { data: lessonData } = await supabase
             .from("lessons")
@@ -189,11 +191,9 @@ addCourseRouter.post('/addcourse', imageCoverUpload, async (req, res) => {
           const lessonId = lessonData[0].lesson_id;
           lessonIdMap[lessonId] = [];
 
-
           if (lesson.subLessonData && Array.isArray(lesson.subLessonData)) {
             const subLessonInsertPromises = lesson.subLessonData.map(async (subLesson) => {
               const subLessonName = subLesson.subLessonName;
-              console.log(subLessonName)
               const { data: subLessonData, error } = await supabase
                 .from("sublessons")
                 .insert([{ lesson_id: lessonId, sublesson_name: subLessonName }])
@@ -210,8 +210,6 @@ addCourseRouter.post('/addcourse', imageCoverUpload, async (req, res) => {
         });
 
         await Promise.all(insertPromises);
-        console.log(lessonIdMap)
-        console.log(subLessonId)
 
         res.json({ success: true, message: "Lessons and sub-lessons inserted successfully" });
       } catch (error) {
