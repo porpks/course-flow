@@ -361,8 +361,6 @@ function AdminAddCourse() {
                       getUrl={setLocalVdo}
                       setGetVdoUrl={setGetVdoUrl}
                     />
-
-                    <button type="submit">Submit</button>
                   </Form>
                 </Formik>
               </div>
