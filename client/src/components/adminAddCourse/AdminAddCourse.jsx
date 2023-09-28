@@ -1,70 +1,71 @@
-import React, { useState, useEffect } from "react";
-import "./adminAddCourse.css";
-import Sidebar from "../Sidebar";
-import { useNavigate } from "react-router-dom";
-import { Formik, Form, Field, useFormik } from "formik";
-import LessonTable from "./LessonTable";
-import AddLesson from "../addLessonComponent/AddLesson";
-import axios from "axios";
-import * as Yup from "yup";
-import UploadVideo from "./UploadVideo";
-import UploadImage from "./UploadImage";
-import SnackBar from "../SnackBar.jsx";
+import React, { useState, useEffect } from 'react'
+import './adminAddCourse.css'
+import Sidebar from '../Sidebar'
+import { useNavigate } from 'react-router-dom'
+import { Formik, Form, Field, useFormik } from 'formik'
+import LessonTable from './LessonTable'
+import AddLesson from '../addLessonComponent/AddLesson'
+import axios from 'axios'
+import * as Yup from 'yup'
+import UploadVideo from './UploadVideo'
+import UploadImage from './UploadImage'
+import SnackBar from '../SnackBar.jsx'
 function AdminAddCourse() {
   // const history = useHistory()
-  const navigate = useNavigate();
-  const [image_url, setImage_url] = useState("");
-  const [video_url, setVideo_url] = useState("");
-  const [submitData, setSubmitData] = useState(false);
-
-  const [localImg, setLocalImg] = useState("");
-  const [localVdo, setLocalVdo] = useState("");
+  const navigate = useNavigate()
+  const [image_url, setImage_url] = useState('')
+  const [video_url, setVideo_url] = useState('')
+  const [submitData, setSubmitData] = useState(false)
+  const [lessonData, setLessonData] = useState('')
+  const [subLessonData, setSubLessonData] = useState('')
+  const [localImg, setLocalImg] = useState('')
+  const [localVdo, setLocalVdo] = useState('')
 
   const handleChange = (event) => {
     setValues((prevValues) => ({
       ...prevValues,
       [event.target.name]: event.target.value,
-    }));
-  };
+    }))
+  }
   const validate = (values) => {
-    const errors = {};
+    const errors = {}
     if (!values.courseName) {
-      errors.courseName = "Required";
+      errors.courseName = 'Required'
     } else if (values.courseName.length > 15) {
-      errors.courseName = "Must be 15 characters or less";
+      errors.courseName = 'Must be 15 characters or less'
     }
     if (!values.price) {
-      errors.price = "Required";
+      errors.price = 'Required'
     }
     if (!values.totalLearningTime) {
-      errors.totalLearningTime = "Required";
+      errors.totalLearningTime = 'Required'
     }
     if (!values.courseSummary) {
-      errors.courseSummary = "Required";
+      errors.courseSummary = 'Required'
     } else if (values.courseSummary.length > 15) {
-      errors.courseSummary = "Must be more than 15 characters";
+      errors.courseSummary = 'Must be more than 15 characters'
     }
     if (!values.courseDetail) {
-      errors.courseDetail = "Required";
+      errors.courseDetail = 'Required'
     } else if (values.courseDetail.length > 15) {
-      errors.courseDetail = "Must be more than 15 characters";
+      errors.courseDetail = 'Must be more than 15 characters'
     }
-    return errors;
-  };
+    return errors
+  }
   const formik = useFormik({
     initialValues: {
-      courseName: "",
-      price: "",
-      totalLearningTime: "",
-      courseSummary: "",
-      courseDetail: "",
+      courseName: '',
+      price: '',
+      totalLearningTime: '',
+      courseSummary: '',
+      courseDetail: '',
     },
     validate,
     onSubmit: (values) => {
-      console.log("onSubmit", values);
-      alert(JSON.stringify(values, null, 2));
+      console.log('onSubmit', values)
+      alert(JSON.stringify(values, null, 2))
     },
-  });
+  })
 
   const courseData = {
     course_name: formik.values.courseName,
@@ -74,42 +75,69 @@ function AdminAddCourse() {
     course_detail: formik.values.courseDetail,
     cover_img: image_url,
     video_trailer: video_url,
-  };
+  }
 
+  // const lessonData = {
+  //   // lesson_name,
+  // }
+  // const subLessonData = {
+  //   // sublesson_name,
+  //   // sublesson_video,
+  // }
   // console.log(localImg);
   // console.log(localVdo);
 
   if (localImg && localVdo) {
-    const storedImageUrl = localImg;
-    const storedVideoUrl = localVdo;
+    const storedImageUrl = localImg
+    const storedVideoUrl = localVdo
     if (storedImageUrl !== image_url) {
-      setImage_url(storedImageUrl);
+      setImage_url(storedImageUrl)
     }
     if (storedVideoUrl !== video_url) {
-      setVideo_url(storedVideoUrl);
+      setVideo_url(storedVideoUrl)
     }
   }
 
   useEffect(() => {
-    const storedData = localStorage.getItem("course_data");
+    const lessonDataStorage = localStorage.getItem('lesson_data')
+    try {
+      if (lessonDataStorage) {
+        // console.log('have storage')
+        const parsedData = JSON.parse(lessonDataStorage)
+        // console.log(parsedData)
+        const lessonName = parsedData.lessonName
+        const transformedData = parsedData.map((lesson, index) => ({
+          lessonName: lesson.lessonName,
+          subLessonData: lesson.subLessonList,
+        }))
+        const subLessonData = { ...parsedData }
+        // console.log(subLessonData)
+
+        setLessonData(transformedData)
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+
+    const storedData = localStorage.getItem('course_data')
     const fetchData = async () => {
       try {
         if (storedData) {
-          const parsedData = JSON.parse(storedData);
+          const parsedData = JSON.parse(storedData)
           const courseDataFromLocal = {
             courseName: parsedData.course_name,
             price: parsedData.price,
             totalLearningTime: parsedData.total_time,
             courseSummary: parsedData.course_summary,
             courseDetail: parsedData.course_detail,
-          };
-          formik.setValues(courseDataFromLocal);
+          }
+          formik.setValues(courseDataFromLocal)
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error)
       }
-    };
-
+    }
+    // console.log(lessonData)
     // const intervalId = setInterval(() => {
     //   const storedImageUrl = localStorage.getItem("image_url");
     //   const storedVideoUrl = localStorage.getItem("video_url");
@@ -125,58 +153,97 @@ function AdminAddCourse() {
 
     // // Clear the interval when the component unmounts
     // return () => clearInterval(intervalId);
-  }, []);
+  }, [])
 
   const sendData = async (course) => {
     const updatedCourseData = {
       ...courseData,
       cover_img: image_url,
       video_trailer: video_url,
-    };
-    try {
-      await axios.post(
-        `http://localhost:4000/admin/addcourse`,
-        updatedCourseData
-      );
-      // console.log(updatedCourseData);
-      localStorage.removeItem("video_url");
-      localStorage.removeItem("image_url");
-      formik.resetForm();
-      setSubmitData(true);
-    } catch (error) {
-      message: error;
     }
-    displaySnackbar("You've Successfully Added a New Course. 🎉");
-  };
+    // console.log(updatedCourseData)
+
+    const testData = [
+      {
+        ...courseData,
+        ...lessonData,
+      },
+    ]
+
+    console.log(testData)
+    const fromDatabase = 'your_course_id_value' // Replace with the actual value from the database
+    const updateLessonDataArray = lessonData.map((lesson, index) => ({
+      course_id: fromDatabase,
+      lesson_name: lesson.lessonName,
+      sublesson_name: lesson.subLessonData,
+    }))
+    // console.log(updateLessonDataArray)
+    // console.log(lessonData)
+    // const fromDatabase = 'your_course_id_value' // Replace with the actual value from the database
+    // const updateLessonDataArray = lessonData.map((lesson) => ({
+    //   course_id: fromDatabase,
+    //   lesson_name: lesson.lessonName,
+    //   sublesson_name: lesson.subLessonData.map((sublesson) => ({
+    //     sublesson_name: sublesson.subLessonName,
+    //   })),
+    // }))
+    // console.log(updateLessonDataArray)
+
+    // const updateSubLessonData = {
+    //   sublesson_name: [],
+    // }
+
+    // lessonData.forEach((lesson) => {
+    //   lesson.subLessonData.forEach((subLesson) => {
+    //     updateSubLessonData.sublesson_name.push(subLesson.subLessonName)
+    //   })
+    // })
+
+    // console.log(updateSubLessonData)
+    // try {
+    //   await axios.post(
+    //     `http://localhost:4000/admin/addcourse`,
+    //     updatedCourseData
+    //   )
+    //   // console.log(updatedCourseData);
+    //   localStorage.removeItem('video_url')
+    //   localStorage.removeItem('image_url')
+    //   formik.resetForm()
+    //   setSubmitData(true)
+    // } catch (error) {
+    //   message: error
+    // }
+    displaySnackbar("You've Successfully Added a New Course. 🎉")
+  }
 
   const handleData = () => {
-    localStorage.setItem(`course_data`, JSON.stringify(courseData));
-    navigate(`/admin/addcourse/addlesson`);
+    localStorage.setItem(`course_data`, JSON.stringify(courseData))
+    navigate(`/admin/addcourse/addlesson`)
     // console.log(localStorage.getItem(`course_data`))
-  };
+  }
 
   function displaySnackbar(message) {
-    setOpenSnackBar(false);
-    setSnackbarMes(message);
-    setOpenSnackBar(true);
+    setOpenSnackBar(false)
+    setSnackbarMes(message)
+    setOpenSnackBar(true)
   }
-  const [openSnackbar, setOpenSnackBar] = useState(false);
-  const [snackBarMes, setSnackbarMes] = useState("");
+  const [openSnackbar, setOpenSnackBar] = useState(false)
+  const [snackBarMes, setSnackbarMes] = useState('')
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+    if (reason === 'clickaway') {
+      return
     }
 
-    setOpenSnackBar(false);
-  };
+    setOpenSnackBar(false)
+  }
 
   return (
     <>
       <SnackBar
         open={openSnackbar}
         onClose={handleClose}
-        severity={"success"}
+        severity={'success'}
         message={snackBarMes}
       />
 
@@ -252,7 +319,7 @@ function AdminAddCourse() {
                           className="Input"
                           value={formik.values.totalLearningTime}
                           onChange={formik.handleChange}
-                        />{" "}
+                        />{' '}
                         {formik.errors.totalLearningTime ? (
                           <div>{formik.errors.totalLearningTime}</div>
                         ) : null}
@@ -306,7 +373,7 @@ function AdminAddCourse() {
                 <button
                   className="Primary Shadow1 px-[32px] py-[18px] justify-center border-none"
                   onClick={() => {
-                    handleData();
+                    handleData()
                   }}
                 >
                   + Add Lesson
@@ -321,6 +388,6 @@ function AdminAddCourse() {
         </div>
       </div>
     </>
-  );
+  )
 }
-export default AdminAddCourse;
+export default AdminAddCourse

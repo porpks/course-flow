@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom'
 
 function LessonTable() {
   const [lessonData, setLessonData] = useState([])
+
   useEffect(() => {
-    const storage = localStorage.getItem('lesson_data')
+    const lessonDataStorage = localStorage.getItem('lesson_data')
     try {
-      if (storage) {
+      if (lessonDataStorage) {
         console.log('have storage')
-        const parsedData = JSON.parse(storage)
+        const parsedData = JSON.parse(lessonDataStorage)
         // console.log(parsedData)
         const lessonName = parsedData.lessonName
         const transformedData = parsedData.map((lesson, index) => ({
@@ -17,7 +18,7 @@ function LessonTable() {
           subLessonData: lesson.subLessonList,
         }))
         const subLessonData = { ...parsedData }
-        console.log(subLessonData)
+        // console.log(subLessonData)
 
         setLessonData(transformedData)
       }
@@ -33,9 +34,9 @@ function LessonTable() {
   const handleDelete = (index, lessonName) => {
     if (window.confirm(`คุณต้องการลบบทเรียน "${lessonName}" ใช่หรือไม่?`)) {
       try {
-        const storage = localStorage.getItem('lesson_data')
-        if (storage) {
-          const parsedData = JSON.parse(storage)
+        const lessonDataStorage = localStorage.getItem('lesson_data')
+        if (lessonDataStorage) {
+          const parsedData = JSON.parse(lessonDataStorage)
 
           if (index >= 0 && index < parsedData.length) {
             // ลบบทเรียนจากอาร์เรย์ด้วย index
