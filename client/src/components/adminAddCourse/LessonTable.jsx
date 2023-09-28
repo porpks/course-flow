@@ -5,7 +5,7 @@ import { useAuth } from "../../contexts/AuthContext.jsx";
 
 function LessonTable() {
   const [lessonData, setLessonData] = useState([]);
-  const { lesson } = useAuth();
+  const { lesson, setLesson } = useAuth();
 
   useEffect(() => {
     const storage = localStorage.getItem("lesson_data");
@@ -26,6 +26,8 @@ function LessonTable() {
       console.error("Error:", error);
     }
   }, []);
+  console.log(lesson, "lessonFromtable");
+  console.log(localStorage.getItem("lesson_data"));
 
   // const handleDelete = (id, lessonName) => {
   //   alert(`Deleted lesson with ID ${id} ${lessonName}`)
@@ -35,16 +37,19 @@ function LessonTable() {
     if (window.confirm(`คุณต้องการลบบทเรียน "${lessonName}" ใช่หรือไม่?`)) {
       try {
         const storage = localStorage.getItem("lesson_data");
+        const newDataLesson = [...lesson];
         if (storage) {
           const parsedData = JSON.parse(storage);
 
           if (index >= 0 && index < parsedData.length) {
             // ลบบทเรียนจากอาร์เรย์ด้วย index
             parsedData.splice(index, 1);
-
             // อัปเดตข้อมูลใน Local Storage และ state
             localStorage.setItem("lesson_data", JSON.stringify(parsedData));
+            console.log(newDataLesson, "newDataLesson");
+            console.log(newDataLesson.splice(index, 1));
             setLessonData(parsedData);
+            setLesson(newDataLesson);
 
             alert(`ลบบทเรียน "${lessonName}" เรียบร้อยแล้ว`);
           } else {
