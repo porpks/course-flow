@@ -5,11 +5,16 @@ import Sidebar from '../../components/Sidebar'
 
 function EditLessonPage() {
   return (
-    <div className="flex flex-row">
-      {/* <Navbar /> */}
-      <Sidebar isCoursePage={true} />
-      <EditLesson />
-    </div>
+    <>
+      <div className="flex flex-row justify-center">
+        <div className="w-[240px]">
+          <Sidebar isCoursePage={true} />
+        </div>
+        <div className="w-[1200px]">
+          <EditLesson />
+        </div>
+      </div>
+    </>
   )
 }
 

@@ -4,12 +4,14 @@ import CourseList from '../../components/adminCourseListComponent/courselist'
 
 function CourseListPage() {
   return (
-    <div className="flex justify-center w-full">
-      <div className="w-[240px]">
-        <Sidebar isCoursePage={true} />
+    <>
+      <div className="flex justify-center w-full">
+        <div className="w-[240px]">
+          <Sidebar isCoursePage={true} />
+        </div>
+        <CourseList />
       </div>
-      <CourseList />
-    </div>
+    </>
   )
 }
 
