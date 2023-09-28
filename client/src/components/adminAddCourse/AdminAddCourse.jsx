@@ -180,8 +180,8 @@ function AdminAddCourse() {
       cover_img: getImgUrl,
       video_trailer: getVdoUrl,
       ...lesson, //เปลี่ยน
-    }
-    console.log(updatedCourseData)
+
+
     // try {
     //   const result = await axios.post(
     //     `http://localhost:4000/admin/addcourse`,
