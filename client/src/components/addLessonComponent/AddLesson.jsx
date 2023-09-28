@@ -126,8 +126,17 @@ function AddLesson(sharedState, updateState) {
       console.log(Array.isArray(parsedData));
       const newData = [...parsedData, { lessonName, subLessonList }];
       localStorage.setItem("lesson_data", JSON.stringify(newData));
-      setLesson({ lessonName, subLessonList });
-      console.log({ lessonName, subLessonList });
+
+      const subLessonData = subLessonList.map((item) => ({
+        subLessonId: item.subLessonId,
+        subLessonName: item.subLessonName,
+      }));
+
+      const subLessonVideo = subLessonList
+        .filter((item) => item.subLessonVideo && item.subLessonVideo !== "")
+        .map((item) => item.subLessonVideo);
+
+      setLesson({ lessonName, subLessonData, subLessonVideo });
     }
     console.log(lesson, "final");
 
@@ -290,7 +299,7 @@ function AddLesson(sharedState, updateState) {
                       <div className="flex flex-row justify-between">
                         <p className="Body2 pb-1">Sub-lesson name*</p>
                         <button
-                          className="2 hover:cursor-pointer text-blue-500"
+                          className="Ghost hover:cursor-pointer text-blue-500"
                           onClick={() =>
                             deleteSubLesson(subLesson.subLessonId)
                           }>
