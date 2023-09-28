@@ -80,14 +80,16 @@ function AdminEditCourse() {
       total_time: formik.values.totalLearningTime,
       course_summary: formik.values.courseSummary,
       course_detail: formik.values.courseDetail,
+      // course_name: 1,
+      // price: 2,
+      // total_time: 3,
+      // course_summary: 4,
+      // course_detail: 5,
     }
     console.log(newCourseData)
     await axios.put(
       `http://localhost:4000/ourcourse/${courseId}`,
-      newCourseData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      }
+      newCourseData
     )
 
     // try {

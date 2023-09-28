@@ -138,11 +138,18 @@ function AddLesson(sharedState, updateState) {
 
   const handleUploadVideo = async (event, subLessonId) => {
     const vdoFile = event.target.files[0]
+    const file = JSON.stringify(vdoFile)
+    console.log(event.target.files[0])
+    const fileJsonString = JSON.stringify(file)
+    localStorage.setItem('fileData', fileJsonString)
+
+    console.log(vdoFile)
     const updatedSubLessonList = subLessonList.map((subLesson) =>
       subLesson.subLessonId === subLessonId
-        ? { ...subLesson, subLessonVideo: URL.createObjectURL(vdoFile) }
+        ? { ...subLesson, subLessonVideo: vdoFile }
         : subLesson
     )
+
     setSubLessonList(updatedSubLessonList)
 
     if (vdoFile) {

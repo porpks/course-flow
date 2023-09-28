@@ -149,17 +149,17 @@ courseRouter.put('/:courseId', async (req, res) => {
   const courseId = req.params.courseId
   const lessonData = { lesson_name: req.body.lesson_name }
 
-  if (
-    !req.body.course_name ||
-    !req.body.price ||
-    !req.body.total_time ||
-    !req.body.course_summary ||
-    !req.body.course_detail
-  ) {
-    return res.status(400).json({
-      message: 'Please enter all information.',
-    })
-  }
+  // if (
+  //   !req.body.course_name ||
+  //   !req.body.price ||
+  //   !req.body.total_time ||
+  //   !req.body.course_summary ||
+  //   !req.body.course_detail
+  // ) {
+  //   return res.status(400).json({
+  //     message: 'Please enter all information.',
+  //   })
+  // }
 
   console.log(req.body)
   try {

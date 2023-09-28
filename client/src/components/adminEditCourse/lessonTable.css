@@ -1,23 +1,24 @@
 table {
-  border-collapse: collapse;
+  /* border-collapse: collapse; */
 }
 tr:first-child {
-  background-color: #dddddd;
-
+  /* background-color: #dddddd; */
 }
 
-th {
-  text-align: left;
-  padding: 16px 10px;
-}
-
-td {
-  padding: 32px 16px;
+.Tab {
   border-bottom: 1px solid var(--gray500);
 }
 
+th {
+  /* text-align: left; */
+}
+
+td {
+  /* border-bottom: 1px solid var(--gray500); */
+}
+
 td:first-child {
-  text-align: center;
+  /* text-align: center; */
 }
 
 .btn {

@@ -1,119 +1,119 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import Mymodal from "../Mymodal";
-import CircularIndeterminate from "../../assets/loadingProgress.jsx";
-import SnackBar from "../SnackBar";
-
+import axios from 'axios'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Mymodal from '../Mymodal'
+import CircularIndeterminate from '../../assets/loadingProgress.jsx'
+import SnackBar from '../SnackBar'
+import { useParams } from 'react-router-dom'
 function CourseList() {
-  const [courseData, setCourseData] = useState([]);
-  const [searchBox, setSearchBox] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [courseData, setCourseData] = useState([])
+  const [searchBox, setSearchBox] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
 
-  const [start, setStart] = useState(1);
-  const [end, setEnd] = useState(8);
-  const [page, setPage] = useState(1);
+  const [start, setStart] = useState(1)
+  const [end, setEnd] = useState(8)
+  const [page, setPage] = useState(1)
 
-  const [targetCourseId, setTargetCourseId] = useState(null);
-  const [targetCourseName, setTargetCourseName] = useState(null);
-  const [deleteToggle, setDeleteToggle] = useState(false);
-  const closeDelete = () => setDeleteToggle(false);
+  const [targetCourseId, setTargetCourseId] = useState(null)
+  const [targetCourseName, setTargetCourseName] = useState(null)
+  const [deleteToggle, setDeleteToggle] = useState(false)
+  const closeDelete = () => setDeleteToggle(false)
 
-  const navigate = useNavigate();
-
+  const navigate = useNavigate()
+  const courseId = useParams()
   const courseFetching = async () => {
     try {
       const result = await axios.get(
         `http://localhost:4000/ourcourse?course=${searchBox}&start=${start}&end=${end}&desc&`
-      );
-      setCourseData(result.data.data);
-      setIsLoading(false);
+      )
+      setCourseData(result.data.data)
+      setIsLoading(false)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   function formatDateTime(isoDateTime) {
-    const date = new Date(isoDateTime);
+    const date = new Date(isoDateTime)
 
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const year = date.getFullYear()
 
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    const ampm = hours >= 12 ? "PM" : "AM";
+    let hours = date.getHours()
+    let minutes = date.getMinutes()
+    const ampm = hours >= 12 ? 'PM' : 'AM'
 
     if (hours > 12) {
-      hours -= 12;
+      hours -= 12
     }
 
     if (minutes < 10) {
-      minutes = "0" + minutes;
+      minutes = '0' + minutes
     }
 
-    const formattedDateTime = `${month}/${day}/${year} ${hours}:${minutes}${ampm}`;
+    const formattedDateTime = `${month}/${day}/${year} ${hours}:${minutes}${ampm}`
 
-    return formattedDateTime;
+    return formattedDateTime
   }
 
   const changeUpperPage = () => {
-    let newStart = start + 8;
-    let newEnd = end + 8;
-    let newPage = page + 1;
-    setStart(newStart);
-    setEnd(newEnd);
-    setPage(newPage);
-  };
+    let newStart = start + 8
+    let newEnd = end + 8
+    let newPage = page + 1
+    setStart(newStart)
+    setEnd(newEnd)
+    setPage(newPage)
+  }
 
   const changeLowerPage = () => {
     if (start > 1) {
-      let newStart = start - 8;
-      let newEnd = end - 8;
-      let newPage = page - 1;
-      setStart(newStart);
-      setEnd(newEnd);
-      setPage(newPage);
+      let newStart = start - 8
+      let newEnd = end - 8
+      let newPage = page - 1
+      setStart(newStart)
+      setEnd(newEnd)
+      setPage(newPage)
     }
-  };
+  }
 
   const handleDelete = async () => {
     if (targetCourseId) {
       try {
-        await axios.delete(`http://localhost:4000/ourcourse/${targetCourseId}`);
+        await axios.delete(`http://localhost:4000/ourcourse/${targetCourseId}`)
 
-        setTargetCourseName(null);
-        setTargetCourseId(null);
-        setDeleteToggle(false);
-        courseFetching();
-        displaySnackbar(`${targetCourseId} has been deleted`, "success");
+        setTargetCourseName(null)
+        setTargetCourseId(null)
+        setDeleteToggle(false)
+        courseFetching()
+        displaySnackbar(`${targetCourseId} has been deleted`, 'success')
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     }
-  };
+  }
 
   function displaySnackbar(message, status) {
-    setOpenSnackBar(false);
-    setSnackStatus(status);
-    setSnackbarMes(message);
-    setOpenSnackBar(true);
+    setOpenSnackBar(false)
+    setSnackStatus(status)
+    setSnackbarMes(message)
+    setOpenSnackBar(true)
   }
-  const [openSnackbar, setOpenSnackBar] = useState(false);
-  const [snackBarMes, setSnackbarMes] = useState("");
-  const [snackStatus, setSnackStatus] = useState("");
+  const [openSnackbar, setOpenSnackBar] = useState(false)
+  const [snackBarMes, setSnackbarMes] = useState('')
+  const [snackStatus, setSnackStatus] = useState('')
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+    if (reason === 'clickaway') {
+      return
     }
 
-    setOpenSnackBar(false);
-  };
+    setOpenSnackBar(false)
+  }
 
   useEffect(() => {
-    courseFetching();
-  }, [searchBox, page]);
+    courseFetching()
+  }, [searchBox, page])
 
   if (isLoading) {
     return (
@@ -121,7 +121,7 @@ function CourseList() {
         <h1>Loading...</h1>
         <CircularIndeterminate />
       </div>
-    );
+    )
   }
 
   return (
@@ -158,7 +158,8 @@ function CourseList() {
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -170,16 +171,17 @@ function CourseList() {
               placeholder="Search..."
               className=" Search grow shrink basis-0 placeholder:text-slate-400 text-base font-normal font-['Inter'] leading-normal border-none outline-none"
               onChange={(e) => {
-                setSearchBox(e.target.value);
-                setStart(1);
-                setEnd(8);
-                setPage(1);
+                setSearchBox(e.target.value)
+                setStart(1)
+                setEnd(8)
+                setPage(1)
               }}
             />
           </div>
           <button
-            onClick={() => navigate("/admin/addcourse")}
-            className="Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex border-none">
+            onClick={() => navigate('/admin/addcourse')}
+            className="Primary px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 flex border-none"
+          >
             <div className=" text-center text-white text-base font-bold font-['Inter'] leading-normal">
               + Add Course
             </div>
@@ -215,7 +217,8 @@ function CourseList() {
           {courseData.map((item) => (
             <div
               key={item.course_id}
-              className="w-[1120px] h-[88px] grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] bg-white Body2">
+              className="w-[1120px] h-[88px] grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] bg-white Body2"
+            >
               <div className="w-[48px] flex items-center px-[16px] py-[32px]">
                 {item.course_id}
               </div>
@@ -233,7 +236,7 @@ function CourseList() {
                 {item.lessons.length}
               </div>
               <div className="w-[105px]  flex items-center px-[16px] py-[10px]">
-                {item.price?.toLocaleString("en-US", {
+                {item.price?.toLocaleString('en-US', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
@@ -248,16 +251,18 @@ function CourseList() {
                 <button
                   className="cursor-pointer bg-white border-none"
                   onClick={() => {
-                    setDeleteToggle(true);
-                    setTargetCourseId(item.course_id);
-                    setTargetCourseName(item.course_name);
-                  }}>
+                    setDeleteToggle(true)
+                    setTargetCourseId(item.course_id)
+                    setTargetCourseName(item.course_name)
+                  }}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
-                    fill="none">
+                    fill="none"
+                  >
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"
@@ -266,13 +271,19 @@ function CourseList() {
                     />
                   </svg>
                 </button>
-                <button className="cursor-pointer bg-white border-none">
+                <button
+                  className="cursor-pointer bg-white border-none"
+                  onClick={() =>
+                    navigate(`/admin/editcourse/${item.course_id}`)
+                  }
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
-                    fill="none">
+                    fill="none"
+                  >
                     <path
                       d="M21.7313 2.26899C21.239 1.77681 20.5714 1.50031 19.8753 1.50031C19.1791 1.50031 18.5115 1.77681 18.0193 2.26899L16.8623 3.42599L20.5743 7.13799L21.7313 5.98099C22.2234 5.48872 22.4999 4.82111 22.4999 4.12499C22.4999 3.42888 22.2234 2.76127 21.7313 2.26899ZM19.5133 8.199L15.8013 4.48699L7.40125 12.887C6.78411 13.5038 6.33043 14.2648 6.08125 15.101L5.28125 17.786C5.24263 17.9156 5.23975 18.0532 5.27292 18.1842C5.30608 18.3153 5.37407 18.435 5.46967 18.5306C5.56527 18.6262 5.68494 18.6942 5.81601 18.7273C5.94709 18.7605 6.08469 18.7576 6.21425 18.719L8.89925 17.919C9.73548 17.6698 10.4964 17.2161 11.1133 16.599L19.5133 8.199Z"
                       fill="#8DADE0"
@@ -291,13 +302,15 @@ function CourseList() {
             <button
               className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center
               cursor-pointer	}`}
-              onClick={page > 1 ? changeLowerPage : undefined}>
+              onClick={page > 1 ? changeLowerPage : undefined}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6 inline-block mr-2"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor">
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -310,14 +323,16 @@ function CourseList() {
             <span className="text-gray-600 text-lg">Page {page}</span>
             <button
               className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center cursor-pointer`}
-              onClick={courseData.length < 8 ? undefined : changeUpperPage}>
+              onClick={courseData.length < 8 ? undefined : changeUpperPage}
+            >
               Next
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6 inline-block ml-2"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor">
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -330,7 +345,7 @@ function CourseList() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default CourseList;
+export default CourseList
