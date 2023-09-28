@@ -46,8 +46,8 @@ function LessonTable() {
             parsedData.splice(index, 1);
             // อัปเดตข้อมูลใน Local Storage และ state
             localStorage.setItem("lesson_data", JSON.stringify(parsedData));
-            console.log(newDataLesson, "newDataLesson");
-            console.log(newDataLesson.splice(index, 1));
+
+            newDataLesson.splice(index, 1);
             setLessonData(parsedData);
             setLesson(newDataLesson);
 
