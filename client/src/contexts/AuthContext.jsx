@@ -28,6 +28,7 @@ function AuthProvider(props) {
     state: false,
     assignment_id: null,
   });
+  const [lesson, setLesson] = useState([]);
 
   const userIdFromCookie = getCookie("cookieUserID");
   const userId = secureLocalStorage.getItem("userID");
@@ -243,8 +244,9 @@ function AuthProvider(props) {
           userIdFromCookie,
           loginAdmin,
           logoutAdmin,
-        }}
-      >
+          lesson,
+          setLesson,
+        }}>
         {props.children}
       </AuthContext.Provider>
     </>
