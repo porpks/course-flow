@@ -165,14 +165,14 @@ function AdminAddCourse() {
   // console.log(getVdoUrl)
 
   const sendData = async (course) => {
-    // const updatedCourseData = [
-    //   {
-    //     ...courseData,
-    //     cover_img: getImgUrl,
-    //     video_trailer: getVdoUrl,
-    //   },
-    // ]
-    // console.log(updatedCourseData)
+    const updatedCourseData = [
+      {
+        ...courseData,
+        cover_img: getImgUrl,
+        video_trailer: getVdoUrl,
+      },
+    ]
+    console.log(updatedCourseData)
 
     const updatedCourseData = {
       ...courseData,
@@ -234,6 +234,7 @@ function AdminAddCourse() {
 
       // displaySnackbar("You've Successfully Added a New Course. 🎉")
     };
+    displaySnackbar("You've Successfully Added a New Course. 🎉");
   };
   const handleData = () => {
     localStorage.setItem(`course_data`, JSON.stringify(courseData));

@@ -120,7 +120,6 @@ function AddLesson(sharedState, updateState) {
       displaySnackbar("lesson has successfully created! ", "success");
       alert("lesson has successfully created! ");
       const parsedData = JSON.parse(storage);
-      console.log(Array.isArray(parsedData));
       const newData = [...parsedData, { lessonName, subLessonList }];
       localStorage.setItem("lesson_data", JSON.stringify(newData));
 
@@ -133,8 +132,8 @@ function AddLesson(sharedState, updateState) {
         .filter((item) => item.subLessonVideo && item.subLessonVideo !== "")
         .map((item) => item.subLessonVideo);
 
-      const newLesson = lesson
-      newLesson.push({ lessonName, subLessonData, subLessonVideo })
+      const newLesson = lesson;
+      newLesson.push({ lessonName, subLessonData, subLessonVideo });
       setLesson(newLesson);
     }
 
