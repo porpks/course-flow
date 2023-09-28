@@ -259,9 +259,7 @@ function AdminAddCourse() {
           <div className="w-full">
             <div className="topNav  flex  items-center gap-[16px] px-[40px] py-[16px] w-100% bg  ">
               <div className="H3 flex-1">Add Course</div>
-              <button className="Secondary Shadow1" onClick={navigate(-1)}>
-                Cancel
-              </button>
+              <button className="Secondary Shadow1">Cancel</button>
               <button
                 className="Primary Shadow1 border-none"
                 onClick={sendData}
