@@ -1,31 +1,34 @@
-import React, { useState, useEffect } from 'react'
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
-import { func } from 'prop-types'
-import axios from 'axios'
-import { useParams } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
-import AddLessonVideo from './AddLessonVideo'
-import ReactPlayer from 'react-player'
+import React, { useState, useEffect } from "react";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import { func } from "prop-types";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import AddLessonVideo from "./AddLessonVideo";
+import ReactPlayer from "react-player";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 function AddLesson(sharedState, updateState) {
-  const { lessonIndex } = useParams() // รับค่า index จาก URL
+  const { lessonIndex } = useParams(); // รับค่า index จาก URL
   // const lessonToEdit = lessonData[lessonIndex]
-  const navigate = useNavigate()
-  const { courseid } = useParams()
-  const [dataCourse, setDataCourse] = useState([])
-  const [dataCourseName, setDataCourseName] = useState('')
+  const navigate = useNavigate();
+  const { courseid } = useParams();
+  const [dataCourse, setDataCourse] = useState([]);
+  const [dataCourseName, setDataCourseName] = useState("");
   const [subLessonList, setSubLessonList] = useState([
-    { subLessonId: 1, subLessonName: '', subLessonVideo: null },
-  ])
-  const [lessonName, setLessonName] = useState('')
-  const [vdo, setVdo] = useState('')
-  const [avatarVdo, setAvatarVdo] = useState({})
-  const [VdoUrl, setVdoUrl] = useState('')
+    { subLessonId: 1, subLessonName: "", subLessonVideo: null },
+  ]);
+  const [lessonName, setLessonName] = useState("");
+  const [vdo, setVdo] = useState("");
+  const [avatarVdo, setAvatarVdo] = useState({});
+  const [VdoUrl, setVdoUrl] = useState("");
+  const { lesson, setLesson } = useAuth();
+  console.log(subLessonList);
 
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
         `http://localhost:4000/admin/editcourse/${courseid}`
-      )
+      );
       setDataCourse({
         course_id: dataDetailCourse.data.data.course_id,
         course_name: dataDetailCourse.data.data.course_name,
@@ -33,27 +36,27 @@ function AddLesson(sharedState, updateState) {
           lesson_name: lesson.lesson_name,
           sublessons: lesson.sublessons,
         })),
-      })
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
   useEffect(() => {
-    const courseDataStorage = localStorage.getItem('course_data')
-    const courseParsedData = JSON.parse(courseDataStorage)
-    setDataCourseName(courseParsedData.course_name)
+    const courseDataStorage = localStorage.getItem("course_data");
+    const courseParsedData = JSON.parse(courseDataStorage);
+    setDataCourseName(courseParsedData.course_name);
 
-    const storage = localStorage.getItem('lesson_data')
+    const storage = localStorage.getItem("lesson_data");
     if (storage) {
-      const parsedData = JSON.parse(storage)
+      const parsedData = JSON.parse(storage);
       if (lessonIndex >= 0 && lessonIndex < parsedData.length) {
-        const lessonToEdit = parsedData[lessonIndex]
-        setLessonName(lessonToEdit.lessonName)
-        setSubLessonList(lessonToEdit.subLessonList)
+        const lessonToEdit = parsedData[lessonIndex];
+        setLessonName(lessonToEdit.lessonName);
+        setSubLessonList(lessonToEdit.subLessonList);
       }
     }
-  }, [lessonIndex])
+  }, [lessonIndex]);
 
   // useEffect(() => {
   //   getDetailCourse()
@@ -68,57 +71,61 @@ function AddLesson(sharedState, updateState) {
   //     setUpdatedLessonId('')
   //   }
   // }, [updatedSubLessonName, updatedLessonId, subLessonList])
-  console.log(subLessonList)
+  console.log(subLessonList);
   const addSubLesson = () => {
-    const newLessonId = subLessonList.length + 1
+    const newLessonId = subLessonList.length + 1;
     const newSubLesson = {
       subLessonId: newLessonId,
-      subLessonName: '',
+      subLessonName: "",
       subLessonVideo: null,
-    }
-    setSubLessonList([...subLessonList, newSubLesson])
-  }
+    };
+    setSubLessonList([...subLessonList, newSubLesson]);
+  };
 
   const deleteSubLesson = (lessonIdToDelete) => {
     if (subLessonList.length === 1) {
-      alert("You can't delete the last sub-lesson.")
-      return
+      alert("You can't delete the last sub-lesson.");
+      return;
     }
     const updatedSubLessonList = subLessonList.filter(
       (subLesson) => subLesson.subLessonId !== lessonIdToDelete
-    )
-    setSubLessonList(updatedSubLessonList)
-  }
+    );
+    setSubLessonList(updatedSubLessonList);
+  };
 
   const handleSubLesson = (subLessonId, subLessonName) => {
     const updatedSubLessonList = subLessonList.map((subLesson) =>
       subLesson.subLessonId === subLessonId
         ? { ...subLesson, subLessonName }
         : subLesson
-    )
-    setSubLessonList(updatedSubLessonList)
-  }
-
+    );
+    setLesson(updatedSubLessonList);
+    setSubLessonList(updatedSubLessonList);
+  };
+  console.log(lesson, "auth");
+  console.log(subLessonList, "sublist");
   const handleLesson = (event) => {
-    const value = event.target.value
-    setLessonName(value)
-  }
+    const value = event.target.value;
+    setLessonName(value);
+  };
 
   const createButton = (event) => {
-    const storage = localStorage.getItem('lesson_data')
+    const storage = localStorage.getItem("lesson_data");
 
     if (!storage) {
-      console.log('dont have storage')
-      const data = [{ lessonName, subLessonList }]
-      console.log(data)
-      localStorage.setItem(`lesson_data`, JSON.stringify(data))
+      console.log("dont have storage");
+      const data = [{ lessonName, subLessonList }];
+      console.log(data);
+      localStorage.setItem(`lesson_data`, JSON.stringify(data));
     } else if (storage) {
-      console.log('have storage')
-      const parsedData = JSON.parse(storage)
-      console.log(Array.isArray(parsedData))
-      const newData = [...parsedData, { lessonName, subLessonList }]
-      console.log(newData)
-      localStorage.setItem('lesson_data', JSON.stringify(newData))
+      console.log("have storage");
+      const parsedData = JSON.parse(storage);
+      console.log(Array.isArray(parsedData));
+      const newData = [...parsedData, { lessonName, subLessonList }];
+      localStorage.setItem("lesson_data", JSON.stringify(newData));
+      setLesson(subLessonList);
+      console.log(lesson, "2auth");
+      console.log(subLessonList, "2sublist");
     }
     // navigate(`/admin/addcourse`)
     // console.log(data)
@@ -134,54 +141,54 @@ function AddLesson(sharedState, updateState) {
     // }))
 
     // console.log(preparedData)
-  }
+  };
 
   const handleUploadVideo = async (event, subLessonId) => {
-    const vdoFile = event.target.files[0]
-    const file = JSON.stringify(vdoFile)
-    console.log(event.target.files[0])
-    const fileJsonString = JSON.stringify(file)
-    localStorage.setItem('fileData', fileJsonString)
+    const vdoFile = event.target.files[0];
+    const file = JSON.stringify(vdoFile);
+    console.log(event.target.files[0]);
+    const fileJsonString = JSON.stringify(file);
+    localStorage.setItem("fileData", fileJsonString);
 
-    console.log(vdoFile)
+    console.log(vdoFile);
     const updatedSubLessonList = subLessonList.map((subLesson) =>
       subLesson.subLessonId === subLessonId
         ? { ...subLesson, subLessonVideo: vdoFile }
         : subLesson
-    )
+    );
 
-    setSubLessonList(updatedSubLessonList)
+    setSubLessonList(updatedSubLessonList);
 
     if (vdoFile) {
       const allowedVdoTypes = [
-        'video/mp4',
-        'video/quicktime',
-        'video/x-msvideo',
-      ]
+        "video/mp4",
+        "video/quicktime",
+        "video/x-msvideo",
+      ];
 
       if (allowedVdoTypes.includes(vdoFile.type)) {
         if (vdoFile.size <= 20 * 1024 * 1024) {
-          setAvatarVdo(vdoFile)
-          setVdoUrl(URL.createObjectURL(vdoFile))
+          setAvatarVdo(vdoFile);
+          setVdoUrl(URL.createObjectURL(vdoFile));
         } else {
-          displaySnackbar('File size exceeds 20 MB.')
+          displaySnackbar("File size exceeds 20 MB.");
         }
       } else {
         displaySnackbar(
-          'Invalid video type. Please choose a .mp4, .mov, or .avi file.'
-        )
+          "Invalid video type. Please choose a .mp4, .mov, or .avi file."
+        );
       }
     }
-  }
+  };
 
   const handleRemoveVdo = async (subLessonId) => {
     const updatedSubLessonList = subLessonList.map((subLesson) =>
       subLesson.subLessonId === subLessonId
         ? { ...subLesson, subLessonVideo: null }
         : subLesson
-    )
-    setSubLessonList(updatedSubLessonList)
-  }
+    );
+    setSubLessonList(updatedSubLessonList);
+  };
 
   return (
     <div className="flex flex-col">
@@ -191,16 +198,14 @@ function AddLesson(sharedState, updateState) {
             <div
               className=""
               onClick={() => {
-                navigate(`/admin/addcourse`)
-              }}
-            >
+                navigate(`/admin/addcourse`);
+              }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
-                fill="none"
-              >
+                fill="none">
                 <path
                   d="M18.7915 11.0051H7.62148L12.5015 6.1251C12.8915 5.7351 12.8915 5.0951 12.5015 4.7051C12.1115 4.3151 11.4815 4.3151 11.0915 4.7051L4.50148 11.2951C4.11148 11.6851 4.11148 12.3151 4.50148 12.7051L11.0915 19.2951C11.4815 19.6851 12.1115 19.6851 12.5015 19.2951C12.8915 18.9051 12.8915 18.2751 12.5015 17.8851L7.62148 13.0051H18.7915C19.3415 13.0051 19.7915 12.5551 19.7915 12.0051C19.7915 11.4551 19.3415 11.0051 18.7915 11.0051Z"
                   fill="#9AA1B9"
@@ -226,9 +231,8 @@ function AddLesson(sharedState, updateState) {
       <form
         className="w-[1200px] pb-[219px] h-auto  flex flex-col justify-center items-center bg-[#F6F7FC] pt-10"
         onSubmit={(e) => {
-          e.preventDefault()
-        }}
-      >
+          e.preventDefault();
+        }}>
         <div className="w-[1120px]  flex flex-col justify-center items-center bg-[#FFF]">
           <div className="w-[920px] flex flex-col justify-center">
             <div className="pt-[40px]">
@@ -242,13 +246,13 @@ function AddLesson(sharedState, updateState) {
               />
             </div>
             <hr />
-            <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{' '}
+            <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{" "}
             {subLessonList.map((subLesson, index) => (
               <div key={index}>
                 <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
                   <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
                     <DragIndicatorIcon
-                      style={{ fontSize: 24, color: '#C8CCDB' }}
+                      style={{ fontSize: 24, color: "#C8CCDB" }}
                       className="hover:cursor-pointer"
                     />
                   </div>
@@ -256,9 +260,8 @@ function AddLesson(sharedState, updateState) {
                     <div className="flex flex-row justify-between">
                       <p className="Body2 pb-1">Sub-lesson name*</p>
                       <button
-                        className="Ghost hover:cursor-pointer"
-                        onClick={() => deleteSubLesson(subLesson.subLessonId)}
-                      >
+                        className="2 hover:cursor-pointer text-blue-500"
+                        onClick={() => deleteSubLesson(subLesson.subLessonId)}>
                         Delete
                       </button>
                     </div>
@@ -292,15 +295,14 @@ function AddLesson(sharedState, updateState) {
                                 height="100%"
                                 controls={true}
                                 // light={dataDetail.cover_img}
-                                playIcon={'../public/image/playIcon.svg'}
+                                playIcon={"../public/image/playIcon.svg"}
                               />
                               {subLesson.subLessonVideo ? (
                                 <button
                                   className="absolute top-[22px] left-[698px] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
                                   onClick={() =>
                                     handleRemoveVdo(subLesson.subLessonId)
-                                  }
-                                >
+                                  }>
                                   <img
                                     src="../../public/image/closeIcon.svg"
                                     alt=""
@@ -315,8 +317,7 @@ function AddLesson(sharedState, updateState) {
                             <div className="absolute top-0 left-0 w-[250px] h-[250px] border-[2px] border-[--gray300] border-solid rounded-2xl hover:border-dashed  hover:border-[--blue500] hover:border-[3px]   group ">
                               <label
                                 htmlFor={`video-upload-${subLesson.subLessonId}`}
-                                className="hidden group-hover:block w-full h-full pt-[45px] rounded-full  cursor-pointer "
-                              >
+                                className="hidden group-hover:block w-full h-full pt-[45px] rounded-full  cursor-pointer ">
                                 <input
                                   id={`video-upload-${subLesson.subLessonId}`}
                                   name={`video-upload-${index}`}
@@ -339,15 +340,14 @@ function AddLesson(sharedState, updateState) {
             ))}
             <button
               className="Secondary w-fit mb-[60px] mt-3"
-              onClick={addSubLesson}
-            >
+              onClick={addSubLesson}>
               +Add Sub-lesson
             </button>
           </div>
         </div>
       </form>
     </div>
-  )
+  );
 }
 
-export default AddLesson
+export default AddLesson;
