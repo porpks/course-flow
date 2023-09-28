@@ -120,7 +120,7 @@ function AddLesson(sharedState, updateState) {
       console.log(newData)
       localStorage.setItem('lesson_data', JSON.stringify(newData))
     }
-    // navigate(`/admin/addcourse`)
+    navigate(`/admin/addcourse`)
     // console.log(data)
     // updateState(data)
     // const lessonData = { lessonName, subLessonList }

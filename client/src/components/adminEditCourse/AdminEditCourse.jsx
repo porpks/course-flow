@@ -32,7 +32,7 @@ function AdminEditCourse() {
     courseSummary: '',
     courseDetail: '',
   }
-
+  console.log(courseData)
   const handleChange = (event) => {
     setValues((prevValues) => ({
       ...prevValues,
@@ -260,16 +260,14 @@ function AdminEditCourse() {
 
       <div className="flex justify-center items-center">
         <div className="canvas flex flex-row w-[1440px]">
-          {/* LEFT-NAV */}
-
           {/* RIGHT-NAV */}
           <div className="w-full">
             <div className="topNav  flex  items-center gap-[16px] px-[40px] py-[16px] w-100% bg justify-between ">
               <div className="flex flex-row justify-center items-center space-x-4">
                 <div
-                  className=""
+                  className="cursor-pointer"
                   onClick={() => {
-                    navigate(`/admin/addcourse`)
+                    navigate(-1)
                   }}
                 >
                   <svg
@@ -288,7 +286,7 @@ function AdminEditCourse() {
                 <div className="flex flex-col ">
                   <div className="flex flex-row Body3 space-x-2 justify-center">
                     <p className="text-[#9AA1B9] H3">Course</p>
-                    <p>{}</p>
+                    <h3 className="H3">{courseData.course_name}</h3>
                   </div>
                 </div>
               </div>
