@@ -6,10 +6,12 @@ function CourseListPage() {
   return (
     <>
       <div className="flex justify-center w-full">
-        <div className="w-[240px]">
+        <div className="w-[240px]  shadow-xl">
           <Sidebar isCoursePage={true} />
         </div>
-        <CourseList />
+        <div className="flex flex-col w-[1200px]  shadow-xl">
+          <CourseList />
+        </div>
       </div>
     </>
   )

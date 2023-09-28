@@ -180,10 +180,7 @@ function AdminAddCourse() {
       video_trailer: getVdoUrl,
       ...lesson, //เปลี่ยน
     };
-    // console.log(updatedCourseData);
-    // Object.values(updatedCourseData).map((value) => {
-    //   console.log(value);
-    // })
+
     const formData = new FormData()
     for (let key in updatedCourseData) {
 
@@ -217,9 +214,27 @@ function AdminAddCourse() {
       console.error(error);
     }
 
-    displaySnackbar("You've Successfully Added a New Course. 🎉");
-  };
 
+      // try {
+      //   const result = await axios.post(
+      //     `http://localhost:4000/admin/addcourse`,
+      //     updatedCourseData,
+      //     { headers: { "Content-Type": "multipart/form-data" } }
+      //   );
+      //   // //console.log(updatedCourseData);
+      //   // localStorage.removeItem('video_url')
+      //   // localStorage.removeItem('image_url')
+      //   // formik.resetForm()
+      //   setSubmitData(true);
+      //   // displaySnackbar("You've Successfully Added a New Course. 🎉")
+      //   // navigate('/admin/courselist')
+      // } catch (error) {
+      //   console.error(error);
+      // }
+
+      // displaySnackbar("You've Successfully Added a New Course. 🎉")
+    };
+  };
   const handleData = () => {
     localStorage.setItem(`course_data`, JSON.stringify(courseData));
     navigate(`/admin/addcourse/addlesson`);
@@ -259,7 +274,13 @@ function AdminAddCourse() {
           <div className="w-full">
             <div className="topNav  flex  items-center gap-[16px] px-[40px] py-[16px] w-100% bg  ">
               <div className="H3 flex-1">Add Course</div>
-              <button className="Secondary Shadow1">Cancel</button>
+              <button
+                className="Secondary Shadow1"
+                onClick={() => {
+                  navigate(-1);
+                }}>
+                Cancel
+              </button>
               <button
                 className="Primary Shadow1 border-none"
                 onClick={sendData}>
@@ -370,8 +391,6 @@ function AdminAddCourse() {
                       getUrl={setLocalVdo}
                       setGetVdoUrl={setGetVdoUrl}
                     />
-
-                    <button type="submit">Submit</button>
                   </Form>
                 </Formik>
               </div>
