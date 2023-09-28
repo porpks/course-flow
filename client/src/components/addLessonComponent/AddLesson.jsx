@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import AddLessonVideo from "./AddLessonVideo";
 import ReactPlayer from "react-player";
 import { useAuth } from "../../contexts/AuthContext.jsx";
+import SnackBar from "../SnackBar";
+
 function AddLesson(sharedState, updateState) {
   const { lessonIndex } = useParams(); // รับค่า index จาก URL
   // const lessonToEdit = lessonData[lessonIndex]
@@ -84,6 +86,7 @@ function AddLesson(sharedState, updateState) {
 
   const deleteSubLesson = (lessonIdToDelete) => {
     if (subLessonList.length === 1) {
+      SnackBar("You can't delete the last sub-lesson.", "warning");
       alert("You can't delete the last sub-lesson.");
       return;
     }
@@ -102,8 +105,6 @@ function AddLesson(sharedState, updateState) {
     setLesson(updatedSubLessonList);
     setSubLessonList(updatedSubLessonList);
   };
-  console.log(lesson, "auth");
-  console.log(subLessonList, "sublist");
   const handleLesson = (event) => {
     const value = event.target.value;
     setLessonName(value);
@@ -113,21 +114,24 @@ function AddLesson(sharedState, updateState) {
     const storage = localStorage.getItem("lesson_data");
 
     if (!storage) {
-      console.log("dont have storage");
+      displaySnackbar("lesson has successfully created! ", "success");
+      alert("lesson has successfully created! ");
       const data = [{ lessonName, subLessonList }];
       console.log(data);
       localStorage.setItem(`lesson_data`, JSON.stringify(data));
     } else if (storage) {
-      console.log("have storage");
+      displaySnackbar("lesson has successfully created! ", "success");
+      alert("lesson has successfully created! ");
       const parsedData = JSON.parse(storage);
       console.log(Array.isArray(parsedData));
       const newData = [...parsedData, { lessonName, subLessonList }];
       localStorage.setItem("lesson_data", JSON.stringify(newData));
-      setLesson(subLessonList);
-      console.log(lesson, "2auth");
-      console.log(subLessonList, "2sublist");
+      setLesson({ lessonName, subLessonList });
+      console.log({ lessonName, subLessonList });
     }
-    navigate(`/admin/addcourse`)
+    console.log(lesson, "final");
+
+    navigate(`/admin/addcourse`);
     // console.log(data)
     // updateState(data)
     // const lessonData = { lessonName, subLessonList }
@@ -171,11 +175,12 @@ function AddLesson(sharedState, updateState) {
           setAvatarVdo(vdoFile);
           setVdoUrl(URL.createObjectURL(vdoFile));
         } else {
-          displaySnackbar("File size exceeds 20 MB.");
+          displaySnackbar("File size exceeds 20 MB.", "warning");
         }
       } else {
         displaySnackbar(
-          "Invalid video type. Please choose a .mp4, .mov, or .avi file."
+          "Invalid video type. Please choose a .mp4, .mov, or .avi file.",
+          "warning"
         );
       }
     }
@@ -190,163 +195,194 @@ function AddLesson(sharedState, updateState) {
     setSubLessonList(updatedSubLessonList);
   };
 
+  function displaySnackbar(message, status) {
+    setOpenSnackBar(false);
+    setSnackStatus(status);
+    setSnackbarMes(message);
+    setOpenSnackBar(true);
+  }
+  const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [snackBarMes, setSnackbarMes] = useState("");
+  const [snackStatus, setSnackStatus] = useState("");
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackBar(false);
+  };
+
   return (
-    <div className="flex flex-col">
-      <div className="w-[1200px] ">
-        <div className="flex flex-row justify-between file: items-center px-10 py-4">
-          <div className="flex flex-row justify-center items-center space-x-4">
-            <div
-              className=""
-              onClick={() => {
-                navigate(`/admin/addcourse`);
-              }}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none">
-                <path
-                  d="M18.7915 11.0051H7.62148L12.5015 6.1251C12.8915 5.7351 12.8915 5.0951 12.5015 4.7051C12.1115 4.3151 11.4815 4.3151 11.0915 4.7051L4.50148 11.2951C4.11148 11.6851 4.11148 12.3151 4.50148 12.7051L11.0915 19.2951C11.4815 19.6851 12.1115 19.6851 12.5015 19.2951C12.8915 18.9051 12.8915 18.2751 12.5015 17.8851L7.62148 13.0051H18.7915C19.3415 13.0051 19.7915 12.5551 19.7915 12.0051C19.7915 11.4551 19.3415 11.0051 18.7915 11.0051Z"
-                  fill="#9AA1B9"
-                />
-              </svg>
-            </div>
-            <div className="flex flex-col ">
-              <div className="flex flex-row Body3 space-x-2">
-                <p className="text-[#9AA1B9]">Course</p>
-                <p>{dataCourseName}</p>
+    <>
+      <SnackBar
+        open={openSnackbar}
+        onClose={handleClose}
+        severity={snackStatus}
+        message={snackBarMes}
+      />
+      <div className="flex flex-col">
+        <div className="w-[1200px] ">
+          <div className="flex flex-row justify-between file: items-center px-10 py-4">
+            <div className="flex flex-row justify-center items-center space-x-4">
+              <div
+                className=""
+                onClick={() => {
+                  navigate(`/admin/addcourse`);
+                }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none">
+                  <path
+                    d="M18.7915 11.0051H7.62148L12.5015 6.1251C12.8915 5.7351 12.8915 5.0951 12.5015 4.7051C12.1115 4.3151 11.4815 4.3151 11.0915 4.7051L4.50148 11.2951C4.11148 11.6851 4.11148 12.3151 4.50148 12.7051L11.0915 19.2951C11.4815 19.6851 12.1115 19.6851 12.5015 19.2951C12.8915 18.9051 12.8915 18.2751 12.5015 17.8851L7.62148 13.0051H18.7915C19.3415 13.0051 19.7915 12.5551 19.7915 12.0051C19.7915 11.4551 19.3415 11.0051 18.7915 11.0051Z"
+                    fill="#9AA1B9"
+                  />
+                </svg>
               </div>
-              <h1 className="H3">Add Lesson</h1>
+              <div className="flex flex-col ">
+                <div className="flex flex-row Body3 space-x-2">
+                  <p className="text-[#9AA1B9]">Course</p>
+                  <p>{dataCourseName}</p>
+                </div>
+                <h1 className="H3">Add Lesson</h1>
+              </div>
             </div>
-          </div>
-          <div className="space-x-4">
-            <button className="Secondary">Cancle</button>
-            <button className="Primary border-none" onClick={createButton}>
-              Create
-            </button>
+            <div className="space-x-4">
+              <button className="Secondary">Cancle</button>
+              <button className="Primary border-none" onClick={createButton}>
+                Create
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <form
-        className="w-[1200px] pb-[219px] h-auto  flex flex-col justify-center items-center bg-[#F6F7FC] pt-10"
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}>
-        <div className="w-[1120px]  flex flex-col justify-center items-center bg-[#FFF]">
-          <div className="w-[920px] flex flex-col justify-center">
-            <div className="pt-[40px]">
-              <p className="Body2 pb-1 ">Lesson name*</p>
-              <input
-                type="text"
-                name="Lesson name"
-                className="Input w-full h-[48px] mb-10"
-                value={lessonName}
-                onChange={handleLesson}
-              />
-            </div>
-            <hr />
-            <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{" "}
-            {subLessonList.map((subLesson, index) => (
-              <div key={index}>
-                <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
-                  <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
-                    <DragIndicatorIcon
-                      style={{ fontSize: 24, color: "#C8CCDB" }}
-                      className="hover:cursor-pointer"
-                    />
-                  </div>
-                  <div className="flex flex-col w-full">
-                    <div className="flex flex-row justify-between">
-                      <p className="Body2 pb-1">Sub-lesson name*</p>
-                      <button
-                        className="2 hover:cursor-pointer text-blue-500"
-                        onClick={() => deleteSubLesson(subLesson.subLessonId)}>
-                        Delete
-                      </button>
+        <form
+          className="w-[1200px] pb-[219px] h-auto  flex flex-col justify-center items-center bg-[#F6F7FC] pt-10"
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}>
+          <div className="w-[1120px]  flex flex-col justify-center items-center bg-[#FFF]">
+            <div className="w-[920px] flex flex-col justify-center">
+              <div className="pt-[40px]">
+                <p className="Body2 pb-1 ">Lesson name*</p>
+                <input
+                  type="text"
+                  name="Lesson name"
+                  className="Input w-full h-[48px] mb-10"
+                  value={lessonName}
+                  onChange={handleLesson}
+                />
+              </div>
+              <hr />
+              <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{" "}
+              {subLessonList.map((subLesson, index) => (
+                <div key={index}>
+                  <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
+                    <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
+                      <DragIndicatorIcon
+                        style={{ fontSize: 24, color: "#C8CCDB" }}
+                        className="hover:cursor-pointer"
+                      />
                     </div>
-                    <input
-                      type="text"
-                      name="sub-lesson-name"
-                      className="Body2 Input w-[530px] h-[48px] mb-10 p"
-                      value={subLesson.subLessonName}
-                      onChange={(e) =>
-                        handleSubLesson(subLesson.subLessonId, e.target.value)
-                      }
-                    />
-                    <p className="Body2 pb-1">Video*</p>
+                    <div className="flex flex-col w-full">
+                      <div className="flex flex-row justify-between">
+                        <p className="Body2 pb-1">Sub-lesson name*</p>
+                        <button
+                          className="2 hover:cursor-pointer text-blue-500"
+                          onClick={() =>
+                            deleteSubLesson(subLesson.subLessonId)
+                          }>
+                          Delete
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        name="sub-lesson-name"
+                        className="Body2 Input w-[530px] h-[48px] mb-10 p"
+                        value={subLesson.subLessonName}
+                        onChange={(e) =>
+                          handleSubLesson(subLesson.subLessonId, e.target.value)
+                        }
+                      />
+                      <p className="Body2 pb-1">Video*</p>
 
-                    <div>
-                      <div className="flex flex-col gap-[6px]">
-                        <div className="relative ">
-                          {/*---------------------- IMG THUMBNAIL UPLOAD -----------------------*/}
-                          {!subLesson.subLessonVideo ? (
-                            <img
-                              src="../../public/image/uploadVdo.svg"
-                              className="relative w-[250px] h-[250px] object-cover rounded-2xl"
-                            />
-                          ) : null}
-                          {/*---------------------- VDO PLAYER -----------------------*/}
-                          {subLesson.subLessonVideo ? (
-                            <div className="vdo-preview rounded-[8px] w-[739px] h-[460px] cursor-pointer ">
-                              <ReactPlayer
-                                url={subLesson.subLessonVideo}
-                                width="100%"
-                                height="100%"
-                                controls={true}
-                                // light={dataDetail.cover_img}
-                                playIcon={"../public/image/playIcon.svg"}
+                      <div>
+                        <div className="flex flex-col gap-[6px]">
+                          <div className="relative ">
+                            {/*---------------------- IMG THUMBNAIL UPLOAD -----------------------*/}
+                            {!subLesson.subLessonVideo ? (
+                              <img
+                                src="../../public/image/uploadVdo.svg"
+                                className="relative w-[250px] h-[250px] object-cover rounded-2xl"
                               />
-                              {subLesson.subLessonVideo ? (
-                                <button
-                                  className="absolute top-[22px] left-[698px] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
-                                  onClick={() =>
-                                    handleRemoveVdo(subLesson.subLessonId)
-                                  }>
-                                  <img
-                                    src="../../public/image/closeIcon.svg"
-                                    alt=""
-                                    className="w-[10px] h-[10px]"
-                                  />
-                                </button>
-                              ) : null}
-                            </div>
-                          ) : null}
-                          {/*---------------------- UPLOAD BTN -----------------------*/}
-                          {!subLesson.subLessonVideo ? (
-                            <div className="absolute top-0 left-0 w-[250px] h-[250px] border-[2px] border-[--gray300] border-solid rounded-2xl hover:border-dashed  hover:border-[--blue500] hover:border-[3px]   group ">
-                              <label
-                                htmlFor={`video-upload-${subLesson.subLessonId}`}
-                                className="hidden group-hover:block w-full h-full pt-[45px] rounded-full  cursor-pointer ">
-                                <input
-                                  id={`video-upload-${subLesson.subLessonId}`}
-                                  name={`video-upload-${index}`}
-                                  type="file"
-                                  onChange={(e) =>
-                                    handleUploadVideo(e, subLesson.subLessonId)
-                                  }
-                                  hidden
+                            ) : null}
+                            {/*---------------------- VDO PLAYER -----------------------*/}
+                            {subLesson.subLessonVideo ? (
+                              <div className="vdo-preview rounded-[8px] w-[739px] h-[460px] cursor-pointer ">
+                                <ReactPlayer
+                                  url={subLesson.subLessonVideo}
+                                  width="100%"
+                                  height="100%"
+                                  controls={true}
+                                  // light={dataDetail.cover_img}
+                                  playIcon={"../public/image/playIcon.svg"}
                                 />
-                              </label>
-                            </div>
-                          ) : null}
-                          {/*------------------------------------------------------------*/}
+                                {subLesson.subLessonVideo ? (
+                                  <button
+                                    className="absolute top-[22px] left-[698px] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
+                                    onClick={() =>
+                                      handleRemoveVdo(subLesson.subLessonId)
+                                    }>
+                                    <img
+                                      src="../../public/image/closeIcon.svg"
+                                      alt=""
+                                      className="w-[10px] h-[10px]"
+                                    />
+                                  </button>
+                                ) : null}
+                              </div>
+                            ) : null}
+                            {/*---------------------- UPLOAD BTN -----------------------*/}
+                            {!subLesson.subLessonVideo ? (
+                              <div className="absolute top-0 left-0 w-[250px] h-[250px] border-[2px] border-[--gray300] border-solid rounded-2xl hover:border-dashed  hover:border-[--blue500] hover:border-[3px]   group ">
+                                <label
+                                  htmlFor={`video-upload-${subLesson.subLessonId}`}
+                                  className="hidden group-hover:block w-full h-full pt-[45px] rounded-full  cursor-pointer ">
+                                  <input
+                                    id={`video-upload-${subLesson.subLessonId}`}
+                                    name={`video-upload-${index}`}
+                                    type="file"
+                                    onChange={(e) =>
+                                      handleUploadVideo(
+                                        e,
+                                        subLesson.subLessonId
+                                      )
+                                    }
+                                    hidden
+                                  />
+                                </label>
+                              </div>
+                            ) : null}
+                            {/*------------------------------------------------------------*/}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-            <button
-              className="Secondary w-fit mb-[60px] mt-3"
-              onClick={addSubLesson}>
-              +Add Sub-lesson
-            </button>
+              ))}
+              <button
+                className="Secondary w-fit mb-[60px] mt-3"
+                onClick={addSubLesson}>
+                +Add Sub-lesson
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </>
   );
 }
 
