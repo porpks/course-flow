@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
-import ReactPlayer from "react-player";
+import React, { useState, useEffect } from 'react'
+import ReactPlayer from 'react-player'
 
-import SnackBar from "../SnackBar.jsx";
+import SnackBar from '../SnackBar.jsx'
 
 function AddLessonVideo() {
   const [vdo, setVdo] = useState('')
   const [avatarVdo, setAvatarVdo] = useState({})
   const [VdoUrl, setVdoUrl] = useState('')
 
-
-  // console.log(`VDO : ${avatarVdo}`);
-  // console.log(`VDO URL : ${VdoUrl}`);
+  console.log(`VDO : ${avatarVdo}`)
+  console.log(`VDO URL : ${VdoUrl}`)
 
   const handleUploadVideo = async (event) => {
     const vdoFile = event.target.files[0]
@@ -27,31 +26,31 @@ function AddLessonVideo() {
           setAvatarVdo(vdoFile)
           setVdoUrl(URL.createObjectURL(vdoFile))
         } else {
-          displaySnackbar("File size exceeds 20 MB.");
+          displaySnackbar('File size exceeds 20 MB.')
         }
       } else {
         displaySnackbar(
-          "Invalid video type. Please choose a .mp4, .mov, or .avi file."
-        );
+          'Invalid video type. Please choose a .mp4, .mov, or .avi file.'
+        )
       }
     }
-  };
+  }
 
   function displaySnackbar(message) {
-    setOpenSnackBar(false);
-    setSnackbarMes(message);
-    setOpenSnackBar(true);
+    setOpenSnackBar(false)
+    setSnackbarMes(message)
+    setOpenSnackBar(true)
   }
-  const [openSnackbar, setOpenSnackBar] = useState(false);
-  const [snackBarMes, setSnackbarMes] = useState("");
+  const [openSnackbar, setOpenSnackBar] = useState(false)
+  const [snackBarMes, setSnackbarMes] = useState('')
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+    if (reason === 'clickaway') {
+      return
     }
 
-    setOpenSnackBar(false);
-  };
+    setOpenSnackBar(false)
+  }
 
   const handleRemoveVdo = async () => {
     setAvatarVdo({})
@@ -64,7 +63,7 @@ function AddLessonVideo() {
       <SnackBar
         open={openSnackbar}
         onClose={handleClose}
-        severity={"error"}
+        severity={'error'}
         message={snackBarMes}
       />
       <div>
@@ -86,7 +85,7 @@ function AddLessonVideo() {
                   height="100%"
                   controls={true}
                   // light={dataDetail.cover_img}
-                  playIcon={"../public/image/playIcon.svg"}
+                  playIcon={'../public/image/playIcon.svg'}
                 />
               </div>
             ) : null}
@@ -126,8 +125,7 @@ function AddLessonVideo() {
         </div>
       </div>
     </>
-  );
-
+  )
 }
 
 export default AddLessonVideo

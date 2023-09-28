@@ -75,11 +75,11 @@ function AdminEditCourse() {
 
   const onSubmit = async () => {
     const newCourseData = {
-      courseName: formik.values.courseName,
+      course_name: formik.values.courseName,
       price: formik.values.price,
-      totalLearningTime: formik.values.totalLearningTime,
-      courseSummary: formik.values.courseSummary,
-      courseDetail: formik.values.courseDetail,
+      total_time: formik.values.totalLearningTime,
+      course_summary: formik.values.courseSummary,
+      course_detail: formik.values.courseDetail,
     }
     console.log(newCourseData)
     await axios.put(
