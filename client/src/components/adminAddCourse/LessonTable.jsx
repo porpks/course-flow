@@ -11,7 +11,6 @@ function LessonTable() {
     const storage = localStorage.getItem("lesson_data");
     try {
       if (storage) {
-        console.log("have storage");
         const parsedData = JSON.parse(storage);
         // console.log(parsedData)
         const lessonName = parsedData.lessonName;
@@ -20,7 +19,6 @@ function LessonTable() {
           subLessonData: lesson.subLessonList,
         }));
         const subLessonData = { ...parsedData };
-        console.log(subLessonData);
 
         setLessonData(transformedData);
       }
@@ -28,7 +26,6 @@ function LessonTable() {
       console.error("Error:", error);
     }
   }, []);
-  console.log(lesson, "fromtable");
 
   // const handleDelete = (id, lessonName) => {
   //   alert(`Deleted lesson with ID ${id} ${lessonName}`)

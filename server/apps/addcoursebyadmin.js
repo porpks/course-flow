@@ -2,17 +2,20 @@ import { Router } from 'express'
 import supabase from '../utils/db.js'
 import multer from 'multer'
 import { v4 as uuidv4 } from 'uuid'
+import { log } from 'console'
 
 const addCourseRouter = Router()
 const multerUpload = multer({})
 const imageCoverUpload = multerUpload.fields([
   { name: 'cover_img', maxCount: 1 },
   { name: 'video_trailer', maxCount: 1 },
+  { name: 'subLessonVideo', maxCount: 99 },
 ])
 
 addCourseRouter.post('/addcourse', imageCoverUpload, async (req, res) => {
 
   const body = req.body;
+  const subLessonVideos = req.files.subLessonVideo
 
   const courseName = req.body.course_name
   const dataCourse = {
@@ -25,7 +28,8 @@ addCourseRouter.post('/addcourse', imageCoverUpload, async (req, res) => {
     video_trailer: req.body.video_trailer,
   }
 
-
+  // console.log(req.files.subLessonVideo);
+  // console.log(subLessonVideos.length)
   // UPLOAD FILE IMG
   try {
     if (
@@ -132,37 +136,9 @@ addCourseRouter.post('/addcourse', imageCoverUpload, async (req, res) => {
       } catch (error) {
         console.log(error)
       }
-      // try {
-      //   const { data, error } = await supabase
-      //     .from("courses")
-      //     .insert([dataCourse])
 
-      //     .select();
-
-      //   console.log(data);
-
-      //   if (error) {
-      //     return res.status(400).json({
-      //       error: "Upload Course failed",
-      //       error_message: error.message,
-      //     });
-      //   }
-
-      //   console.log();
-
-      //   res.status(201).json({
-      //     success: "Course uploaded successfully",
-      //     data: data,
-      //   });
-      // } catch (error) {
-      //   console.error("Error:", error);
-      //   res.status(500).json({
-      //     error: "Internal Server Error",
-      //     error_message: error.message,
-      //   });
-      // }
       const extractedData = body;
-      const lessons = Object.values(extractedData).filter(item => typeof item === "object");
+      const lessons = Object.values(extractedData).filter(item => item.startsWith('{') && item.endsWith('}')).map((item) => JSON.parse(item));
       let lessonIdMap = {};
       let subLessonId = [];
       let { data: courses, error: errorGetcourse } = await supabase
@@ -211,7 +187,41 @@ addCourseRouter.post('/addcourse', imageCoverUpload, async (req, res) => {
 
         await Promise.all(insertPromises);
 
+        for (let i = 0; i < subLessonVideos.length; i++) {
+          const subLessonVideo = subLessonVideos[i]
+          const file_Video = new Blob([subLessonVideo.buffer], { type: subLessonVideo.mimetype, })
+
+          const { data: subUploadData, error: subUploadError } = await supabase.storage
+            .from('test-avatar')
+            .upload(`sublessonVideo/${subLessonId[i]}/${uuidv4()}`, file_Video)
+
+          if (subUploadError) {
+            console.error("Upload sublesson video failed", subUploadError);
+          } else {
+            console.log('Sublesson video uploaded successfully')
+          }
+          const subVdoUrl = `${process.env.VITE_SUPABASE_URL}/storage/v1/object/public/test-avatar/${subUploadData.path}`
+          try {
+            const { data: updateSublessonData, error: updateSublessonError } = await supabase
+              .from("sublessons")
+              .update({ "sublesson_video": subVdoUrl })
+              .eq("sublesson_id", Number(subLessonId[i]))
+              .select()
+            if (updateSublessonError) {
+              console.error("Upload sublesson video failed", subUploadError);
+            }
+            console.log(subLessonId[i]);
+            console.log(Number(subLessonId[i]));
+            console.log("update", updateSublessonData);
+            console.log('Sublesson data updated successfully')
+
+          } catch (err) {
+            console.error(err);
+          }
+        }
+
         res.json({ success: true, message: "Lessons and sub-lessons inserted successfully" });
+
       } catch (error) {
         console.error("Error inserting lessons and sub-lessons:", error);
         res.status(500).json({ error: "Internal server error" });
