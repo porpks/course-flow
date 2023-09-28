@@ -6,10 +6,10 @@ export default function EditCoursePage() {
   return (
     <>
       <div className="flex flex-row justify-center">
-        <div className="w-[240px]">
+        <div className="w-[240px]  shadow-xl">
           <Sidebar isCoursePage={true} />
         </div>
-        <div className="w-[1200px]">
+        <div className="w-[1200px]  shadow-xl">
           <AdminEditCourse />
         </div>
       </div>

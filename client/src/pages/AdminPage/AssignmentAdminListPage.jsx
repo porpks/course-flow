@@ -14,11 +14,11 @@ function AssignmentAdminListPage() {
         <ModalAssignmentDelete />
       ) : (
         <>
-          <div className="flex justify-center w-full">
-            <div>
+          <div className="flex justify-center w-full ">
+            <div className="w-[240px]  shadow-xl">
               <Sidebar isAssignmentPage={true} />
             </div>
-            <div>
+            <div className="w-[1200px]  shadow-xl">
               <AssignmentTopbar setSearchQuery={setSearchQuery} />
               <AssignmentListAdmin searchQuery={searchQuery} />
             </div>

@@ -1,74 +1,74 @@
-import React, { useState, useEffect } from "react";
-import "./adminAddCourse.css";
-import Sidebar from "../Sidebar";
-import { useNavigate } from "react-router-dom";
-import { Formik, Form, Field, useFormik } from "formik";
-import LessonTable from "./LessonTable";
-import AddLesson from "../addLessonComponent/AddLesson";
-import axios from "axios";
-import * as Yup from "yup";
-import UploadVideo from "./UploadVideo";
-import UploadImage from "./UploadImage";
-import SnackBar from "../SnackBar.jsx";
-import { useAuth } from "../../contexts/AuthContext.jsx";
+import React, { useState, useEffect } from 'react'
+import './adminAddCourse.css'
+import Sidebar from '../Sidebar'
+import { useNavigate } from 'react-router-dom'
+import { Formik, Form, Field, useFormik } from 'formik'
+import LessonTable from './LessonTable'
+import AddLesson from '../addLessonComponent/AddLesson'
+import axios from 'axios'
+import * as Yup from 'yup'
+import UploadVideo from './UploadVideo'
+import UploadImage from './UploadImage'
+import SnackBar from '../SnackBar.jsx'
+import { useAuth } from '../../contexts/AuthContext.jsx'
 
 function AdminAddCourse() {
   // const history = useHistory()
-  const navigate = useNavigate();
-  const [image_url, setImage_url] = useState("");
-  const [video_url, setVideo_url] = useState("");
-  const [submitData, setSubmitData] = useState(false);
-  const [lessonData, setLessonData] = useState("");
-  const [subLessonData, setSubLessonData] = useState("");
-  const [localImg, setLocalImg] = useState("");
-  const [localVdo, setLocalVdo] = useState("");
-  const { lesson } = useAuth();
+  const navigate = useNavigate()
+  const [image_url, setImage_url] = useState('')
+  const [video_url, setVideo_url] = useState('')
+  const [submitData, setSubmitData] = useState(false)
+  const [lessonData, setLessonData] = useState('')
+  const [subLessonData, setSubLessonData] = useState('')
+  const [localImg, setLocalImg] = useState('')
+  const [localVdo, setLocalVdo] = useState('')
+  const { lesson } = useAuth()
 
   const handleChange = (event) => {
     setValues((prevValues) => ({
       ...prevValues,
       [event.target.name]: event.target.value,
-    }));
-  };
+    }))
+  }
   const validate = (values) => {
-    const errors = {};
+    const errors = {}
     if (!values.courseName) {
-      errors.courseName = "Required";
+      errors.courseName = 'Required'
     } else if (values.courseName.length > 15) {
-      errors.courseName = "Must be 15 characters or less";
+      errors.courseName = 'Must be 15 characters or less'
     }
     if (!values.price) {
-      errors.price = "Required";
+      errors.price = 'Required'
     }
     if (!values.totalLearningTime) {
-      errors.totalLearningTime = "Required";
+      errors.totalLearningTime = 'Required'
     }
     if (!values.courseSummary) {
-      errors.courseSummary = "Required";
+      errors.courseSummary = 'Required'
     } else if (values.courseSummary.length > 15) {
-      errors.courseSummary = "Must be more than 15 characters";
+      errors.courseSummary = 'Must be more than 15 characters'
     }
     if (!values.courseDetail) {
-      errors.courseDetail = "Required";
+      errors.courseDetail = 'Required'
     } else if (values.courseDetail.length > 15) {
-      errors.courseDetail = "Must be more than 15 characters";
+      errors.courseDetail = 'Must be more than 15 characters'
     }
-    return errors;
-  };
+    return errors
+  }
   const formik = useFormik({
     initialValues: {
-      courseName: "",
-      price: "",
-      totalLearningTime: "",
-      courseSummary: "",
-      courseDetail: "",
+      courseName: '',
+      price: '',
+      totalLearningTime: '',
+      courseSummary: '',
+      courseDetail: '',
     },
     validate,
     onSubmit: (values) => {
-      console.log("onSubmit", values);
-      alert(JSON.stringify(values, null, 2));
+      console.log('onSubmit', values)
+      alert(JSON.stringify(values, null, 2))
     },
-  });
+  })
 
   const courseData = {
     course_name: formik.values.courseName,
@@ -78,7 +78,7 @@ function AdminAddCourse() {
     course_detail: formik.values.courseDetail,
     cover_img: image_url,
     video_trailer: video_url,
-  };
+  }
 
   // const lessonData = {
   //   // lesson_name,
@@ -87,48 +87,48 @@ function AdminAddCourse() {
   //   // sublesson_name,
   //   // sublesson_video,
   // }
-  console.log(localImg);
-  console.log(localVdo);
-  const [getImgUrl, setGetImgUrl] = useState("");
-  const [getVdoUrl, setGetVdoUrl] = useState("");
+  console.log(localImg)
+  console.log(localVdo)
+  const [getImgUrl, setGetImgUrl] = useState('')
+  const [getVdoUrl, setGetVdoUrl] = useState('')
 
   useEffect(() => {
-    const lessonDataStorage = localStorage.getItem("lesson_data");
+    const lessonDataStorage = localStorage.getItem('lesson_data')
     try {
       if (lessonDataStorage) {
         // console.log('have storage')
-        const parsedData = JSON.parse(lessonDataStorage);
+        const parsedData = JSON.parse(lessonDataStorage)
         // console.log(parsedData)
-        const lessonName = parsedData.lessonName;
+        const lessonName = parsedData.lessonName
         const transformedData = parsedData.map((lesson, index) => ({
           lessonName: lesson.lessonName,
           subLessonData: lesson.subLessonList,
-        }));
-        const subLessonData = { ...parsedData };
+        }))
+        const subLessonData = { ...parsedData }
         // console.log(subLessonData)
 
-        setLessonData(transformedData);
+        setLessonData(transformedData)
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error:', error)
     }
 
     if (localImg && localVdo) {
-      const storedImageUrl = localImg;
-      const storedVideoUrl = localVdo;
+      const storedImageUrl = localImg
+      const storedVideoUrl = localVdo
       if (storedImageUrl !== image_url) {
-        setImage_url(storedImageUrl);
+        setImage_url(storedImageUrl)
       }
       if (storedVideoUrl !== video_url) {
-        setVideo_url(storedVideoUrl);
+        setVideo_url(storedVideoUrl)
       }
     }
 
-    const storedData = localStorage.getItem("course_data");
+    const storedData = localStorage.getItem('course_data')
     const fetchData = async () => {
       try {
         if (storedData) {
-          const parsedData = JSON.parse(storedData);
+          const parsedData = JSON.parse(storedData)
           const courseDataFromLocal = {
             courseName: parsedData.course_name,
             price: parsedData.price,
@@ -137,13 +137,13 @@ function AdminAddCourse() {
             courseDetail: parsedData.course_detail,
             cover_img: parsedData.image_url,
             video_trailer: parsedData.video_url,
-          };
-          formik.setValues(courseDataFromLocal);
+          }
+          formik.setValues(courseDataFromLocal)
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error)
       }
-    };
+    }
     // console.log(lessonData)
     // const intervalId = setInterval(() => {
     //   const storedImageUrl = localStorage.getItem("image_url");
@@ -160,8 +160,8 @@ function AdminAddCourse() {
 
     // // Clear the interval when the component unmounts
     // return () => clearInterval(intervalId);
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
   // console.log(getImgUrl)
   // console.log(getVdoUrl)
 
@@ -180,8 +180,8 @@ function AdminAddCourse() {
       cover_img: getImgUrl,
       video_trailer: getVdoUrl,
       ...lesson, //เปลี่ยน
-    };
-    console.log(updatedCourseData);
+    }
+    console.log(updatedCourseData)
     // try {
     //   const result = await axios.post(
     //     `http://localhost:4000/admin/addcourse`,
@@ -199,37 +199,37 @@ function AdminAddCourse() {
     //   console.error(error);
     // }
 
-    displaySnackbar("You've Successfully Added a New Course. 🎉");
-  };
+    displaySnackbar("You've Successfully Added a New Course. 🎉")
+  }
 
   const handleData = () => {
-    localStorage.setItem(`course_data`, JSON.stringify(courseData));
-    navigate(`/admin/addcourse/addlesson`);
+    localStorage.setItem(`course_data`, JSON.stringify(courseData))
+    navigate(`/admin/addcourse/addlesson`)
     // console.log(localStorage.getItem(`course_data`))
-  };
+  }
 
   function displaySnackbar(message) {
-    setOpenSnackBar(false);
-    setSnackbarMes(message);
-    setOpenSnackBar(true);
+    setOpenSnackBar(false)
+    setSnackbarMes(message)
+    setOpenSnackBar(true)
   }
-  const [openSnackbar, setOpenSnackBar] = useState(false);
-  const [snackBarMes, setSnackbarMes] = useState("");
+  const [openSnackbar, setOpenSnackBar] = useState(false)
+  const [snackBarMes, setSnackbarMes] = useState('')
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
+    if (reason === 'clickaway') {
+      return
     }
 
-    setOpenSnackBar(false);
-  };
+    setOpenSnackBar(false)
+  }
 
   return (
     <>
       <SnackBar
         open={openSnackbar}
         onClose={handleClose}
-        severity={"success"}
+        severity={'success'}
         message={snackBarMes}
       />
 
@@ -241,10 +241,18 @@ function AdminAddCourse() {
           <div className="w-full">
             <div className="topNav  flex  items-center gap-[16px] px-[40px] py-[16px] w-100% bg  ">
               <div className="H3 flex-1">Add Course</div>
-              <button className="Secondary Shadow1">Cancel</button>
+              <button
+                className="Secondary Shadow1"
+                onClick={() => {
+                  navigate(-1)
+                }}
+              >
+                Cancel
+              </button>
               <button
                 className="Primary Shadow1 border-none"
-                onClick={sendData}>
+                onClick={sendData}
+              >
                 Create
               </button>
             </div>
@@ -255,7 +263,8 @@ function AdminAddCourse() {
                 <Formik>
                   <Form
                     className="flex flex-col  gap-[40px]"
-                    onSubmit={formik.handleSubmit}>
+                    onSubmit={formik.handleSubmit}
+                  >
                     <div className="flex flex-col gap-[4px] border-2 border-sky-500">
                       <label htmlFor="courseName" className="">
                         Course name *
@@ -301,7 +310,7 @@ function AdminAddCourse() {
                           className="Input"
                           value={formik.values.totalLearningTime}
                           onChange={formik.handleChange}
-                        />{" "}
+                        />{' '}
                         {formik.errors.totalLearningTime ? (
                           <div>{formik.errors.totalLearningTime}</div>
                         ) : null}
@@ -363,8 +372,9 @@ function AdminAddCourse() {
                 <button
                   className="Primary Shadow1 px-[32px] py-[18px] justify-center border-none"
                   onClick={() => {
-                    handleData();
-                  }}>
+                    handleData()
+                  }}
+                >
                   + Add Lesson
                 </button>
               </div>
@@ -377,6 +387,6 @@ function AdminAddCourse() {
         </div>
       </div>
     </>
-  );
+  )
 }
-export default AdminAddCourse;
+export default AdminAddCourse

@@ -3,14 +3,16 @@ import Sidebar from '../../components/Sidebar'
 
 function AddAssignmentPage() {
   return (
-    <div className="flex  flex-row justify-center">
-      <div className="w-[240px]">
-        <Sidebar isAssignmentPage={true} />
+    <>
+      <div className="flex  flex-row justify-center">
+        <div className="w-[240px]  shadow-xl">
+          <Sidebar isAssignmentPage={true} />
+        </div>
+        <div className="flex flex-col w-[1200px]  shadow-xl">
+          <AssignmentField addAssignment={true} />
+        </div>
       </div>
-      <div className="flex flex-col w-[1200px]">
-        <AssignmentField addAssignment={true} />
-      </div>
-    </div>
+    </>
   )
 }
 

@@ -291,7 +291,14 @@ function AdminEditCourse() {
                 </div>
               </div>
               <div className="space-x-4">
-                <button className="Secondary Shadow1">Cancel</button>
+                <button
+                  className="Secondary Shadow1"
+                  onClick={() => {
+                    navigate(-1)
+                  }}
+                >
+                  Cancel
+                </button>
                 <button
                   className="Primary Shadow1 border-none"
                   onClick={onSubmit}
