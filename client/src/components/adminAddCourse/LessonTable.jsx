@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from "react";
-import "./lessonTable.css";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react'
+import './lessonTable.css'
+import { Link } from 'react-router-dom'
 
 function LessonTable() {
-  const [lessonData, setLessonData] = useState([]);
+  const [lessonData, setLessonData] = useState([])
+
   useEffect(() => {
-    const storage = localStorage.getItem("lesson_data");
+    const lessonDataStorage = localStorage.getItem('lesson_data')
     try {
-      if (storage) {
-        console.log("have storage");
-        const parsedData = JSON.parse(storage);
+      if (lessonDataStorage) {
+        console.log('have storage')
+        const parsedData = JSON.parse(lessonDataStorage)
         // console.log(parsedData)
-        const lessonName = parsedData.lessonName;
+        const lessonName = parsedData.lessonName
         const transformedData = parsedData.map((lesson, index) => ({
           lessonName: lesson.lessonName,
           subLessonData: lesson.subLessonList,
-        }));
-        const subLessonData = { ...parsedData };
-        console.log(subLessonData);
+        }))
+        const subLessonData = { ...parsedData }
+        // console.log(subLessonData)
 
-        setLessonData(transformedData);
+        setLessonData(transformedData)
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error:', error)
     }
-  }, []);
+  }, [])
 
   // const handleDelete = (id, lessonName) => {
   //   alert(`Deleted lesson with ID ${id} ${lessonName}`)
@@ -33,36 +34,36 @@ function LessonTable() {
   const handleDelete = (index, lessonName) => {
     if (window.confirm(`คุณต้องการลบบทเรียน "${lessonName}" ใช่หรือไม่?`)) {
       try {
-        const storage = localStorage.getItem("lesson_data");
-        if (storage) {
-          const parsedData = JSON.parse(storage);
+        const lessonDataStorage = localStorage.getItem('lesson_data')
+        if (lessonDataStorage) {
+          const parsedData = JSON.parse(lessonDataStorage)
 
           if (index >= 0 && index < parsedData.length) {
             // ลบบทเรียนจากอาร์เรย์ด้วย index
-            parsedData.splice(index, 1);
+            parsedData.splice(index, 1)
 
             // อัปเดตข้อมูลใน Local Storage และ state
-            localStorage.setItem("lesson_data", JSON.stringify(parsedData));
-            setLessonData(parsedData);
+            localStorage.setItem('lesson_data', JSON.stringify(parsedData))
+            setLessonData(parsedData)
 
-            alert(`ลบบทเรียน "${lessonName}" เรียบร้อยแล้ว`);
+            alert(`ลบบทเรียน "${lessonName}" เรียบร้อยแล้ว`)
           } else {
-            alert(`Index ${index} ไม่ถูกต้อง`);
+            alert(`Index ${index} ไม่ถูกต้อง`)
           }
         }
       } catch (error) {
-        console.error("Error:", error);
+        console.error('Error:', error)
       }
     }
-  };
+  }
 
   const handleEdit = (id, lessonName) => {
-    alert(`Edited lesson with ID ${id} ${lessonName}`);
-  };
+    alert(`Edited lesson with ID ${id} ${lessonName}`)
+  }
 
   const countSubLessons = (subLessonList) => {
-    return subLessonList ? subLessonList.length : 0;
-  };
+    return subLessonList ? subLessonList.length : 0
+  }
 
   return (
     <>
@@ -97,7 +98,7 @@ function LessonTable() {
         </tbody>
       </table>
     </>
-  );
+  )
 }
 
-export default LessonTable;
+export default LessonTable
