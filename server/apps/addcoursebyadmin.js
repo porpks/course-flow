@@ -32,9 +32,9 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
   // UPLOAD FILE IMG
   try {
     if (
-      req.files.length > 0 ||
-      req.files.cover_img ||
-      req.files.video_trailer
+      req.files?.length > 0 ||
+      req.files?.cover_img ||
+      req.files?.video_trailer
     ) {
       const fileImg = req.files.cover_img[0];
       const fileImage = new Blob([fileImg.buffer], { type: fileImg.mimetype });
@@ -222,8 +222,8 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
             if (updateSublessonError) {
               console.error("Upload sublesson video failed", subUploadError);
             }
-            console.log(subLessonId[i]);
-            console.log(Number(subLessonId[i]));
+            // console.log(subLessonId[i]);
+            // console.log(Number(subLessonId[i]));
             console.log("update", updateSublessonData);
             console.log("Sublesson data updated successfully");
           } catch (err) {
@@ -243,6 +243,176 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
+  const courseId = req.params.courseId;
+  const lessonData = { lesson_name: req.body.lesson_name };
+
+  // console.log(req.params);
+  console.log(req.body);
+  // console.log(req.body.course_name);
+  // console.log(req.body.price);
+  // console.log(req.body.total_time);
+  // console.log(req.body.course_summary);
+  // console.log(req.body.course_detail);
+
+  if (
+    !req.body.course_name ||
+    !req.body.price ||
+    !req.body.total_time ||
+    !req.body.course_summary ||
+    !req.body.course_detail
+  ) {
+    return res.status(400).json({
+      message: "Please enter all information.",
+    });
+  }
+  console.log(req.files);
+  // console.log(req.files.cover_img.length);
+  // console.log(req.files?.avatar);
+
+  try {
+    if (req.files.cover_img?.length > 0) {
+      const reqImg = req.files.cover_img[0];
+      const fileImage = new Blob([reqImg.buffer], { type: reqImg.mimetype });
+
+      const { data: objects, error: err } = await supabase.storage
+        .from("test-avatar")
+        .list(`imgCover/${courseId}`);
+      console.log(objects);
+      if (err) {
+        console.error("Error listing objects:", err.message);
+      }
+
+      for (const object of objects) {
+        const { error: errorRemove, data } = await supabase.storage
+          .from("test-avatar")
+          .remove(`imgCover/${courseId}/${[object.name]}`);
+        // console.log(data);
+        if (errorRemove) {
+          console.error("Error remove objects:", errorRemove.message);
+        }
+      }
+
+      const { data, error } = await supabase.storage
+        .from("test-avatar")
+        .upload(`imgCover/${courseId}/${uuidv4()}`, fileImage);
+
+      if (error) {
+        console.error(error);
+      } else {
+        console.log("File uploaded successfully:", data);
+      }
+
+      const path = data.path;
+      const imgUrl = `${process.env.VITE_SUPABASE_URL}/storage/v1/object/public/test-avatar/${path}`;
+      const now1 = new Date();
+      const formattedDate1 =
+        now1.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
+
+      console.log(imgUrl);
+      try {
+        const { data, error } = await supabase
+          .from("courses")
+          .update({
+            cover_img: imgUrl,
+          })
+          .eq("course_id", courseId);
+        if (error) {
+          console.log(error);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    if (req.files.video_trailer?.length > 0) {
+      const reqVideo = req.files.video_trailer[0];
+      const fileVideo = new Blob([reqVideo.buffer], {
+        type: reqVideo.mimetype,
+      });
+
+      const { data: objects, error: err } = await supabase.storage
+        .from("test-avatar")
+        .list(`video_trailer/${courseId}`);
+      console.log(objects);
+      if (err) {
+        console.error("Error listing objects:", err.message);
+      }
+
+      for (const object of objects) {
+        const { error: errorRemove, data } = await supabase.storage
+          .from("test-avatar")
+          .remove(`video_trailer/${courseId}/${[object.name]}`);
+        // console.log(data);
+        if (errorRemove) {
+          console.error("Error remove objects:", errorRemove.message);
+        }
+      }
+
+      const { data, error } = await supabase.storage
+        .from("test-avatar")
+        .upload(`video_trailer/${courseId}/${uuidv4()}`, fileVideo);
+
+      if (error) {
+        console.error(error);
+      } else {
+        console.log("File uploaded successfully:", data);
+      }
+
+      const path = data.path;
+      const videoUrl = `${process.env.VITE_SUPABASE_URL}/storage/v1/object/public/test-avatar/${path}`;
+      const now1 = new Date();
+      const formattedDate1 =
+        now1.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
+
+      // console.log(imgUrl);
+      try {
+        const { data, error } = await supabase
+          .from("courses")
+          .update({
+            // videoUrl
+            video_trailer: videoUrl,
+          })
+          .eq("course_id", courseId);
+        if (error) {
+          console.log(error);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    const now2 = new Date();
+    const formattedDate2 =
+      now2.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
+
+    try {
+      const { data, error } = await supabase
+        .from("courses")
+        .update({
+          course_name: req.body.course_name,
+          price: req.body.price,
+          total_time: req.body.total_time,
+          course_summary: req.body.course_summary,
+          course_detail: req.body.course_detail,
+          updated_date: formattedDate2,
+        })
+        .eq("course_id", courseId);
+
+      if (error) {
+        console.log(error);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return res.json({
+    message: "Your course has been updated successfully.",
+  });
 });
 
 export default addCourseRouter;
