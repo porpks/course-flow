@@ -40,10 +40,7 @@ function UnauthenticatedApp() {
           element={<AddLessonPage />}
         /> */}
 
-        <Route
-          path="/admin/editcourse/:courseId"
-          element={<EditCoursePage />}
-        />
+        <Route path="/admin/editcourse/" element={<EditCoursePage />} />
         <Route path="/admin/editcourse/addlesson" element={<AddLessonPage />} />
         <Route
           path="/admin/editcourse/:courseId/editlesson/:lessonId"
