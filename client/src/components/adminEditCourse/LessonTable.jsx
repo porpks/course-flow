@@ -69,30 +69,33 @@ function LessonTable() {
     <>
       <table className=" w-full border-collapse ">
         <tbody>
-          <tr className="rounded-lg">
-            <th></th>
-            <th>Lesson name</th>
-            <th>Sub-lesson</th>
-            <th>Action</th>
+          <tr className="rounded-lg Body3 flex flex-row bg-[--gray400] text-[--gray800] ">
+            <p className="py-[10px] px-4 w-[500px] pl-[70px] ">Lesson name</p>
+            <p className="py-[10px] px-4 w-[396px]">Sub-lesson</p>
+            <p className="py-[10px] px-6 w-[120px]">Action</p>
           </tr>
           {lessonData.map((data, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{data.lessonName}</td>
-              <td>{countSubLessons(data.subLessonData)}</td>
-              <td className="flex gap-[17px] items-center justify-center">
-                <button
-                  className="btn cursor-pointer"
-                  onClick={() => handleDelete(index, data.lessonName)}
-                >
-                  <img src="../../../public/image/delete.svg" alt="" />
-                </button>
-                <Link to={`/admin/addcourse/editlesson/${index}`}>
-                  <button className="btn cursor-pointer">
-                    <img src="../../../public/image/edit.svg" alt="Edit" />
+            <tr key={index} className="bg-white Body2 ">
+              <div className="Tab flex flex-row items-center border-1">
+                <td className="py-8 w-[70px] text-center">{index + 1}</td>
+                <td className="py-8 w-[430px] ">{data.lessonName}</td>
+                <td className="py-8  px-4 w-[396px]">
+                  {countSubLessons(data.subLessonData)}
+                </td>
+                <div className="flex flex-row space-x-[17px] items-center justify-stretch px-[20px] w-[120px]">
+                  <button
+                    className="btn cursor-pointer"
+                    onClick={() => handleDelete(index, data.lessonName)}
+                  >
+                    <img src="../../../public/image/delete.svg" alt="" />
                   </button>
-                </Link>
-              </td>
+                  <Link to={`/admin/addcourse/editlesson/${index}`}>
+                    <button className="btn cursor-pointer">
+                      <img src="../../../public/image/edit.svg" alt="Edit" />
+                    </button>
+                  </Link>
+                </div>
+              </div>
             </tr>
           ))}
         </tbody>

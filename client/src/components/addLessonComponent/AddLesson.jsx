@@ -5,7 +5,7 @@ import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import AddLessonVideo from './AddLessonVideo'
-
+import ReactPlayer from 'react-player'
 function AddLesson(sharedState, updateState) {
   const { lessonIndex } = useParams() // รับค่า index จาก URL
   // const lessonToEdit = lessonData[lessonIndex]
@@ -14,9 +14,13 @@ function AddLesson(sharedState, updateState) {
   const [dataCourse, setDataCourse] = useState([])
   const [dataCourseName, setDataCourseName] = useState('')
   const [subLessonList, setSubLessonList] = useState([
-    { subLessonId: 1, subLessonName: '' },
+    { subLessonId: 1, subLessonName: '', subLessonVideo: null },
   ])
   const [lessonName, setLessonName] = useState('')
+  const [vdo, setVdo] = useState('')
+  const [avatarVdo, setAvatarVdo] = useState({})
+  const [VdoUrl, setVdoUrl] = useState('')
+
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
@@ -34,9 +38,8 @@ function AddLesson(sharedState, updateState) {
       console.log(error)
     }
   }
-  // console.log(dataCourse)
+
   useEffect(() => {
-    // 1. รับข้อมูลบทเรียนที่ต้องการแก้ไขจาก LocalStorage
     const courseDataStorage = localStorage.getItem('course_data')
     const courseParsedData = JSON.parse(courseDataStorage)
     setDataCourseName(courseParsedData.course_name)
@@ -65,10 +68,14 @@ function AddLesson(sharedState, updateState) {
   //     setUpdatedLessonId('')
   //   }
   // }, [updatedSubLessonName, updatedLessonId, subLessonList])
-
+  console.log(subLessonList)
   const addSubLesson = () => {
     const newLessonId = subLessonList.length + 1
-    const newSubLesson = { subLessonId: newLessonId, subLessonName: '' }
+    const newSubLesson = {
+      subLessonId: newLessonId,
+      subLessonName: '',
+      subLessonVideo: null,
+    }
     setSubLessonList([...subLessonList, newSubLesson])
   }
 
@@ -103,7 +110,7 @@ function AddLesson(sharedState, updateState) {
     if (!storage) {
       console.log('dont have storage')
       const data = [{ lessonName, subLessonList }]
-
+      console.log(data)
       localStorage.setItem(`lesson_data`, JSON.stringify(data))
     } else if (storage) {
       console.log('have storage')
@@ -127,6 +134,53 @@ function AddLesson(sharedState, updateState) {
     // }))
 
     // console.log(preparedData)
+  }
+
+  const handleUploadVideo = async (event, subLessonId) => {
+    const vdoFile = event.target.files[0]
+    const file = JSON.stringify(vdoFile)
+    console.log(event.target.files[0])
+    const fileJsonString = JSON.stringify(file)
+    localStorage.setItem('fileData', fileJsonString)
+
+    console.log(vdoFile)
+    const updatedSubLessonList = subLessonList.map((subLesson) =>
+      subLesson.subLessonId === subLessonId
+        ? { ...subLesson, subLessonVideo: vdoFile }
+        : subLesson
+    )
+
+    setSubLessonList(updatedSubLessonList)
+
+    if (vdoFile) {
+      const allowedVdoTypes = [
+        'video/mp4',
+        'video/quicktime',
+        'video/x-msvideo',
+      ]
+
+      if (allowedVdoTypes.includes(vdoFile.type)) {
+        if (vdoFile.size <= 20 * 1024 * 1024) {
+          setAvatarVdo(vdoFile)
+          setVdoUrl(URL.createObjectURL(vdoFile))
+        } else {
+          displaySnackbar('File size exceeds 20 MB.')
+        }
+      } else {
+        displaySnackbar(
+          'Invalid video type. Please choose a .mp4, .mov, or .avi file.'
+        )
+      }
+    }
+  }
+
+  const handleRemoveVdo = async (subLessonId) => {
+    const updatedSubLessonList = subLessonList.map((subLesson) =>
+      subLesson.subLessonId === subLessonId
+        ? { ...subLesson, subLessonVideo: null }
+        : subLesson
+    )
+    setSubLessonList(updatedSubLessonList)
   }
 
   return (
@@ -218,7 +272,67 @@ function AddLesson(sharedState, updateState) {
                       }
                     />
                     <p className="Body2 pb-1">Video*</p>
-                    <AddLessonVideo />
+
+                    <div>
+                      <div className="flex flex-col gap-[6px]">
+                        <div className="relative ">
+                          {/*---------------------- IMG THUMBNAIL UPLOAD -----------------------*/}
+                          {!subLesson.subLessonVideo ? (
+                            <img
+                              src="../../public/image/uploadVdo.svg"
+                              className="relative w-[250px] h-[250px] object-cover rounded-2xl"
+                            />
+                          ) : null}
+                          {/*---------------------- VDO PLAYER -----------------------*/}
+                          {subLesson.subLessonVideo ? (
+                            <div className="vdo-preview rounded-[8px] w-[739px] h-[460px] cursor-pointer ">
+                              <ReactPlayer
+                                url={subLesson.subLessonVideo}
+                                width="100%"
+                                height="100%"
+                                controls={true}
+                                // light={dataDetail.cover_img}
+                                playIcon={'../public/image/playIcon.svg'}
+                              />
+                              {subLesson.subLessonVideo ? (
+                                <button
+                                  className="absolute top-[22px] left-[698px] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
+                                  onClick={() =>
+                                    handleRemoveVdo(subLesson.subLessonId)
+                                  }
+                                >
+                                  <img
+                                    src="../../public/image/closeIcon.svg"
+                                    alt=""
+                                    className="w-[10px] h-[10px]"
+                                  />
+                                </button>
+                              ) : null}
+                            </div>
+                          ) : null}
+                          {/*---------------------- UPLOAD BTN -----------------------*/}
+                          {!subLesson.subLessonVideo ? (
+                            <div className="absolute top-0 left-0 w-[250px] h-[250px] border-[2px] border-[--gray300] border-solid rounded-2xl hover:border-dashed  hover:border-[--blue500] hover:border-[3px]   group ">
+                              <label
+                                htmlFor={`video-upload-${subLesson.subLessonId}`}
+                                className="hidden group-hover:block w-full h-full pt-[45px] rounded-full  cursor-pointer "
+                              >
+                                <input
+                                  id={`video-upload-${subLesson.subLessonId}`}
+                                  name={`video-upload-${index}`}
+                                  type="file"
+                                  onChange={(e) =>
+                                    handleUploadVideo(e, subLesson.subLessonId)
+                                  }
+                                  hidden
+                                />
+                              </label>
+                            </div>
+                          ) : null}
+                          {/*------------------------------------------------------------*/}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

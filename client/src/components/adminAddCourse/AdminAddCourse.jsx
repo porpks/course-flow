@@ -84,11 +84,10 @@ function AdminAddCourse() {
   //   // sublesson_name,
   //   // sublesson_video,
   // }
-  // console.log(localImg);
-  // console.log(localVdo);
+  console.log(localImg)
+  console.log(localVdo)
   const [getImgUrl, setGetImgUrl] = useState('')
   const [getVdoUrl, setGetVdoUrl] = useState('')
-
 
   useEffect(() => {
     const lessonDataStorage = localStorage.getItem('lesson_data')
@@ -134,7 +133,7 @@ function AdminAddCourse() {
             courseSummary: parsedData.course_summary,
             courseDetail: parsedData.course_detail,
             cover_img: parsedData.image_url,
-            video_trailer: parsedData.video_url
+            video_trailer: parsedData.video_url,
           }
           formik.setValues(courseDataFromLocal)
         }
@@ -173,8 +172,7 @@ function AdminAddCourse() {
     // ]
     // console.log(updatedCourseData)
 
-    const updatedCourseData =
-    {
+    const updatedCourseData = {
       ...courseData,
       cover_img: getImgUrl,
       video_trailer: getVdoUrl,
