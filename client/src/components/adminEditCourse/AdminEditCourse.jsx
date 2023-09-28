@@ -90,6 +90,7 @@ function AdminEditCourse() {
       course_summary: formik.values.courseSummary,
       course_detail: formik.values.courseDetail,
       cover_img: getImgUrl,
+      video_trailer: getVdoUrl,
     };
     console.log(newCourseData);
 
@@ -112,6 +113,7 @@ function AdminEditCourse() {
     await axios.put(`http://localhost:4000/admin/${courseId}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
+    navigate("/admin/courselist");
   };
 
   if (localImg && localVdo) {

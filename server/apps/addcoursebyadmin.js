@@ -1,20 +1,20 @@
-import { Router } from 'express'
-import supabase from '../utils/db.js'
-import multer from 'multer'
-import { v4 as uuidv4 } from 'uuid'
-import { log } from 'console'
+import { Router } from "express";
+import supabase from "../utils/db.js";
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
+import { log } from "console";
 
 const addCourseRouter = Router();
 const multerUpload = multer({});
 const imageCoverUpload = multerUpload.fields([
-  { name: 'cover_img', maxCount: 1 },
-  { name: 'video_trailer', maxCount: 1 },
-  { name: 'subLessonVideo', maxCount: 99 },
-])
+  { name: "cover_img", maxCount: 1 },
+  { name: "video_trailer", maxCount: 1 },
+  { name: "subLessonVideo", maxCount: 99 },
+]);
 
 addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
   const body = req.body;
-  const subLessonVideos = req.files.subLessonVideo
+  const subLessonVideos = req.files.subLessonVideo;
 
   const courseName = req.body.course_name;
   const dataCourse = {
@@ -25,7 +25,7 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
     course_detail: req.body.course_detail,
     cover_img: req.body.cover_img,
     video_trailer: req.body.video_trailer,
-  }
+  };
 
   // console.log(req.files.subLessonVideo);
   // console.log(subLessonVideos.length)
@@ -137,7 +137,9 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
       }
 
       const extractedData = body;
-      const lessons = Object.values(extractedData).filter(item => item.startsWith('{') && item.endsWith('}')).map((item) => JSON.parse(item));
+      const lessons = Object.values(extractedData)
+        .filter((item) => item.startsWith("{") && item.endsWith("}"))
+        .map((item) => JSON.parse(item));
       let lessonIdMap = {};
       let subLessonId = [];
       let { data: courses, error: errorGetcourse } = await supabase
@@ -191,40 +193,48 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
         await Promise.all(insertPromises);
 
         for (let i = 0; i < subLessonVideos.length; i++) {
-          const subLessonVideo = subLessonVideos[i]
-          const file_Video = new Blob([subLessonVideo.buffer], { type: subLessonVideo.mimetype, })
+          const subLessonVideo = subLessonVideos[i];
+          const file_Video = new Blob([subLessonVideo.buffer], {
+            type: subLessonVideo.mimetype,
+          });
 
-          const { data: subUploadData, error: subUploadError } = await supabase.storage
-            .from('test-avatar')
-            .upload(`sublessonVideo/${subLessonId[i]}/${uuidv4()}`, file_Video)
+          const { data: subUploadData, error: subUploadError } =
+            await supabase.storage
+              .from("test-avatar")
+              .upload(
+                `sublessonVideo/${subLessonId[i]}/${uuidv4()}`,
+                file_Video
+              );
 
           if (subUploadError) {
             console.error("Upload sublesson video failed", subUploadError);
           } else {
-            console.log('Sublesson video uploaded successfully')
+            console.log("Sublesson video uploaded successfully");
           }
-          const subVdoUrl = `${process.env.VITE_SUPABASE_URL}/storage/v1/object/public/test-avatar/${subUploadData.path}`
+          const subVdoUrl = `${process.env.VITE_SUPABASE_URL}/storage/v1/object/public/test-avatar/${subUploadData.path}`;
           try {
-            const { data: updateSublessonData, error: updateSublessonError } = await supabase
-              .from("sublessons")
-              .update({ "sublesson_video": subVdoUrl })
-              .eq("sublesson_id", Number(subLessonId[i]))
-              .select()
+            const { data: updateSublessonData, error: updateSublessonError } =
+              await supabase
+                .from("sublessons")
+                .update({ sublesson_video: subVdoUrl })
+                .eq("sublesson_id", Number(subLessonId[i]))
+                .select();
             if (updateSublessonError) {
               console.error("Upload sublesson video failed", subUploadError);
             }
-            console.log(subLessonId[i]);
-            console.log(Number(subLessonId[i]));
+            // console.log(subLessonId[i]);
+            // console.log(Number(subLessonId[i]));
             console.log("update", updateSublessonData);
-            console.log('Sublesson data updated successfully')
-
+            console.log("Sublesson data updated successfully");
           } catch (err) {
             console.error(err);
           }
         }
 
-        res.json({ success: true, message: "Lessons and sub-lessons inserted successfully" });
-
+        res.json({
+          success: true,
+          message: "Lessons and sub-lessons inserted successfully",
+        });
       } catch (error) {
         console.error("Error inserting lessons and sub-lessons:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -258,25 +268,28 @@ addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
       message: "Please enter all information.",
     });
   }
+  console.log(req.files);
+  // console.log(req.files.cover_img.length);
+  // console.log(req.files?.avatar);
 
-  // มีไฟล์
   try {
-    if (req.files?.length > 0 || req.files?.avatar) {
-      const fileImg = req.files.cover_img[0];
-      const fileImage = new Blob([fileImg.buffer], { type: fileImg.mimetype });
-      // console.log(files);
+    if (req.files.cover_img?.length > 0) {
+      const reqImg = req.files.cover_img[0];
+      const fileImage = new Blob([reqImg.buffer], { type: reqImg.mimetype });
+
       const { data: objects, error: err } = await supabase.storage
         .from("test-avatar")
-        .list(`imgCover/${courseName}`);
-
+        .list(`imgCover/${courseId}`);
+      console.log(objects);
       if (err) {
         console.error("Error listing objects:", err.message);
       }
 
       for (const object of objects) {
-        const { error: errorRemove } = await supabase.storage
+        const { error: errorRemove, data } = await supabase.storage
           .from("test-avatar")
           .remove(`imgCover/${courseId}/${[object.name]}`);
+        // console.log(data);
         if (errorRemove) {
           console.error("Error remove objects:", errorRemove.message);
         }
@@ -298,17 +311,12 @@ addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
       const formattedDate1 =
         now1.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
 
+      console.log(imgUrl);
       try {
         const { data, error } = await supabase
           .from("courses")
           .update({
-            course_name: req.body.course_name,
-            price: req.body.price,
-            total_time: req.body.total_time,
-            course_summary: req.body.course_summary,
-            course_detail: req.body.course_detail,
             cover_img: imgUrl,
-            updated_at: formattedDate1,
           })
           .eq("course_id", courseId);
         if (error) {
@@ -318,31 +326,85 @@ addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
         console.error(error);
       }
     }
-    // ไม่มีไฟล์
-    else {
-      const now2 = new Date();
-      const formattedDate2 =
-        now2.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
+    if (req.files.video_trailer?.length > 0) {
+      const reqVideo = req.files.video_trailer[0];
+      const fileVideo = new Blob([reqVideo.buffer], {
+        type: reqVideo.mimetype,
+      });
 
+      const { data: objects, error: err } = await supabase.storage
+        .from("test-avatar")
+        .list(`video_trailer/${courseId}`);
+      console.log(objects);
+      if (err) {
+        console.error("Error listing objects:", err.message);
+      }
+
+      for (const object of objects) {
+        const { error: errorRemove, data } = await supabase.storage
+          .from("test-avatar")
+          .remove(`video_trailer/${courseId}/${[object.name]}`);
+        // console.log(data);
+        if (errorRemove) {
+          console.error("Error remove objects:", errorRemove.message);
+        }
+      }
+
+      const { data, error } = await supabase.storage
+        .from("test-avatar")
+        .upload(`video_trailer/${courseId}/${uuidv4()}`, fileVideo);
+
+      if (error) {
+        console.error(error);
+      } else {
+        console.log("File uploaded successfully:", data);
+      }
+
+      const path = data.path;
+      const videoUrl = `${process.env.VITE_SUPABASE_URL}/storage/v1/object/public/test-avatar/${path}`;
+      const now1 = new Date();
+      const formattedDate1 =
+        now1.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
+
+      // console.log(imgUrl);
       try {
         const { data, error } = await supabase
           .from("courses")
           .update({
-            course_name: req.body.course_name,
-            price: req.body.price,
-            total_time: req.body.total_time,
-            course_summary: req.body.course_summary,
-            course_detail: req.body.course_detail,
-            updated_date: formattedDate2,
+            // videoUrl
+            video_trailer: videoUrl,
           })
           .eq("course_id", courseId);
-
         if (error) {
           console.log(error);
         }
       } catch (error) {
         console.error(error);
       }
+    }
+
+    const now2 = new Date();
+    const formattedDate2 =
+      now2.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
+
+    try {
+      const { data, error } = await supabase
+        .from("courses")
+        .update({
+          course_name: req.body.course_name,
+          price: req.body.price,
+          total_time: req.body.total_time,
+          course_summary: req.body.course_summary,
+          course_detail: req.body.course_detail,
+          updated_date: formattedDate2,
+        })
+        .eq("course_id", courseId);
+
+      if (error) {
+        console.log(error);
+      }
+    } catch (error) {
+      console.error(error);
     }
   } catch (error) {
     console.log(error);
