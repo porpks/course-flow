@@ -223,185 +223,187 @@ function AdminAddCourse() {
       console.error(error);
     }
   };
-  displaySnackbar("You've Successfully Added a New Course. 🎉");
-}
-const handleData = () => {
-  localStorage.setItem(`course_data`, JSON.stringify(courseData));
-  navigate(`/admin/addcourse/addlesson`);
-  // console.log(localStorage.getItem(`course_data`))
-};
 
-function displaySnackbar(message) {
-  setOpenSnackBar(false);
-  setSnackbarMes(message);
-  setOpenSnackBar(true);
-}
-const [openSnackbar, setOpenSnackBar] = useState(false);
-const [snackBarMes, setSnackbarMes] = useState("");
+  const handleData = () => {
+    localStorage.setItem(`course_data`, JSON.stringify(courseData));
+    navigate(`/admin/addcourse/addlesson`);
+    // console.log(localStorage.getItem(`course_data`))
+  };
 
-const handleClose = (event, reason) => {
-  if (reason === "clickaway") {
-    return;
+  function displaySnackbar(message) {
+    setOpenSnackBar(false);
+    setSnackbarMes(message);
+    setOpenSnackBar(true);
   }
+  const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [snackBarMes, setSnackbarMes] = useState("");
 
-  setOpenSnackBar(false);
-};
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
-return (
-  <>
-    <SnackBar
-      open={openSnackbar}
-      onClose={handleClose}
-      severity={"success"}
-      message={snackBarMes}
-    />
+    setOpenSnackBar(false);
+  };
 
-    <div className="flex justify-center items-center">
-      <div className="canvas flex flex-row w-[1440px]">
-        {/* LEFT-NAV */}
+  return (
+    <>
+      <SnackBar
+        open={openSnackbar}
+        onClose={handleClose}
+        severity={"success"}
+        message={snackBarMes}
+      />
 
-        {/* RIGHT-NAV */}
-        <div className="w-full">
-          <div className="topNav  flex  items-center gap-[16px] px-[40px] py-[16px] w-100% bg  ">
-            <div className="H3 flex-1">Add Course</div>
-            <button
-              className="Secondary Shadow1"
-              onClick={() => {
-                navigate(-1);
-              }}>
-              Cancel
-            </button>
-            <button className="Primary Shadow1 border-none" onClick={sendData}>
-              Create
-            </button>
-          </div>
-          {/* MIDDLE-AREA */}
-          <div className="p-[40px] bg-[--gray100] ">
-            {/* PACKAGE WRAPPER  */}
-            <div className="packageWrapper px-[100px] pt-[40px] pb-[60px] w-full h-full mb-[24px] ">
-              <Formik>
-                <Form
-                  className="flex flex-col  gap-[40px]"
-                  onSubmit={formik.handleSubmit}>
-                  <div className="flex flex-col gap-[4px] border-2 border-sky-500">
-                    <label htmlFor="courseName" className="">
-                      Course name *
-                    </label>
-                    <input
-                      type="text"
-                      name="courseName"
-                      // id="courseName"
-                      placeholder="Enter Course Name"
-                      className="Input"
-                      value={formik.values.courseName}
-                      onChange={formik.handleChange}
-                    />
-                    {formik.errors.courseName ? (
-                      <div>{formik.errors.courseName}</div>
-                    ) : null}
-                  </div>
-                  <div className="flex gap-[80px] ">
-                    <div className="flex flex-col flex-1 gap-[4px] ">
-                      <label htmlFor="Price" className="">
-                        Price *
-                      </label>
-                      <input
-                        type="number"
-                        name="price"
-                        // id="price"
-                        placeholder="Enter Course Price"
-                        className="Input"
-                        value={formik.values.price}
-                        onChange={formik.handleChange}
-                      />
-                      {formik.errors.price ? (
-                        <div>{formik.errors.price}</div>
-                      ) : null}
-                    </div>
-                    <div className="flex flex-col flex-1 gap-[4px]">
-                      <label className="">Total learning time *</label>
-                      <input
-                        type="number"
-                        name="totalLearningTime"
-                        // id="totalLearningTime"
-                        placeholder="Enter Total learning time"
-                        className="Input"
-                        value={formik.values.totalLearningTime}
-                        onChange={formik.handleChange}
-                      />{" "}
-                      {formik.errors.totalLearningTime ? (
-                        <div>{formik.errors.totalLearningTime}</div>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-[4px]">
-                    <label className="">Course summary *</label>
-                    <Field
-                      as="textarea"
-                      // type="text"
-                      name="courseSummary"
-                      // id="courseSummary"
-                      placeholder="Enter Course summary"
-                      className="Input h-[100px] resize-none"
-                      value={formik.values.courseSummary}
-                      onChange={formik.handleChange}
-                    />
-                    {formik.errors.courseSummary ? (
-                      <div>{formik.errors.courseSummary}</div>
-                    ) : null}
-                  </div>
-                  <div className="flex flex-col gap-[4px]">
-                    <label className="">Course detail *</label>
-                    <Field
-                      as="textarea"
-                      // type="text"
-                      name="courseDetail"
-                      // id="courseDetail"
-                      placeholder="Enter Course detail"
-                      className="Input h-[220px] resize-none flex text- align-text-top "
-                      value={formik.values.courseDetail}
-                      onChange={formik.handleChange}
-                    />
-                    {formik.errors.courseDetail ? (
-                      <div>{formik.errors.courseDetail}</div>
-                    ) : null}
-                  </div>
+      <div className="flex justify-center items-center">
+        <div className="canvas flex flex-row w-[1440px]">
+          {/* LEFT-NAV */}
 
-                  {/*----------------------- UPLOAD IMG --------------------- */}
-                  <UploadImage
-                    submitData={submitData}
-                    getUrl={setLocalImg}
-                    setGetImgUrl={setGetImgUrl}
-                  />
-                  {/*----------------------- UPLOAD VIDEO --------------------- */}
-                  <UploadVideo
-                    submitData={submitData}
-                    getUrl={setLocalVdo}
-                    setGetVdoUrl={setGetVdoUrl}
-                  />
-                </Form>
-              </Formik>
-            </div>
-            {/* add;-lesson */}
-            <div className="add-lesson flex flex-row gap-[16px] items-center mb-[43px]">
-              <div className="H3 flex-1">Lesson</div>
+          {/* RIGHT-NAV */}
+          <div className="w-full">
+            <div className="topNav  flex  items-center gap-[16px] px-[40px] py-[16px] w-100% bg  ">
+              <div className="H3 flex-1">Add Course</div>
               <button
-                className="Primary Shadow1 px-[32px] py-[18px] justify-center border-none"
+                className="Secondary Shadow1"
                 onClick={() => {
-                  handleData();
+                  navigate(-1);
                 }}>
-                + Add Lesson
+                Cancel
+              </button>
+              <button
+                className="Primary Shadow1 border-none"
+                onClick={sendData}>
+                Create
               </button>
             </div>
-            {/* table-SubLesson */}
-            <div className="table-SubLesson">
-              <LessonTable />
+            {/* MIDDLE-AREA */}
+            <div className="p-[40px] bg-[--gray100] ">
+              {/* PACKAGE WRAPPER  */}
+              <div className="packageWrapper px-[100px] pt-[40px] pb-[60px] w-full h-full mb-[24px] ">
+                <Formik>
+                  <Form
+                    className="flex flex-col  gap-[40px]"
+                    onSubmit={formik.handleSubmit}>
+                    <div className="flex flex-col gap-[4px] border-2 border-sky-500">
+                      <label htmlFor="courseName" className="">
+                        Course name *
+                      </label>
+                      <input
+                        type="text"
+                        name="courseName"
+                        // id="courseName"
+                        placeholder="Enter Course Name"
+                        className="Input"
+                        value={formik.values.courseName}
+                        onChange={formik.handleChange}
+                      />
+                      {formik.errors.courseName ? (
+                        <div>{formik.errors.courseName}</div>
+                      ) : null}
+                    </div>
+                    <div className="flex gap-[80px] ">
+                      <div className="flex flex-col flex-1 gap-[4px] ">
+                        <label htmlFor="Price" className="">
+                          Price *
+                        </label>
+                        <input
+                          type="number"
+                          name="price"
+                          // id="price"
+                          placeholder="Enter Course Price"
+                          className="Input"
+                          value={formik.values.price}
+                          onChange={formik.handleChange}
+                        />
+                        {formik.errors.price ? (
+                          <div>{formik.errors.price}</div>
+                        ) : null}
+                      </div>
+                      <div className="flex flex-col flex-1 gap-[4px]">
+                        <label className="">Total learning time *</label>
+                        <input
+                          type="number"
+                          name="totalLearningTime"
+                          // id="totalLearningTime"
+                          placeholder="Enter Total learning time"
+                          className="Input"
+                          value={formik.values.totalLearningTime}
+                          onChange={formik.handleChange}
+                        />{" "}
+                        {formik.errors.totalLearningTime ? (
+                          <div>{formik.errors.totalLearningTime}</div>
+                        ) : null}
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-[4px]">
+                      <label className="">Course summary *</label>
+                      <Field
+                        as="textarea"
+                        // type="text"
+                        name="courseSummary"
+                        // id="courseSummary"
+                        placeholder="Enter Course summary"
+                        className="Input h-[100px] resize-none"
+                        value={formik.values.courseSummary}
+                        onChange={formik.handleChange}
+                      />
+                      {formik.errors.courseSummary ? (
+                        <div>{formik.errors.courseSummary}</div>
+                      ) : null}
+                    </div>
+                    <div className="flex flex-col gap-[4px]">
+                      <label className="">Course detail *</label>
+                      <Field
+                        as="textarea"
+                        // type="text"
+                        name="courseDetail"
+                        // id="courseDetail"
+                        placeholder="Enter Course detail"
+                        className="Input h-[220px] resize-none flex text- align-text-top "
+                        value={formik.values.courseDetail}
+                        onChange={formik.handleChange}
+                      />
+                      {formik.errors.courseDetail ? (
+                        <div>{formik.errors.courseDetail}</div>
+                      ) : null}
+                    </div>
+
+                    {/*----------------------- UPLOAD IMG --------------------- */}
+                    <UploadImage
+                      submitData={submitData}
+                      getUrl={setLocalImg}
+                      setGetImgUrl={setGetImgUrl}
+                    />
+                    {/*----------------------- UPLOAD VIDEO --------------------- */}
+                    <UploadVideo
+                      submitData={submitData}
+                      getUrl={setLocalVdo}
+                      setGetVdoUrl={setGetVdoUrl}
+                    />
+                  </Form>
+                </Formik>
+              </div>
+              {/* add;-lesson */}
+              <div className="add-lesson flex flex-row gap-[16px] items-center mb-[43px]">
+                <div className="H3 flex-1">Lesson</div>
+                <button
+                  className="Primary Shadow1 px-[32px] py-[18px] justify-center border-none"
+                  onClick={() => {
+                    handleData();
+                  }}>
+                  + Add Lesson
+                </button>
+              </div>
+              {/* table-SubLesson */}
+              <div className="table-SubLesson">
+                <LessonTable />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </>
-);
+    </>
+  );
+}
 
 export default AdminAddCourse;
