@@ -236,9 +236,7 @@ function AdminAddCourse() {
       <div className="flex justify-center items-center">
         <div className="canvas flex flex-row w-[1440px]">
           {/* LEFT-NAV */}
-          <div className="">
-            <Sidebar isCoursePage={true} />
-          </div>
+
           {/* RIGHT-NAV */}
           <div className="w-full">
             <div className="topNav  flex  items-center gap-[16px] px-[40px] py-[16px] w-100% bg  ">

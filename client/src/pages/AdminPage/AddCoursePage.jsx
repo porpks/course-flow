@@ -1,12 +1,20 @@
-import React from "react";
-import AdminAddCourse from "../../components/adminAddCourse/AdminAddCourse";
+import React from 'react'
+import AdminAddCourse from '../../components/adminAddCourse/AdminAddCourse'
+import Sidebar from '../../components/Sidebar'
 
 function AddCoursePage() {
   return (
-    <div>
-      <AdminAddCourse />
-    </div>
-  );
+    <>
+      <div className="flex flex-row justify-center">
+        <div className="w-[240px]">
+          <Sidebar isCoursePage={true} />
+        </div>
+        <div className="w-[1200px]">
+          <AdminAddCourse />
+        </div>
+      </div>
+    </>
+  )
 }
 
-export default AddCoursePage;
+export default AddCoursePage
