@@ -147,7 +147,7 @@ function AdminEditCourse() {
       }
     }
     courseFetching()
-  }, [])
+  }, [courseId])
 
   const onSubmitForm = (e) => {
     e.preventDefault()
@@ -291,7 +291,14 @@ function AdminEditCourse() {
                 </div>
               </div>
               <div className="space-x-4">
-                <button className="Secondary Shadow1">Cancel</button>
+                <button
+                  className="Secondary Shadow1"
+                  onClick={() => {
+                    navigate(-1)
+                  }}
+                >
+                  Cancel
+                </button>
                 <button
                   className="Primary Shadow1 border-none"
                   onClick={onSubmit}
@@ -405,8 +412,6 @@ function AdminEditCourse() {
                       getUrl={setLocalVdo}
                       setGetVdoUrl={setGetVdoUrl}
                     />
-
-                    <button type="submit">Submit</button>
                   </Form>
                 </Formik>
               </div>

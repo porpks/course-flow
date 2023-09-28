@@ -15,10 +15,10 @@ function EditAssignmentPage() {
       ) : (
         <>
           <div className="flex justify-center w-full">
-            <div className="w-[240px]">
+            <div className="w-[240px]  shadow-xl">
               <Sidebar />
             </div>
-            <div className="flex flex-col w-[1440px]">
+            <div className="flex flex-col w-[1200px]  shadow-xl">
               <AssignmentField editAssignment={true} />
               <div className="bg-[--gray100] px-10 text-end pb-4">
                 <h1
