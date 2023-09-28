@@ -156,65 +156,46 @@ function AdminAddCourse() {
     // // Clear the interval when the component unmounts
     // return () => clearInterval(intervalId);
   }, [])
+  // console.log(getImgUrl)
+  // console.log(getVdoUrl)
 
   const sendData = async (course) => {
-    const updatedCourseData = {
-      ...courseData,
-      cover_img: image_url,
-      video_trailer: video_url,
-    }
+    // const updatedCourseData = [
+    //   {
+    //     ...courseData,
+    //     cover_img: getImgUrl,
+    //     video_trailer: getVdoUrl,
+    //   },
+    // ]
     // console.log(updatedCourseData)
 
-    const testData = [
+    const updatedCourseData = [
       {
         ...courseData,
+        cover_img: getImgUrl,
+        video_trailer: getVdoUrl,
         ...lessonData,
       },
     ]
+    console.log(updatedCourseData)
 
-    console.log(testData)
-    const fromDatabase = 'your_course_id_value' // Replace with the actual value from the database
-    const updateLessonDataArray = lessonData.map((lesson, index) => ({
-      course_id: fromDatabase,
-      lesson_name: lesson.lessonName,
-      sublesson_name: lesson.subLessonData,
-    }))
-    // console.log(updateLessonDataArray)
-    // console.log(lessonData)
-    // const fromDatabase = 'your_course_id_value' // Replace with the actual value from the database
-    // const updateLessonDataArray = lessonData.map((lesson) => ({
-    //   course_id: fromDatabase,
-    //   lesson_name: lesson.lessonName,
-    //   sublesson_name: lesson.subLessonData.map((sublesson) => ({
-    //     sublesson_name: sublesson.subLessonName,
-    //   })),
-    // }))
-    // console.log(updateLessonDataArray)
-
-    // const updateSubLessonData = {
-    //   sublesson_name: [],
-    // }
-
-    // lessonData.forEach((lesson) => {
-    //   lesson.subLessonData.forEach((subLesson) => {
-    //     updateSubLessonData.sublesson_name.push(subLesson.subLessonName)
-    //   })
-    // })
-
-    // console.log(updateSubLessonData)
     // try {
     //   await axios.post(
     //     `http://localhost:4000/admin/addcourse`,
-    //     updatedCourseData
+    //     updatedCourseData,
+    //     { headers: { 'Content-Type': 'multipart/form-data' } }
     //   )
     //   // console.log(updatedCourseData);
     //   localStorage.removeItem('video_url')
     //   localStorage.removeItem('image_url')
     //   formik.resetForm()
     //   setSubmitData(true)
+    //   displaySnackbar("You've Successfully Added a New Course. 🎉")
+    //   navigate('/admin/courselist')
     // } catch (error) {
     //   message: error
     // }
+
     displaySnackbar("You've Successfully Added a New Course. 🎉")
   }
 
