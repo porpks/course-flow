@@ -25,14 +25,6 @@ function AdminEditCourse() {
   const [courseData, setCourseData] = useState([]);
   const { courseId } = useParams();
 
-  const [getImgUrl, setGetImgUrl] = useState("");
-  const [getVdoUrl, setGetVdoUrl] = useState("");
-
-  const [getCoverImg, setGetCoverImg] = useState([]);
-  // const [getCoverImg, setGetCoverImg] = useState([]);
-
-  const [getVideoTrailer, setGetVideoTrailer] = useState([]);
-
   const initialValues = {
     courseName: "",
     price: "",
@@ -40,7 +32,7 @@ function AdminEditCourse() {
     courseSummary: "",
     courseDetail: "",
   };
-
+  console.log(courseData);
   const handleChange = (event) => {
     setValues((prevValues) => ({
       ...prevValues,
@@ -72,7 +64,6 @@ function AdminEditCourse() {
     }
     return errors;
   };
-
   const formik = useFormik({
     initialValues,
     validate,
@@ -89,32 +80,38 @@ function AdminEditCourse() {
       total_time: formik.values.totalLearningTime,
       course_summary: formik.values.courseSummary,
       course_detail: formik.values.courseDetail,
-      cover_img: getImgUrl,
-      video_trailer: getVdoUrl,
+      // course_name: 1,
+      // price: 2,
+      // total_time: 3,
+      // course_summary: 4,
+      // course_detail: 5,
     };
     console.log(newCourseData);
+    await axios.put(
+      `http://localhost:4000/ourcourse/${courseId}`,
+      newCourseData
+    );
 
-    const formData = new FormData();
-    for (let key in newCourseData) {
-      if (
-        key !== "cover_img" &&
-        key !== "video_trailer" &&
-        typeof newCourseData[key] === "object"
-      ) {
-        formData.append(key, JSON.stringify(newCourseData[key]));
-        // console.log(newCourseData[key].subLessonVideo);
-        for (let value of newCourseData[key].subLessonVideo) {
-          formData.append("subLessonVideo", value);
-        }
-      } else {
-        formData.append(key, newCourseData[key]);
-      }
-    }
-    await axios.put(`http://localhost:4000/admin/${courseId}`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    navigate("/admin/courselist");
+    // try {
+    //   const response = await axios.get(
+    //     `http://localhost:4000/profile/${userId}`
+    //   )
+    //   setUsername(response.data.data)
+    //   localStorage.removeItem('username')
+    //   localStorage.removeItem('userimage')
+    //   localStorage.setItem('username', response.data.data.full_name)
+    //   localStorage.setItem('userimage', response.data.data.image_url)
+    // } catch (error) {
+    //   alert(error.message)
+    // }
+    // const useid = userId
+    // setUserID(params.id ? params.id : useid)
+
+    // navigate('/ourcourse')
   };
+
+  const [getImgUrl, setGetImgUrl] = useState("");
+  const [getVdoUrl, setGetVdoUrl] = useState("");
 
   if (localImg && localVdo) {
     const storedImageUrl = localImg;
@@ -133,7 +130,7 @@ function AdminEditCourse() {
         const result = await axios.get(
           `http://localhost:4000/ourcourse/${courseId}`
         );
-        console.log(result.data.data);
+        console.log(result);
 
         const initialValues = {
           courseName: result.data.data.course_name,
@@ -144,18 +141,13 @@ function AdminEditCourse() {
         };
         formik.setValues(initialValues);
         setCourseData(result.data.data);
-        setGetCoverImg(result.data.data.cover_img);
-        setGetVideoTrailer(result.data.data.video_trailer);
-        // console.log(`result : ${setGetVideoTrailer}`);
-        // setIsLoading(false);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
     };
     courseFetching();
   }, [courseId]);
-
-  // console.log(getCourse);
 
   const onSubmitForm = (e) => {
     e.preventDefault();
@@ -180,6 +172,7 @@ function AdminEditCourse() {
       cover_img: image_url,
       video_trailer: video_url,
     };
+    // console.log(updatedCourseData)
 
     const testData = [
       {
@@ -188,14 +181,49 @@ function AdminEditCourse() {
       },
     ];
 
-    // console.log(testData);
+    console.log(testData);
     const fromDatabase = "your_course_id_value"; // Replace with the actual value from the database
     const updateLessonDataArray = lessonData.map((lesson, index) => ({
       course_id: fromDatabase,
       lesson_name: lesson.lessonName,
       sublesson_name: lesson.subLessonData,
     }));
+    // console.log(updateLessonDataArray)
+    // console.log(lessonData)
+    // const fromDatabase = 'your_course_id_value' // Replace with the actual value from the database
+    // const updateLessonDataArray = lessonData.map((lesson) => ({
+    //   course_id: fromDatabase,
+    //   lesson_name: lesson.lessonName,
+    //   sublesson_name: lesson.subLessonData.map((sublesson) => ({
+    //     sublesson_name: sublesson.subLessonName,
+    //   })),
+    // }))
+    // console.log(updateLessonDataArray)
 
+    // const updateSubLessonData = {
+    //   sublesson_name: [],
+    // }
+
+    // lessonData.forEach((lesson) => {
+    //   lesson.subLessonData.forEach((subLesson) => {
+    //     updateSubLessonData.sublesson_name.push(subLesson.subLessonName)
+    //   })
+    // })
+
+    // console.log(updateSubLessonData)
+    // try {
+    //   await axios.post(
+    //     `http://localhost:4000/admin/addcourse`,
+    //     updatedCourseData
+    //   )
+    //   // console.log(updatedCourseData);
+    //   localStorage.removeItem('video_url')
+    //   localStorage.removeItem('image_url')
+    //   formik.resetForm()
+    //   setSubmitData(true)
+    // } catch (error) {
+    //   message: error
+    // }
     displaySnackbar("You've Successfully Added a New Course. 🎉");
   };
 
@@ -220,7 +248,7 @@ function AdminEditCourse() {
 
     setOpenSnackBar(false);
   };
-  // console.log(getVideoTrailer);
+
   return (
     <>
       <SnackBar
@@ -240,15 +268,13 @@ function AdminEditCourse() {
                   className="cursor-pointer"
                   onClick={() => {
                     navigate(-1);
-                  }}
-                >
+                  }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
-                    fill="none"
-                  >
+                    fill="none">
                     <path
                       d="M18.7915 11.0051H7.62148L12.5015 6.1251C12.8915 5.7351 12.8915 5.0951 12.5015 4.7051C12.1115 4.3151 11.4815 4.3151 11.0915 4.7051L4.50148 11.2951C4.11148 11.6851 4.11148 12.3151 4.50148 12.7051L11.0915 19.2951C11.4815 19.6851 12.1115 19.6851 12.5015 19.2951C12.8915 18.9051 12.8915 18.2751 12.5015 17.8851L7.62148 13.0051H18.7915C19.3415 13.0051 19.7915 12.5551 19.7915 12.0051C19.7915 11.4551 19.3415 11.0051 18.7915 11.0051Z"
                       fill="#9AA1B9"
@@ -267,14 +293,12 @@ function AdminEditCourse() {
                   className="Secondary Shadow1"
                   onClick={() => {
                     navigate(-1);
-                  }}
-                >
+                  }}>
                   Cancel
                 </button>
                 <button
                   className="Primary Shadow1 border-none"
-                  onClick={onSubmit}
-                >
+                  onClick={onSubmit}>
                   Edit
                 </button>
               </div>
@@ -286,8 +310,7 @@ function AdminEditCourse() {
                 <Formik>
                   <Form
                     className="flex flex-col  gap-[40px]"
-                    onSubmit={onSubmitForm}
-                  >
+                    onSubmit={onSubmitForm}>
                     <div className="flex flex-col gap-[4px] border-2 border-sky-500">
                       <label htmlFor="courseName" className="">
                         Course name *
@@ -372,25 +395,20 @@ function AdminEditCourse() {
                       ) : null}
                     </div>
 
-                    {/* <button type="submit">Submit</button> */}
+                    {/*----------------------- UPLOAD IMG --------------------- */}
+                    <UploadImage
+                      submitData={submitData}
+                      getUrl={setLocalImg}
+                      setGetImgUrl={setGetImgUrl}
+                    />
+                    {/*----------------------- UPLOAD VIDEO --------------------- */}
+                    <UploadVideo
+                      submitData={submitData}
+                      getUrl={setLocalVdo}
+                      setGetVdoUrl={setGetVdoUrl}
+                    />
                   </Form>
                 </Formik>
-                {/*----------------------- UPLOAD IMG --------------------- */}
-                <UploadImage
-                  submitData={submitData}
-                  getUrl={setLocalImg}
-                  setGetImgUrl={setGetImgUrl}
-                  getCoverImg={getCoverImg}
-                  setGetCoverImg={setGetCoverImg}
-                />
-                {/*----------------------- UPLOAD VIDEO --------------------- */}
-                <UploadVideo
-                  submitData={submitData}
-                  getUrl={setLocalVdo}
-                  setGetVdoUrl={setGetVdoUrl}
-                  getVideoTrailer={getVideoTrailer}
-                  setGetVideoTrailer={setGetVideoTrailer}
-                />
               </div>
               {/* add;-lesson */}
               <div className="add-lesson flex flex-row gap-[16px] items-center mb-[43px]">
@@ -399,8 +417,7 @@ function AdminEditCourse() {
                   className="Primary Shadow1 px-[32px] py-[18px] justify-center border-none"
                   onClick={() => {
                     handleData();
-                  }}
-                >
+                  }}>
                   + Add Lesson
                 </button>
               </div>

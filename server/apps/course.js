@@ -145,113 +145,59 @@ courseRouter.delete("/:courseId", async (req, res) => {
   }
 });
 
-// courseRouter.put("/:courseId", async (req, res) => {
-//   const courseId = req.params.courseId;
-//   const lessonData = { lesson_name: req.body.lesson_name };
+courseRouter.put("/:courseId", async (req, res) => {
+  const courseId = req.params.courseId;
+  const lessonData = { lesson_name: req.body.lesson_name };
 
-//   if (
-//     !req.body.course_name ||
-//     !req.body.price ||
-//     !req.body.total_time ||
-//     !req.body.course_summary ||
-//     !req.body.course_detail
-//   ) {
-//     return res.status(400).json({
-//       message: "Please enter all information.",
-//     });
-//   }
-//   // มีไฟล์
-//   try {
-//     if (req.files.length > 0 || req.files.avatar) {
-//       const fileImg = req.files.cover_img[0];
-//       const fileImage = new Blob([fileImg.buffer], { type: fileImg.mimetype });
+  // if (
+  //   !req.body.course_name ||
+  //   !req.body.price ||
+  //   !req.body.total_time ||
+  //   !req.body.course_summary ||
+  //   !req.body.course_detail
+  // ) {
+  //   return res.status(400).json({
+  //     message: 'Please enter all information.',
+  //   })
+  // }
 
-//       const { data: objects, error: err } = await supabase.storage
-//         .from("test-avatar")
-//         .list(`imgCover/${courseId}`);
+  console.log(req.body);
+  try {
+    const { data, error } = await supabase
+      .from("courses")
+      .update({
+        course_name: req.body.course_name,
+        price: req.body.price,
+        total_time: req.body.total_time,
+        course_summary: req.body.course_summary,
+        course_detail: req.body.course_detail,
+        // image_url: imgUrl,
+        // updated_at: formattedDate1,
+      })
+      .eq("course_id", courseId);
+    if (error) {
+      console.log(error);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+  // try {
+  //   const courseId = req.params.courseId
+  //   const { data, error } = await supabase
+  //     .from('courses')
+  //     .select('*,lessons(*,sublessons(sublesson_name,sublesson_id))')
+  //     .eq('course_id', courseId)
 
-//       if (err) {
-//         console.error("Error listing objects:", err.message);
-//       }
+  //   if (error) {
+  //     throw error
+  //   }
 
-//       for (const object of objects) {
-//         const { error: errorRemove } = await supabase.storage
-//           .from("test-avatar")
-//           .remove(`imgCover/${courseId}/${[object.name]}`);
-//         if (errorRemove) {
-//           console.error("Error remove objects:", errorRemove.message);
-//         }
-//       }
-
-//       const { data, error } = await supabase.storage
-//         .from("test-avatar")
-//         .upload(`imgCover/${courseId}/${uuidv4()}`, fileImage);
-
-//       if (error) {
-//         console.error(error);
-//       } else {
-//         console.log("File uploaded successfully:", data);
-//       }
-
-//       const path = data.path;
-//       const imgUrl = `${process.env.VITE_SUPABASE_URL}/storage/v1/object/public/test-avatar/${path}`;
-//       const now1 = new Date();
-//       const formattedDate1 =
-//         now1.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
-
-//       try {
-//         const { data, error } = await supabase
-//           .from("courses")
-//           .update({
-//             course_name: req.body.courseName,
-//             price: req.body.price,
-//             total_time: req.body.totalLearningTime,
-//             course_summary: req.body.courseSummary,
-//             course_detail: req.body.courseDetail,
-//             cover_img: imgUrl,
-//             updated_at: formattedDate1,
-//           })
-//           .eq("course_id", req.body.courseId);
-//         if (error) {
-//           console.log(error);
-//         }
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     }
-//     // ไม่มีไฟล์
-//     else {
-//       const now2 = new Date();
-//       const formattedDate2 =
-//         now2.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
-
-//       try {
-//         const { data, error } = await supabase
-//           .from("courses")
-//           .update({
-//             course_name: req.body.courseName,
-//             price: req.body.price,
-//             total_time: req.body.totalLearningTime,
-//             course_summary: req.body.courseSummary,
-//             course_detail: req.body.courseDetail,
-//             updated_at: formattedDate2,
-//           })
-//           .eq("course_id", req.body.courseId);
-
-//         if (error) {
-//           console.log(error);
-//         }
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-
-//   return res.json({
-//     message: "Your course has been updated successfully.",
-//   });
-// });
+  return res.json({
+    message: "You Course has been update",
+  });
+  // } catch (error) {
+  //   message: error
+  // }
+});
 
 export default courseRouter;

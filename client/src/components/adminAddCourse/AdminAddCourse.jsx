@@ -218,13 +218,11 @@ function AdminAddCourse() {
       // formik.resetForm()
       setSubmitData(true);
       // displaySnackbar("You've Successfully Added a New Course. 🎉")
-
       // navigate('/admin/courselist')
     } catch (error) {
       console.error(error);
     }
   };
-
 
   const handleData = () => {
     localStorage.setItem(`course_data`, JSON.stringify(courseData));

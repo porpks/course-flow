@@ -46,8 +46,8 @@ function LessonTable() {
             parsedData.splice(index, 1);
             // อัปเดตข้อมูลใน Local Storage และ state
             localStorage.setItem("lesson_data", JSON.stringify(parsedData));
-
-            newDataLesson.splice(index, 1);
+            console.log(newDataLesson, "newDataLesson");
+            console.log(newDataLesson.splice(index, 1));
             setLessonData(parsedData);
             setLesson(newDataLesson);
 
@@ -75,9 +75,9 @@ function LessonTable() {
       <table className=" w-full border-collapse ">
         <tbody className="">
           <tr className="rounded-lg Body3 flex flex-row bg-[--gray400] text-[--gray800] ">
-            <th className="py-[10px] px-4 w-[500px] pl-[70px] ">Lesson name</th>
-            <th className="py-[10px] px-4 w-[396px]">Sub-lesson</th>
-            <th className="py-[10px] px-6 w-[120px]">Action</th>
+            <p className="py-[10px] px-4 w-[500px] pl-[70px] ">Lesson name</p>
+            <p className="py-[10px] px-4 w-[396px]">Sub-lesson</p>
+            <p className="py-[10px] px-6 w-[120px]">Action</p>
           </tr>
           {lessonData.map((data, index) => (
             <tr key={index} className="bg-white Body2 ">
