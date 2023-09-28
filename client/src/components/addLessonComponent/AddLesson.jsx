@@ -127,7 +127,7 @@ function AddLesson(sharedState, updateState) {
       console.log(lesson, "2auth");
       console.log(subLessonList, "2sublist");
     }
-    // navigate(`/admin/addcourse`)
+    navigate(`/admin/addcourse`)
     // console.log(data)
     // updateState(data)
     // const lessonData = { lessonName, subLessonList }

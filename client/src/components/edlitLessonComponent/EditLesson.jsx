@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 
 function EditLesson(sharedState, updateState) {
-  // const { lessonIndex } = useParams()
   const navigate = useNavigate()
   const { lessonId } = useParams()
   const [dataCourse, setDataCourse] = useState([])
@@ -37,19 +36,23 @@ function EditLesson(sharedState, updateState) {
     const courseDataStorage = localStorage.getItem('course_data')
     const courseParsedData = JSON.parse(courseDataStorage)
     setDataCourseName(courseParsedData.course_name)
+
     const lessonDataStorage = localStorage.getItem('lesson_data')
     const lessonParsedData = JSON.parse(lessonDataStorage)
-    const lessonName = lessonParsedData[0].lessonName
-    setLessonName(lessonName)
-    // console.log(lessonParsedData)
-    const subLessonListFromLessonData = lessonParsedData
-      .map((lesson) => lesson.subLessonList)
-      .flat()
-    const lessonToEdit = lessonParsedData[lessonId]
-    console.log(lessonId)
-    console.log(lessonId)
-    setSubLessonList(lessonToEdit.subLessonList)
-  }, [])
+
+    if (lessonParsedData && lessonParsedData[lessonId]) {
+      const lesson = lessonParsedData[lessonId]
+      setLessonName(lesson.lessonName)
+      setSubLessonList(lesson.subLessonList)
+    }
+    // const lessonName = lessonParsedData[0].lessonName
+    // setLessonName(lessonName)
+    // const subLessonListFromLessonData = lessonParsedData
+    //   .map((lesson) => lesson.subLessonList)
+    //   .flat()
+    // const lessonToEdit = lessonParsedData[lessonId]
+    // setSubLessonList(lessonToEdit.subLessonList)
+  }, [lessonId])
 
   // console.log(subLessonList)
   const addSubLesson = () => {
@@ -57,7 +60,7 @@ function EditLesson(sharedState, updateState) {
     const newSubLesson = { subLessonId: newLessonId, subLessonName: '' }
     setSubLessonList([...subLessonList, newSubLesson])
   }
-  // console.log(dataCourseName)
+
   const deleteSubLesson = (lessonIdToDelete) => {
     if (subLessonList.length === 1) {
       alert("You can't delete the last sub-lesson.")
@@ -83,36 +86,23 @@ function EditLesson(sharedState, updateState) {
     setLessonName(value)
   }
 
-  const createButton = (event) => {
+  const editButton = (event) => {
     const storage = localStorage.getItem('lesson_data')
 
-    if (!storage) {
-      console.log('dont have storage')
-      const data = [{ lessonName, subLessonList }]
+    if (storage) {
+      const updatedData = {
+        lessonName,
+        subLessonList,
+      }
 
-      localStorage.setItem(`lesson_data`, JSON.stringify(data))
-    } else if (storage) {
-      console.log('have storage')
       const parsedData = JSON.parse(storage)
-      console.log(Array.isArray(parsedData))
-      const newData = [...parsedData, { lessonName, subLessonList }]
-      console.log(newData)
-      localStorage.setItem('lesson_data', JSON.stringify(newData))
-    }
-    // navigate(`/admin/addcourse`)
-    // console.log(data)
-    // updateState(data)
-    // const lessonData = { lessonName, subLessonList }
-    // const subLessonsArray = Object.values(lessonData).filter(
-    //   (item) => typeof item === 'object'
-    // )
-    // // Map and prepare the data for sending to the server
-    // const preparedData = subLessonsArray.map((subLesson) => ({
-    //   lessonName: lessonData.lessonName,
-    //   ...subLesson,
-    // }))
 
-    // console.log(preparedData)
+      if (parsedData[lessonId]) {
+        parsedData[lessonId] = updatedData
+        localStorage.setItem('lesson_data', JSON.stringify(parsedData))
+      }
+    }
+    navigate(`/admin/addcourse`)
   }
 
   return (
@@ -123,7 +113,7 @@ function EditLesson(sharedState, updateState) {
             <div
               className=""
               onClick={() => {
-                navigate(`/admin/addcourse`)
+                navigate(-1)
               }}
             >
               <svg
@@ -149,7 +139,7 @@ function EditLesson(sharedState, updateState) {
           </div>
           <div className="space-x-4">
             <button className="Secondary">Cancle</button>
-            <button className="Primary border-none" onClick={createButton}>
+            <button className="Primary border-none" onClick={editButton}>
               Edit
             </button>
           </div>
