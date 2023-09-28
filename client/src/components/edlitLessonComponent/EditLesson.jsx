@@ -36,16 +36,23 @@ function EditLesson(sharedState, updateState) {
     const courseDataStorage = localStorage.getItem('course_data')
     const courseParsedData = JSON.parse(courseDataStorage)
     setDataCourseName(courseParsedData.course_name)
+
     const lessonDataStorage = localStorage.getItem('lesson_data')
     const lessonParsedData = JSON.parse(lessonDataStorage)
-    const lessonName = lessonParsedData[0].lessonName
-    setLessonName(lessonName)
-    const subLessonListFromLessonData = lessonParsedData
-      .map((lesson) => lesson.subLessonList)
-      .flat()
-    const lessonToEdit = lessonParsedData[lessonId]
-    setSubLessonList(lessonToEdit.subLessonList)
-  }, [])
+
+    if (lessonParsedData && lessonParsedData[lessonId]) {
+      const lesson = lessonParsedData[lessonId]
+      setLessonName(lesson.lessonName)
+      setSubLessonList(lesson.subLessonList)
+    }
+    // const lessonName = lessonParsedData[0].lessonName
+    // setLessonName(lessonName)
+    // const subLessonListFromLessonData = lessonParsedData
+    //   .map((lesson) => lesson.subLessonList)
+    //   .flat()
+    // const lessonToEdit = lessonParsedData[lessonId]
+    // setSubLessonList(lessonToEdit.subLessonList)
+  }, [lessonId])
 
   // console.log(subLessonList)
   const addSubLesson = () => {
