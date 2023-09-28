@@ -162,7 +162,5 @@ addCourseRouter.post('/addcourse', imageCoverUpload, async (req, res) => {
     console.log(error)
   }
 })
-})
 
-export default addCourseRouter
 export default addCourseRouter

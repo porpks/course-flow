@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import './adminAddCourse.css'
+import './adminEditCourse.css'
 import Sidebar from '../Sidebar'
 import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, useFormik } from 'formik'
@@ -10,7 +10,9 @@ import * as Yup from 'yup'
 import UploadVideo from './UploadVideo'
 import UploadImage from './UploadImage'
 import SnackBar from '../SnackBar.jsx'
-function AdminAddCourse() {
+import { useParams } from 'react-router-dom'
+
+function AdminEditCourse() {
   // const history = useHistory()
   const navigate = useNavigate()
   const [image_url, setImage_url] = useState('')
@@ -20,6 +22,19 @@ function AdminAddCourse() {
   const [subLessonData, setSubLessonData] = useState('')
   const [localImg, setLocalImg] = useState('')
   const [localVdo, setLocalVdo] = useState('')
+  const [courseData, setCourseData] = useState([])
+  const { courseid } = useParams()
+  const courseFetching = async () => {
+    try {
+      const result = await axios.get(
+        `http://localhost:4000/ourcourse?course=${searchBox}&start=${start}&end=${end}&desc&`
+      )
+      setCourseData(result.data.data)
+      setIsLoading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleChange = (event) => {
     setValues((prevValues) => ({
@@ -67,25 +82,16 @@ function AdminAddCourse() {
     },
   })
 
-  const courseData = {
-    course_name: formik.values.courseName,
-    price: formik.values.price,
-    total_time: formik.values.totalLearningTime,
-    course_summary: formik.values.courseSummary,
-    course_detail: formik.values.courseDetail,
-    cover_img: image_url,
-    video_trailer: video_url,
-  }
+  // const courseData = {
+  //   course_name: formik.values.courseName,
+  //   price: formik.values.price,
+  //   total_time: formik.values.totalLearningTime,
+  //   course_summary: formik.values.courseSummary,
+  //   course_detail: formik.values.courseDetail,
+  //   cover_img: image_url,
+  //   video_trailer: video_url,
+  // }
 
-  // const lessonData = {
-  //   // lesson_name,
-  // }
-  // const subLessonData = {
-  //   // sublesson_name,
-  //   // sublesson_video,
-  // }
-  // console.log(localImg);
-  // console.log(localVdo);
   const [getImgUrl, setGetImgUrl] = useState('')
   const [getVdoUrl, setGetVdoUrl] = useState('')
 
@@ -139,22 +145,6 @@ function AdminAddCourse() {
         console.error('Error fetching data:', error)
       }
     }
-    // console.log(lessonData)
-    // const intervalId = setInterval(() => {
-    //   const storedImageUrl = localStorage.getItem("image_url");
-    //   const storedVideoUrl = localStorage.getItem("video_url");
-    //   if (storedImageUrl !== image_url) {
-    //     setImage_url(storedImageUrl);
-    //     // console.log("Updated Image URL:", storedImageUrl);
-    //   }
-    //   if (storedVideoUrl !== video_url) {
-    //     setVideo_url(storedVideoUrl);
-    //     // console.log("Updated VDO URL:", storedVideoUrl);
-    //   }
-    // }, 2000);
-
-    // // Clear the interval when the component unmounts
-    // return () => clearInterval(intervalId);
   }, [])
 
   const sendData = async (course) => {
@@ -257,17 +247,43 @@ function AdminAddCourse() {
           </div>
           {/* RIGHT-NAV */}
           <div className="w-full">
-            <div className="topNav  flex  items-center gap-[16px] px-[40px] py-[16px] w-100% bg  ">
-              <div className="H3 flex-1">Add Course</div>
-              <button className="Secondary Shadow1" onClick={navigate(-1)}>
-                Cancel
-              </button>
-              <button
-                className="Primary Shadow1 border-none"
-                onClick={sendData}
-              >
-                Create
-              </button>
+            <div className="topNav  flex  items-center gap-[16px] px-[40px] py-[16px] w-100% bg justify-between ">
+              <div className="flex flex-row justify-center items-center space-x-4">
+                <div
+                  className=""
+                  onClick={() => {
+                    navigate(`/admin/addcourse`)
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M18.7915 11.0051H7.62148L12.5015 6.1251C12.8915 5.7351 12.8915 5.0951 12.5015 4.7051C12.1115 4.3151 11.4815 4.3151 11.0915 4.7051L4.50148 11.2951C4.11148 11.6851 4.11148 12.3151 4.50148 12.7051L11.0915 19.2951C11.4815 19.6851 12.1115 19.6851 12.5015 19.2951C12.8915 18.9051 12.8915 18.2751 12.5015 17.8851L7.62148 13.0051H18.7915C19.3415 13.0051 19.7915 12.5551 19.7915 12.0051C19.7915 11.4551 19.3415 11.0051 18.7915 11.0051Z"
+                      fill="#9AA1B9"
+                    />
+                  </svg>
+                </div>
+                <div className="flex flex-col ">
+                  <div className="flex flex-row Body3 space-x-2 justify-center">
+                    <p className="text-[#9AA1B9] H3">Course</p>
+                    <p>{}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="space-x-4">
+                <button className="Secondary Shadow1">Cancel</button>
+                <button
+                  className="Primary Shadow1 border-none"
+                  onClick={sendData}
+                >
+                  Edit
+                </button>
+              </div>
             </div>
             {/* MIDDLE-AREA */}
             <div className="p-[40px] bg-[--gray100] ">
@@ -402,4 +418,4 @@ function AdminAddCourse() {
     </>
   )
 }
-export default AdminAddCourse
+export default AdminEditCourse
