@@ -181,7 +181,7 @@ function AdminAddCourse() {
       video_trailer: getVdoUrl,
       ...lesson, //เปลี่ยน
     };
-    console.log(updatedCourseData);
+    console.log(updatedCourseData, "sss");
     // try {
     //   const result = await axios.post(
     //     `http://localhost:4000/admin/addcourse`,
