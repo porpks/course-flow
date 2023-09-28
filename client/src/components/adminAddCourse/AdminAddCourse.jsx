@@ -89,16 +89,6 @@ function AdminAddCourse() {
   const [getImgUrl, setGetImgUrl] = useState('')
   const [getVdoUrl, setGetVdoUrl] = useState('')
 
-  if (localImg && localVdo) {
-    const storedImageUrl = localImg
-    const storedVideoUrl = localVdo
-    if (storedImageUrl !== image_url) {
-      setImage_url(storedImageUrl)
-    }
-    if (storedVideoUrl !== video_url) {
-      setVideo_url(storedVideoUrl)
-    }
-  }
 
   useEffect(() => {
     const lessonDataStorage = localStorage.getItem('lesson_data')
@@ -121,6 +111,17 @@ function AdminAddCourse() {
       console.error('Error:', error)
     }
 
+    if (localImg && localVdo) {
+      const storedImageUrl = localImg
+      const storedVideoUrl = localVdo
+      if (storedImageUrl !== image_url) {
+        setImage_url(storedImageUrl)
+      }
+      if (storedVideoUrl !== video_url) {
+        setVideo_url(storedVideoUrl)
+      }
+    }
+
     const storedData = localStorage.getItem('course_data')
     const fetchData = async () => {
       try {
@@ -132,6 +133,8 @@ function AdminAddCourse() {
             totalLearningTime: parsedData.total_time,
             courseSummary: parsedData.course_summary,
             courseDetail: parsedData.course_detail,
+            cover_img: parsedData.image_url,
+            video_trailer: parsedData.video_url
           }
           formik.setValues(courseDataFromLocal)
         }
@@ -155,6 +158,7 @@ function AdminAddCourse() {
 
     // // Clear the interval when the component unmounts
     // return () => clearInterval(intervalId);
+    fetchData()
   }, [])
   // console.log(getImgUrl)
   // console.log(getVdoUrl)
@@ -169,32 +173,30 @@ function AdminAddCourse() {
     // ]
     // console.log(updatedCourseData)
 
-    const updatedCourseData = [
-      {
-        ...courseData,
-        cover_img: getImgUrl,
-        video_trailer: getVdoUrl,
-        ...lessonData,
-      },
-    ]
-    console.log(updatedCourseData)
+    const updatedCourseData =
+    {
+      ...courseData,
+      cover_img: getImgUrl,
+      video_trailer: getVdoUrl,
+      ...lessonData,
+    }
 
-    // try {
-    //   await axios.post(
-    //     `http://localhost:4000/admin/addcourse`,
-    //     updatedCourseData,
-    //     { headers: { 'Content-Type': 'multipart/form-data' } }
-    //   )
-    //   // console.log(updatedCourseData);
-    //   localStorage.removeItem('video_url')
-    //   localStorage.removeItem('image_url')
-    //   formik.resetForm()
-    //   setSubmitData(true)
-    //   displaySnackbar("You've Successfully Added a New Course. 🎉")
-    //   navigate('/admin/courselist')
-    // } catch (error) {
-    //   message: error
-    // }
+    try {
+      const result = await axios.post(
+        `http://localhost:4000/admin/addcourse`,
+        updatedCourseData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      )
+      // //console.log(updatedCourseData);
+      // localStorage.removeItem('video_url')
+      // localStorage.removeItem('image_url')
+      // formik.resetForm()
+      setSubmitData(true)
+      // displaySnackbar("You've Successfully Added a New Course. 🎉")
+      // navigate('/admin/courselist')
+    } catch (error) {
+      console.error(error)
+    }
 
     displaySnackbar("You've Successfully Added a New Course. 🎉")
   }

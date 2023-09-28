@@ -11,6 +11,9 @@ const imageCoverUpload = multerUpload.fields([
 ])
 
 addCourseRouter.post('/addcourse', imageCoverUpload, async (req, res) => {
+
+  const body = req.body;
+
   const courseName = req.body.course_name
   const dataCourse = {
     course_name: req.body?.course_name,
@@ -21,7 +24,8 @@ addCourseRouter.post('/addcourse', imageCoverUpload, async (req, res) => {
     cover_img: req.body.cover_img,
     video_trailer: req.body.video_trailer,
   }
-  console.log(req.files)
+
+
   // UPLOAD FILE IMG
   try {
     if (
@@ -157,6 +161,64 @@ addCourseRouter.post('/addcourse', imageCoverUpload, async (req, res) => {
       //     error_message: error.message,
       //   });
       // }
+      const extractedData = body;
+      const lessons = Object.values(extractedData).filter(item => typeof item === "object");
+      let lessonIdMap = {};
+      let subLessonId = [];
+      let { data: courses, error } = await supabase
+        .from('courses')
+        .select('course_id')
+        .order("course_id", { ascending: false })
+        .limit(1)
+      try {
+        const courseId = courses[0].course_id
+        const insertPromises = lessons.map(async (lesson) => {
+          const lessonName = lesson.lessonName;
+
+
+          const { data: lessonData } = await supabase
+            .from("lessons")
+            .insert({ course_id: courseId, lesson_name: lessonName })
+            .select()
+            .order("lesson_id", { ascending: false });
+
+          if (!lessonData || lessonData.length === 0) {
+            throw new Error("Lesson data is null or empty");
+          }
+
+          const lessonId = lessonData[0].lesson_id;
+          lessonIdMap[lessonId] = [];
+
+
+          if (lesson.subLessonData && Array.isArray(lesson.subLessonData)) {
+            const subLessonInsertPromises = lesson.subLessonData.map(async (subLesson) => {
+              const subLessonName = subLesson.subLessonName;
+              console.log(subLessonName)
+              const { data: subLessonData, error } = await supabase
+                .from("sublessons")
+                .insert([{ lesson_id: lessonId, sublesson_name: subLessonName }])
+                .select("sublesson_id")
+                .order("sublesson_id", { ascending: false });
+
+              subLessonId.push(subLessonData[0].sublesson_id)
+              let subLessonId1 = subLessonData[0].sublesson_id;
+              lessonIdMap[lessonId].push(subLessonId1);
+            });
+
+            await Promise.all(subLessonInsertPromises);
+          }
+        });
+
+        await Promise.all(insertPromises);
+        console.log(lessonIdMap)
+        console.log(subLessonId)
+
+        res.json({ success: true, message: "Lessons and sub-lessons inserted successfully" });
+      } catch (error) {
+        console.error("Error inserting lessons and sub-lessons:", error);
+        res.status(500).json({ error: "Internal server error" });
+      }
+
     }
   } catch (error) {
     console.log(error)
