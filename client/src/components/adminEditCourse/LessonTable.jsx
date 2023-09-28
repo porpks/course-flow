@@ -70,9 +70,9 @@ function LessonTable() {
       <table className=" w-full border-collapse ">
         <tbody>
           <tr className="rounded-lg Body3 flex flex-row bg-[--gray400] text-[--gray800] ">
-            <p className="py-[10px] px-4 w-[500px] pl-[70px] ">Lesson name</p>
-            <p className="py-[10px] px-4 w-[396px]">Sub-lesson</p>
-            <p className="py-[10px] px-6 w-[120px]">Action</p>
+            <th className="py-[10px] px-4 w-[500px] pl-[70px] ">Lesson name</th>
+            <th className="py-[10px] px-4 w-[396px]">Sub-lesson</th>
+            <th className="py-[10px] px-6 w-[120px]">Action</th>
           </tr>
           {lessonData.map((data, index) => (
             <tr key={index} className="bg-white Body2 ">

@@ -234,7 +234,7 @@ function AdminAddCourse() {
 
       // displaySnackbar("You've Successfully Added a New Course. 🎉")
     };
-  };
+
   const handleData = () => {
     localStorage.setItem(`course_data`, JSON.stringify(courseData));
     navigate(`/admin/addcourse/addlesson`);

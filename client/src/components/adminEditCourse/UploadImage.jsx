@@ -5,10 +5,12 @@ function UploadImage(props) {
   const [image, setImage] = useState("");
   const [avatar, setAvatar] = useState({});
   const [avatarUrl, setAvatarUrl] = useState("");
- 
 
   const handleUploadImage = (event) => {
+    displaySnackbar("Your course image upload was a success.");
+
     const imgFile = event.target.files[0];
+
     if (imgFile) {
       const allowedImgTypes = ["image/jpeg", "image/jpg", "image/png"];
 
@@ -17,7 +19,7 @@ function UploadImage(props) {
           const image_url = URL.createObjectURL(imgFile);
           // setGetImgUrl(URL.createObjectURL(imgFile));
           // setAvatar(imgFile);
-          props.setGetImgUrl(imgFile)
+          props.setGetImgUrl(imgFile);
           setAvatarUrl(image_url);
           localStorage.setItem("image_url", image_url);
           props.getUrl(localStorage.getItem("image_url"));
@@ -33,10 +35,11 @@ function UploadImage(props) {
   };
 
   const handleRemoveImage = async () => {
-    setAvatar({});
     setAvatarUrl("");
-    setImage("");
+    props.setGetCoverImg("");
+    // setImage("");
     localStorage.removeItem("image_url");
+    console.log(`Delete`);
   };
 
   function displaySnackbar(message) {
@@ -69,28 +72,37 @@ function UploadImage(props) {
       <SnackBar
         open={openSnackbar}
         onClose={handleClose}
-        severity={"error"}
+        severity={avatarUrl ? "success" : "error"}
         message={snackBarMes}
       />
-      <div className="flex flex-col gap-[6px]">
+      <div className="flex flex-col gap-[6px] mt-[40px]">
         <label className="">Cover image *</label>
         <div className="relative h-fit">
           {/*---------------------- IMG THUMBNAIL UPLOAD -----------------------*/}
-          {!avatarUrl ? (
+          {!props.getCoverImg && !avatarUrl ? (
             <img
               src="../../../public/image/uploadImage.svg"
               className="relative bg-[--gray100] w-[358px] h-[358px] object-cover	rounded-2xl"
             />
           ) : null}
+
           {/*---------------------- IMG  UPLOAD -----------------------*/}
+          {props.getCoverImg ? (
+            <img
+              src={`${props.getCoverImg}`}
+              className="relative w-[calc(357px*1.5)] h-[calc(240px*1.5)] 	rounded-2xl	"
+            />
+          ) : null}
+
           {avatarUrl ? (
             <img
               src={`${avatarUrl}`}
               className="relative w-[calc(357px*1.5)] h-[calc(240px*1.5)] 	rounded-2xl	"
             />
           ) : null}
+
           {/*---------------------- Close X BTN -----------------------*/}
-          {avatarUrl || image ? (
+          {props.getCoverImg || avatarUrl ? (
             <button
               className=" absolute top-0 left-[calc((357px*1.5)-2.5rem)] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
               onClick={handleRemoveImage}
@@ -102,9 +114,10 @@ function UploadImage(props) {
               />
             </button>
           ) : null}
+
           {/*---------------------- UPLOAD BTN -----------------------*/}
-          {!avatarUrl ? (
-            <div className="absolute top-0 left-0 w-[358px] h-[358px] border-[--blue500] border-[3px] rounded-2xl hover:border-dashed   group ">
+          {!props.getCoverImg && !avatarUrl ? (
+            <div className="absolute top-0 left-0  w-[358px] h-[358px]  border-[--blue500] border-[3px] rounded-2xl hover:border-dashed   group ">
               <label
                 htmlFor="upload-img"
                 className="hidden group-hover:block w-full h-full pt-[45px] text-[--blue500] text-center text-xl  cursor-pointer "
@@ -119,6 +132,7 @@ function UploadImage(props) {
               </label>
             </div>
           ) : null}
+
           {/*------------------------------------------------------------*/}
         </div>
       </div>
