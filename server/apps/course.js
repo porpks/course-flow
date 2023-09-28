@@ -145,4 +145,59 @@ courseRouter.delete('/:courseId', async (req, res) => {
   }
 })
 
+courseRouter.put('/:courseId', async (req, res) => {
+  const courseId = req.params.courseId
+  const lessonData = { lesson_name: req.body.lesson_name }
+
+  if (
+    !req.body.course_name ||
+    !req.body.price ||
+    !req.body.total_time ||
+    !req.body.course_summary ||
+    !req.body.course_detail
+  ) {
+    return res.status(400).json({
+      message: 'Please enter all information.',
+    })
+  }
+
+  console.log(req.body)
+  try {
+    const { data, error } = await supabase
+      .from('courses')
+      .update({
+        course_name: req.body.course_name,
+        price: req.body.price,
+        total_time: req.body.total_time,
+        course_summary: req.body.course_summary,
+        course_detail: req.body.course_detail,
+        // image_url: imgUrl,
+        // updated_at: formattedDate1,
+      })
+      .eq('course_id', courseId)
+    if (error) {
+      console.log(error)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+  // try {
+  //   const courseId = req.params.courseId
+  //   const { data, error } = await supabase
+  //     .from('courses')
+  //     .select('*,lessons(*,sublessons(sublesson_name,sublesson_id))')
+  //     .eq('course_id', courseId)
+
+  //   if (error) {
+  //     throw error
+  //   }
+
+  return res.json({
+    message: 'You Course has been update',
+  })
+  // } catch (error) {
+  //   message: error
+  // }
+})
+
 export default courseRouter
