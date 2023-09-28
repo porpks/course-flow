@@ -166,40 +166,40 @@ function AdminAddCourse() {
   // console.log(getVdoUrl)
 
   const sendData = async (course) => {
-    // const updatedCourseData = [
-    //   {
-    //     ...courseData,
-    //     cover_img: getImgUrl,
-    //     video_trailer: getVdoUrl,
-    //   },
-    // ]
-    // console.log(updatedCourseData)
+    const updatedCourseData = [
+      {
+        ...courseData,
+        cover_img: getImgUrl,
+        video_trailer: getVdoUrl,
+      },
+    ]
+    console.log(updatedCourseData)
 
     const updatedCourseData = {
       ...courseData,
       cover_img: getImgUrl,
       video_trailer: getVdoUrl,
-      ...lesson, //เปลี่ยน
+      ...lesson, 
+    }
 
-      // try {
-      //   const result = await axios.post(
-      //     `http://localhost:4000/admin/addcourse`,
-      //     updatedCourseData,
-      //     { headers: { "Content-Type": "multipart/form-data" } }
-      //   );
-      //   // //console.log(updatedCourseData);
-      //   // localStorage.removeItem('video_url')
-      //   // localStorage.removeItem('image_url')
-      //   // formik.resetForm()
-      //   setSubmitData(true);
-      //   // displaySnackbar("You've Successfully Added a New Course. 🎉")
-      //   // navigate('/admin/courselist')
-      // } catch (error) {
-      //   console.error(error);
-      // }
-
-      // displaySnackbar("You've Successfully Added a New Course. 🎉")
+      try {
+        const result = await axios.post(
+          `http://localhost:4000/admin/addcourse`,
+          updatedCourseData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        //console.log(updatedCourseData);
+        localStorage.removeItem('video_url')
+        localStorage.removeItem('image_url')
+        formik.resetForm()
+        setSubmitData(true);
+        // displaySnackbar("You've Successfully Added a New Course. 🎉")
+        // navigate('/admin/courselist')
+      } catch (error) {
+        console.error(error);
+      }
     };
+    displaySnackbar("You've Successfully Added a New Course. 🎉");
   };
   const handleData = () => {
     localStorage.setItem(`course_data`, JSON.stringify(courseData));

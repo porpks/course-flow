@@ -24,7 +24,6 @@ function AddLesson(sharedState, updateState) {
   const [avatarVdo, setAvatarVdo] = useState({});
   const [VdoUrl, setVdoUrl] = useState("");
   const { lesson, setLesson } = useAuth();
-  console.log(subLessonList);
 
   async function getDetailCourse() {
     try {
@@ -73,7 +72,6 @@ function AddLesson(sharedState, updateState) {
   //     setUpdatedLessonId('')
   //   }
   // }, [updatedSubLessonName, updatedLessonId, subLessonList])
-  console.log(subLessonList);
   const addSubLesson = () => {
     const newLessonId = subLessonList.length + 1;
     const newSubLesson = {
@@ -117,13 +115,11 @@ function AddLesson(sharedState, updateState) {
       displaySnackbar("lesson has successfully created! ", "success");
       alert("lesson has successfully created! ");
       const data = [{ lessonName, subLessonList }];
-      console.log(data);
       localStorage.setItem(`lesson_data`, JSON.stringify(data));
     } else if (storage) {
       displaySnackbar("lesson has successfully created! ", "success");
       alert("lesson has successfully created! ");
       const parsedData = JSON.parse(storage);
-      console.log(Array.isArray(parsedData));
       const newData = [...parsedData, { lessonName, subLessonList }];
       localStorage.setItem("lesson_data", JSON.stringify(newData));
 
@@ -136,11 +132,10 @@ function AddLesson(sharedState, updateState) {
         .filter((item) => item.subLessonVideo && item.subLessonVideo !== "")
         .map((item) => item.subLessonVideo);
 
-      const newLesson = lesson
-      newLesson.push({ lessonName, subLessonData, subLessonVideo })
+      const newLesson = lesson;
+      newLesson.push({ lessonName, subLessonData, subLessonVideo });
       setLesson(newLesson);
     }
-    console.log(lesson, "final");
 
     navigate(`/admin/addcourse`);
     // console.log(data)
@@ -161,11 +156,9 @@ function AddLesson(sharedState, updateState) {
   const handleUploadVideo = async (event, subLessonId) => {
     const vdoFile = event.target.files[0];
     const file = JSON.stringify(vdoFile);
-    console.log(event.target.files[0]);
     const fileJsonString = JSON.stringify(file);
     localStorage.setItem("fileData", fileJsonString);
 
-    console.log(vdoFile);
     const updatedSubLessonList = subLessonList.map((subLesson) =>
       subLesson.subLessonId === subLessonId
         ? { ...subLesson, subLessonVideo: vdoFile }
