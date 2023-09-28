@@ -147,7 +147,7 @@ function AdminEditCourse() {
       }
     }
     courseFetching()
-  }, [])
+  }, [courseId])
 
   const onSubmitForm = (e) => {
     e.preventDefault()
