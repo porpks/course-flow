@@ -186,13 +186,7 @@ function AdminAddCourse() {
     // })
     const formData = new FormData()
     for (let key in updatedCourseData) {
-      // if (key === "subLessonVideo") {
-      //   for (let value of updatedCourseData.subLessonVideo) {
-      //     console.log(value);
-      //     formData.append("subLessonVideo", value)
-      //   }
-      // }
-      // else
+
       if (key !== "cover_img" && key !== "video_trailer" && typeof updatedCourseData[key] === "object") {
         formData.append(key, JSON.stringify(updatedCourseData[key]))
         // console.log(updatedCourseData[key].subLessonVideo);
@@ -213,12 +207,12 @@ function AdminAddCourse() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      // localStorage.removeItem('video_url')
-      // localStorage.removeItem('image_url')
-      // formik.resetForm()
+      localStorage.removeItem('video_url')
+      localStorage.removeItem('image_url')
+      formik.resetForm()
       setSubmitData(true);
       // displaySnackbar("You've Successfully Added a New Course. 🎉")
-      // navigate('/admin/courselist')
+      navigate('/admin/courselist')
     } catch (error) {
       console.error(error);
     }
