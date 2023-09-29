@@ -330,7 +330,7 @@ function AdminAddCourse() {
                         onChange={formik.handleChange}
                       />
                       {formik.errors.courseSummary ? (
-                        <div className="text-red-500">
+                        <div className="text-red-500 self-end">
                           {formik.errors.courseSummary}
                         </div>
                       ) : null}
@@ -348,7 +348,7 @@ function AdminAddCourse() {
                         onChange={formik.handleChange}
                       />
                       {formik.errors.courseDetail ? (
-                        <div className="text-red-500">
+                        <div className="text-red-500 self-end">
                           {formik.errors.courseDetail}
                         </div>
                       ) : null}
