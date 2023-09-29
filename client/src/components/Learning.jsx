@@ -163,9 +163,9 @@ function Learning() {
     }
   };
 
-  const handlePause = async (pauseTime) => {
+  const handlePause = async (pausetime) => {
     await axios.put("http://localhost:4000/learn/videotime", {
-      sublesson_video_timestop: pauseTime,
+      sublesson_video_timestop: pausetime,
       sublesson_id: localStorage.getItem("videoKey"),
       user_Id: userId,
     });
@@ -182,11 +182,14 @@ function Learning() {
 
     if (result.data.data[0].sublesson_video_timestop !== null) {
       setPauseTime(result.data.data[0].sublesson_video_timestop);
+      localStorage.setItem(
+        "pauseTime",
+        result.data.data[0].sublesson_video_timestop
+      );
     } else if (result.data.data[0].sublesson_video_timestop === null) {
       setPauseTime(0);
     }
   };
-
   const handleEnd = async () => {
     const sublessonID = localStorage.getItem("videoKey") || videoKey;
 
