@@ -161,11 +161,11 @@ function AuthProvider(props) {
   }
 
   const loginAdmin = async (loginData) => {
+    const response = await axios.post(
+      'http://localhost:4000/authadmin/login',
+      loginData
+    )
     try {
-      const response = await axios.post(
-        'http://localhost:4000/authadmin/login',
-        loginData
-      )
       if (!response.data.error) {
         console.log('Login successful')
         const admin_id = response.data.data[0].admin_id
@@ -183,12 +183,15 @@ function AuthProvider(props) {
             console.error(error)
           }
         }, 50)
+
+        displaySnackbar('login successful', 'success')
         navigate('admin/courselist')
-      } else if (response.data.error.status === 400) {
-        throw new Error(response.data.error)
       }
     } catch (error) {
-      console.error('Error during login:', error.message)
+      displaySnackbar(
+        'Email or password is incorrect. Please try again.',
+        'warning'
+      )
     }
   }
 
