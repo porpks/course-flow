@@ -65,7 +65,6 @@ function AdminAddCourse() {
     },
     validate,
     onSubmit: (values) => {
-      console.log("onSubmit", values);
       alert(JSON.stringify(values, null, 2));
     },
   });
@@ -95,16 +94,13 @@ function AdminAddCourse() {
     const lessonDataStorage = localStorage.getItem("lesson_data");
     try {
       if (lessonDataStorage) {
-        // console.log('have storage')
         const parsedData = JSON.parse(lessonDataStorage);
-        // console.log(parsedData)
         const lessonName = parsedData.lessonName;
         const transformedData = parsedData.map((lesson, index) => ({
           lessonName: lesson.lessonName,
           subLessonData: lesson.subLessonList,
         }));
         const subLessonData = { ...parsedData };
-        // console.log(subLessonData)
 
         setLessonData(transformedData);
       }
@@ -161,8 +157,7 @@ function AdminAddCourse() {
     // return () => clearInterval(intervalId);
     fetchData();
   }, []);
-  // console.log(getImgUrl)
-  // console.log(getVdoUrl)
+
 
   const sendData = async (course) => {
     const updatedCourseData = {
@@ -180,7 +175,6 @@ function AdminAddCourse() {
         typeof updatedCourseData[key] === "object"
       ) {
         formData.append(key, JSON.stringify(updatedCourseData[key]));
-        // console.log(updatedCourseData[key].subLessonVideo);
         for (let value of updatedCourseData[key].subLessonVideo) {
           formData.append("subLessonVideo", value);
         }
@@ -205,29 +199,11 @@ function AdminAddCourse() {
     } catch (error) {
       console.error(error);
     }
-
-    try {
-      const result = await axios.post(
-        `http://localhost:4000/admin/addcourse`,
-        updatedCourseData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      // //console.log(updatedCourseData);
-      // localStorage.removeItem('video_url')
-      // localStorage.removeItem('image_url')
-      // formik.resetForm()
-      setSubmitData(true);
-      // displaySnackbar("You've Successfully Added a New Course. 🎉")
-      // navigate('/admin/courselist')
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  }
 
   const handleData = () => {
     localStorage.setItem(`course_data`, JSON.stringify(courseData));
     navigate(`/admin/addcourse/addlesson`);
-    // console.log(localStorage.getItem(`course_data`))
   };
 
   function displaySnackbar(message) {

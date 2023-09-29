@@ -27,8 +27,6 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
     video_trailer: req.body.video_trailer,
   };
 
-  // console.log(req.files.subLessonVideo);
-  // console.log(subLessonVideos.length)
   // UPLOAD FILE IMG
   try {
     if (
@@ -222,8 +220,7 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
             if (updateSublessonError) {
               console.error("Upload sublesson video failed", subUploadError);
             }
-            // console.log(subLessonId[i]);
-            // console.log(Number(subLessonId[i]));
+
             console.log("update", updateSublessonData);
             console.log("Sublesson data updated successfully");
           } catch (err) {
@@ -249,14 +246,6 @@ addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
   const courseId = req.params.courseId;
   const lessonData = { lesson_name: req.body.lesson_name };
 
-  // console.log(req.params);
-  console.log(req.body);
-  // console.log(req.body.course_name);
-  // console.log(req.body.price);
-  // console.log(req.body.total_time);
-  // console.log(req.body.course_summary);
-  // console.log(req.body.course_detail);
-
   if (
     !req.body.course_name ||
     !req.body.price ||
@@ -268,9 +257,7 @@ addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
       message: "Please enter all information.",
     });
   }
-  console.log(req.files);
-  // console.log(req.files.cover_img.length);
-  // console.log(req.files?.avatar);
+
 
   try {
     if (req.files.cover_img?.length > 0) {
@@ -280,7 +267,6 @@ addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
       const { data: objects, error: err } = await supabase.storage
         .from("test-avatar")
         .list(`imgCover/${courseId}`);
-      console.log(objects);
       if (err) {
         console.error("Error listing objects:", err.message);
       }
@@ -289,7 +275,6 @@ addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
         const { error: errorRemove, data } = await supabase.storage
           .from("test-avatar")
           .remove(`imgCover/${courseId}/${[object.name]}`);
-        // console.log(data);
         if (errorRemove) {
           console.error("Error remove objects:", errorRemove.message);
         }
@@ -311,7 +296,6 @@ addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
       const formattedDate1 =
         now1.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
 
-      console.log(imgUrl);
       try {
         const { data, error } = await supabase
           .from("courses")
@@ -335,7 +319,6 @@ addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
       const { data: objects, error: err } = await supabase.storage
         .from("test-avatar")
         .list(`video_trailer/${courseId}`);
-      console.log(objects);
       if (err) {
         console.error("Error listing objects:", err.message);
       }
@@ -344,7 +327,6 @@ addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
         const { error: errorRemove, data } = await supabase.storage
           .from("test-avatar")
           .remove(`video_trailer/${courseId}/${[object.name]}`);
-        // console.log(data);
         if (errorRemove) {
           console.error("Error remove objects:", errorRemove.message);
         }
@@ -366,7 +348,6 @@ addCourseRouter.put("/:courseId", imageCoverUpload, async (req, res) => {
       const formattedDate1 =
         now1.toISOString().replace(/T/, " ").replace(/\..+/, "") + ".682314+00";
 
-      // console.log(imgUrl);
       try {
         const { data, error } = await supabase
           .from("courses")
