@@ -19,7 +19,6 @@ courseRouter.get("/", async (req, res) => {
       .from("courses")
       .select("*", { count: "exact", head: true });
 
-    console.log(count);
 
     if (course) {
       query.ilike("course_name", `%${course}%`);

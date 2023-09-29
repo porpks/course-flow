@@ -82,7 +82,7 @@ function AuthProvider(props) {
       logout()
     }
 
-    return () => {}
+    return () => { }
   }, [userId])
 
   function clearAllCookies() {
@@ -124,34 +124,43 @@ function AuthProvider(props) {
         'http://localhost:4000/auth/login',
         userData
       )
-      const token = result.data.token
-      // setUserID(result.data.data[0].user_id);
-      setCookie('cookieUserID', result.data.data[0].user_id, 1)
-      setCookie('token', token, 1)
-      localStorage.setItem('isLoggedIn', true)
-      secureLocalStorage.setItem('userID', result.data.data[0].user_id)
-      localStorage.setItem('token', token)
-      // setIsLoggedIn(true);
-      // const response = await axios.get(
-      //   `http://localhost:4000/profile/${userID}`
-      // );
-      setTimeout(async () => {
-        try {
-          const response = await axios.get(
-            `http://localhost:4000/profile/${result.data.data[0].user_id}`
-          )
-          const hasToken = !!localStorage.getItem('token')
-          setUsername(response.data.data)
-          localStorage.setItem('username', response.data.data.full_name)
-          localStorage.setItem('userimage', response.data.data.image_url)
-          localStorage.setItem('isLoggedIn', hasToken ? 'true' : 'false')
-        } catch (error) {
-          console.error(error)
-        }
-      }, 50)
+      console.log(result);
+      if (result.data.message === "Email not confirmed") {
+        displaySnackbar(
+          'Email is not confirmed. Please check you email to verify',
+          'warning'
+        )
+      }
+      else {
+        const token = result.data.token
+        // setUserID(result.data.data[0].user_id);
+        setCookie('cookieUserID', result.data.data[0].user_id, 1)
+        setCookie('token', token, 1)
+        localStorage.setItem('isLoggedIn', true)
+        secureLocalStorage.setItem('userID', result.data.data[0].user_id)
+        localStorage.setItem('token', token)
+        // setIsLoggedIn(true);
+        // const response = await axios.get(
+        //   `http://localhost:4000/profile/${userID}`
+        // );
+        setTimeout(async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:4000/profile/${result.data.data[0].user_id}`
+            )
+            const hasToken = !!localStorage.getItem('token')
+            setUsername(response.data.data)
+            localStorage.setItem('username', response.data.data.full_name)
+            localStorage.setItem('userimage', response.data.data.image_url)
+            localStorage.setItem('isLoggedIn', hasToken ? 'true' : 'false')
+          } catch (error) {
+            console.error(error)
+          }
+        }, 50)
 
-      displaySnackbar('login successful', 'success')
-      navigate('/ourcourse')
+        displaySnackbar('login successful', 'success')
+        navigate('/ourcourse')
+      }
     } catch (error) {
       displaySnackbar(
         'Email or password is incorrect. Please try again.',
