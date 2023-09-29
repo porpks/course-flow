@@ -51,10 +51,11 @@ function Register() {
         setOpenSnackBar(true)
       } else {
         setSnackbarMes("register success check you email to verify")
+        setSnackbarSeverity("success")
         setOpenSnackBar(true)
         setTimeout(() => {
           navigate("/login");
-        }, 1000);
+        }, 2000);
       }
 
     } catch (error) {
