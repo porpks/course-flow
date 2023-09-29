@@ -5,7 +5,6 @@ function UploadImage(props) {
   const [image, setImage] = useState("");
   const [avatar, setAvatar] = useState({});
   const [avatarUrl, setAvatarUrl] = useState("");
- 
 
   const handleUploadImage = (event) => {
     const imgFile = event.target.files[0];
@@ -17,7 +16,7 @@ function UploadImage(props) {
           const image_url = URL.createObjectURL(imgFile);
           // setGetImgUrl(URL.createObjectURL(imgFile));
           // setAvatar(imgFile);
-          props.setGetImgUrl(imgFile)
+          props.setGetImgUrl(imgFile);
           setAvatarUrl(image_url);
           localStorage.setItem("image_url", image_url);
           props.getUrl(localStorage.getItem("image_url"));
@@ -93,8 +92,7 @@ function UploadImage(props) {
           {avatarUrl || image ? (
             <button
               className=" absolute top-0 left-[calc((357px*1.5)-2.5rem)] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
-              onClick={handleRemoveImage}
-            >
+              onClick={handleRemoveImage}>
               <img
                 src="../../../public/image/closeIcon.svg"
                 alt=""
@@ -107,8 +105,7 @@ function UploadImage(props) {
             <div className="absolute top-0 left-0 w-[358px] h-[358px] border-[--blue500] border-[3px] rounded-2xl hover:border-dashed   group ">
               <label
                 htmlFor="upload-img"
-                className="hidden group-hover:block w-full h-full pt-[45px] text-[--blue500] text-center text-xl  cursor-pointer "
-              >
+                className="hidden group-hover:block w-full h-full pt-[45px] text-[--blue500] text-center text-xl  cursor-pointer ">
                 <input
                   id="upload-img"
                   name="avatar"

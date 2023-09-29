@@ -102,8 +102,7 @@ function UploadVideo(props) {
           {VdoUrl || vdo ? (
             <button
               className=" absolute top-[22px] left-[698px] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
-              onClick={handleRemoveVdo}
-            >
+              onClick={handleRemoveVdo}>
               <img
                 src="../../../public/image/closeIcon.svg"
                 alt=""
@@ -117,8 +116,7 @@ function UploadVideo(props) {
             <div className="absolute top-0 left-0 w-[358px] h-[358px] border-[--blue500] border-[3px] rounded-2xl hover:border-dashed   group ">
               <label
                 htmlFor="video-upload"
-                className="hidden group-hover:block w-full h-full pt-[45px] rounded-full  cursor-pointer "
-              >
+                className="hidden group-hover:block w-full h-full pt-[45px] rounded-full  cursor-pointer ">
                 <input
                   id="video-upload"
                   name="video"

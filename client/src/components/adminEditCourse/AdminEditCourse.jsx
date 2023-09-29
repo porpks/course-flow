@@ -399,8 +399,7 @@ function AdminEditCourse() {
                   className="Primary Shadow1 px-[32px] py-[18px] justify-center border-none"
                   onClick={() => {
                     handleData();
-                  }}
-                >
+                  }}>
                   + Add Lesson
                 </button> */}
               </div>
