@@ -50,24 +50,24 @@ function AdminEditCourse() {
   const validate = (values) => {
     const errors = {}
     if (!values.courseName) {
-      errors.courseName = 'Required'
+      errors.courseName = '* Required'
     } else if (values.courseName.length > 15) {
       errors.courseName = 'Must be 15 characters or less'
     }
     if (!values.price) {
-      errors.price = 'Required'
+      errors.price = '* Required'
     }
     if (!values.totalLearningTime) {
-      errors.totalLearningTime = 'Required'
+      errors.totalLearningTime = '* Required'
     }
     if (!values.courseSummary) {
-      errors.courseSummary = 'Required'
-    } else if (values.courseSummary.length > 15) {
+      errors.courseSummary = '* Required'
+    } else if (values.courseSummary.length < 15) {
       errors.courseSummary = 'Must be more than 15 characters'
     }
     if (!values.courseDetail) {
-      errors.courseDetail = 'Required'
-    } else if (values.courseDetail.length > 15) {
+      errors.courseDetail = '* Required'
+    } else if (values.courseDetail.length < 15) {
       errors.courseDetail = 'Must be more than 15 characters'
     }
     return errors
@@ -302,7 +302,9 @@ function AdminEditCourse() {
                         onChange={formik.handleChange}
                       />
                       {formik.errors.courseName ? (
-                        <div>{formik.errors.courseName}</div>
+                        <div className="text-red-500 self-end pt-2">
+                          {formik.errors.courseName}
+                        </div>
                       ) : null}
                     </div>
                     <div className="flex gap-[80px] ">
@@ -320,7 +322,9 @@ function AdminEditCourse() {
                           onChange={formik.handleChange}
                         />
                         {formik.errors.price ? (
-                          <div>{formik.errors.price}</div>
+                          <div className="text-red-500 self-end pt-2">
+                            {formik.errors.price}
+                          </div>
                         ) : null}
                       </div>
                       <div className="flex flex-col flex-1 gap-[4px]">
@@ -335,7 +339,9 @@ function AdminEditCourse() {
                           onChange={formik.handleChange}
                         />{' '}
                         {formik.errors.totalLearningTime ? (
-                          <div>{formik.errors.totalLearningTime}</div>
+                          <div className="text-red-500 self-end pt-2">
+                            {formik.errors.totalLearningTime}
+                          </div>
                         ) : null}
                       </div>
                     </div>
@@ -352,7 +358,9 @@ function AdminEditCourse() {
                         onChange={formik.handleChange}
                       />
                       {formik.errors.courseSummary ? (
-                        <div>{formik.errors.courseSummary}</div>
+                        <div className="text-red-500 self-end pt-2">
+                          {formik.errors.courseSummary}
+                        </div>
                       ) : null}
                     </div>
                     <div className="flex flex-col gap-[4px]">
@@ -368,7 +376,9 @@ function AdminEditCourse() {
                         onChange={formik.handleChange}
                       />
                       {formik.errors.courseDetail ? (
-                        <div>{formik.errors.courseDetail}</div>
+                        <div className="text-red-500 self-end pt-2">
+                          {formik.errors.courseDetail}
+                        </div>
                       ) : null}
                     </div>
 
