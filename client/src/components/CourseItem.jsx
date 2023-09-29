@@ -7,7 +7,7 @@ function CourseItem(props) {
     <>
       <div
 
-        className=" Shadow1 w-[357px]  bg-[--white] rounded-t-[8px] no-underline  flex flex-col justify-between"
+        className="cardItem Shadow1 w-[357px]  bg-[--white] rounded-t-[8px] no-underline  flex flex-col justify-between "
         onClick={props.onClick}
       >
         <div className="topCard flex justify-center items-center rounded-t-lg  bg-red-300 ">
