@@ -124,7 +124,6 @@ function AuthProvider(props) {
         'http://localhost:4000/auth/login',
         userData
       )
-      console.log(result);
       if (result.data.message === "Email not confirmed") {
         displaySnackbar(
           'Email is not confirmed. Please check you email to verify',
