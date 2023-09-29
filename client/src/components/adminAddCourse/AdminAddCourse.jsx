@@ -22,7 +22,9 @@ function AdminAddCourse() {
   const [subLessonData, setSubLessonData] = useState("");
   const [localImg, setLocalImg] = useState("");
   const [localVdo, setLocalVdo] = useState("");
-  const { lesson } = useAuth();
+  const { lesson, getImgUrl, setGetImgUrl, getVdoUrl, setGetVdoUrl } = useAuth();
+  // const [getImgUrl, setGetImgUrl] = useState("");
+  // const [getVdoUrl, setGetVdoUrl] = useState("");
 
   const handleChange = (event) => {
     setValues((prevValues) => ({
@@ -86,9 +88,6 @@ function AdminAddCourse() {
   //   // sublesson_name,
   //   // sublesson_video,
   // }
-
-  const [getImgUrl, setGetImgUrl] = useState("");
-  const [getVdoUrl, setGetVdoUrl] = useState("");
 
   useEffect(() => {
     const lessonDataStorage = localStorage.getItem("lesson_data");
@@ -182,7 +181,6 @@ function AdminAddCourse() {
         formData.append(key, updatedCourseData[key]);
       }
     }
-
     try {
       const result = await axios.post(
         `http://localhost:4000/admin/addcourse`,

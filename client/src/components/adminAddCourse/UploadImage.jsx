@@ -1,10 +1,14 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
 import SnackBar from "../SnackBar.jsx";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 
 function UploadImage(props) {
   const [image, setImage] = useState("");
   const [avatar, setAvatar] = useState({});
-  const [avatarUrl, setAvatarUrl] = useState("");
+  // const [avatarUrl, setAvatarUrl] = useState("");
+  const { adminImageUrl, setAdminImageUrl } = useAuth()
+
 
   const handleUploadImage = (event) => {
     const imgFile = event.target.files[0];
@@ -17,7 +21,7 @@ function UploadImage(props) {
           // setGetImgUrl(URL.createObjectURL(imgFile));
           // setAvatar(imgFile);
           props.setGetImgUrl(imgFile);
-          setAvatarUrl(image_url);
+          setAdminImageUrl(image_url);
           localStorage.setItem("image_url", image_url);
           props.getUrl(localStorage.getItem("image_url"));
         } else {
@@ -33,7 +37,7 @@ function UploadImage(props) {
 
   const handleRemoveImage = async () => {
     setAvatar({});
-    setAvatarUrl("");
+    setAdminImageUrl("");
     setImage("");
     localStorage.removeItem("image_url");
   };
@@ -58,7 +62,7 @@ function UploadImage(props) {
 
   useEffect(() => {
     if (props.submitData) {
-      setAvatarUrl("");
+      setAdminImageUrl("");
     }
   }, [props.submitData]);
 
@@ -75,21 +79,21 @@ function UploadImage(props) {
         <label className="">Cover image *</label>
         <div className="relative h-fit">
           {/*---------------------- IMG THUMBNAIL UPLOAD -----------------------*/}
-          {!avatarUrl ? (
+          {!adminImageUrl ? (
             <img
               src="../../../public/image/uploadImage.svg"
               className="relative bg-[--gray100] w-[358px] h-[358px] object-cover	rounded-2xl"
             />
           ) : null}
           {/*---------------------- IMG  UPLOAD -----------------------*/}
-          {avatarUrl ? (
+          {adminImageUrl ? (
             <img
-              src={`${avatarUrl}`}
+              src={`${adminImageUrl}`}
               className="relative w-[calc(357px*1.5)] h-[calc(240px*1.5)] 	rounded-2xl	"
             />
           ) : null}
           {/*---------------------- Close X BTN -----------------------*/}
-          {avatarUrl || image ? (
+          {adminImageUrl || image ? (
             <button
               className=" absolute top-0 left-[calc((357px*1.5)-2.5rem)] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
               onClick={handleRemoveImage}>
@@ -101,7 +105,7 @@ function UploadImage(props) {
             </button>
           ) : null}
           {/*---------------------- UPLOAD BTN -----------------------*/}
-          {!avatarUrl ? (
+          {!adminImageUrl ? (
             <div className="absolute top-0 left-0 w-[358px] h-[358px] border-[--blue500] border-[3px] rounded-2xl hover:border-dashed   group ">
               <label
                 htmlFor="upload-img"

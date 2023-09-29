@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
 import SnackBar from "../SnackBar.jsx";
+import { useAuth } from "../../contexts/AuthContext.jsx";
+
 
 function UploadVideo(props) {
   const [vdo, setVdo] = useState("");
   const [avatarVdo, setAvatarVdo] = useState({});
-  const [VdoUrl, setVdoUrl] = useState("");
+  // const [VdoUrl, setVdoUrl] = useState("");
+  const { adminVideoUrl, setAdminVideoUrl } = useAuth()
 
-  //   console.log(`VDO : ${avatarVdo}`);
-  //   console.log(`VDO URL : ${VdoUrl}`);
 
   const handleUploadVideo = async (event) => {
     const vdoFile = event.target.files[0];
@@ -24,7 +25,7 @@ function UploadVideo(props) {
         if (vdoFile.size <= 20 * 1024 * 1024) {
           const video_url = URL.createObjectURL(vdoFile);
           props.setGetVdoUrl(vdoFile);
-          setVdoUrl(URL.createObjectURL(vdoFile));
+          setAdminVideoUrl(URL.createObjectURL(vdoFile));
           localStorage.setItem("video_url", video_url);
           props.getUrl(localStorage.getItem("video_url"));
         } else {
@@ -40,7 +41,7 @@ function UploadVideo(props) {
 
   const handleRemoveVdo = async () => {
     setAvatarVdo({});
-    setVdoUrl("");
+    setAdminVideoUrl("");
     setVdo("");
     localStorage.removeItem("video_url");
     // await axios.put(`http://localhost:4000/profile/delete/${userId}`);
@@ -64,7 +65,7 @@ function UploadVideo(props) {
 
   useEffect(() => {
     if (props.submitData) {
-      setVdoUrl("");
+      setAdminVideoUrl("");
     }
   }, [props.submitData]);
   return (
@@ -79,17 +80,17 @@ function UploadVideo(props) {
         <label className="">Video Trailer *</label>
         <div className="relative ">
           {/*---------------------- IMG THUMBNAIL UPLOAD -----------------------*/}
-          {VdoUrl || vdo ? null : (
+          {adminVideoUrl || vdo ? null : (
             <img
               src="../../../public/image/uploadVdo.svg"
               className="relative w-[358px] h-[358px] object-cover rounded-2xl	"
             />
           )}
           {/*---------------------- VDO PLAYER -----------------------*/}
-          {VdoUrl || vdo ? (
+          {adminVideoUrl || vdo ? (
             <div className="vdo-preview rounded-[8px] w-[739px] h-[460px] cursor-pointer ">
               <ReactPlayer
-                url={`${VdoUrl}`}
+                url={`${adminVideoUrl}`}
                 width="100%"
                 height="100%"
                 controls={true}
@@ -99,7 +100,7 @@ function UploadVideo(props) {
             </div>
           ) : null}
           {/*---------------------- Close X BTN -----------------------*/}
-          {VdoUrl || vdo ? (
+          {adminVideoUrl || vdo ? (
             <button
               className=" absolute top-[22px] left-[698px] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
               onClick={handleRemoveVdo}>
@@ -112,7 +113,7 @@ function UploadVideo(props) {
           ) : null}
           {/*---------------------- UPLOAD BTN -----------------------*/}
 
-          {!VdoUrl ? (
+          {!adminVideoUrl ? (
             <div className="absolute top-0 left-0 w-[358px] h-[358px] border-[--blue500] border-[3px] rounded-2xl hover:border-dashed   group ">
               <label
                 htmlFor="video-upload"

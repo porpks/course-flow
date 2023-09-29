@@ -30,6 +30,11 @@ function AuthProvider(props) {
   });
   const [lesson, setLesson] = useState([]);
 
+  const [adminImageUrl, setAdminImageUrl] = useState("");
+  const [adminVideoUrl, setAdminVideoUrl] = useState("");
+  const [getImgUrl, setGetImgUrl] = useState("");
+  const [getVdoUrl, setGetVdoUrl] = useState("");
+
   const userIdFromCookie = getCookie("cookieUserID");
   const userId = secureLocalStorage.getItem("userID");
   const navigate = useNavigate();
@@ -76,7 +81,7 @@ function AuthProvider(props) {
       logout();
     }
 
-    return () => {};
+    return () => { };
   }, [userId]);
 
   function clearAllCookies() {
@@ -246,6 +251,14 @@ function AuthProvider(props) {
           logoutAdmin,
           lesson,
           setLesson,
+          adminImageUrl,
+          setAdminImageUrl,
+          adminVideoUrl,
+          setAdminVideoUrl,
+          getImgUrl,
+          setGetImgUrl,
+          getVdoUrl,
+          setGetVdoUrl,
         }}>
         {props.children}
       </AuthContext.Provider>
