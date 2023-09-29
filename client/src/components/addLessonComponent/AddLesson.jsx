@@ -25,6 +25,16 @@ function AddLesson(sharedState, updateState) {
   const [VdoUrl, setVdoUrl] = useState("");
   const { lesson, setLesson } = useAuth();
 
+  const filterSublesson = subLessonList.filter(
+    (item) => item.subLessonName === ""
+  );
+  const isSublessonEmpty = filterSublesson.length > 0;
+
+  const filterVdo = subLessonList.filter(
+    (item) => item.subLessonVideo === null
+  );
+  const isVdoEmpty = filterVdo.length > 0;
+
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
@@ -85,7 +95,6 @@ function AddLesson(sharedState, updateState) {
   const deleteSubLesson = (lessonIdToDelete) => {
     if (subLessonList.length === 1) {
       SnackBar("You can't delete the last sub-lesson.", "warning");
-      alert("You can't delete the last sub-lesson.");
       return;
     }
     const updatedSubLessonList = subLessonList.filter(
@@ -113,15 +122,28 @@ function AddLesson(sharedState, updateState) {
 
     if (!storage) {
       displaySnackbar("lesson has successfully created! ", "success");
-      alert("lesson has successfully created! ");
       const data = [{ lessonName, subLessonList }];
       localStorage.setItem(`lesson_data`, JSON.stringify(data));
     } else if (storage) {
       displaySnackbar("lesson has successfully created! ", "success");
-      alert("lesson has successfully created! ");
       const parsedData = JSON.parse(storage);
       const newData = [...parsedData, { lessonName, subLessonList }];
       localStorage.setItem("lesson_data", JSON.stringify(newData));
+
+      if (!lessonName) {
+        displaySnackbar("Please enter a name for the lesson.", "warning");
+        return;
+      }
+
+      if (isSublessonEmpty) {
+        displaySnackbar("Please enter a name for the sub-lesson.", "warning");
+        return;
+      }
+
+      if (isVdoEmpty) {
+        displaySnackbar("Please upload videos for the sub-lesson.", "warning");
+        return;
+      }
 
       const subLessonData = subLessonList.map((item) => ({
         subLessonId: item.subLessonId,
@@ -283,7 +305,7 @@ function AddLesson(sharedState, updateState) {
               <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{" "}
               {subLessonList.map((subLesson, index) => {
                 return (
-                  <div key={index} >
+                  <div key={index}>
                     <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
                       <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
                         <DragIndicatorIcon
@@ -308,7 +330,10 @@ function AddLesson(sharedState, updateState) {
                           className="Body2 Input w-[530px] h-[48px] mb-10 p"
                           value={subLesson.subLessonName}
                           onChange={(e) =>
-                            handleSubLesson(subLesson.subLessonId, e.target.value)
+                            handleSubLesson(
+                              subLesson.subLessonId,
+                              e.target.value
+                            )
                           }
                         />
                         <p className="Body2 pb-1">Video*</p>
@@ -327,12 +352,14 @@ function AddLesson(sharedState, updateState) {
                               {subLesson.subLessonVideo ? (
                                 <div className="vdo-preview rounded-[8px] w-[739px] h-[460px] cursor-pointer ">
                                   <ReactPlayer
-                                    url={URL.createObjectURL(subLesson.subLessonVideo)}
+                                    url={URL.createObjectURL(
+                                      subLesson.subLessonVideo
+                                    )}
                                     width="100%"
                                     height="100%"
                                     controls={true}
-                                  // light={true}
-                                  // playIcon={"../public/image/playIcon.svg"}
+                                    // light={true}
+                                    // playIcon={"../public/image/playIcon.svg"}
                                   />
                                   {subLesson.subLessonVideo ? (
                                     <button
@@ -377,7 +404,7 @@ function AddLesson(sharedState, updateState) {
                       </div>
                     </div>
                   </div>
-                )
+                );
               })}
               <button
                 className="Secondary w-fit mb-[60px] mt-3"
@@ -386,8 +413,8 @@ function AddLesson(sharedState, updateState) {
               </button>
             </div>
           </div>
-        </form >
-      </div >
+        </form>
+      </div>
     </>
   );
 }
