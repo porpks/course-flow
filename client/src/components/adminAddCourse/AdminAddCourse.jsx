@@ -40,7 +40,7 @@ function AdminAddCourse() {
       errors.courseName = 'Must be 15 characters or less'
     }
     if (!values.price) {
-      errors.price = '* Required'
+      errors.price = '*Required'
     }
     if (!values.totalLearningTime) {
       errors.totalLearningTime = '* Required'
