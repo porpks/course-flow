@@ -1,11 +1,12 @@
-import React from "react";
-import "./courseItem.css";
-import { Link } from "react-router-dom";
+import React from 'react'
+import './courseItem.css'
+import { Link } from 'react-router-dom'
 
 function CourseItem(props) {
   return (
     <>
       <div
+
         className=" Shadow1 w-[357px]  bg-[--white] rounded-t-[8px] no-underline  flex flex-col justify-between"
         onClick={props.onClick}
       >
@@ -17,15 +18,16 @@ function CourseItem(props) {
           />
         </div>
         <div className="bodyCard w-full h-[190px]  my-[24px] mx-0 pt-0 px-[16px] pb-[16px] ">
+
           <div className="border border-sky-500">
             <p className="Body3 text-[--orange500]">Course</p>
             <h2 className="H3 text-[#000] py-[8px]">{props.coursename}</h2>
             <p className="Body2 text-[--gray700]">
               {props.coursedetail
                 ? props.coursedetail.length > 65
-                  ? props.coursedetail.slice(0, 65) + " ..."
+                  ? props.coursedetail.slice(0, 65) + ' ...'
                   : props.coursedetail
-                : ""}
+                : ''}
             </p>
           </div>
         </div>
@@ -48,7 +50,7 @@ function CourseItem(props) {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default CourseItem;
+export default CourseItem

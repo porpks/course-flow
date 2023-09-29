@@ -1,47 +1,29 @@
 import React, { useState } from 'react'
 import CourseFlowIcon from '../../assets/CourseFlowIcon'
-import axios from 'axios'
-import Login from '../Login'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext.jsx'
 
 function AdminLogin() {
-  const navigate = useNavigate()
-  const [adminId, setAdminId] = useState(null)
-  // const [login, isLoggedIn] = useState(false)
   const { loginAdmin } = useAuth()
   const [loginData, setLoginData] = useState({
     email: null,
     password: null,
   })
+  const [loginError, setLoginError] = useState(null)
 
-  const handleLogin = async (loginData) => {
-    try {
-      const response = await axios.post(
-        'http://localhost:4000/authadmin/login',
-        loginData
-      )
-      console.log(response)
-      if (!response.data.error) {
-        console.log('Login successful')
-        console.log(response)
-        const admin_id = response.data.data[0].admin_id
-        setAdminId(admin_id)
-        localStorage.setItem('adminID', admin_id)
-      } else if (response.data.error.status === 400) {
-        throw new Error('Invalid login credentials')
-      }
-    } catch (error) {
-      console.error('Error during login:', error.message)
-    }
-  }
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     if (!loginData.email || !loginData.password) {
       alert('nodata')
     } else {
-      loginAdmin(loginData)
+      try {
+        await loginAdmin(loginData) // Attempt to login
+        // Handle successful login (you can navigate the user or show a success message)
+      } catch (error) {
+        // Handle login error
+        setLoginError(error.message) // Set the error message in state
+        console.log(error.message)
+      }
     }
   }
   return (
