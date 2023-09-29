@@ -281,102 +281,104 @@ function AddLesson(sharedState, updateState) {
               </div>
               <hr />
               <p className="Body1 my-10 text-[#646D89]">Sub-Lesson</p>{" "}
-              {subLessonList.map((subLesson, index) => (
-                <div key={index}>
-                  <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
-                    <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
-                      <DragIndicatorIcon
-                        style={{ fontSize: 24, color: "#C8CCDB" }}
-                        className="hover:cursor-pointer"
-                      />
-                    </div>
-                    <div className="flex flex-col w-full">
-                      <div className="flex flex-row justify-between">
-                        <p className="Body2 pb-1">Sub-lesson name*</p>
-                        <button
-                          className="Ghost hover:cursor-pointer text-blue-500"
-                          onClick={() =>
-                            deleteSubLesson(subLesson.subLessonId)
-                          }>
-                          Delete
-                        </button>
+              {subLessonList.map((subLesson, index) => {
+                return (
+                  <div key={index} >
+                    <div className="my-[12px] flex flex-row bg-[#F6F7FC] px-4 py-6">
+                      <div className="w-[26px] h-[76px] mr-6 flex justify- items-center">
+                        <DragIndicatorIcon
+                          style={{ fontSize: 24, color: "#C8CCDB" }}
+                          className="hover:cursor-pointer"
+                        />
                       </div>
-                      <input
-                        type="text"
-                        name="sub-lesson-name"
-                        className="Body2 Input w-[530px] h-[48px] mb-10 p"
-                        value={subLesson.subLessonName}
-                        onChange={(e) =>
-                          handleSubLesson(subLesson.subLessonId, e.target.value)
-                        }
-                      />
-                      <p className="Body2 pb-1">Video*</p>
+                      <div className="flex flex-col w-full">
+                        <div className="flex flex-row justify-between">
+                          <p className="Body2 pb-1">Sub-lesson name*</p>
+                          <button
+                            className="Ghost hover:cursor-pointer text-blue-500"
+                            onClick={() =>
+                              deleteSubLesson(subLesson.subLessonId)
+                            }>
+                            Delete
+                          </button>
+                        </div>
+                        <input
+                          type="text"
+                          name="sub-lesson-name"
+                          className="Body2 Input w-[530px] h-[48px] mb-10 p"
+                          value={subLesson.subLessonName}
+                          onChange={(e) =>
+                            handleSubLesson(subLesson.subLessonId, e.target.value)
+                          }
+                        />
+                        <p className="Body2 pb-1">Video*</p>
 
-                      <div>
-                        <div className="flex flex-col gap-[6px]">
-                          <div className="relative ">
-                            {/*---------------------- IMG THUMBNAIL UPLOAD -----------------------*/}
-                            {!subLesson.subLessonVideo ? (
-                              <img
-                                src="../../public/image/uploadVdo.svg"
-                                className="relative w-[250px] h-[250px] object-cover rounded-2xl"
-                              />
-                            ) : null}
-                            {/*---------------------- VDO PLAYER -----------------------*/}
-                            {subLesson.subLessonVideo ? (
-                              <div className="vdo-preview rounded-[8px] w-[739px] h-[460px] cursor-pointer ">
-                                <ReactPlayer
-                                  url={subLesson.subLessonVideo}
-                                  width="100%"
-                                  height="100%"
-                                  controls={true}
-                                  // light={dataDetail.cover_img}
-                                  playIcon={"../public/image/playIcon.svg"}
+                        <div>
+                          <div className="flex flex-col gap-[6px]">
+                            <div className="relative ">
+                              {/*---------------------- IMG THUMBNAIL UPLOAD -----------------------*/}
+                              {!subLesson.subLessonVideo ? (
+                                <img
+                                  src="../../public/image/uploadVdo.svg"
+                                  className="relative w-[250px] h-[250px] object-cover rounded-2xl"
                                 />
-                                {subLesson.subLessonVideo ? (
-                                  <button
-                                    className="absolute top-[22px] left-[698px] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
-                                    onClick={() =>
-                                      handleRemoveVdo(subLesson.subLessonId)
-                                    }>
-                                    <img
-                                      src="../../public/image/closeIcon.svg"
-                                      alt=""
-                                      className="w-[10px] h-[10px]"
-                                    />
-                                  </button>
-                                ) : null}
-                              </div>
-                            ) : null}
-                            {/*---------------------- UPLOAD BTN -----------------------*/}
-                            {!subLesson.subLessonVideo ? (
-                              <div className="absolute top-0 left-0 w-[250px] h-[250px] border-[2px] border-[--gray300] border-solid rounded-2xl hover:border-dashed  hover:border-[--blue500] hover:border-[3px]   group ">
-                                <label
-                                  htmlFor={`video-upload-${subLesson.subLessonId}`}
-                                  className="hidden group-hover:block w-full h-full pt-[45px] rounded-full  cursor-pointer ">
-                                  <input
-                                    id={`video-upload-${subLesson.subLessonId}`}
-                                    name={`video-upload-${index}`}
-                                    type="file"
-                                    onChange={(e) =>
-                                      handleUploadVideo(
-                                        e,
-                                        subLesson.subLessonId
-                                      )
-                                    }
-                                    hidden
+                              ) : null}
+                              {/*---------------------- VDO PLAYER -----------------------*/}
+                              {subLesson.subLessonVideo ? (
+                                <div className="vdo-preview rounded-[8px] w-[739px] h-[460px] cursor-pointer ">
+                                  <ReactPlayer
+                                    url={URL.createObjectURL(subLesson.subLessonVideo)}
+                                    width="100%"
+                                    height="100%"
+                                    controls={true}
+                                  // light={true}
+                                  // playIcon={"../public/image/playIcon.svg"}
                                   />
-                                </label>
-                              </div>
-                            ) : null}
-                            {/*------------------------------------------------------------*/}
+                                  {subLesson.subLessonVideo ? (
+                                    <button
+                                      className="absolute top-[22px] left-[698px] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
+                                      onClick={() =>
+                                        handleRemoveVdo(subLesson.subLessonId)
+                                      }>
+                                      <img
+                                        src="../../public/image/closeIcon.svg"
+                                        alt=""
+                                        className="w-[10px] h-[10px]"
+                                      />
+                                    </button>
+                                  ) : null}
+                                </div>
+                              ) : null}
+                              {/*---------------------- UPLOAD BTN -----------------------*/}
+                              {!subLesson.subLessonVideo ? (
+                                <div className="absolute top-0 left-0 w-[250px] h-[250px] border-[2px] border-[--gray300] border-solid rounded-2xl hover:border-dashed  hover:border-[--blue500] hover:border-[3px]   group ">
+                                  <label
+                                    htmlFor={`video-upload-${subLesson.subLessonId}`}
+                                    className="hidden group-hover:block w-full h-full pt-[45px] rounded-full  cursor-pointer ">
+                                    <input
+                                      id={`video-upload-${subLesson.subLessonId}`}
+                                      name={`video-upload-${index}`}
+                                      type="file"
+                                      onChange={(e) =>
+                                        handleUploadVideo(
+                                          e,
+                                          subLesson.subLessonId
+                                        )
+                                      }
+                                      hidden
+                                    />
+                                  </label>
+                                </div>
+                              ) : null}
+                              {/*------------------------------------------------------------*/}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
               <button
                 className="Secondary w-fit mb-[60px] mt-3"
                 onClick={addSubLesson}>
@@ -384,8 +386,8 @@ function AddLesson(sharedState, updateState) {
               </button>
             </div>
           </div>
-        </form>
-      </div>
+        </form >
+      </div >
     </>
   );
 }
