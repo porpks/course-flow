@@ -20,6 +20,7 @@ courseRouter.get("/", async (req, res) => {
       .select("*", { count: "exact", head: true })
       .ilike("course_name", `%${course}%`);
 
+
     if (course) {
       query.ilike("course_name", `%${course}%`);
     }

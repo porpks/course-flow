@@ -1,83 +1,83 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import "../components/Assignment.css";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useAuth } from "../contexts/AuthContext";
-import CircularIndeterminate from "../assets/loadingProgress";
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import '../components/Assignment.css'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import { useAuth } from '../contexts/AuthContext'
+import CircularIndeterminate from '../assets/loadingProgress'
 function AssignmentPage() {
-  const { userId } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [selectedFilter, setSelectedFilter] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [answers, setAnswers] = useState([]);
+  const { userId } = useAuth()
+  const [isLoading, setIsLoading] = useState(true)
+  const [data, setData] = useState([])
+  const [selectedFilter, setSelectedFilter] = useState('All')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [answers, setAnswers] = useState([])
 
   useEffect(() => {
     const getAssignmentData = async () => {
-      setIsLoading(true);
+      setIsLoading(true)
       try {
         const response = await axios.get(
           `http://localhost:4000/assignment/${userId}`
-        );
-        setData(response.data.data);
+        )
+        setData(response.data.data)
 
         const initialAnswers = response.data.data.map((assignment) => ({
           assignment_id: assignment.assignment_id,
-          assignment_answer: assignment.assignment_answer || "",
+          assignment_answer: assignment.assignment_answer || '',
           assignment_status: assignment.assignment_status,
-        }));
-        setAnswers(initialAnswers);
-        setIsLoading(false);
+        }))
+        setAnswers(initialAnswers)
+        setIsLoading(false)
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error)
       }
-    };
+    }
 
-    getAssignmentData();
-  }, [currentPage]);
+    getAssignmentData()
+  }, [currentPage])
 
-  const pageSize = 4;
+  const pageSize = 4
 
   const prevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      setCurrentPage(currentPage - 1)
     }
-  };
+  }
   const nextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+      setCurrentPage(currentPage + 1)
     }
-  };
+  }
 
   const handleFilterSelect = (filter) => {
-    setSelectedFilter(filter);
-    setCurrentPage(1);
-  };
+    setSelectedFilter(filter)
+    setCurrentPage(1)
+  }
 
   const filteredAssignments = data?.filter((assignment) => {
     return (
-      selectedFilter === "All" ||
-      (selectedFilter === "Submitted late" &&
-        assignment.assignment_status === "Submitted late") ||
-      (selectedFilter === "Pending" &&
-        assignment.assignment_status === "Pending") ||
-      (selectedFilter === "Submitted" &&
-        assignment.assignment_status === "Submitted") ||
-      (selectedFilter === "Overdue" &&
-        assignment.assignment_status === "Overdue")
-    );
-  });
+      selectedFilter === 'All' ||
+      (selectedFilter === 'Submitted late' &&
+        assignment.assignment_status === 'Submitted late') ||
+      (selectedFilter === 'Pending' &&
+        assignment.assignment_status === 'Pending') ||
+      (selectedFilter === 'Submitted' &&
+        assignment.assignment_status === 'Submitted') ||
+      (selectedFilter === 'Overdue' &&
+        assignment.assignment_status === 'Overdue')
+    )
+  })
 
-  const totalPages = Math.ceil((filteredAssignments || []).length / pageSize);
+  const totalPages = Math.ceil((filteredAssignments || []).length / pageSize)
 
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = currentPage * pageSize;
+  const startIndex = (currentPage - 1) * pageSize
+  const endIndex = currentPage * pageSize
 
   const assignmentsToDisplay = (filteredAssignments || []).slice(
     startIndex,
     endIndex
-  );
+  )
 
   const handleAnswerChange = (e, assignmentId, status) => {
     const updatedAnswers = answers.map((answer) => {
@@ -86,12 +86,12 @@ function AssignmentPage() {
           ...answer,
           assignment_answer: e.target.value,
           assignment_status: status,
-        };
+        }
       }
-      return answer;
-    });
-    setAnswers(updatedAnswers);
-  };
+      return answer
+    })
+    setAnswers(updatedAnswers)
+  }
 
   const handleSubmit = async (assignment_id) => {
     try {
@@ -99,31 +99,31 @@ function AssignmentPage() {
         assignment_id: answer.assignment_id,
         assignment_answer: answer.assignment_answer,
         assignment_status: answer.assignment_status,
-      }));
+      }))
 
       const response = await axios.put(
         `http://localhost:4000/assignment/${userId}?assignmentid=${assignment_id}`,
         assignmentAnswers
-      );
+      )
 
       if (response.status === 200) {
         const updatedDataResponse = await axios.get(
           `http://localhost:4000/assignment/${userId}`
-        );
+        )
 
-        setData(updatedDataResponse.data.data);
+        setData(updatedDataResponse.data.data)
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     }
-  };
+  }
   if (isLoading) {
     return (
       <div className="flex justify-center items-center w-[100%] min-h-[100vh] gap-8 text-black">
         <h1>Loading...</h1>
         <CircularIndeterminate />
       </div>
-    );
+    )
   }
 
   return (
@@ -138,6 +138,7 @@ function AssignmentPage() {
             fill="none"
             className="absolute "
             xmlns="http://www.w3.org/2000/svg">
+
             <circle cx="64.5" cy="5.5" r="4" stroke="#2F5FAC" strokeWidth="3" />
             <circle cx="1381" cy="153" r="37" fill="#C6DCFF" />
             <circle cx="13.1741" cy="72.1741" r="13.1741" fill="#C6DCFF" />
@@ -165,41 +166,50 @@ function AssignmentPage() {
             </div>
             <div className="justify-start items-start gap-4 inline-flex ">
               <div
-                onClick={() => handleFilterSelect("All")}
+                onClick={() => handleFilterSelect('All')}
                 className={`cursor-pointer Component1 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${
-                  selectedFilter === "All" ? "border-b-2" : ""
-                }`}>
+                  selectedFilter === 'All' ? 'border-b-2' : ''
+                }`}
+              >
                 <div className="Body2">All</div>
               </div>
               <div
                 onClick={() => {
-                  handleFilterSelect("Pending");
+                  handleFilterSelect('Pending')
                 }}
                 className={`cursor-pointer Component4 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${
-                  selectedFilter === "Pending" ? "border-b-2" : ""
-                }`}>
+                  selectedFilter === 'Pending' ? 'border-b-2' : ''
+                }`}
+              >
+
                 <div className="Body2">Pending</div>
               </div>
 
               <div
-                onClick={() => handleFilterSelect("Submitted")}
+                onClick={() => handleFilterSelect('Submitted')}
                 className={`cursor-pointer Component2 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${
-                  selectedFilter === "Submitted" ? "border-b-2" : ""
-                }`}>
+                  selectedFilter === 'Submitted' ? 'border-b-2' : ''
+                }`}
+              >
+
                 <div className="Body2">Submitted</div>
               </div>
               <div
-                onClick={() => handleFilterSelect("Overdue")}
+                onClick={() => handleFilterSelect('Overdue')}
                 className={`cursor-pointer Component3 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${
-                  selectedFilter === "Overdue" ? "border-b-2" : ""
-                }`}>
+                  selectedFilter === 'Overdue' ? 'border-b-2' : ''
+                }`}
+              >
+
                 <div className="Body2">Overdue</div>
               </div>
               <div
-                onClick={() => handleFilterSelect("Submitted late")}
+                onClick={() => handleFilterSelect('Submitted late')}
                 className={`cursor-pointer Component1 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${
-                  selectedFilter === "Submitted late" ? "border-b-2" : ""
-                }`}>
+                  selectedFilter === 'Submitted late' ? 'border-b-2' : ''
+                }`}
+              >
+
                 <div className="Body2">Submitted Late</div>
               </div>
             </div>
@@ -210,7 +220,9 @@ function AssignmentPage() {
                 return (
                   <div
                     key={index}
-                    className="relative Frame427321006 px-24 py-10 bg-slate-200 rounded-lg flex-col justify-start items-start gap-9 flex w-[100%]">
+                    className="relative Frame427321006 px-24 py-10 bg-slate-200 rounded-lg flex-col justify-start items-start gap-9 flex w-[100%]"
+                  >
+
                     <div className="Frame427321001 w-[100%] justify-start items-start gap-6 inline-flex">
                       <div className="Frame427321000 grow shrink basis-0 flex-col justify-start items-start gap-3 inline-flex w-[100%]">
                         <div className="CourseServiceDesignEssentials self-stretch text-black text-2xl font-medium leading-loose w-[100%]">
@@ -223,36 +235,39 @@ function AssignmentPage() {
                       <div className="Frame427321007 flex-col justify-start items-end gap-2 inline-flex">
                         <div
                           className={`StatusHomework px-2 py-1 ${
-                            assignment.assignment_status === "Pending"
-                              ? "bg-[#FFFBDA]"
+                            assignment.assignment_status === 'Pending'
+                              ? 'bg-[#FFFBDA]'
                               : assignment.assignment_status ===
-                                "Submitted late"
-                              ? "bg-red-100"
-                              : assignment.assignment_status === "Submitted"
-                              ? "bg-[#DCF8EE]"
-                              : assignment.assignment_status === "Overdue"
-                              ? "bg-[#FAE7F4]"
+                                'Submitted late'
+                              ? 'bg-red-100'
+                              : assignment.assignment_status === 'Submitted'
+                              ? 'bg-[#DCF8EE]'
+                              : assignment.assignment_status === 'Overdue'
+                              ? 'bg-[#FAE7F4]'
                               : null
-                          } rounded justify-start items-start gap-2 inline-flex`}>
+                          } rounded justify-start items-start gap-2 inline-flex`}
+                        >
                           <div
                             className={`${
-                              assignment.assignment_status === "Pending"
-                                ? " text-[#996400]"
+                              assignment.assignment_status === 'Pending'
+                                ? ' text-[#996400]'
                                 : assignment.assignment_status ===
-                                  "Submitted late"
-                                ? "text-red-500"
-                                : assignment.assignment_status === "Submitted"
-                                ? "text-[#0A7B60]"
-                                : assignment.assignment_status === "Overdue"
-                                ? "text-[#9B2FAC]"
+                                  'Submitted late'
+                                ? 'text-red-500'
+                                : assignment.assignment_status === 'Submitted'
+                                ? 'text-[#0A7B60]'
+                                : assignment.assignment_status === 'Overdue'
+                                ? 'text-[#9B2FAC]'
                                 : null
-                            } text-base font-medium leading-normal`}>
-                            {assignment.assignment_status === "Submitted late"
-                              ? "Submitted Late"
+                            } text-base font-medium leading-normal`}
+                          >
+                            {assignment.assignment_status === 'Submitted late'
+                              ? 'Submitted Late'
                               : assignment.assignment_status}
                           </div>
                         </div>
-                        {assignment.assignment_status === "Pending" ? (
+                        {assignment.assignment_status === 'Pending' ? (
+
                           <div className="Email text-slate-500 text-base font-normal leading-normal">
                             Assign within {assignment.assignment_duedate}
                           </div>
@@ -261,7 +276,9 @@ function AssignmentPage() {
                     </div>
                     <div
                       className={`w-[100%] Frame427321002  p-6  
-                      } rounded-lg border border-gray-300 justify-start items-end gap-6 inline-flex`}>
+                      } rounded-lg border border-gray-300 justify-start items-end gap-6 inline-flex`}
+                    >
+
                       <div className="InputStyle grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex">
                         <div className="Label self-stretch justify-start items-start gap-1 inline-flex">
                           <div className="Email grow shrink basis-0 Body2">
@@ -269,16 +286,18 @@ function AssignmentPage() {
                           </div>
                         </div>
                         <div
-                          className={`InputField self-stretch pl-3 pr-4 py-3 bg-white rounded-lg border border-solid border-gray-300  justify-start items-start gap-2 inline-flex`}>
+                          className={`InputField self-stretch pl-3 pr-4 py-3 bg-white rounded-lg border border-solid border-gray-300  justify-start items-start gap-2 inline-flex`}
+                        >
+
                           <div className="ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex">
                             <textarea
                               className={`${
-                                (assignment.assignment_status === "Submitted" ||
+                                (assignment.assignment_status === 'Submitted' ||
                                   assignment.assignment_status ===
-                                    "Submitted late") &&
+                                    'Submitted late') &&
                                 !assignment.assignment_answer
-                                  ? "bg-slate-200 text-slate-500 "
-                                  : "bg-white  text-slate-400"
+                                  ? 'bg-slate-200 text-slate-500 '
+                                  : 'bg-white  text-slate-400'
                               }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
                               placeholder="Answer..."
                               value={
@@ -287,7 +306,7 @@ function AssignmentPage() {
                                     a.assignment_id === assignment.assignment_id
                                 )?.assignment_answer ||
                                 assignment.assignment_answer ||
-                                ""
+                                ''
                               }
                               onChange={(e) =>
                                 handleAnswerChange(
@@ -296,25 +315,28 @@ function AssignmentPage() {
                                   assignment.assignment_status
                                 )
                               }
-                              style={{ resize: "none" }}
+                              style={{ resize: 'none' }}
                               readOnly={
-                                assignment.assignment_status === "Submitted" ||
+                                assignment.assignment_status === 'Submitted' ||
                                 assignment.assignment_status ===
-                                  "Submitted late"
+                                  'Submitted late'
                               }
                             />
                           </div>
                         </div>
                       </div>
                       <div className="Frame427321003 flex-col  items-start gap-4 inline-flex justify-center">
-                        {assignment.assignment_status !== "Submitted late" &&
-                          assignment.assignment_status !== "Submitted" && (
+                        {assignment.assignment_status !== 'Submitted late' &&
+                          assignment.assignment_status !== 'Submitted' && (
+
                             <>
                               <div
                                 className=" cursor-pointer Primary mb-[20px] self-stretch px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 inline-flex"
                                 onClick={() =>
                                   handleSubmit(assignment.assignment_id)
-                                }>
+                                }
+                              >
+
                                 <div className="text-center text-white text-base font-bold leading-normal">
                                   Submit
                                 </div>
@@ -329,7 +351,7 @@ function AssignmentPage() {
                       </div>
                     </div>
                   </div>
-                );
+                )
               })
             ) : (
               <div className="text-center mt-6 self-center">
@@ -395,11 +417,12 @@ function AssignmentPage() {
               </button>
             </div>
           )}
+
         </div>
       </div>
       <Footer />
     </>
-  );
+  )
 }
 
-export default AssignmentPage;
+export default AssignmentPage

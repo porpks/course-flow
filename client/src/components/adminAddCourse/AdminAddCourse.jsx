@@ -40,7 +40,7 @@ function AdminAddCourse() {
       errors.courseName = 'Must be 15 characters or less'
     }
     if (!values.price) {
-      errors.price = '* Required'
+      errors.price = '*Required'
     }
     if (!values.totalLearningTime) {
       errors.totalLearningTime = '* Required'
@@ -274,7 +274,7 @@ function AdminAddCourse() {
                         onChange={formik.handleChange}
                       />
                       {formik.errors.courseName ? (
-                        <div className="text-red-500">
+                        <div className="text-red-500 self-end pt-2">
                           {formik.errors.courseName}
                         </div>
                       ) : null}
@@ -294,7 +294,7 @@ function AdminAddCourse() {
                           onChange={formik.handleChange}
                         />
                         {formik.errors.price ? (
-                          <div className="text-red-500">
+                          <div className="text-red-500 self-end pt-2">
                             {formik.errors.price}
                           </div>
                         ) : null}
@@ -311,7 +311,7 @@ function AdminAddCourse() {
                           onChange={formik.handleChange}
                         />{' '}
                         {formik.errors.totalLearningTime ? (
-                          <div className="text-red-500">
+                          <div className="text-red-500 self-end pt-2">
                             {formik.errors.totalLearningTime}
                           </div>
                         ) : null}
@@ -330,7 +330,7 @@ function AdminAddCourse() {
                         onChange={formik.handleChange}
                       />
                       {formik.errors.courseSummary ? (
-                        <div className="text-red-500 self-end">
+                        <div className="text-red-500 self-end pt-2">
                           {formik.errors.courseSummary}
                         </div>
                       ) : null}
@@ -348,7 +348,7 @@ function AdminAddCourse() {
                         onChange={formik.handleChange}
                       />
                       {formik.errors.courseDetail ? (
-                        <div className="text-red-500 self-end">
+                        <div className="text-red-500 self-end pt-2">
                           {formik.errors.courseDetail}
                         </div>
                       ) : null}
