@@ -26,7 +26,7 @@ import NotFoundPage from "./NotFoundPage.jsx";
 import AddAssignmentPage from "../pages/AdminPage/AddAssignmentPage";
 import EditAssignmentPage from "../pages/AdminPage/EditAssignmentPage";
 
-function AuthenticatedApp() {
+function AdminAuthenApp() {
   const { userId, logout } = useAuth();
 
   const ProtectedProfileRoute = () => {
@@ -59,35 +59,35 @@ function AuthenticatedApp() {
         <Route path='/assignment' element={<AssignmentPage />} />
         <Route path='/learning/:courseId' element={<LearningPage />} />
         <Route path='/admin' element={<AdminPage />} />
-        {/* <Route path="/admin/courselist" element={<CourseListPage />} />
-        <Route path="/admin/addcourse" element={<AddCoursePage />} />
-        <Route path="/admin/addcourse/addlesson" element={<AddLessonPage />} />
+        <Route path='/admin/courselist' element={<CourseListPage />} />
+        <Route path='/admin/addcourse' element={<AddCoursePage />} />
+        <Route path='/admin/addcourse/addlesson' element={<AddLessonPage />} />
         <Route
-          path="/admin/addcourse/editlesson/:lessonId"
+          path='/admin/addcourse/editlesson/:lessonId'
           element={<EditLessonPage />}
         />
         <Route
-          path="/admin/editcourse/:courseId"
+          path='/admin/editcourse/:courseId'
           element={<EditCoursePage />}
         />
-        <Route path="/admin/editcourse/addlesson" element={<AddLessonPage />} />
+        <Route path='/admin/editcourse/addlesson' element={<AddLessonPage />} />
         <Route
-          path="/admin/editcourse/:courseId/editlesson/:lessonId"
+          path='/admin/editcourse/:courseId/editlesson/:lessonId'
           element={<EditLessonPage />}
         />
         <Route
-          path="/admin/assingmentlist"
+          path='/admin/assingmentlist'
           element={<AssignmentAdminListPage />}
         />
-        <Route path="/admin/addassingment" element={<AddAssignmentPage />} />
+        <Route path='/admin/addassingment' element={<AddAssignmentPage />} />
         <Route
-          path="/admin/editassingment/:assignId"
+          path='/admin/editassingment/:assignId'
           element={<EditAssignmentPage />}
-        /> */}
+        />
         <Route path='*' element={<NotFoundPage />} />{" "}
       </Routes>
     </>
   );
 }
 
-export default AuthenticatedApp;
+export default AdminAuthenApp;
