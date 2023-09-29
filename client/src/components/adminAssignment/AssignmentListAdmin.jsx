@@ -8,19 +8,52 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext.jsx";
 import CircularIndeterminate from "../../assets/loadingProgress.jsx";
 
-const AssignmentListAdmin = (props) => {
+const AssignmentListAdmin = ({
+  searchQuery,
+  start,
+  end,
+  page,
+  setStart,
+  setEnd,
+  setPage,
+}) => {
   const navigate = useNavigate();
   const { setDeleteAssignment } = useAuth();
   const [assignmentList, setAssignmentList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(8);
+
+  // const [start, setStart] = useState(1);
+  // const [end, setEnd] = useState(8);
+  // const [page, setPage] = useState(1);
+  const [maxPage, setMaxpage] = useState(9);
+
+  const changeUpperPage = () => {
+    let newStart = start + 8;
+    let newEnd = end + 8;
+    let newPage = page + 1;
+    setStart(newStart);
+    setEnd(newEnd);
+    setPage(newPage);
+  };
+
+  const changeLowerPage = () => {
+    if (start > 1) {
+      let newStart = start - 8;
+      let newEnd = end - 8;
+      let newPage = page - 1;
+      setStart(newStart);
+      setEnd(newEnd);
+      setPage(newPage);
+    }
+  };
 
   const fetchData = async (searchQuery) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/assignment?page=${currentPage}&perPage=${perPage}&search=${searchQuery}`
+        `http://localhost:4000/assignment?start=${start}&end=${end}&search=${searchQuery}`
       );
+      setMaxpage(Math.ceil(response.data.count / 8));
+      console.log(Math.ceil(response.data.count / 8));
       setAssignmentList(response.data.flatData);
       setLoading(false);
     } catch (e) {
@@ -30,9 +63,9 @@ const AssignmentListAdmin = (props) => {
   };
 
   useEffect(() => {
-    fetchData(props.searchQuery);
+    fetchData(searchQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, props.searchQuery]);
+  }, [page, searchQuery]);
   const nextPage = () => {
     if (assignmentList.length >= perPage) {
       setCurrentPage(currentPage + 1);
@@ -131,29 +164,31 @@ const AssignmentListAdmin = (props) => {
                       <div className="TableContent grow shrink basis-0 h-[88px] justify-start items-start flex">
                         <div className="CreatedDate w-[200px]   h-[88px] px-4 py-8 justify-start items-center gap-2.5 flex">
                           <div className="WhatAreThe4Elem  text-black text-base font-normal font-['Inter'] leading-normal">
-                            {assignment.assignment_question}
+                            {assignment.assignment_question.slice(0, 50)}
                           </div>
                         </div>
                         <div className="Name  w-[200px]  h-[88px] px-4 py-8 justify-start items-center gap-2.5 flex">
                           <div className="ServiceDesignEssen  text-black text-base font-normal font-['Inter'] leading-normal">
-                            {assignment.course_name}
+                            {assignment.course_name.slice(0, 50)}
                           </div>
                         </div>
                         <div className="CreatedDate w-[200px]  h-[88px] px-4 py-8 justify-start items-center gap-2.5 flex">
                           <div className="Introduction  text-black text-base font-normal font-['Inter'] leading-normal">
-                            {assignment.lesson_name}
+                            {assignment.lesson_name.slice(0, 50)}
                           </div>
                         </div>
                         <div className="CreatedDate  w-[200px]  h-[88px] px-4 py-8 justify-start items-center gap-2.5 flex">
                           <div className="LevelsOfServiceD  text-black text-base font-normal font-['Inter'] leading-normal">
-                            {assignment.sublesson_name}
+                            {assignment.sublesson_name.slice(0, 50)}
                           </div>
                         </div>
                         <div className="CreatedDate grow shrink basis-0 w-[200px]  h-[88px] px-4 py-8 justify-start items-center gap-2.5 flex">
                           <div className="0220221030pm  text-black text-base font-normal font-['Inter'] leading-normal">
                             {assignment.created_at === null
                               ? "Database does not have information"
-                              : formatDateTime(assignment.created_at)}
+                              : formatDateTime(
+                                  assignment.created_at.slice(0, 50)
+                                )}
                           </div>
                         </div>
                       </div>
@@ -206,52 +241,57 @@ const AssignmentListAdmin = (props) => {
               </>
             )}
 
-            <div className="pagination flex justify-center items-center space-x-4 mt-6 self-center">
-              <button
-                onClick={prevPage}
-                disabled={currentPage === 1}
-                className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${
-                  currentPage === 1 ? "cursor-not-allowed" : "cursor-pointer"
-                }`}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 inline-block mr-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                  />
-                </svg>
-                Prev
-              </button>
-              <span className="text-gray-600 text-lg">Page {currentPage}</span>
-              <button
-                onClick={nextPage}
-                className={`${
-                  assignmentList.length >= perPage
-                    ? "cursor-pointer"
-                    : "cursor-not-allowed"
-                } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center`}>
-                Next
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 inline-block ml-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </button>
-            </div>
+            {maxPage > 1 && (
+              <div className="flex justify-center items-center space-x-4 mt-6 self-center">
+                <button
+                  className={`${
+                    page > 1 ? "cursor-pointer" : "cursor-not-allowed"
+                  } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center `}
+                  onClick={page > 1 ? changeLowerPage : undefined}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 inline-block mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
+                  </svg>
+                  Prev
+                </button>
+                <span className="text-gray-600 text-lg">
+                  Page {page} / {maxPage}
+                </span>
+                <button
+                  className={`${
+                    assignmentList.length < 8
+                      ? "cursor-not-allowed"
+                      : "cursor-pointer"
+                  } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center`}
+                  onClick={
+                    assignmentList.length < 8 ? undefined : changeUpperPage
+                  }>
+                  Next
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 inline-block ml-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

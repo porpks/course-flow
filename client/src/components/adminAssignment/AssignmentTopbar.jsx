@@ -1,9 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useNavigate } from "react-router-dom";
-function AssignmentTopbar({ setSearchQuery }) {
+function AssignmentTopbar({ setSearchQuery, setStart, setEnd, setPage }) {
   const navigate = useNavigate();
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value); // Update searchQuery state
+    setStart(1);
+    setEnd(8);
+    setPage(1);
   };
   return (
     <>

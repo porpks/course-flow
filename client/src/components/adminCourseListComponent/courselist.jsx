@@ -13,6 +13,7 @@ function CourseList() {
   const [start, setStart] = useState(1);
   const [end, setEnd] = useState(8);
   const [page, setPage] = useState(1);
+  const [maxPage, setMaxpage] = useState(9);
 
   const [targetCourseId, setTargetCourseId] = useState(null);
   const [targetCourseName, setTargetCourseName] = useState(null);
@@ -26,6 +27,7 @@ function CourseList() {
       const result = await axios.get(
         `http://localhost:4000/ourcourse?course=${searchBox}&start=${start}&end=${end}&desc&`
       );
+      setMaxpage(Math.ceil(result.data.count / 8));
       setCourseData(result.data.data);
       setIsLoading(false);
     } catch (error) {
@@ -229,12 +231,12 @@ function CourseList() {
               <div className="w-[96px]  flex items-center px-[16px] py-[10px]">
                 <img
                   src={item.cover_img}
-                  alt={item.course_name}
+                  alt={item.course_name.slice(0, 50)}
                   className="w-[64px] h-[47px] object-cover"
                 />
               </div>
               <div className="w-[268px]  flex items-center px-[16px] py-[10px]">
-                {item.course_name}
+                {item.course_name.slice(0, 50)}
               </div>
               <div className="w-[105px]  flex items-center px-[16px] py-[10px]">
                 {item.lessons.length}
@@ -249,7 +251,9 @@ function CourseList() {
                 {formatDateTime(item.created_date)}
               </div>
               <div className="w-[176px]  flex items-center px-[16px] py-[10px]">
-                {formatDateTime(item.updated_date)}
+                {formatDateTime(item.updated_date) === "1/1/1970 7:00AM"
+                  ? formatDateTime(item.created_date)
+                  : formatDateTime(item.updated_date)}
               </div>
               <div className="w-[120px]  flex items-center justify-center gap-[17px] ">
                 <button
@@ -298,49 +302,55 @@ function CourseList() {
             </div>
           ))}
 
-          <div className="flex justify-center items-center space-x-4 mt-6 self-center">
-            <button
-              className={`${
-                page > 1 ? "cursor-pointer" : "cursor-not-allowed"
-              } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center `}
-              onClick={page > 1 ? changeLowerPage : undefined}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 inline-block mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
-              Prev
-            </button>
-            <span className="text-gray-600 text-lg">Page {page}</span>
-            <button
-              className={`${
-                courseData.length < 8 ? "cursor-not-allowed" : "cursor-pointer"
-              } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center`}
-              onClick={courseData.length < 8 ? undefined : changeUpperPage}>
-              Next
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 inline-block ml-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </button>
-          </div>
+          {maxPage > 1 && (
+            <div className="flex justify-center items-center space-x-4 mt-6 self-center">
+              <button
+                className={`${
+                  page > 1 ? "cursor-pointer" : "cursor-not-allowed"
+                } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center `}
+                onClick={page > 1 ? changeLowerPage : undefined}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 inline-block mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  />
+                </svg>
+                Prev
+              </button>
+              <span className="text-gray-600 text-lg">
+                Page {page} / {maxPage}
+              </span>
+              <button
+                className={`${
+                  courseData.length < 8
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
+                } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center`}
+                onClick={courseData.length < 8 ? undefined : changeUpperPage}>
+                Next
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 inline-block ml-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

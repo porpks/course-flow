@@ -6,19 +6,28 @@ const desireRouter = Router();
 desireRouter.get("/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
+    let start = req.query.start - 1;
+    let end = req.query.end - 1;
 
     const { data, error } = await supabase
       .from("desire_courses")
       .select(
         `*,courses(course_id,course_name,cover_img,course_detail,total_time,lessons(lesson_id,lesson_name))`
       )
+      .eq("user_id", userId)
+      .range(start, end);
+
+    const { count } = await supabase
+      .from("desire_courses")
+      .select("*", { count: "exact", head: true })
       .eq("user_id", userId);
 
     if (error) {
       throw error;
     }
 
-    res.json(data);
+    res.json({ data, count });
+    // res.json(data);
   } catch (error) {
     console.error("Error fetching user course data:", error.message);
     res.status(500).json({ error });
@@ -86,7 +95,7 @@ desireRouter.delete("/", async (req, res) => {
 
     res.json({ message: "desire course has been delete" });
   } catch (error) {
-    res.json({error});
+    res.json({ error });
   }
 });
 
