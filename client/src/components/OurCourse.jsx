@@ -51,7 +51,7 @@ function OurCourse() {
   const handleSearch = (event) => {
     setSearchKey(event.target.value);
     setStart(1);
-    setEnd(8);
+    setEnd(9);
     setPage(1);
   };
 
@@ -89,7 +89,7 @@ function OurCourse() {
 
   return (
     <div className="canvas-ourCourse ">
-      {/* {window.scrollTo({ top: 0, left: 0, behavior: "auto" })} */}
+      {window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
       <div className="topSection">
         <h2 className="H2">Our Courses</h2>
         <div className="input-container">
