@@ -22,8 +22,18 @@ function AdminAddCourse() {
   const [subLessonData, setSubLessonData] = useState("");
   const [localImg, setLocalImg] = useState("");
   const [localVdo, setLocalVdo] = useState("");
-  const { lesson, getImgUrl, setGetImgUrl, getVdoUrl, setGetVdoUrl } =
-    useAuth();
+  const {
+    lesson,
+    getImgUrl,
+    setGetImgUrl,
+    getVdoUrl,
+    setGetVdoUrl,
+    setAdminImageUrl,
+    setAdminVideoUrl,
+  } = useAuth();
+
+  console.log(getImgUrl, "getImgUrl");
+  console.log(getVdoUrl, "getVdoUrl");
   const [loadingMes, setLoadingMes] = useState("Loading...");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -36,25 +46,25 @@ function AdminAddCourse() {
   const validate = (values) => {
     const errors = {};
     if (!values.courseName) {
-      errors.courseName = "* Required";
+      errors.courseName = "Required!";
     } else if (values.courseName.length > 15) {
-      errors.courseName = "Must be 15 characters or less";
+      errors.courseName = "Please provide less than 15 characters.";
     }
     if (!values.price) {
-      errors.price = "*Required";
+      errors.price = "Required!";
     }
     if (!values.totalLearningTime) {
-      errors.totalLearningTime = "* Required";
+      errors.totalLearningTime = "Required!";
     }
     if (!values.courseSummary) {
       errors.courseSummary = "* Required";
     } else if (values.courseSummary.length < 15) {
-      errors.courseSummary = "Must be more than 15 characters";
+      errors.courseSummary = "Please provide more than 15 characters.";
     }
     if (!values.courseDetail) {
       errors.courseDetail = "* Required";
     } else if (values.courseDetail.length < 15) {
-      errors.courseDetail = "Must be more than 15 characters";
+      errors.courseDetail = "Please provide more than 15 characters.";
     }
     return errors;
   };
@@ -158,7 +168,47 @@ function AdminAddCourse() {
     fetchData();
   }, []);
 
-  const sendData = async (course) => {
+  const sendData = async (e) => {
+    e.preventDefault();
+
+    if (
+      !formik.values.courseName ||
+      !formik.values.price ||
+      !formik.values.totalLearningTime ||
+      !formik.values.courseSummary ||
+      !formik.values.courseDetail
+    ) {
+      displaySnackbar("Please fill out all fields.", "warning");
+      return;
+    }
+
+    if (
+      !localStorage.getItem("video_url") &&
+      !localStorage.getItem("image_url")
+    ) {
+      displaySnackbar(
+        "Please upload a cover image and a video trailer.",
+        "warning"
+      );
+      return;
+    }
+
+    if (!localStorage.getItem("image_url")) {
+      displaySnackbar("Please upload a cover image.", "warning");
+      return;
+    }
+    if (!localStorage.getItem("video_url")) {
+      displaySnackbar("Please upload a video trailer.", "warning");
+      return;
+    }
+    if (JSON.parse(localStorage.getItem("lesson_data"))?.length < 1) {
+      displaySnackbar(
+        "Please add at least one lesson to your course.",
+        "warning"
+      );
+      return;
+    }
+
     setLoadingMes("Course Upload in Progress...");
     setIsLoading(true);
     const updatedCourseData = {
@@ -192,10 +242,15 @@ function AdminAddCourse() {
 
       localStorage.removeItem("video_url");
       localStorage.removeItem("image_url");
+      localStorage.removeItem("course_data");
+      localStorage.removeItem("lesson_data");
+
       formik.resetForm();
       setSubmitData(true);
       setIsLoading(false);
       // displaySnackbar("You've Successfully Added a New Course. 🎉")
+      setAdminImageUrl(null);
+      setAdminVideoUrl(null);
       navigate("/admin/courselist");
     } catch (error) {
       console.error(error);
@@ -207,13 +262,15 @@ function AdminAddCourse() {
     navigate(`/admin/addcourse/addlesson`);
   };
 
-  function displaySnackbar(message) {
+  function displaySnackbar(message, status) {
     setOpenSnackBar(false);
     setSnackbarMes(message);
+    setSnackbarStatus(status);
     setOpenSnackBar(true);
   }
   const [openSnackbar, setOpenSnackBar] = useState(false);
   const [snackBarMes, setSnackbarMes] = useState("");
+  const [snackbarStatus, setSnackbarStatus] = useState("");
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -237,7 +294,7 @@ function AdminAddCourse() {
       <SnackBar
         open={openSnackbar}
         onClose={handleClose}
-        severity={"success"}
+        severity={snackbarStatus}
         message={snackBarMes}
       />
 
@@ -279,12 +336,17 @@ function AdminAddCourse() {
                         name="courseName"
                         // id="courseName"
                         placeholder="Enter Course Name"
-                        className="Input"
+                        className={`Body2 p-[12px] w-[100%] h-[48px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
+                          formik.touched.courseName && formik.errors.courseName
+                            ? " border-[#9B2FAC]"
+                            : " border-[--gray500]"
+                        }`}
                         value={formik.values.courseName}
+                        onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                       />
-                      {formik.errors.courseName ? (
-                        <div className="text-red-500 self-end pt-2">
+                      {formik.errors.courseName && formik.touched.courseName ? (
+                        <div className="text-[#9B2FAC] self-end pt-2">
                           {formik.errors.courseName}
                         </div>
                       ) : null}
@@ -299,12 +361,17 @@ function AdminAddCourse() {
                           name="price"
                           // id="price"
                           placeholder="Enter Course Price"
-                          className="Input"
+                          className={`Body2 p-[12px] w-[100%] h-[48px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
+                            formik.touched.price && formik.errors.price
+                              ? " border-[#9B2FAC]"
+                              : " border-[--gray500]"
+                          }`}
                           value={formik.values.price}
+                          onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
                         />
-                        {formik.errors.price ? (
-                          <div className="text-red-500 self-end pt-2">
+                        {formik.errors.price && formik.touched.price ? (
+                          <div className="text-[#9B2FAC] self-end pt-2">
                             {formik.errors.price}
                           </div>
                         ) : null}
@@ -316,12 +383,19 @@ function AdminAddCourse() {
                           name="totalLearningTime"
                           // id="totalLearningTime"
                           placeholder="Enter Total learning time"
-                          className="Input"
+                          className={`Body2 p-[12px] w-[100%] h-[48px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
+                            formik.touched.totalLearningTime &&
+                            formik.errors.totalLearningTime
+                              ? " border-[#9B2FAC]"
+                              : " border-[--gray500]"
+                          }`}
                           value={formik.values.totalLearningTime}
+                          onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
                         />{" "}
-                        {formik.errors.totalLearningTime ? (
-                          <div className="text-red-500 self-end pt-2">
+                        {formik.errors.totalLearningTime &&
+                        formik.touched.totalLearningTime ? (
+                          <div className="text-[#9B2FAC] self-end pt-2">
                             {formik.errors.totalLearningTime}
                           </div>
                         ) : null}
@@ -335,12 +409,19 @@ function AdminAddCourse() {
                         name="courseSummary"
                         // id="courseSummary"
                         placeholder="Enter Course summary"
-                        className="Input h-[100px] resize-none"
+                        className={`Body2 p-[12px] w-[100%] h-[100px] resize-none rounded-lg border-solid border-[2px] focus:border-[--orange500] focus:outline-none ${
+                          formik.touched.courseSummary &&
+                          formik.errors.courseSummary
+                            ? " border-[#9B2FAC]"
+                            : " border-[--gray500]"
+                        }`}
                         value={formik.values.courseSummary}
+                        onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                       />
-                      {formik.errors.courseSummary ? (
-                        <div className="text-red-500 self-end pt-2">
+                      {formik.errors.courseSummary &&
+                      formik.touched.courseSummary ? (
+                        <div className="text-[#9B2FAC] self-end pt-2">
                           {formik.errors.courseSummary}
                         </div>
                       ) : null}
@@ -353,12 +434,19 @@ function AdminAddCourse() {
                         name="courseDetail"
                         // id="courseDetail"
                         placeholder="Enter Course detail"
-                        className="Input h-[220px] resize-none flex text- align-text-top "
+                        className={`flex text- align-text-top Body2 p-[12px] w-[100%] h-[220px] resize-none rounded-lg border-solid border-[2px] focus:border-[--orange500] focus:outline-none ${
+                          formik.touched.courseSummary &&
+                          formik.errors.courseSummary
+                            ? " border-[#9B2FAC]"
+                            : " border-[--gray500]"
+                        }`}
                         value={formik.values.courseDetail}
+                        onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                       />
-                      {formik.errors.courseDetail ? (
-                        <div className="text-red-500 self-end pt-2">
+                      {formik.errors.courseDetail &&
+                      formik.touched.courseDetail ? (
+                        <div className="text-[#9B2FAC] self-end pt-2">
                           {formik.errors.courseDetail}
                         </div>
                       ) : null}
