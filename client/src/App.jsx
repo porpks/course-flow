@@ -1,5 +1,5 @@
-import './App.css'
-import './index.css'
+import "./App.css";
+import "./index.css";
 
 // import HomePage from "./pages/HomePage.jsx";
 // import OurCoursePage from "./pages/OurCoursePage.jsx";
@@ -8,17 +8,25 @@ import './index.css'
 // import Profile from "./pages/Profile.jsx";
 
 // import jwtInterceptor from "./utils/jwtInterceptors";
-import { useAuth } from './contexts/AuthContext.jsx'
-import AuthenticatedApp from './components/AuthenticatedApp.jsx'
-import UnauthenticatedApp from './components/UnauthenticatedApp.jsx'
-import React from 'react'
-import ReactDOM from 'react-dom'
-
+import { useAuth } from "./contexts/AuthContext.jsx";
+import AuthenticatedApp from "./components/AuthenticatedApp.jsx";
+import UnauthenticatedApp from "./components/UnauthenticatedApp.jsx";
+import React from "react";
+import ReactDOM from "react-dom";
+import AdminAuthenApp from "./components/AdminAuthen.jsx";
 // Disable the warning
-ReactDOM.unstable_disableWarnOnNestedVirtualComponents = true
-function App() {
-  const auth = useAuth()
 
-  return auth.isAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />
+ReactDOM.unstable_disableWarnOnNestedVirtualComponents = true;
+function App() {
+  const auth = useAuth();
+  const { isAdminAuthenticated } = useAuth();
+  console.log(isAdminAuthenticated);
+  return isAdminAuthenticated ? (
+    <AdminAuthenApp />
+  ) : auth.isAuthenticated ? (
+    <AuthenticatedApp />
+  ) : (
+    <UnauthenticatedApp />
+  );
 }
-export default App
+export default App;
