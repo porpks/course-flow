@@ -118,38 +118,36 @@ const AssignmentBox = (props) => {
       <div className='Frame427320994 w-[739px]  p-[24px] bg-slate-200 rounded-lg flex-col justify-start items-start gap-6 inline-flex'>
         {data &&
           assignmentsToDisplay.map((assignment, index) => {
-            const assignmentKey = uuidv4();
+            {/* const assignmentKey = uuidv4(); */ }
             return (
               <>
-                <div key={assignmentKey} className='w-[100%]'>
+                <div key={index + "A"} className='w-[100%]'>
                   <div className=' Frame427320997 self-stretch flex items-start justify-between'>
                     <div className='Assignment grow shrink basis-0 h-8 text-black text-xl font-normal leading-loose'>
                       Assignment
                     </div>
                     <div
-                      className={`StatusHomework px-2 py-1 ${
-                        assignment.assignment_status === "Pending"
-                          ? "bg-[#FFFBDA]"
-                          : assignment.assignment_status === "Submitted late"
+                      className={`StatusHomework px-2 py-1 ${assignment.assignment_status === "Pending"
+                        ? "bg-[#FFFBDA]"
+                        : assignment.assignment_status === "Submitted late"
                           ? "bg-red-100"
                           : assignment.assignment_status === "Submitted"
-                          ? "bg-[#DCF8EE]"
-                          : assignment.assignment_status === "Overdue"
-                          ? "bg-[#FAE7F4]"
-                          : null
-                      } rounded justify-start items-start gap-2 inline-flex `}>
+                            ? "bg-[#DCF8EE]"
+                            : assignment.assignment_status === "Overdue"
+                              ? "bg-[#FAE7F4]"
+                              : null
+                        } rounded justify-start items-start gap-2 inline-flex `}>
                       <div
-                        className={`${
-                          assignment.assignment_status === "Pending"
-                            ? " text-[#996400]"
-                            : assignment.assignment_status === "Submitted late"
+                        className={`${assignment.assignment_status === "Pending"
+                          ? " text-[#996400]"
+                          : assignment.assignment_status === "Submitted late"
                             ? "text-red-500"
                             : assignment.assignment_status === "Submitted"
-                            ? "text-[#0A7B60]"
-                            : assignment.assignment_status === "Overdue"
-                            ? "text-[#9B2FAC]"
-                            : null
-                        } text-base font-medium leading-normal`}>
+                              ? "text-[#0A7B60]"
+                              : assignment.assignment_status === "Overdue"
+                                ? "text-[#9B2FAC]"
+                                : null
+                          } text-base font-medium leading-normal`}>
                         {assignment.assignment_status === "Submitted late"
                           ? "Submitted Late"
                           : assignment.assignment_status}
