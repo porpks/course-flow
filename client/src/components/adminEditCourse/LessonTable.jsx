@@ -25,7 +25,7 @@ function LessonTable() {
     } catch (error) {
       console.error('Error:', error)
     }
-  }, [])
+  }, [lessonData])
 
   // const handleDelete = (id, lessonName) => {
   //   alert(`Deleted lesson with ID ${id} ${lessonName}`)
