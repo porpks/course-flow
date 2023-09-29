@@ -18,7 +18,7 @@ function OurCourse() {
   async function getDataCourse() {
     try {
       const result = await axios.get(
-        `http://localhost:4000/ourcourse?start=${start}&end=${end}`
+        `http://localhost:4000/ourcourse?course=${""}&start=${start}&end=${end}`
       );
       setDataCourse(result.data.data);
       setMaxpage(Math.ceil(result.data.count / 9));
@@ -28,13 +28,10 @@ function OurCourse() {
     }
   }
 
-  const getCourseByKeywords = async (keywords) => {
+  const getCourseByKeywords = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/ourcourse/course?start=${start}&end=${end}`,
-        {
-          params: { keywords },
-        }
+        `http://localhost:4000/ourcourse?course=${searchKey}&start=${start}&end=${end}`
       );
       setDataCourse(response.data.data);
       setMaxpage(Math.ceil(response.data.count / 9));
@@ -44,27 +41,18 @@ function OurCourse() {
   };
 
   useEffect(() => {
-    setPage(1);
-    setStart(1);
-    setEnd(9);
-
     if (searchKey) {
-      getCourseByKeywords(searchKey);
+      getCourseByKeywords();
     } else {
       getDataCourse();
     }
-  }, [searchKey]);
-
-  useEffect(() => {
-    if (searchKey) {
-      getCourseByKeywords(searchKey);
-    } else {
-      getDataCourse();
-    }
-  }, [page]);
+  }, [page, searchKey]);
 
   const handleSearch = (event) => {
     setSearchKey(event.target.value);
+    setStart(1);
+    setEnd(8);
+    setPage(1);
   };
 
   /////////////////////////////////////////////////
@@ -125,7 +113,7 @@ function OurCourse() {
                   coverimg={item.cover_img}
                   coursename={item.course_name}
                   coursedetail={item.course_detail}
-                  coursesummary={item.course_summary}
+                  coursesummary={item.lessons.length}
                   totallearningtime={item.total_time}
                   onClick={() => {
                     window.scrollTo(0, 0);
@@ -141,15 +129,13 @@ function OurCourse() {
               <button
                 className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center
               cursor-pointer	}`}
-                onClick={page > 1 ? changeLowerPage : undefined}
-              >
+                onClick={page > 1 ? changeLowerPage : undefined}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 inline-block mr-2"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                  stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -164,16 +150,14 @@ function OurCourse() {
               </span>
               <button
                 className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center cursor-pointer`}
-                onClick={maxPage <= page ? undefined : changeUpperPage}
-              >
+                onClick={maxPage <= page ? undefined : changeUpperPage}>
                 Next
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 inline-block ml-2"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                  stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

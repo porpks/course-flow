@@ -137,8 +137,8 @@ function AssignmentPage() {
             viewBox="0 0 1418 190"
             fill="none"
             className="absolute "
-            xmlns="http://www.w3.org/2000/svg"
-          >
+            xmlns="http://www.w3.org/2000/svg">
+
             <circle cx="64.5" cy="5.5" r="4" stroke="#2F5FAC" strokeWidth="3" />
             <circle cx="1381" cy="153" r="37" fill="#C6DCFF" />
             <circle cx="13.1741" cy="72.1741" r="13.1741" fill="#C6DCFF" />
@@ -181,6 +181,7 @@ function AssignmentPage() {
                   selectedFilter === 'Pending' ? 'border-b-2' : ''
                 }`}
               >
+
                 <div className="Body2">Pending</div>
               </div>
 
@@ -190,6 +191,7 @@ function AssignmentPage() {
                   selectedFilter === 'Submitted' ? 'border-b-2' : ''
                 }`}
               >
+
                 <div className="Body2">Submitted</div>
               </div>
               <div
@@ -198,6 +200,7 @@ function AssignmentPage() {
                   selectedFilter === 'Overdue' ? 'border-b-2' : ''
                 }`}
               >
+
                 <div className="Body2">Overdue</div>
               </div>
               <div
@@ -206,6 +209,7 @@ function AssignmentPage() {
                   selectedFilter === 'Submitted late' ? 'border-b-2' : ''
                 }`}
               >
+
                 <div className="Body2">Submitted Late</div>
               </div>
             </div>
@@ -218,6 +222,7 @@ function AssignmentPage() {
                     key={index}
                     className="relative Frame427321006 px-24 py-10 bg-slate-200 rounded-lg flex-col justify-start items-start gap-9 flex w-[100%]"
                   >
+
                     <div className="Frame427321001 w-[100%] justify-start items-start gap-6 inline-flex">
                       <div className="Frame427321000 grow shrink basis-0 flex-col justify-start items-start gap-3 inline-flex w-[100%]">
                         <div className="CourseServiceDesignEssentials self-stretch text-black text-2xl font-medium leading-loose w-[100%]">
@@ -262,6 +267,7 @@ function AssignmentPage() {
                           </div>
                         </div>
                         {assignment.assignment_status === 'Pending' ? (
+
                           <div className="Email text-slate-500 text-base font-normal leading-normal">
                             Assign within {assignment.assignment_duedate}
                           </div>
@@ -272,6 +278,7 @@ function AssignmentPage() {
                       className={`w-[100%] Frame427321002  p-6  
                       } rounded-lg border border-gray-300 justify-start items-end gap-6 inline-flex`}
                     >
+
                       <div className="InputStyle grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex">
                         <div className="Label self-stretch justify-start items-start gap-1 inline-flex">
                           <div className="Email grow shrink basis-0 Body2">
@@ -281,6 +288,7 @@ function AssignmentPage() {
                         <div
                           className={`InputField self-stretch pl-3 pr-4 py-3 bg-white rounded-lg border border-solid border-gray-300  justify-start items-start gap-2 inline-flex`}
                         >
+
                           <div className="ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex">
                             <textarea
                               className={`${
@@ -320,6 +328,7 @@ function AssignmentPage() {
                       <div className="Frame427321003 flex-col  items-start gap-4 inline-flex justify-center">
                         {assignment.assignment_status !== 'Submitted late' &&
                           assignment.assignment_status !== 'Submitted' && (
+
                             <>
                               <div
                                 className=" cursor-pointer Primary mb-[20px] self-stretch px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 inline-flex"
@@ -327,6 +336,7 @@ function AssignmentPage() {
                                   handleSubmit(assignment.assignment_id)
                                 }
                               >
+
                                 <div className="text-center text-white text-base font-bold leading-normal">
                                   Submit
                                 </div>
@@ -356,59 +366,58 @@ function AssignmentPage() {
               </div>
             )}
           </div>
-          <div className="pagination flex justify-center items-center space-x-4 mt-6 self-center">
-            <button
-              onClick={() => prevPage()}
-              disabled={currentPage === 1}
-              className={`border-none px-4 py-2 bg-blue-800 hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${
-                currentPage === 1 ? 'cursor-not-allowed' : 'cursor-pointer'
-              }`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 inline-block mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
-              Prev
-            </button>
-            <span className="text-gray-600 text-lg">
-              Page {currentPage}/{totalPages === 0 ? '1' : totalPages}
-            </span>
-            <button
-              onClick={() => nextPage()}
-              disabled={filteredAssignments.length < 4}
-              className={`border-none px-4 py-2 bg-blue-800 hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${
-                filteredAssignments.length < 4
-                  ? 'cursor-not-allowed'
-                  : 'cursor-pointer'
-              }`}
-            >
-              Next
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 inline-block ml-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </button>
-          </div>
+          {filteredAssignments.length === 0 ? null : (
+            <div className="pagination flex justify-center items-center space-x-4 mt-6 self-center">
+              <button
+                onClick={() => prevPage()}
+                disabled={currentPage === 1}
+                className={`border-none px-4 py-2 bg-blue-800 hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${
+                  currentPage === 1 ? "cursor-not-allowed" : "cursor-pointer"
+                }`}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 inline-block mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  />
+                </svg>
+                Prev
+              </button>
+              <span className="text-gray-600 text-lg">
+                Page {currentPage} / {totalPages === 0 ? "1" : totalPages}
+              </span>
+              <button
+                onClick={() => nextPage()}
+                disabled={filteredAssignments.length < 4}
+                className={`border-none px-4 py-2 bg-blue-800 hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${
+                  filteredAssignments.length < 4
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}>
+                Next
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 inline-block ml-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
+
         </div>
       </div>
       <Footer />

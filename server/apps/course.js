@@ -17,7 +17,8 @@ courseRouter.get("/", async (req, res) => {
 
     const { count } = await supabase
       .from("courses")
-      .select("*", { count: "exact", head: true });
+      .select("*", { count: "exact", head: true })
+      .ilike("course_name", `%${course}%`);
 
 
     if (course) {
