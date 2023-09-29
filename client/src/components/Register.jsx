@@ -16,6 +16,7 @@ function Register() {
   const navigate = useNavigate();
   const [registerData, setRegisterData] = useState({});
   const [dateOfBirth, setDateOfBirth] = useState(null);
+  const [disSubmit, setDisSubmit] = useState(true);
   const [openSnackbar, setOpenSnackBar] = useState(false);
   const [snackBarMes, setSnackbarMes] = useState("");
   const [snackBarSeverity, setSnackbarSeverity] = useState("success");
@@ -28,13 +29,15 @@ function Register() {
   }, [navigate, registerData]);
 
   const handleRegister = (values) => {
-    setRegisterData({
-      name: values.name,
-      dateOfBirth: dateOfBirth,
-      educationBackground: values.eduBg,
-      email: values.email,
-      password: values.password,
-    });
+    if (values.name && dateOfBirth && values.eduBg && values.email && values.password) {
+      setRegisterData({
+        name: values.name,
+        dateOfBirth: dateOfBirth,
+        educationBackground: values.eduBg,
+        email: values.email,
+        password: values.password,
+      })
+    }
   };
 
   const sendRegisterRequest = async () => {
@@ -62,6 +65,43 @@ function Register() {
     }
     setOpenSnackBar(false);
   };
+  const validateForm = (values) => {
+    const errors = {};
+
+    if (!values.name) {
+      errors.name = "Required!";
+    }
+    else if (!/^[A-Z' -]+$/i.test(values.name)) {
+      errors.name = `Name must be included (A-Z) , (a-z) and (' , -)`;
+    }
+    // else if (!values.dateOfBirth) {
+    //     errors.dateOfBirth = 'Required!'
+    // } else if (new Date(values.dateOfBirth) > new Date().getTime()) {
+    //     errors.dateOfBirth = `Date must  be in the past`;
+    // }
+    else if (!values.eduBg) {
+      errors.eduBg = "Required!";
+    }
+    else if (!values.email) {
+      errors.email = "Required!";
+    }
+    else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+    ) {
+      errors.email = "Invalid email address!";
+    }
+    else if (!values.password) {
+      errors.password = "Required!";
+    }
+    else if (values.password.length < 12) {
+      errors.password =
+        "Password must contain at least 12 or more characters";
+    }
+    else {
+      setDisSubmit(false)
+    }
+    return errors;
+  }
 
   return (
     <>
@@ -78,42 +118,11 @@ function Register() {
 
           <Formik
             initialValues={{}}
-            validate={(values) => {
-              const errors = {};
-              if (!values) {
-                alert("Please input the form");
-              }
-              if (!values.name) {
-                errors.name = "Required!";
-              } else if (!/^[A-Z' -]+$/i.test(values.name)) {
-                errors.name = `Name must be included (A-Z) , (a-z) and (' , -)`;
-              }
-
-              // else if (!values.dateOfBirth) {
-              //     errors.dateOfBirth = 'Required!'
-              // } else if (new Date(values.dateOfBirth) > new Date().getTime()) {
-              //     errors.dateOfBirth = `Date must  be in the past`;
-              // }
-              else if (!values.eduBg) {
-                errors.eduBg = "Required!";
-              } else if (!values.email) {
-                errors.email = "Required!";
-              } else if (
-                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-              ) {
-                errors.email = "Invalid email address!";
-              } else if (!values.password) {
-                errors.password = "Required!";
-              } else if (values.password.length < 12) {
-                errors.password =
-                  "Password must contain at least 12 or more characters";
-              }
-              return errors;
-            }}
+            validate={validateForm}
             onSubmit={(values, actions) => {
-              // alert(JSON.stringify(values, null, 2));
 
               handleRegister(values);
+
               actions.resetForm();
               actions.setFieldValue("name", "");
               setDateOfBirth(null);
@@ -121,14 +130,10 @@ function Register() {
               actions.setFieldValue("email", "");
               actions.setFieldValue("password", "");
 
-              // alert("register successfully")
+              setOpenSnackBar(false)
+              setSnackbarMes("register success check you email to verify")
+              setOpenSnackBar(true)
 
-              actions.setSubmitting(true);
-              const timeOut = setTimeout(() => {
-                actions.setSubmitting(false);
-
-                clearTimeout(timeOut);
-              }, 400);
             }}>
             {({ errors, touched, handleSubmit, isSubmitting }) => (
               <Form onSubmit={handleSubmit}>
@@ -147,25 +152,21 @@ function Register() {
                       : " border-[--gray500]"
                       }`}
                   />
-                  <ErrorMessage
-                    name='name'
-                    component='div'
-                    className='text-[#9B2FAC] absolute right-0 -bottom-6'
-                  />
-                  {errors.name && touched.name ? (
-                    <img
-                      src='../../public/Exclamation-circle.svg'
-                      className='absolute right-4 top-11'
-                    />
-                  ) : null}
+                  {errors.name && touched.name &&
+                    <div className='text-[#9B2FAC] absolute right-0 -bottom-6'>
+                      {errors.name}
+                      <img
+                        src='../../public/Exclamation-circle.svg'
+                        className='absolute right-4 -top-10'
+                      />
+                    </div>}
+
                 </div>
 
                 <div className='relative mt-10'>
                   <label htmlFor='dateOfBirth' className='Body2'>
                     Date of Birth
                   </label>
-                  {/* <Field type="date" name="dateOfBirth" id="dateOfBirth"
-                                    className={`Body2 w-full mt-1 p-3 rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${errors.dateOfBirth && touched.dateOfBirth ? " border-[#9B2FAC]" : " border-[--gray500]"}`} /> */}
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       slotProps={{ popper: { placement: "bottom-end" } }}
@@ -193,16 +194,12 @@ function Register() {
                       format='DD-MM-YYYY'
                       maxDate={today}
                       value={dateOfBirth}
-                      // showDaysOutsideCurrentMonth
                       onChange={(newValue) => {
                         const timestamp = new Date(newValue);
                         setDateOfBirth(timestamp);
                       }}
                     />
                   </LocalizationProvider>
-                  {/* <ErrorMessage name="dateOfBirth" component="div"
-                                    className='text-[#9B2FAC] absolute right-0 -bottom-6' />
-                                {errors.dateOfBirth && touched.dateOfBirth ? <img src='../../public/Exclamation-circle.svg' className='absolute right-10 top-11' /> : null} */}
                 </div>
 
                 <div className='relative mt-10'>
@@ -219,17 +216,16 @@ function Register() {
                       : " border-[--gray500]"
                       }`}
                   />
-                  <ErrorMessage
-                    name='eduBg'
-                    component='div'
-                    className='text-[#9B2FAC] absolute right-0 -bottom-6'
-                  />
-                  {errors.eduBg && touched.eduBg ? (
-                    <img
-                      src='../../public/Exclamation-circle.svg'
-                      className='absolute right-4 top-11'
-                    />
-                  ) : null}
+                  {errors.eduBg && touched.eduBg &&
+                    <div className='text-[#9B2FAC] absolute right-0 -bottom-6'>
+                      {errors.eduBg}
+                      <img
+                        src='../../public/Exclamation-circle.svg'
+                        className='absolute right-4 -top-10'
+                      />
+                    </div>
+
+                  }
                 </div>
 
                 <div className='relative mt-10'>
@@ -247,17 +243,16 @@ function Register() {
                       : " border-[--gray500]"
                       }`}
                   />
-                  <ErrorMessage
-                    name='email'
-                    component='div'
-                    className='text-[#9B2FAC] absolute right-0 -bottom-6'
-                  />
-                  {errors.email && touched.email ? (
-                    <img
-                      src='../../public/Exclamation-circle.svg'
-                      className='absolute right-4 top-11'
-                    />
-                  ) : null}
+                  {errors.email && touched.email &&
+                    <div className='text-[#9B2FAC] absolute right-0 -bottom-6'>
+                      {errors.email}
+                      <img
+                        src='../../public/Exclamation-circle.svg'
+                        className='absolute right-4 -top-10'
+                      />
+                    </div>
+
+                  }
                 </div>
 
                 <div className='relative mt-10'>
@@ -274,22 +269,21 @@ function Register() {
                       : " border-[--gray500]"
                       }`}
                   />
-                  <ErrorMessage
-                    name='password'
-                    component='div'
-                    className='text-[#9B2FAC] absolute right-0 -bottom-6'
-                  />
-                  {errors.password && touched.password ? (
-                    <img
-                      src='../../public/Exclamation-circle.svg'
-                      className='absolute right-4 top-11'
-                    />
-                  ) : null}
+                  {errors.password && touched.password &&
+                    <div className='text-[#9B2FAC] absolute right-0 -bottom-6'>
+                      {errors.password}
+                      <img
+                        src='../../public/Exclamation-circle.svg'
+                        className='absolute right-4 -top-10'
+                      />
+                    </div>
+
+                  }
                 </div>
 
                 <button
                   type='submit'
-                  disabled={isSubmitting}
+                  disabled={disSubmit}
                   className='Body1 text-white bg-[--blue500] w-full mt-10 p-4 rounded-2xl border-none cursor-pointer disabled:bg-[--gray500] hover:bg-[--blue400] active:bg-[--blue700]'>
                   {isSubmitting ? "Registering..." : "Register"}
                 </button>
