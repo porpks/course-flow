@@ -57,8 +57,10 @@ authRouter.post("/login", async (req, res) => {
       email: loginData.email,
       password: loginData.password,
     });
-
     if (error) {
+      if (error.message === "Email not confirmed") {
+        return res.json({ message: "Email not confirmed" })
+      }
       return res.status(401).json({ error: error });
     }
 
@@ -81,7 +83,6 @@ authRouter.post("/login", async (req, res) => {
           token,
           data: userId,
         });
-        console.log(res.json);
       } catch (error) {
         res.json({ error: error });
       }
