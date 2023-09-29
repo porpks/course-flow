@@ -26,8 +26,6 @@ function LessonTable() {
       console.error("Error:", error);
     }
   }, []);
-  console.log(lesson, "lessonFromtable");
-  console.log(localStorage.getItem("lesson_data"));
 
   // const handleDelete = (id, lessonName) => {
   //   alert(`Deleted lesson with ID ${id} ${lessonName}`)
