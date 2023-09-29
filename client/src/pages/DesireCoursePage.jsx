@@ -37,7 +37,7 @@ function DesireCoursePage() {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-  console.log(currentPage);
+
   useEffect(() => {
     getDataDesireCourse();
   }, []);
