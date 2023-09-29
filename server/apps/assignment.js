@@ -39,8 +39,8 @@ assignmentRouter.get("/", async (req, res) => {
         .select(
             "*,sublessons(lesson_id,sublesson_name,lessons(*,courses(course_name)))"
         )
-        .range((page - 1) * perPage, page * perPage - 1);
-
+        .range((page - 1) * perPage, page * perPage - 1)
+        .order("assignment_id")    
 
 
 

@@ -35,9 +35,20 @@ function AssignmentPage() {
     };
 
     getAssignmentData();
-  }, []);
+  }, [currentPage]);
 
   const pageSize = 4;
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   const handleFilterSelect = (filter) => {
     setSelectedFilter(filter);
@@ -67,10 +78,6 @@ function AssignmentPage() {
     startIndex,
     endIndex
   );
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
 
   const handleAnswerChange = (e, assignmentId, status) => {
     const updatedAnswers = answers.map((answer) => {
@@ -107,7 +114,6 @@ function AssignmentPage() {
         setData(updatedDataResponse.data.data);
       }
     } catch (error) {
-      console.log(error);
       console.log(error.message);
     }
   };
@@ -119,11 +125,12 @@ function AssignmentPage() {
       </div>
     );
   }
+
   return (
     <>
       <Navbar />
-      <div className='flex flex-col items-center pt-[100px] '>
-        <div className='top-5 h-[2050px] bg-white  w-[1440px] flex flex-col items-center relative'>
+      <div className='flex flex-col items-center py-[100px] '>
+        <div className='top-5 min-h-[350px] bg-white  w-[1440px] flex flex-col items-center relative'>
           <svg
             width='1418'
             height='190'
@@ -198,7 +205,7 @@ function AssignmentPage() {
             </div>
           </div>
           <div className='Frame427321008 w-[1120px]  flex-col justify-start items-start gap-6 inline-flex mt-[40px]  '>
-            {data ? (
+            {filteredAssignments && filteredAssignments.length > 0 ? (
               assignmentsToDisplay.map((assignment, index) => {
                 return (
                   <div
@@ -325,26 +332,70 @@ function AssignmentPage() {
                 );
               })
             ) : (
-              <>
-                <div>There is no Assignment.</div>
-              </>
+              <div className='text-center mt-6 self-center'>
+                <div className='bg-gray-100 border border-gray-300 p-4 rounded-lg shadow-lg'>
+                  <p className='text-xl font-semibold text-gray-600'>
+                    No assignments found
+                  </p>
+                  <p className='text-lg text-gray-500'>
+                    There are no assignments matching the {selectedFilter}
+                  </p>
+                </div>
+              </div>
             )}
           </div>
-          <div className='pagination '>
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => handlePageChange(index + 1)}
-                className={`pagination-item ${
-                  currentPage === index + 1 ? "active" : ""
-                }`}>
-                {index + 1}
-              </button>
-            ))}
+          <div className='pagination flex justify-center items-center space-x-4 mt-6 self-center'>
+            <button
+              onClick={() => prevPage()}
+              disabled={currentPage === 1}
+              className={`border-none px-4 py-2 bg-blue-800 hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${
+                currentPage === 1 ? "cursor-not-allowed" : "cursor-pointer"
+              }`}>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='h-6 w-6 inline-block mr-2'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'>
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M10 19l-7-7m0 0l7-7m-7 7h18'
+                />
+              </svg>
+              Prev
+            </button>
+            <span className='text-gray-600 text-lg'>
+              Page {currentPage}/{totalPages === 0 ? "1" : totalPages}
+            </span>
+            <button
+              onClick={() => nextPage()}
+              disabled={filteredAssignments.length < 4}
+              className={`border-none px-4 py-2 bg-blue-800 hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${
+                filteredAssignments.length < 4
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}>
+              Next
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='h-6 w-6 inline-block ml-2'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'>
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M14 5l7 7m0 0l-7 7m7-7H3'
+                />
+              </svg>
+            </button>
           </div>
         </div>
-        <Footer />
       </div>
+      <Footer />
     </>
   );
 }
