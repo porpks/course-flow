@@ -203,6 +203,24 @@ function Learning() {
       const newStatus = { ...subStatus };
       newStatus[videoKey] = "complete";
       setSubStatus(newStatus);
+      const result = await axios.get("http://localhost:4000/learn/status/", {
+        params: {
+          userID: userId,
+          courseID: localStorage.getItem("course_id"),
+        },
+      });
+      setPercentComplete(Number(result.data.percentComplete));
+
+      if (Number(result.data.percentComplete) === 100) {
+        const statusCompleteBody = {
+          user_id: userId,
+          course_id: localStorage.getItem("course_id"),
+        };
+        await axios.post(
+          "http://localhost:4000/learn/status/",
+          statusCompleteBody
+        );
+      }
     }
 
     //have assignment
@@ -292,7 +310,7 @@ function Learning() {
           <p className='text-[--blue500] font-[700] text-[16px]'>Back</p>
         </a>
       </div>
-      <div className='flex justify-center pt-[100px] px-[160px]'>
+      <div className='flex justify-center pt-[100px] px-[160px] min-h-[1000px]'>
         <div className=' flex flex-col w-[360px] mr-[24px] px-6 py-8 shadow-[4px_4px_24px_0px_rgba(0,0,0,0.08)] '>
           <div className=''>
             <h1 className='Body3 text-[--orange500] mb-6'>Course</h1>
@@ -336,11 +354,10 @@ function Learning() {
                           <label
                             key={index}
                             id={sublesson.sublesson_id}
-                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${
-                              sublesson.sublesson_id === videoKey
-                                ? "bg-[--gray400]"
-                                : ""
-                            }`}
+                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${sublesson.sublesson_id === videoKey
+                              ? "bg-[--gray400]"
+                              : ""
+                              }`}
                             onClick={() =>
                               handleShowVideo(
                                 sublesson.sublesson_name,
@@ -349,7 +366,7 @@ function Learning() {
                             }>
                             <div className='mr-4 h-[20px]'>
                               {subStatus[sublesson.sublesson_id] ===
-                              "complete" ? (
+                                "complete" ? (
                                 <svg
                                   xmlns='http://www.w3.org/2000/svg'
                                   width='20'
@@ -419,7 +436,7 @@ function Learning() {
           </form>
         </div>
 
-        <div className='flex flex-col w-full' ref={boxRef}>
+        <div className='flex flex-col w-[739px]' ref={boxRef}>
           <div className='mb-20'>
             <div className='h-[90px]'>
               <h1 className='H2'>
@@ -435,8 +452,8 @@ function Learning() {
                   <ReactPlayer
                     ref={playerRef}
                     url={videoUrl}
-                    width='100%'
-                    height='100%'
+                    width='739px'
+                    height='420px'
                     controls={true}
                     light={videoThumbnail}
                     playIcon={
@@ -497,7 +514,7 @@ function Learning() {
         )}
 
         {sublessonIdArray.findIndex((element) => element === videoKey) <
-        sublessonIdArray.length - 1 ? (
+          sublessonIdArray.length - 1 ? (
           <button
             className='Primary border-none cursor-pointer'
             onClick={() => {
