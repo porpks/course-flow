@@ -101,9 +101,7 @@ function OurCourse() {
 
   return (
     <div className="canvas-ourCourse ">
-      {searchKey
-        ? window.scrollTo({ top: 150, left: 0, behavior: "auto" })
-        : window.scrollTo({ top: 0, left: 0, behavior: "auto" })}
+      {/* {window.scrollTo({ top: 0, left: 0, behavior: "auto" })} */}
       <div className="topSection">
         <h2 className="H2">Our Courses</h2>
         <div className="input-container">
@@ -143,13 +141,15 @@ function OurCourse() {
               <button
                 className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center
               cursor-pointer	}`}
-                onClick={page > 1 ? changeLowerPage : undefined}>
+                onClick={page > 1 ? changeLowerPage : undefined}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 inline-block mr-2"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor">
+                  stroke="currentColor"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -164,14 +164,16 @@ function OurCourse() {
               </span>
               <button
                 className={`border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center cursor-pointer`}
-                onClick={maxPage <= page ? undefined : changeUpperPage}>
+                onClick={maxPage <= page ? undefined : changeUpperPage}
+              >
                 Next
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 inline-block ml-2"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor">
+                  stroke="currentColor"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

@@ -336,10 +336,11 @@ function Learning() {
                           <label
                             key={index}
                             id={sublesson.sublesson_id}
-                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${sublesson.sublesson_id === videoKey
-                              ? "bg-[--gray400]"
-                              : ""
-                              }`}
+                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${
+                              sublesson.sublesson_id === videoKey
+                                ? "bg-[--gray400]"
+                                : ""
+                            }`}
                             onClick={() =>
                               handleShowVideo(
                                 sublesson.sublesson_name,
@@ -348,7 +349,7 @@ function Learning() {
                             }>
                             <div className='mr-4 h-[20px]'>
                               {subStatus[sublesson.sublesson_id] ===
-                                "complete" ? (
+                              "complete" ? (
                                 <svg
                                   xmlns='http://www.w3.org/2000/svg'
                                   width='20'
@@ -496,7 +497,7 @@ function Learning() {
         )}
 
         {sublessonIdArray.findIndex((element) => element === videoKey) <
-          sublessonIdArray.length - 1 ? (
+        sublessonIdArray.length - 1 ? (
           <button
             className='Primary border-none cursor-pointer'
             onClick={() => {
