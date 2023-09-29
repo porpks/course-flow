@@ -41,6 +41,7 @@ function Register() {
   };
 
   const sendRegisterRequest = async () => {
+
     try {
       const result = await axios.post("http://localhost:4000/auth/register", registerData);
       if (result.data.error) {
@@ -48,10 +49,12 @@ function Register() {
         setSnackbarMes(result.data.error)
         setSnackbarSeverity("warning")
         setOpenSnackBar(true)
-      }
-
-      if (result.data.data) {
-        navigate("/login");
+      } else {
+        setSnackbarMes("register success check you email to verify")
+        setOpenSnackBar(true)
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
       }
 
     } catch (error) {
@@ -129,10 +132,6 @@ function Register() {
               actions.setFieldValue("eduBg", "");
               actions.setFieldValue("email", "");
               actions.setFieldValue("password", "");
-
-              setOpenSnackBar(false)
-              setSnackbarMes("register success check you email to verify")
-              setOpenSnackBar(true)
 
             }}>
             {({ errors, touched, handleSubmit, isSubmitting }) => (
