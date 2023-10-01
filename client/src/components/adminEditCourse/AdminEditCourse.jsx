@@ -107,10 +107,6 @@ function AdminEditCourse() {
       return;
     }
 
-    if (!getCoverImg) {
-      displaySnackbar("Please upload a cover image.", "warning");
-      return;
-    }
     if (!getVideoTrailer) {
       displaySnackbar("Please upload a video trailer.", "warning");
       return;
