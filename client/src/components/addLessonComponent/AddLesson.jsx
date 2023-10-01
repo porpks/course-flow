@@ -157,8 +157,8 @@ function AddLesson(sharedState, updateState) {
       const newLesson = lesson;
       newLesson.push({ lessonName, subLessonData, subLessonVideo });
       setLesson(newLesson);
+      console.log(lesson);
     }
-    console.log(lesson);
 
     navigate(`/admin/addcourse`);
     // console.log(data)
