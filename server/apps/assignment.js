@@ -282,6 +282,8 @@ assignmentRouter.get("/:userID", async (req, res) => {
           dataItem.assignment_duedate
         );
         dataItem.userId = dataItem.user_id;
+        dataItem.sublesson_id = dataItem.assignments.sublesson_id;
+        dataItem.course_id = dataItem.assignments.sublessons.lessons.course_id;
         delete dataItem.assignments;
         delete dataItem.user_id;
         delete dataItem.user_assignment_id;
@@ -301,7 +303,7 @@ assignmentRouter.get("/:userID", async (req, res) => {
       }
     });
 
-    res.json({ data: flatData2 });
+    res.json({ data: flatData });
   } else {
     const { data, error } = await supabase
       .from("user_assignments")
