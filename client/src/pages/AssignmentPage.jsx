@@ -93,7 +93,7 @@ function AssignmentPage() {
     setAnswers(updatedAnswers)
   }
 
-  const handleSubmit = async (assignment_id) => {
+  const handleSubmit = async (assignment_id, sublessonId, courseId) => {
     try {
       const assignmentAnswers = answers.map((answer) => ({
         assignment_id: answer.assignment_id,
@@ -113,6 +113,24 @@ function AssignmentPage() {
 
         setData(updatedDataResponse.data.data)
       }
+
+      await axios.put(
+        `http://localhost:4000/learn/complete?userID=${userId}&sublessonID=${sublessonId}`
+      );
+
+      const result = await axios.get(`http://localhost:4000/learn/status?userID=${userId}&courseID=${courseId}`);
+
+      if (Number(result.data.percentComplete) === 100) {
+        const statusCompleteBody = {
+          user_id: userId,
+          course_id: courseId,
+        };
+        await axios.post(
+          "http://localhost:4000/learn/status/",
+          statusCompleteBody
+        )
+      }
+
     } catch (error) {
       console.log(error.message)
     }
@@ -167,9 +185,8 @@ function AssignmentPage() {
             <div className="justify-start items-start gap-4 inline-flex ">
               <div
                 onClick={() => handleFilterSelect('All')}
-                className={`cursor-pointer Component1 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${
-                  selectedFilter === 'All' ? 'border-b-2' : ''
-                }`}
+                className={`cursor-pointer Component1 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${selectedFilter === 'All' ? 'border-b-2' : ''
+                  }`}
               >
                 <div className="Body2">All</div>
               </div>
@@ -177,9 +194,8 @@ function AssignmentPage() {
                 onClick={() => {
                   handleFilterSelect('Pending')
                 }}
-                className={`cursor-pointer Component4 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${
-                  selectedFilter === 'Pending' ? 'border-b-2' : ''
-                }`}
+                className={`cursor-pointer Component4 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${selectedFilter === 'Pending' ? 'border-b-2' : ''
+                  }`}
               >
 
                 <div className="Body2">Pending</div>
@@ -187,27 +203,24 @@ function AssignmentPage() {
 
               <div
                 onClick={() => handleFilterSelect('Submitted')}
-                className={`cursor-pointer Component2 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${
-                  selectedFilter === 'Submitted' ? 'border-b-2' : ''
-                }`}
+                className={`cursor-pointer Component2 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${selectedFilter === 'Submitted' ? 'border-b-2' : ''
+                  }`}
               >
 
                 <div className="Body2">Submitted</div>
               </div>
               <div
                 onClick={() => handleFilterSelect('Overdue')}
-                className={`cursor-pointer Component3 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${
-                  selectedFilter === 'Overdue' ? 'border-b-2' : ''
-                }`}
+                className={`cursor-pointer Component3 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${selectedFilter === 'Overdue' ? 'border-b-2' : ''
+                  }`}
               >
 
                 <div className="Body2">Overdue</div>
               </div>
               <div
                 onClick={() => handleFilterSelect('Submitted late')}
-                className={`cursor-pointer Component1 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${
-                  selectedFilter === 'Submitted late' ? 'border-b-2' : ''
-                }`}
+                className={`cursor-pointer Component1 p-2 flex items-start gap-2 hover:border-b-2 border-solid border-black border-t-0 border-r-0 border-l-0 border-b-0 ${selectedFilter === 'Submitted late' ? 'border-b-2' : ''
+                  }`}
               >
 
                 <div className="Body2">Submitted Late</div>
@@ -234,32 +247,30 @@ function AssignmentPage() {
                       </div>
                       <div className="Frame427321007 flex-col justify-start items-end gap-2 inline-flex">
                         <div
-                          className={`StatusHomework px-2 py-1 ${
-                            assignment.assignment_status === 'Pending'
-                              ? 'bg-[#FFFBDA]'
-                              : assignment.assignment_status ===
-                                'Submitted late'
+                          className={`StatusHomework px-2 py-1 ${assignment.assignment_status === 'Pending'
+                            ? 'bg-[#FFFBDA]'
+                            : assignment.assignment_status ===
+                              'Submitted late'
                               ? 'bg-red-100'
                               : assignment.assignment_status === 'Submitted'
-                              ? 'bg-[#DCF8EE]'
-                              : assignment.assignment_status === 'Overdue'
-                              ? 'bg-[#FAE7F4]'
-                              : null
-                          } rounded justify-start items-start gap-2 inline-flex`}
+                                ? 'bg-[#DCF8EE]'
+                                : assignment.assignment_status === 'Overdue'
+                                  ? 'bg-[#FAE7F4]'
+                                  : null
+                            } rounded justify-start items-start gap-2 inline-flex`}
                         >
                           <div
-                            className={`${
-                              assignment.assignment_status === 'Pending'
-                                ? ' text-[#996400]'
-                                : assignment.assignment_status ===
-                                  'Submitted late'
+                            className={`${assignment.assignment_status === 'Pending'
+                              ? ' text-[#996400]'
+                              : assignment.assignment_status ===
+                                'Submitted late'
                                 ? 'text-red-500'
                                 : assignment.assignment_status === 'Submitted'
-                                ? 'text-[#0A7B60]'
-                                : assignment.assignment_status === 'Overdue'
-                                ? 'text-[#9B2FAC]'
-                                : null
-                            } text-base font-medium leading-normal`}
+                                  ? 'text-[#0A7B60]'
+                                  : assignment.assignment_status === 'Overdue'
+                                    ? 'text-[#9B2FAC]'
+                                    : null
+                              } text-base font-medium leading-normal`}
                           >
                             {assignment.assignment_status === 'Submitted late'
                               ? 'Submitted Late'
@@ -291,14 +302,13 @@ function AssignmentPage() {
 
                           <div className="ContainerInputText  grow shrink basis-0 h-[96px] justify-start items-start flex">
                             <textarea
-                              className={`${
-                                (assignment.assignment_status === 'Submitted' ||
-                                  assignment.assignment_status ===
-                                    'Submitted late') &&
+                              className={`${(assignment.assignment_status === 'Submitted' ||
+                                assignment.assignment_status ===
+                                'Submitted late') &&
                                 !assignment.assignment_answer
-                                  ? 'bg-slate-200 text-slate-500 '
-                                  : 'bg-white  text-slate-400'
-                              }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
+                                ? 'bg-slate-200 text-slate-500 '
+                                : 'bg-white  text-slate-400'
+                                }  placeholder-opacity-50 placeholder-slate-400  outline-none border-none Placeholder grow shrink basis-0  text-base font-normal leading-normal h-[100%]`}
                               placeholder="Answer..."
                               value={
                                 answers.find(
@@ -319,7 +329,7 @@ function AssignmentPage() {
                               readOnly={
                                 assignment.assignment_status === 'Submitted' ||
                                 assignment.assignment_status ===
-                                  'Submitted late'
+                                'Submitted late'
                               }
                             />
                           </div>
@@ -333,7 +343,7 @@ function AssignmentPage() {
                               <div
                                 className=" cursor-pointer Primary mb-[20px] self-stretch px-8 py-4 bg-blue-800 rounded-xl shadow justify-center items-center gap-2.5 inline-flex"
                                 onClick={() =>
-                                  handleSubmit(assignment.assignment_id)
+                                  handleSubmit(assignment.assignment_id, assignment.sublesson_id, assignment.course_id)
                                 }
                               >
 
@@ -371,9 +381,8 @@ function AssignmentPage() {
               <button
                 onClick={() => prevPage()}
                 disabled={currentPage === 1}
-                className={`border-none px-4 py-2 bg-blue-800 hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${
-                  currentPage === 1 ? "cursor-not-allowed" : "cursor-pointer"
-                }`}>
+                className={`border-none px-4 py-2 bg-blue-800 hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${currentPage === 1 ? "cursor-not-allowed" : "cursor-pointer"
+                  }`}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 inline-block mr-2"
@@ -395,11 +404,10 @@ function AssignmentPage() {
               <button
                 onClick={() => nextPage()}
                 disabled={filteredAssignments.length < 4}
-                className={`border-none px-4 py-2 bg-blue-800 hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${
-                  filteredAssignments.length < 4
-                    ? "cursor-not-allowed"
-                    : "cursor-pointer"
-                }`}>
+                className={`border-none px-4 py-2 bg-blue-800 hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center ${filteredAssignments.length < 4
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
+                  }`}>
                 Next
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

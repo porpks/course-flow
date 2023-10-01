@@ -20,7 +20,6 @@ ReactDOM.unstable_disableWarnOnNestedVirtualComponents = true;
 function App() {
   const auth = useAuth();
   const { isAdminAuthenticated } = useAuth();
-  console.log(isAdminAuthenticated);
   return isAdminAuthenticated ? (
     <AdminAuthenApp />
   ) : auth.isAuthenticated ? (
