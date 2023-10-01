@@ -158,6 +158,7 @@ function AddLesson(sharedState, updateState) {
       newLesson.push({ lessonName, subLessonData, subLessonVideo });
       setLesson(newLesson);
     }
+    console.log(lesson);
 
     navigate(`/admin/addcourse`);
     // console.log(data)
@@ -358,8 +359,8 @@ function AddLesson(sharedState, updateState) {
                                     width="100%"
                                     height="100%"
                                     controls={true}
-                                    // light={true}
-                                    // playIcon={"../public/image/playIcon.svg"}
+                                  // light={true}
+                                  // playIcon={"../public/image/playIcon.svg"}
                                   />
                                   {subLesson.subLessonVideo ? (
                                     <button
