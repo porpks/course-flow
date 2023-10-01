@@ -32,8 +32,6 @@ function AdminAddCourse() {
     setAdminVideoUrl,
   } = useAuth();
 
-  console.log(getImgUrl, "getImgUrl");
-  console.log(getVdoUrl, "getVdoUrl");
   const [loadingMes, setLoadingMes] = useState("Loading...");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -336,11 +334,10 @@ function AdminAddCourse() {
                         name="courseName"
                         // id="courseName"
                         placeholder="Enter Course Name"
-                        className={`Body2 p-[12px] w-[100%] h-[48px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                          formik.touched.courseName && formik.errors.courseName
+                        className={`Body2 p-[12px] w-[100%] h-[48px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.courseName && formik.errors.courseName
                             ? " border-[#9B2FAC]"
                             : " border-[--gray500]"
-                        }`}
+                          }`}
                         value={formik.values.courseName}
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
@@ -361,11 +358,10 @@ function AdminAddCourse() {
                           name="price"
                           // id="price"
                           placeholder="Enter Course Price"
-                          className={`Body2 p-[12px] w-[100%] h-[48px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                            formik.touched.price && formik.errors.price
+                          className={`Body2 p-[12px] w-[100%] h-[48px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.price && formik.errors.price
                               ? " border-[#9B2FAC]"
                               : " border-[--gray500]"
-                          }`}
+                            }`}
                           value={formik.values.price}
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
@@ -383,18 +379,17 @@ function AdminAddCourse() {
                           name="totalLearningTime"
                           // id="totalLearningTime"
                           placeholder="Enter Total learning time"
-                          className={`Body2 p-[12px] w-[100%] h-[48px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${
-                            formik.touched.totalLearningTime &&
-                            formik.errors.totalLearningTime
+                          className={`Body2 p-[12px] w-[100%] h-[48px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.totalLearningTime &&
+                              formik.errors.totalLearningTime
                               ? " border-[#9B2FAC]"
                               : " border-[--gray500]"
-                          }`}
+                            }`}
                           value={formik.values.totalLearningTime}
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange}
                         />{" "}
                         {formik.errors.totalLearningTime &&
-                        formik.touched.totalLearningTime ? (
+                          formik.touched.totalLearningTime ? (
                           <div className="text-[#9B2FAC] self-end pt-2">
                             {formik.errors.totalLearningTime}
                           </div>
@@ -409,18 +404,17 @@ function AdminAddCourse() {
                         name="courseSummary"
                         // id="courseSummary"
                         placeholder="Enter Course summary"
-                        className={`Body2 p-[12px] w-[100%] h-[100px] resize-none rounded-lg border-solid border-[2px] focus:border-[--orange500] focus:outline-none ${
-                          formik.touched.courseSummary &&
-                          formik.errors.courseSummary
+                        className={`Body2 p-[12px] w-[100%] h-[100px] resize-none rounded-lg border-solid border-[2px] focus:border-[--orange500] focus:outline-none ${formik.touched.courseSummary &&
+                            formik.errors.courseSummary
                             ? " border-[#9B2FAC]"
                             : " border-[--gray500]"
-                        }`}
+                          }`}
                         value={formik.values.courseSummary}
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                       />
                       {formik.errors.courseSummary &&
-                      formik.touched.courseSummary ? (
+                        formik.touched.courseSummary ? (
                         <div className="text-[#9B2FAC] self-end pt-2">
                           {formik.errors.courseSummary}
                         </div>
@@ -434,18 +428,17 @@ function AdminAddCourse() {
                         name="courseDetail"
                         // id="courseDetail"
                         placeholder="Enter Course detail"
-                        className={`flex text- align-text-top Body2 p-[12px] w-[100%] h-[220px] resize-none rounded-lg border-solid border-[2px] focus:border-[--orange500] focus:outline-none ${
-                          formik.touched.courseSummary &&
-                          formik.errors.courseSummary
+                        className={`flex text- align-text-top Body2 p-[12px] w-[100%] h-[220px] resize-none rounded-lg border-solid border-[2px] focus:border-[--orange500] focus:outline-none ${formik.touched.courseSummary &&
+                            formik.errors.courseSummary
                             ? " border-[#9B2FAC]"
                             : " border-[--gray500]"
-                        }`}
+                          }`}
                         value={formik.values.courseDetail}
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                       />
                       {formik.errors.courseDetail &&
-                      formik.touched.courseDetail ? (
+                        formik.touched.courseDetail ? (
                         <div className="text-[#9B2FAC] self-end pt-2">
                           {formik.errors.courseDetail}
                         </div>

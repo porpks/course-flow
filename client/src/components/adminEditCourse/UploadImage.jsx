@@ -97,14 +97,14 @@ function UploadImage(props) {
           {avatarUrl ? (
             <img
               src={`${avatarUrl}`}
-              className="relative w-[calc(357px*1.5)] h-[calc(240px*1.5)] 	rounded-2xl	"
+              className="relative w-[480px]	rounded-2xl	"
             />
           ) : null}
 
           {/*---------------------- Close X BTN -----------------------*/}
           {props.getCoverImg || avatarUrl ? (
             <button
-              className=" absolute top-0 left-[calc((357px*1.5)-2.5rem)] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
+              className=" absolute top-0 left-[calc((480px)-2.5rem)] m-[6px] bg-[#9B2FAC] bg-opacity-95 rounded-full w-[30px] h-[30px] border-none cursor-pointer"
               onClick={handleRemoveImage}
             >
               <img
