@@ -42,6 +42,7 @@ function Learning() {
     course_detail: "",
     lessons: [],
   });
+  const [check, setCheck] = useState(null);
   const [videoThumbnail, setVideoThumbnail] = useState("");
   const [subStatus, setSubStatus] = useState({});
   const [percentComplete, setPercentComplete] = useState(0);
@@ -177,7 +178,7 @@ function Learning() {
     const result = await axios.get(
       `http://localhost:4000/learn/videotimebyid?sublessonid=${videoKey}&userid=${userId}`
     );
-    console.log(result);
+
     if (result.data.data[0].sublesson_video_timestop !== null) {
       setPauseTime(result.data.data[0].sublesson_video_timestop);
       localStorage.setItem(
@@ -269,8 +270,9 @@ function Learning() {
         setSublessonIdArray(newSublessonIdArray);
         setSublessonNameObject(newSublessonNameObject);
         setSublessonVideoObject(newSublessonVideoObject);
-
-        setIsLoading(false); // Data fetching is complete
+        setVideoKey(localStorage.getItem("videoKey"));
+        setIsLoading(false);
+        setCheck(true);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -331,6 +333,7 @@ function Learning() {
               index + 1 < 10
                 ? (seq = "0" + (index + 1))
                 : (seq = String(index + 1));
+
               return (
                 <Accordion key={index}>
                   <AccordionSummary
@@ -438,9 +441,7 @@ function Learning() {
         <div className='flex flex-col w-[739px]' ref={boxRef}>
           <div className='mb-20'>
             <div className='h-[90px]'>
-              <h1 className='H2'>
-                {videoHead || localStorage.getItem("sublessonName")}
-              </h1>
+              <h1 className='H2'>{localStorage.getItem("sublessonName")}</h1>
             </div>
             {isShowVdo || localStorage.getItem("isShowVdo") ? (
               <div className='w-full'>
@@ -450,7 +451,7 @@ function Learning() {
                 <div className='rounded-lg overflow-hidden '>
                   <ReactPlayer
                     ref={playerRef}
-                    url={videoUrl}
+                    url={localStorage.getItem("videoUrl")}
                     width='739px'
                     height='420px'
                     controls={true}
