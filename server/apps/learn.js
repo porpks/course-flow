@@ -221,14 +221,14 @@ learnRouter.get('/videotime', async (req, res) => {
 learnRouter.put('/videotime', async (req, res) => {
     try {
         const body = req.body;
-        const currentDate = new Date(); // Use 'new Date()' to get the current date and time
-
+        const currentDate = new Date(); 
+        console.log(body);
         const { data, error } = await supabase
             .from('user_sublessons')
-            .update({
+            .update([{
                 sublesson_video_timestop: body.sublesson_video_timestop,
-                timestop_updated: currentDate, // Set the 'timestop_updated' column to the current date and time
-            })
+                timestop_updated: currentDate, 
+            }])
             .eq('user_id', body.user_Id)
             .eq('sublesson_id', body.sublesson_id)
             .select();
@@ -247,12 +247,13 @@ learnRouter.put('/videotime', async (req, res) => {
 
 learnRouter.get('/videotimebyid', async (req, res) => {
     const sublesson_id = Number(req.query.sublessonid);
+    const userid = Number(req.query.userid);
     try {
         const { data: interval, error: courseError } = await supabase
             .from('user_sublessons')
             .select('sublesson_video_timestop')
             .eq("sublesson_id", sublesson_id)
-
+            .eq("user_id", userid)
 
 
         res.json({ data: interval });
