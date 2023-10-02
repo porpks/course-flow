@@ -157,7 +157,7 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
             .from("lessons")
             .insert({ course_id: courseId, lesson_name: lessonName })
             .select()
-            .order("lesson_id", { ascending: false });
+          // .order("lesson_id", { ascending: true });
 
           if (!lessonData || lessonData.length === 0) {
             throw new Error("Lesson data is null or empty");
@@ -176,7 +176,7 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
                     { lesson_id: lessonId, sublesson_name: subLessonName },
                   ])
                   .select("sublesson_id")
-                  .order("sublesson_id", { ascending: false });
+                // .order("sublesson_id", { ascending: true });
 
                 subLessonId.push(subLessonData[0].sublesson_id);
                 let subLessonId1 = subLessonData[0].sublesson_id;
@@ -189,7 +189,6 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
         });
 
         await Promise.all(insertPromises);
-        console.log(subLessonVideos)
         for (let i = 0; i < subLessonVideos.length; i++) {
           const subLessonVideo = subLessonVideos[i];
           const file_Video = new Blob([subLessonVideo.buffer], {
@@ -221,7 +220,6 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
               console.error("Upload sublesson video failed", subUploadError);
             }
 
-            console.log("update", updateSublessonData);
             console.log("Sublesson data updated successfully");
           } catch (err) {
             console.error(err);

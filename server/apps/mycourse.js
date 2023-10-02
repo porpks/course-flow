@@ -79,7 +79,7 @@ MyCourseRouter.get("/:userID", async (req, res) => {
     const { data, error } = await supabase
       .from(`user_courses`)
       .select(
-        "*, courses(course_id, course_name, course_detail, cover_img, total_time, course_summary)"
+        "*, courses(course_id, course_name, course_detail, cover_img, total_time, course_summary, lessons(lesson_id))"
       )
       .eq("user_id", userID);
 
