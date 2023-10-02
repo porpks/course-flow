@@ -189,7 +189,6 @@ addCourseRouter.post("/addcourse", imageCoverUpload, async (req, res) => {
         });
 
         await Promise.all(insertPromises);
-        console.log(subLessonVideos)
         for (let i = 0; i < subLessonVideos.length; i++) {
           const subLessonVideo = subLessonVideos[i];
           const file_Video = new Blob([subLessonVideo.buffer], {
