@@ -251,7 +251,7 @@ function AdminAddCourse() {
       setAdminImageUrl(null)
       setAdminVideoUrl(null)
       // TODO need to reset lessons State After Send Data To Server
-      // setLesson([])
+      setLesson([])
       // TODO
       navigate('/admin/courselist')
     } catch (error) {

@@ -120,8 +120,35 @@ function AddLesson(sharedState, updateState) {
     //TODO เนื่องจากการ Add Lesson ครั้งแรกจะยังไม่มีข้อมูลใน Storage เลยไม่มีการทำงานของ Code บรรทัดที่ 125
     if (!storage) {
       displaySnackbar('lesson has successfully created! ', 'success')
-      const data = [{ lessonName, subLessonList }]
-      localStorage.setItem(`lesson_data`, JSON.stringify(data))
+      const newData = [{ lessonName, subLessonList }]
+      localStorage.setItem(`lesson_data`, JSON.stringify(newData))
+
+      const subLessonData = subLessonList.map((item) => ({
+        subLessonId: item.subLessonId,
+        subLessonName: item.subLessonName,
+      }))
+      const subLessonVideo = subLessonList
+        .filter((item) => item.subLessonVideo && item.subLessonVideo !== '')
+        .map((item) => item.subLessonVideo)
+      const newLesson = lesson
+      newLesson.push({ lessonName, subLessonData, subLessonVideo })
+      setLesson(newLesson)
+      console.log(lesson)
+
+      if (!lessonName) {
+        displaySnackbar('Please enter a name for the lesson.', 'warning')
+        return
+      }
+
+      if (isSublessonEmpty) {
+        displaySnackbar('Please enter a name for the sub-lesson.', 'warning')
+        return
+      }
+
+      if (isVdoEmpty) {
+        displaySnackbar('Please upload videos for the sub-lesson.', 'warning')
+        return
+      }
     } else if (storage) {
       displaySnackbar('lesson has successfully created! ', 'success')
       const parsedData = JSON.parse(storage)
