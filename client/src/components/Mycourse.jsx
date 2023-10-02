@@ -229,7 +229,7 @@ function MyCourse() {
           coverimg={item.courses.cover_img}
           coursename={item.courses.course_name}
           coursedetail={item.courses.course_detail}
-          coursesummary={item.courses.course_summary}
+          coursesummary={item.courses.lessons.length}
           totallearningtime={item.courses.total_time}
         />
       </Link>

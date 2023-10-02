@@ -18,9 +18,8 @@ function calculateDueDateStatus(assignmentduedate) {
     );
 
     if (hoursDifference > 0) {
-      return `${hoursDifference} hour${
-        hoursDifference > 1 ? "s" : ""
-      } ${minutesDifference} minute${minutesDifference > 1 ? "s" : ""}`;
+      return `${hoursDifference} hour${hoursDifference > 1 ? "s" : ""
+        } ${minutesDifference} minute${minutesDifference > 1 ? "s" : ""}`;
     } else {
       return `${minutesDifference} minute${minutesDifference > 1 ? "s" : ""}`;
     }
@@ -42,7 +41,7 @@ assignmentRouter.get("/", async (req, res) => {
       "*,sublessons(lesson_id,sublesson_name,lessons(*,courses(course_name)))"
     )
     .range(start, end)
-    .order("assignment_id");
+    .order("assignment_id", { ascending: false });
 
   const { count } = await supabase
     .from("assignments")
