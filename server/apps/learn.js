@@ -183,11 +183,11 @@ learnRouter.get('/videotime', async (req, res) => {
         }
 
         const filteredSublessons = interval.filter(item => {
-       
+
             if (item.sublessons.lessons && item.sublessons.lessons.course_id === courseID) {
-                return true; 
+                return true;
             } else {
-                return false; 
+                return false;
             }
         });
 
@@ -221,13 +221,12 @@ learnRouter.get('/videotime', async (req, res) => {
 learnRouter.put('/videotime', async (req, res) => {
     try {
         const body = req.body;
-        const currentDate = new Date(); 
-        console.log(body);
+        const currentDate = new Date();
         const { data, error } = await supabase
             .from('user_sublessons')
             .update([{
                 sublesson_video_timestop: body.sublesson_video_timestop,
-                timestop_updated: currentDate, 
+                timestop_updated: currentDate,
             }])
             .eq('user_id', body.user_Id)
             .eq('sublesson_id', body.sublesson_id)

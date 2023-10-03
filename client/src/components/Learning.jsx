@@ -42,7 +42,7 @@ function Learning() {
     course_detail: "",
     lessons: [],
   });
-  const [check, setCheck] = useState(null);
+  // const [check, setCheck] = useState(null);
   const [videoThumbnail, setVideoThumbnail] = useState("");
   const [subStatus, setSubStatus] = useState({});
   const [percentComplete, setPercentComplete] = useState(0);
@@ -270,9 +270,9 @@ function Learning() {
         setSublessonIdArray(newSublessonIdArray);
         setSublessonNameObject(newSublessonNameObject);
         setSublessonVideoObject(newSublessonVideoObject);
-        setVideoKey(localStorage.getItem("videoKey"));
+        // setVideoKey(localStorage.getItem("videoKey"));
         setIsLoading(false);
-        setCheck(true);
+        // setCheck(true);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -355,11 +355,11 @@ function Learning() {
                           <label
                             key={index}
                             id={sublesson.sublesson_id}
-                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${
-                              sublesson.sublesson_id === videoKey
+                            className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${sublesson.sublesson_id === videoKey
                                 ? "bg-[--gray400]"
                                 : ""
-                            }`}
+                              }`}
+                            // className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] tab${sublesson.sublesson_id}`}
                             onClick={() =>
                               handleShowVideo(
                                 sublesson.sublesson_name,
@@ -368,7 +368,7 @@ function Learning() {
                             }>
                             <div className='mr-4 h-[20px]'>
                               {subStatus[sublesson.sublesson_id] ===
-                              "complete" ? (
+                                "complete" ? (
                                 <svg
                                   xmlns='http://www.w3.org/2000/svg'
                                   width='20'
@@ -441,7 +441,8 @@ function Learning() {
         <div className='flex flex-col w-[739px]' ref={boxRef}>
           <div className='mb-20'>
             <div className='h-[90px]'>
-              <h1 className='H2'>{localStorage.getItem("sublessonName")}</h1>
+              {/* <h1 className='H2'>{localStorage.getItem("sublessonName")}</h1> */}
+              <h1 className='H2'>{videoHead}</h1>
             </div>
             {isShowVdo || localStorage.getItem("isShowVdo") ? (
               <div className='w-full'>
@@ -451,7 +452,8 @@ function Learning() {
                 <div className='rounded-lg overflow-hidden '>
                   <ReactPlayer
                     ref={playerRef}
-                    url={localStorage.getItem("videoUrl")}
+                    // url={localStorage.getItem("videoUrl")}
+                    url={videoUrl}
                     width='739px'
                     height='420px'
                     controls={true}
@@ -514,7 +516,7 @@ function Learning() {
         )}
 
         {sublessonIdArray.findIndex((element) => element === videoKey) <
-        sublessonIdArray.length - 1 ? (
+          sublessonIdArray.length - 1 ? (
           <button
             className='Primary border-none cursor-pointer'
             onClick={() => {
@@ -526,7 +528,17 @@ function Learning() {
           <div></div>
         )}
       </div>
-      <style>{`.progressbar {width: ${percentComplete}%;}`}</style>
+      <style>
+        {`.progressbar {
+          width: ${percentComplete}%;
+          }`}</style>
+      {/* <style>
+        {`.progressbar {
+          width: ${percentComplete}%;
+          }
+      .tab${videoKey} {
+        background: #d6d9e4;
+      }`}</style> */}
     </>
   );
 }
