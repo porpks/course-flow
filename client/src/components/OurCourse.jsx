@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CircularIndeterminate from "../assets/loadingProgress";
+import { serverUrl } from "../utils/data.js";
+
 function OurCourse() {
   const navigate = useNavigate();
   const [dataCourse, setDataCourse] = useState([]);
@@ -18,7 +20,7 @@ function OurCourse() {
   async function getDataCourse() {
     try {
       const result = await axios.get(
-        `http://localhost:4000/ourcourse?course=${""}&start=${start}&end=${end}`
+        `${serverUrl}/ourcourse?course=${""}&start=${start}&end=${end}`
       );
       setDataCourse(result.data.data);
       setMaxpage(Math.ceil(result.data.count / 9));
@@ -31,7 +33,7 @@ function OurCourse() {
   const getCourseByKeywords = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/ourcourse?course=${searchKey}&start=${start}&end=${end}`
+        `${serverUrl}/ourcourse?course=${searchKey}&start=${start}&end=${end}`
       );
       setDataCourse(response.data.data);
       setMaxpage(Math.ceil(response.data.count / 9));

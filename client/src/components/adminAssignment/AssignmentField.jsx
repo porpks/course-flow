@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
+import { serverUrl } from '../../utils/data.js'
 
 function AssignmentField(props) {
   const navigate = useNavigate()
@@ -26,7 +27,7 @@ function AssignmentField(props) {
   const getCourse = async () => {
     try {
       const result = await axios.get(
-        'http://localhost:4000/assignment/courseList'
+        `${serverUrl}/assignment/courseList`
       )
       setCourseData(result.data.data)
     } catch (err) {
@@ -36,7 +37,7 @@ function AssignmentField(props) {
   const getLesson = async (course_id) => {
     try {
       const result = await axios.get(
-        `http://localhost:4000/assignment/lessonList?courseId=${course_id}`
+        `${serverUrl}/assignment/lessonList?courseId=${course_id}`
       )
       setLessonData(result.data.data)
     } catch (err) {
@@ -46,7 +47,7 @@ function AssignmentField(props) {
   const getSublesson = async (lesson_id) => {
     try {
       const result = await axios.get(
-        `http://localhost:4000/assignment/sublessonList?lessonId=${lesson_id}`
+        `${serverUrl}/assignment/sublessonList?lessonId=${lesson_id}`
       )
       setSublessonData(result.data.data)
     } catch (err) {
@@ -56,7 +57,7 @@ function AssignmentField(props) {
   const getAssingment = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:4000/assignment/byId?assignId=${assignId}`
+        `${serverUrl}/assignment/byId?assignId=${assignId}`
       )
       setCourse(result.data.data.course)
       setLesson(result.data.data.lesson)
@@ -83,7 +84,7 @@ function AssignmentField(props) {
       }
       try {
         await axios.post(
-          `http://localhost:4000/assignment/create`,
+          `${serverUrl}/assignment/create`,
           assignmentBody
         )
       } catch (err) {
@@ -111,7 +112,7 @@ function AssignmentField(props) {
         duration: Number(duration.split(' ')[0]),
       }
       try {
-        await axios.put(`http://localhost:4000/assignment/edit`, assignmentBody)
+        await axios.put(`${serverUrl}/assignment/edit`, assignmentBody)
       } catch (err) {
         console.error(err)
       }

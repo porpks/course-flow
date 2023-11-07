@@ -5,6 +5,8 @@ import Mymodal from "../Mymodal";
 import CircularIndeterminate from "../../assets/loadingProgress.jsx";
 import SnackBar from "../SnackBar";
 import { useParams } from "react-router-dom";
+import { serverUrl } from "../../utils/data.js";
+
 function CourseList() {
   const [courseData, setCourseData] = useState([]);
   const [searchBox, setSearchBox] = useState("");
@@ -25,7 +27,7 @@ function CourseList() {
   const courseFetching = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:4000/ourcourse?course=${searchBox}&start=${start}&end=${end}&desc&`
+        `${serverUrl}/ourcourse?course=${searchBox}&start=${start}&end=${end}&desc&`
       );
       setMaxpage(Math.ceil(result.data.count / 8));
       setCourseData(result.data.data);
@@ -82,7 +84,7 @@ function CourseList() {
   const handleDelete = async () => {
     if (targetCourseId) {
       try {
-        await axios.delete(`http://localhost:4000/ourcourse/${targetCourseId}`);
+        await axios.delete(`${serverUrl}/ourcourse/${targetCourseId}`);
 
         setTargetCourseName(null);
         setTargetCourseId(null);
@@ -305,9 +307,8 @@ function CourseList() {
           {maxPage > 1 && (
             <div className="flex justify-center items-center space-x-4 mt-6 self-center">
               <button
-                className={`${
-                  page > 1 ? "cursor-pointer" : "cursor-not-allowed"
-                } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center `}
+                className={`${page > 1 ? "cursor-pointer" : "cursor-not-allowed"
+                  } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center `}
                 onClick={page > 1 ? changeLowerPage : undefined}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -328,11 +329,10 @@ function CourseList() {
                 Page {page} / {maxPage}
               </span>
               <button
-                className={`${
-                  courseData.length < 8
-                    ? "cursor-not-allowed"
-                    : "cursor-pointer"
-                } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center`}
+                className={`${courseData.length < 8
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
+                  } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center`}
                 onClick={courseData.length < 8 ? undefined : changeUpperPage}>
                 Next
                 <svg

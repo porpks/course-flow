@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const AuthContext = React.createContext();
 import secureLocalStorage from "react-secure-storage";
 import SnackBar from "../components/SnackBar";
+import { serverUrl } from "../utils/data.js";
 
 function AuthProvider(props) {
   const [state, setState] = useState("eiei");
@@ -64,7 +65,7 @@ function AuthProvider(props) {
       localStorage.clear(), setIsLoggedIn(false), clearAllCookies();
       // (window.location.href = '/')
       // setUserID("");
-      // const response = await axios.get(`http://localhost:4000/auth/logout`);
+      // const response = await axios.get(`${serverUrl}/auth/logout`);
       // if (response.status === 200) {
       //   localStorage.clear();
       //   setIsLoggedIn(false);
@@ -83,7 +84,7 @@ function AuthProvider(props) {
       logout();
     }
 
-    return () => {};
+    return () => { };
   }, [userId]);
 
   function clearAllCookies() {
@@ -122,7 +123,7 @@ function AuthProvider(props) {
   const login = async (userData) => {
     try {
       const result = await axios.post(
-        "http://localhost:4000/auth/login",
+        `${serverUrl}/auth/login`,
         userData
       );
       if (result.data.message === "Email not confirmed") {
@@ -140,12 +141,12 @@ function AuthProvider(props) {
         localStorage.setItem("token", token);
         // setIsLoggedIn(true);
         // const response = await axios.get(
-        //   `http://localhost:4000/profile/${userID}`
+        //   `${serverUrl}/profile/${userID}`
         // );
         setTimeout(async () => {
           try {
             const response = await axios.get(
-              `http://localhost:4000/profile/${result.data.data[0].user_id}`
+              `${serverUrl}/profile/${result.data.data[0].user_id}`
             );
             const hasToken = !!localStorage.getItem("token");
             setUsername(response.data.data);
@@ -170,7 +171,7 @@ function AuthProvider(props) {
 
   const loginAdmin = async (loginData) => {
     const response = await axios.post(
-      "http://localhost:4000/authadmin/login",
+      `${serverUrl}/authadmin/login`,
       loginData
     );
     try {

@@ -1,10 +1,7 @@
-import React from "react";
-import { useEffect, useState, forwardRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./courseDetail.css";
-import Collapsible from "../assets/Collapsible.jsx";
 import Mymodal from "../components/Mymodal";
-import { Hidden } from "@mui/material";
 import axios from "axios";
 import ReactPlayer from "react-player";
 import CircularIndeterminate from "../assets/loadingProgress";
@@ -14,10 +11,10 @@ import { useAuth } from "../contexts/AuthContext";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SnackBar from "./SnackBar";
-import MuiAlert from "@mui/material/Alert";
+import { serverUrl } from "../utils/data.js";
+
 
 function CourseDetail() {
   const navigate = useNavigate();
@@ -78,7 +75,7 @@ function CourseDetail() {
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
-        `http://localhost:4000/coursedetail/${param.id}`
+        `${serverUrl}/coursedetail/${param.id}`
       );
       setDataCourse(dataDetailCourse.data.data);
     } catch (error) {
@@ -90,7 +87,7 @@ function CourseDetail() {
   const checkDesire = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
+        `${serverUrl}/desire/?userId=${userId}&courseId=${param.id}`
       );
       setDesireData(result.data.data);
     } catch (error) {
@@ -101,7 +98,7 @@ function CourseDetail() {
   const checkSubscribe = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:4000/mycourse/?user_id=${userId}&course_id=${param.id}`
+        `${serverUrl}/mycourse/?user_id=${userId}&course_id=${param.id}`
       );
       setSubscribeData(result.data.data);
     } catch (error) {
@@ -122,7 +119,7 @@ function CourseDetail() {
     };
 
     try {
-      await axios.post(`http://localhost:4000/desire`, desireBody);
+      await axios.post(`${serverUrl}/desire`, desireBody);
       setDesireToggle(false);
       setDesireData([1]);
       displaySnackbar("Desire course has been added!");
@@ -139,7 +136,7 @@ function CourseDetail() {
     setIsRequestPending(true);
     try {
       await axios.delete(
-        `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
+        `${serverUrl}/desire/?userId=${userId}&courseId=${param.id}`
       );
       setDesireToggle(false);
       setDesireData();
@@ -163,9 +160,9 @@ function CourseDetail() {
       course_id: param.id,
     };
     try {
-      await axios.post(`http://localhost:4000/mycourse/`, subscribe);
+      await axios.post(`${serverUrl}/mycourse/`, subscribe);
       await axios.delete(
-        `http://localhost:4000/desire/?userId=${userId}&courseId=${param.id}`
+        `${serverUrl}/desire/?userId=${userId}&courseId=${param.id}`
       );
       setSubscribeToggle(false);
       displaySnackbar("Thank you for subscribing to our course!");
@@ -200,7 +197,7 @@ function CourseDetail() {
       localStorage.removeItem("videoKey");
       localStorage.setItem("course_id", param.id);
 
-      const result = await axios.get("http://localhost:4000/learn/videotime", {
+      const result = await axios.get(`${serverUrl}/learn/videotime`, {
         params: {
           userID: userId,
           courseID: param.id,
@@ -394,9 +391,8 @@ function CourseDetail() {
                     open={desireToggle}
                     onClose={closeDesire}
                     closeButton={closeDesire}
-                    description={`Do you sure to ${
-                      isDesireExist ? "add" : "remove"
-                    } ${dataCourse.course_name} to your desire Course?`}
+                    description={`Do you sure to ${isDesireExist ? "add" : "remove"
+                      } ${dataCourse.course_name} to your desire Course?`}
                     yesDes={
                       isDesireExist
                         ? "Remove from Desire Course"

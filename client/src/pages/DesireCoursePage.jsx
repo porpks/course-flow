@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import CircularIndeterminate from "../assets/loadingProgress";
+import { serverUrl } from "../utils/data.js";
 
 function DesireCoursePage() {
   const { userId } = useAuth();
@@ -43,7 +44,7 @@ function DesireCoursePage() {
   const getDataDesireCourse = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:4000/desire/${userId}?start=${start}&end=${end}`
+        `${serverUrl}/desire/${userId}?start=${start}&end=${end}`
       );
       const newDataCourse = result.data.data;
       setMaxpage(Math.ceil(result.data.count / 9));

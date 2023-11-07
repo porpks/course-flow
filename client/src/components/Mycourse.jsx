@@ -1,7 +1,4 @@
 import Avatar from '@mui/material/Avatar'
-import MenuItem from '@mui/material/MenuItem'
-import MenuList from '@mui/material/MenuList'
-import Paper from '@mui/material/Paper'
 import CourseCard from './myCourseComponent/CourseCard'
 import { useState, useEffect } from 'react'
 import { Link, json } from 'react-router-dom'
@@ -10,12 +7,11 @@ import { useAuth } from '../contexts/AuthContext.jsx'
 import Ellipse5 from '../assets/myCourseAssets/Ellipse5'
 import Polygon3 from '../assets/myCourseAssets/Polygon3'
 import Cross5 from '../assets/myCourseAssets/Cross5'
-import { Button } from '@mui/base/Button'
 import Pagination from '@mui/material/Pagination'
-import Stack from '@mui/material/Stack'
 import '../components/myCourseComponent/CourseCard.css'
 import CircularIndeterminate from '../assets/loadingProgress'
 import { useNavigate } from 'react-router-dom'
+import { serverUrl } from '../utils/data.js'
 
 function MyCourse() {
   const [dataCourse, setDataCourse] = useState([])
@@ -60,7 +56,7 @@ function MyCourse() {
   const userId = userIdFromCookie
   useEffect(() => {
     // try {
-    //   fetch(`http://localhost:4000/mycourse/${userIdFromCookie}`)
+    //   fetch(`${serverUrl}/mycourse/${userIdFromCookie}`)
     //     .then((response) => response.json())
     //     .then((json) => {
     //       console.log(json.data);
@@ -86,7 +82,7 @@ function MyCourse() {
     try {
       setIsLoading(true)
       const result = await axios.get(
-        `http://localhost:4000/mycourse/${userIdFromCookie}`
+        `${serverUrl}/mycourse/${userIdFromCookie}`
       )
 
       const newDataCourse = result.data.data
@@ -144,7 +140,7 @@ function MyCourse() {
       localStorage.removeItem('nonepause')
       localStorage.removeItem('videoKey')
 
-      const result = await axios.get('http://localhost:4000/learn/videotime', {
+      const result = await axios.get(`${serverUrl}/learn/videotime`, {
         params: {
           userID: userId,
           courseID: localStorage.getItem('course_id'),

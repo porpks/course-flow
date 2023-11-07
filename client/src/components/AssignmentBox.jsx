@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext.jsx";
-import { v4 as uuidv4 } from "uuid";
+import { serverUrl } from "../utils/data.js";
 
 import "./Assignment.css";
 const AssignmentBox = (props) => {
@@ -19,7 +19,7 @@ const AssignmentBox = (props) => {
     const getAssignmentData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
+          `${serverUrl}/assignment/${userId}?sublessonid=${sublessonID}`
         );
         setData(response.data.data);
 
@@ -71,26 +71,26 @@ const AssignmentBox = (props) => {
       }));
 
       const response = await axios.put(
-        `http://localhost:4000/assignment/${userId}?assignmentid=${assignment_id}`,
+        `${serverUrl}/assignment/${userId}?assignmentid=${assignment_id}`,
         assignmentAnswers
       );
 
       if (response.status === 200) {
         const updatedDataResponse = await axios.get(
-          `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
+          `${serverUrl}/assignment/${userId}?sublessonid=${sublessonID}`
         );
 
         setData(updatedDataResponse.data.data);
       }
 
       await axios.put(
-        `http://localhost:4000/learn/complete?userID=${userId}&sublessonID=${sublessonID}`
+        `${serverUrl}/learn/complete?userID=${userId}&sublessonID=${sublessonID}`
       );
       const newStatus = { ...props.subStatus };
       newStatus[sublessonID] = "complete";
       props.setSubStatus(newStatus);
 
-      const result = await axios.get("http://localhost:4000/learn/status/", {
+      const result = await axios.get(`${serverUrl}/learn/status/`, {
         params: {
           userID: userId,
           courseID: localStorage.getItem("course_id"),
@@ -104,7 +104,7 @@ const AssignmentBox = (props) => {
           course_id: localStorage.getItem("course_id"),
         };
         await axios.post(
-          "http://localhost:4000/learn/status/",
+          `${serverUrl}/learn/status/`,
           statusCompleteBody
         );
       }

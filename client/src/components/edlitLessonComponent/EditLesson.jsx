@@ -4,6 +4,7 @@ import { func } from 'prop-types'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import { serverUrl } from '../../utils/data.js'
 
 function EditLesson(sharedState, updateState) {
   const navigate = useNavigate()
@@ -17,7 +18,7 @@ function EditLesson(sharedState, updateState) {
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
-        `http://localhost:4000/admin/editcourse/${courseid}`
+        `${serverUrl}/admin/editcourse/${courseid}`
       )
       setDataCourse({
         course_id: dataDetailCourse.data.data.course_id,

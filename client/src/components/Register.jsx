@@ -9,6 +9,7 @@ import calendarIcon from "../../public/image/calendarIcon.svg";
 import dayjs from "dayjs";
 import axios from "axios";
 import { useEffect } from "react";
+import { serverUrl } from "../utils/data.js";
 
 const today = dayjs();
 
@@ -43,7 +44,7 @@ function Register() {
   const sendRegisterRequest = async () => {
 
     try {
-      const result = await axios.post("http://localhost:4000/auth/register", registerData);
+      const result = await axios.post(`${serverUrl}/auth/register`, registerData);
       if (result.data.error) {
         setOpenSnackBar(false)
         setSnackbarMes(result.data.error)

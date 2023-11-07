@@ -10,6 +10,7 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import CircularIndeterminate from "../assets/loadingProgress";
 import SnackBar from "./SnackBar";
+import { serverUrl } from "../utils/data.js";
 
 function UpdateProfile() {
   const { setUserID, setUsername, userId } = useAuth();
@@ -65,7 +66,7 @@ function UpdateProfile() {
     setAvatar({});
     setAvatarUrl("");
     setImage("");
-    await axios.put(`http://localhost:4000/profile/delete/${userId}`);
+    await axios.put(`${serverUrl}/profile/delete/${userId}`);
   };
 
   const initialValues = {
@@ -76,7 +77,7 @@ function UpdateProfile() {
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   // const getData = async () => {
-  //   const result = await axios.get(`http://localhost:4000/profile/${userId}`);
+  //   const result = await axios.get(`${serverUrl}/profile/${userId}`);
 
   //   const initialValues = {
   //     full_name: result.data.data.full_name,
@@ -91,7 +92,7 @@ function UpdateProfile() {
   // // eslint-disable-next-line react-hooks/exhaustive-deps
   // const getDataImage = async () => {
   //   const imageUrl = await axios.get(
-  //     `http://localhost:4000/profile/image/${userId}`
+  //     `${serverUrl}/profile/image/${userId}`
   //   );
   //   setImage(imageUrl.data);
   // };
@@ -105,13 +106,13 @@ function UpdateProfile() {
       avatar: avatar,
     };
 
-    await axios.put(`http://localhost:4000/profile/${userId}`, newUserData, {
+    await axios.put(`${serverUrl}/profile/${userId}`, newUserData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
     try {
       const response = await axios.get(
-        `http://localhost:4000/profile/${userId}`
+        `${serverUrl}/profile/${userId}`
       );
       setUsername(response.data.data);
       localStorage.removeItem("username");
@@ -183,10 +184,10 @@ function UpdateProfile() {
     const fetchData = async () => {
       try {
         const result = await axios.get(
-          `http://localhost:4000/profile/${userId}`
+          `${serverUrl}/profile/${userId}`
         );
         const imageUrl = await axios.get(
-          `http://localhost:4000/profile/image/${userId}`
+          `${serverUrl}/profile/image/${userId}`
         );
 
         const initialValues = {
@@ -356,8 +357,8 @@ function UpdateProfile() {
                     id="full_name"
                     name="full_name"
                     className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.full_name && formik.errors.full_name
-                        ? " border-[#9B2FAC]"
-                        : " border-[--gray500]"
+                      ? " border-[#9B2FAC]"
+                      : " border-[--gray500]"
                       }`}
                     placeholder="Enter Name and Lastname"
                     onChange={formik.handleChange}
@@ -442,9 +443,9 @@ function UpdateProfile() {
                     id="edu_background"
                     name="edu_background"
                     className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.edu_background &&
-                        formik.errors.edu_background
-                        ? " border-[#9B2FAC]"
-                        : " border-[--gray500]"
+                      formik.errors.edu_background
+                      ? " border-[#9B2FAC]"
+                      : " border-[--gray500]"
                       }`}
                     placeholder="Enter Educational Background"
                     onChange={formik.handleChange}
@@ -475,8 +476,8 @@ function UpdateProfile() {
                     id="email"
                     name="email"
                     className={`Body2 p-[12px] w-[100%] h-[48px] mb-[40px] rounded-lg border-solid focus:border-[--orange500] focus:outline-none ${formik.touched.email && formik.errors.email
-                        ? " border-[#9B2FAC]"
-                        : " border-[--gray500]"
+                      ? " border-[#9B2FAC]"
+                      : " border-[--gray500]"
                       }`}
                     placeholder="Enter Email"
                     onChange={formik.handleChange}

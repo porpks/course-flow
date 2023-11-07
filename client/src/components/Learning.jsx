@@ -12,6 +12,7 @@ import axios from "axios";
 import AssignmentBox from "./AssignmentBox.jsx";
 import CircularIndeterminate from "../assets/loadingProgress";
 import { useNavigate } from "react-router-dom";
+import { serverUrl } from "../utils/data.js";
 
 function Learning() {
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +51,7 @@ function Learning() {
 
   const getStatus = async () => {
     try {
-      const result = await axios.get("http://localhost:4000/learn/status/", {
+      const result = await axios.get(`${serverUrl}/learn/status/`, {
         params: {
           userID: userId,
           courseID: localStorage.getItem("course_id"),
@@ -150,7 +151,7 @@ function Learning() {
     );
     try {
       await axios.put(
-        `http://localhost:4000/learn/start?userID=${userId}&sublessonID=${localStorage.getItem(
+        `${serverUrl}/learn/start?userID=${userId}&sublessonID=${localStorage.getItem(
           "videoKey"
         )}`
       );
@@ -165,7 +166,7 @@ function Learning() {
   };
 
   const handlePause = async (a) => {
-    await axios.put("http://localhost:4000/learn/videotime", {
+    await axios.put(`${serverUrl}/learn/videotime`, {
       sublesson_video_timestop: a,
       sublesson_id: localStorage.getItem("videoKey"),
       user_Id: userId,
@@ -176,7 +177,7 @@ function Learning() {
 
   const fetchPauseTime = async () => {
     const result = await axios.get(
-      `http://localhost:4000/learn/videotimebyid?sublessonid=${videoKey}&userid=${userId}`
+      `${serverUrl}/learn/videotimebyid?sublessonid=${videoKey}&userid=${userId}`
     );
 
     if (result.data.data[0].sublesson_video_timestop !== null) {
@@ -193,16 +194,16 @@ function Learning() {
     const sublessonID = localStorage.getItem("videoKey") || videoKey;
 
     const result = await axios.get(
-      `http://localhost:4000/assignment/check?sublessonId=${sublessonID}`
+      `${serverUrl}/assignment/check?sublessonId=${sublessonID}`
     );
     if (result.data.data.length === 0) {
       await axios.put(
-        `http://localhost:4000/learn/complete?userID=${userId}&sublessonID=${sublessonID}`
+        `${serverUrl}/learn/complete?userID=${userId}&sublessonID=${sublessonID}`
       );
       const newStatus = { ...subStatus };
       newStatus[videoKey] = "complete";
       setSubStatus(newStatus);
-      const result = await axios.get("http://localhost:4000/learn/status/", {
+      const result = await axios.get(`${serverUrl}/learn/status/`, {
         params: {
           userID: userId,
           courseID: localStorage.getItem("course_id"),
@@ -216,7 +217,7 @@ function Learning() {
           course_id: localStorage.getItem("course_id"),
         };
         await axios.post(
-          "http://localhost:4000/learn/status/",
+          `${serverUrl}/learn/status/`,
           statusCompleteBody
         );
       }
@@ -225,10 +226,10 @@ function Learning() {
     //have assignment
     else {
       const response = await axios.get(
-        `http://localhost:4000/assignment/${userId}?sublessonid=${sublessonID}`
+        `${serverUrl}/assignment/${userId}?sublessonid=${sublessonID}`
       );
       if (response.data.data.length === 0) {
-        await axios.post(`http://localhost:4000/assignment/`, {
+        await axios.post(`${serverUrl}/assignment/`, {
           user_id: userId,
           sublesson_id: sublessonID,
         });
@@ -242,7 +243,7 @@ function Learning() {
     async function fetchData() {
       setIsLoading(true);
       try {
-        const result = await axios.get("http://localhost:4000/learn/", {
+        const result = await axios.get(`${serverUrl}/learn/`, {
           params: {
             userID: userId,
             courseID: localStorage.getItem("course_id"),
@@ -356,8 +357,8 @@ function Learning() {
                             key={index}
                             id={sublesson.sublesson_id}
                             className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] ${sublesson.sublesson_id === videoKey
-                                ? "bg-[--gray400]"
-                                : ""
+                              ? "bg-[--gray400]"
+                              : ""
                               }`}
                             // className={`flex items-center px-2 py-3 cursor-pointer hover:bg-[--gray300] active:bg-[--gray500] tab${sublesson.sublesson_id}`}
                             onClick={() =>

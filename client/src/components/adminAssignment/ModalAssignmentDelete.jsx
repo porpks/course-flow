@@ -1,6 +1,8 @@
 import { useAuth } from "../../contexts/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { serverUrl } from "../../utils/data.js";
+
 function ModalAssignmentDelete(props) {
   const navigate = useNavigate()
 
@@ -8,7 +10,7 @@ function ModalAssignmentDelete(props) {
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `http://localhost:4000/assignment/${deleteAssignment.assignment_id}`
+        `${serverUrl}/assignment/${deleteAssignment.assignment_id}`
       );
 
       setDeleteAssignment({

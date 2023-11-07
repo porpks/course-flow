@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, } from 'react'
 import ReactPlayer from 'react-player'
+import { serverUrl } from '../../utils/data.js'
 
 import SnackBar from '../SnackBar.jsx'
 
@@ -56,7 +57,7 @@ function AddLessonVideo() {
     setAvatarVdo({})
     setVdoUrl('')
     setVdo('')
-    // await axios.put(`http://localhost:4000/profile/delete/${userId}`);
+    // await axios.put(`${serverUrl}/profile/delete/${userId}`);
   }
   return (
     <>

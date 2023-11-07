@@ -44,7 +44,7 @@ function UploadVideo(props) {
     setAdminVideoUrl("");
     setVdo("");
     localStorage.removeItem("video_url");
-    // await axios.put(`http://localhost:4000/profile/delete/${userId}`);
+    // await axios.put(`${serverUrl}/profile/delete/${userId}`);
   };
 
   function displaySnackbar(message) {

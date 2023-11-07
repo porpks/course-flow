@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
-import { func } from 'prop-types'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import AddLessonVideo from './AddLessonVideo'
 import ReactPlayer from 'react-player'
 import { useAuth } from '../../contexts/AuthContext.jsx'
 import SnackBar from '../SnackBar'
+import { serverUrl } from '../../utils/data.js'
 
 function AddLesson(sharedState, updateState) {
   const { lessonIndex } = useParams() // รับค่า index จาก URL
@@ -36,7 +35,7 @@ function AddLesson(sharedState, updateState) {
   async function getDetailCourse() {
     try {
       const dataDetailCourse = await axios.get(
-        `http://localhost:4000/admin/editcourse/${courseid}`
+        `${serverUrl}/admin/editcourse/${courseid}`
       )
       setDataCourse({
         course_id: dataDetailCourse.data.data.course_id,
@@ -388,8 +387,8 @@ function AddLesson(sharedState, updateState) {
                                     width="100%"
                                     height="100%"
                                     controls={true}
-                                    // light={true}
-                                    // playIcon={"../public/image/playIcon.svg"}
+                                  // light={true}
+                                  // playIcon={"../public/image/playIcon.svg"}
                                   />
                                   {subLesson.subLessonVideo ? (
                                     <button

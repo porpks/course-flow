@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
 import SnackBar from "../SnackBar.jsx";
+import { serverUrl } from "../../utils/data.js";
 
 function UploadVideo(props) {
   const [vdo, setVdo] = useState("");
@@ -45,7 +46,7 @@ function UploadVideo(props) {
     props.setGetVideoTrailer("");
     // setVdo("");
     localStorage.removeItem("video_url");
-    // await axios.put(`http://localhost:4000/profile/delete/${userId}`);
+    // await axios.put(`${serverUrl}/profile/delete/${userId}`);
   };
 
   function displaySnackbar(message) {

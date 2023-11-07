@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext.jsx";
 import CircularIndeterminate from "../../assets/loadingProgress.jsx";
+import { serverUrl } from "../../utils/data.js";
 
 const AssignmentListAdmin = ({
   searchQuery,
@@ -50,7 +51,7 @@ const AssignmentListAdmin = ({
   const fetchData = async (searchQuery) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/assignment?start=${start}&end=${end}&search=${searchQuery}`
+        `${serverUrl}/assignment?start=${start}&end=${end}&search=${searchQuery}`
       );
       setMaxpage(Math.ceil(response.data.count / 8));
       console.log(Math.ceil(response.data.count / 8));
@@ -187,8 +188,8 @@ const AssignmentListAdmin = ({
                             {assignment.created_at === null
                               ? "Database does not have information"
                               : formatDateTime(
-                                  assignment.created_at.slice(0, 50)
-                                )}
+                                assignment.created_at.slice(0, 50)
+                              )}
                           </div>
                         </div>
                       </div>
@@ -244,9 +245,8 @@ const AssignmentListAdmin = ({
             {maxPage > 1 && (
               <div className="flex justify-center items-center space-x-4 mt-6 self-center">
                 <button
-                  className={`${
-                    page > 1 ? "cursor-pointer" : "cursor-not-allowed"
-                  } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center `}
+                  className={`${page > 1 ? "cursor-pointer" : "cursor-not-allowed"
+                    } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center `}
                   onClick={page > 1 ? changeLowerPage : undefined}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -267,11 +267,10 @@ const AssignmentListAdmin = ({
                   Page {page} / {maxPage}
                 </span>
                 <button
-                  className={`${
-                    assignmentList.length < 8
-                      ? "cursor-not-allowed"
-                      : "cursor-pointer"
-                  } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center`}
+                  className={`${assignmentList.length < 8
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
+                    } border-none px-4 py-2 bg-blue-800  hover:bg-blue-600 text-white font-semibold rounded-full focus:outline-none flex items-center`}
                   onClick={
                     assignmentList.length < 8 ? undefined : changeUpperPage
                   }>
