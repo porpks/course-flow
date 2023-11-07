@@ -1,0 +1,72 @@
+.canvas_CourseDetail {
+  padding: 53px 160px 165px 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 15px;
+  width: 1440px;
+}
+.Subscribe_box {
+  width: 357px;
+  height: fit-content;
+  background-color: var(--white);
+  position: sticky;
+  top: 15px;
+  padding: 32px 24px;
+  border-radius: 8px;
+  /* border: 1px solid #000; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 24px;
+}
+.CourseDetail {
+  /* border: 1px solid #d43434; */
+  width: 739px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 100px;
+}
+
+.lesson_sample {
+  /* border: 1px solid #000; */
+  width: 100%;
+}
+
+.btn-grp {
+  padding-top: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid var(--gray400);
+}
+.accordion {
+  /* margin: 0; */
+  background-color: aqua;
+  border-bottom: 1px solid var(--gray400);
+}
+.typography {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 0;
+}
+.subLesson {
+  padding: 24px 0 24px 40px;
+}
+
+.accordionDetails {
+  border-top: 1px solid var(--gray400);
+}
+
+.accordionSummary {
+  margin: 0 !important;
+}

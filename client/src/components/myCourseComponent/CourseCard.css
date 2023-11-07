@@ -1,0 +1,45 @@
+.courseCard-con:hover {
+  scale: 1.0125;
+  transform: scale(1);
+  transition: transform 0.5s ease-in-out;
+  transform: scale(1.05);
+}
+.footerCard {
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid #000; */
+}
+.topCard img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}
+
+.lesson-count-container,
+.learningTime-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* border: 1px solid #000; */
+}
+
+.footer-Line {
+  width: auto;
+  height: 3px;
+  background: var(--gray600);
+  opacity: 0.1;
+}
+.footerContents {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 16px;
+  gap: 24px;
+}
+
+.bodyCard {
+  /* border: 1px solid #000; */
+  margin: 24px 0;
+  padding: 0 16px 0px 16px;
+}

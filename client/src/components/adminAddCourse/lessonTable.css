@@ -1,0 +1,28 @@
+table {
+  /* border-collapse: collapse; */
+}
+tr:first-child {
+  /* background-color: #dddddd; */
+}
+
+th {
+  text-align: left;
+}
+
+.Tab {
+  border-bottom: 1px solid var(--gray500);
+}
+
+td {
+  /* border-bottom: 1px solid var(--gray500); */
+}
+
+td:first-child {
+  /* text-align: center; */
+}
+
+.btn {
+  border: none;
+  background: none;
+  /* padding-bottom: 17px; */
+}

@@ -38,6 +38,13 @@
   --linear2: linear-gradient(207deg, #5697ff 0%, #2558dd 100%);
 }
 
+.Linear1 {
+  background: linear-gradient(114deg, #95beff 0%, #0040e5 100%);
+}
+.Linear2 {
+  background: linear-gradient(207deg, #5697ff 0%, #2558dd 100%);
+}
+
 .H1 {
   font-family: "Inter", sans-serif;
   font-size: 66px;
@@ -139,6 +146,8 @@
   font-weight: 700;
   line-height: 150%;
   transition: background 0.3s ease-out;
+  cursor: pointer;
+  border: none;
 }
 
 .Primary:hover {
@@ -171,14 +180,17 @@
   font-weight: 700;
   line-height: 150%;
   transition: background 0.3s ease-out;
+  cursor: pointer;
 }
 
 .Secondary:hover {
+  border-color: var(--orange-100, #fbaa1c);
   color: var(--orange-100, #fbaa1c);
   transition: color 0.3s ease-out;
 }
 
 .Secondary:active {
+  border-color: var(--orange-500, #f47e20);
   color: var(--orange-500, #f47e20);
   transition: color 0.3s ease-out;
 }
@@ -187,4 +199,99 @@
   border: 1px solid var(--gray-500, #c8ccdb);
   background: #fff;
   color: var(--gray-500, #c8ccdb);
+}
+
+.hover-scale {
+  transform: scale(1);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Hover state, scale up a bit */
+.hover-scale:hover {
+  transform: scale(1.05); /* Adjust the scale factor as needed */
+}
+
+.Input {
+  display: flex;
+  padding: 12px 16px 12px 12px;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 1px solid var(--gray-400, #d6d9e4);
+  background: var(--utility-white, #fff);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+}
+
+.Input:focus {
+  outline: none !important;
+  display: flex;
+  padding: 12px 16px 12px 12px;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 1px solid var(--orange-500, #f47e20);
+  background: var(--utility-white, #fff);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+}
+
+.Nunito {
+  font-family: "Nunito", sans-serif;
+}
+
+.Ghost {
+  display: flex;
+  padding: 4px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-style: none;
+  border-radius: 16px;
+  color: var(--blue-500, #2f5fac);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%; /* 24px */
+}
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+  display: none;
+}
+.css-e0m66g-MuiFormControl-root-MuiTextField-root .MuiInputBase-root {
+  border: 2px solid #cbd5e0 !important;
+}
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input:focus {
+  border: 2px solid #f47e20;
+  position: absolute;
+  left: -2px;
+  width: 432px;
+  height: 13px;
+  border-radius: 8px;
+}
+.css-1laqsz7-MuiInputAdornment-root {
+  position: absolute;
+  right: 10px;
+}
+
+.gradient-bg {
+  background: linear-gradient(110deg, #95beff 18.21%, #0040e5 95.27%);
+}
+
+.Dropdown-control {
+  padding: 10px 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid #d6d9e4 !important;
+}
+.Dropdown-arrow {
+  top: 24px !important;
+}
+.Dropdown-disabled {
+  background-color: var(--gray100) !important;
 }

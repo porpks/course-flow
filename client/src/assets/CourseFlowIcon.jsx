@@ -1,12 +1,11 @@
-import React from "react";
-
-function CourseFlowIcon() {
+function CourseFlowIcon(props) {
   return (
     <svg
-      width="140"
-      height="16"
+      width={props.width || "140"}
+      height={props.height || "16"}
       viewBox="0 0 140 16"
       fill="none"
+      className="hover-scale"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
@@ -58,8 +57,8 @@ function CourseFlowIcon() {
           y2="52.8293"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#95BEFF" />
-          <stop offset="1" stop-color="#0040E6" />
+          <stop stopColor="#95BEFF" />
+          <stop offset="1" stopColor="#0040E6" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_3971_1685"
@@ -69,8 +68,8 @@ function CourseFlowIcon() {
           y2="52.8293"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#95BEFF" />
-          <stop offset="1" stop-color="#0040E6" />
+          <stop stopColor="#95BEFF" />
+          <stop offset="1" stopColor="#0040E6" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_3971_1685"
@@ -80,8 +79,8 @@ function CourseFlowIcon() {
           y2="52.8293"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#95BEFF" />
-          <stop offset="1" stop-color="#0040E6" />
+          <stop stopColor="#95BEFF" />
+          <stop offset="1" stopColor="#0040E6" />
         </linearGradient>
         <linearGradient
           id="paint3_linear_3971_1685"
@@ -91,8 +90,8 @@ function CourseFlowIcon() {
           y2="52.8293"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#95BEFF" />
-          <stop offset="1" stop-color="#0040E6" />
+          <stop stopColor="#95BEFF" />
+          <stop offset="1" stopColor="#0040E6" />
         </linearGradient>
         <linearGradient
           id="paint4_linear_3971_1685"
@@ -102,8 +101,8 @@ function CourseFlowIcon() {
           y2="52.8293"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#95BEFF" />
-          <stop offset="1" stop-color="#0040E6" />
+          <stop stopColor="#95BEFF" />
+          <stop offset="1" stopColor="#0040E6" />
         </linearGradient>
         <linearGradient
           id="paint5_linear_3971_1685"
@@ -113,8 +112,8 @@ function CourseFlowIcon() {
           y2="52.8293"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#95BEFF" />
-          <stop offset="1" stop-color="#0040E6" />
+          <stop stopColor="#95BEFF" />
+          <stop offset="1" stopColor="#0040E6" />
         </linearGradient>
         <linearGradient
           id="paint6_linear_3971_1685"
@@ -124,8 +123,8 @@ function CourseFlowIcon() {
           y2="52.8293"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#95BEFF" />
-          <stop offset="1" stop-color="#0040E6" />
+          <stop stopColor="#95BEFF" />
+          <stop offset="1" stopColor="#0040E6" />
         </linearGradient>
         <linearGradient
           id="paint7_linear_3971_1685"
@@ -135,8 +134,8 @@ function CourseFlowIcon() {
           y2="52.8293"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#95BEFF" />
-          <stop offset="1" stop-color="#0040E6" />
+          <stop stopColor="#95BEFF" />
+          <stop offset="1" stopColor="#0040E6" />
         </linearGradient>
         <linearGradient
           id="paint8_linear_3971_1685"
@@ -146,8 +145,8 @@ function CourseFlowIcon() {
           y2="52.8293"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#95BEFF" />
-          <stop offset="1" stop-color="#0040E6" />
+          <stop stopColor="#95BEFF" />
+          <stop offset="1" stopColor="#0040E6" />
         </linearGradient>
         <linearGradient
           id="paint9_linear_3971_1685"
@@ -157,8 +156,8 @@ function CourseFlowIcon() {
           y2="52.8293"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#95BEFF" />
-          <stop offset="1" stop-color="#0040E6" />
+          <stop stopColor="#95BEFF" />
+          <stop offset="1" stopColor="#0040E6" />
         </linearGradient>
       </defs>
     </svg>
